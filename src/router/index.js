@@ -29,17 +29,17 @@ Vue.use(Router);
   * meta : `{ role: ['admin'] }`  will control the page role
   **/
 export const constantRouterMap = [
-  { path: '/login', component: Login, hidden: true },
+  { path: '/login', component: _import('login/index'), hidden: true },
   { path: '/404', component: Err404, hidden: true },
    {
      path: '/',
      component: Layout,Dashboard,
-     redirect: '/index',
+     redirect: '/home/index',
      icon: 'home',
      noDropdown:true,
      children:[
        {
-         path:'index',component:_import('dashboard/index'),name: 'Home'
+         path:'home/index',component:_import('dashboard/index'),name: 'Home'
        }
      ]
    }
@@ -75,6 +75,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/students/index',
     name: 'Students',
+    icon: 'bussinessman',
     children:[
       {
         path: 'index',component: _import('students/index'),name: 'Students Information'
@@ -82,13 +83,25 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/table',
+    path: '/tasks',
     component: Layout,
-    redirect: '/table/index',
-    name: 'Table',
-    icon: 'tubiaoleixingzhengchang',
-    noDropdown: true,
-    children: [{ path: 'index', component: Table, name: 'Table', meta: { role: ['admin'] } }]
+    redirect: '/tasks/index',
+    name:"Data Mining Tasks",
+    icon: 'task-management',
+    children: [
+      {
+        path: 'index',component: _import('tasks/index')
+      }
+    ]
   },
+  // {
+  //   path: '/table',
+  //   component: Layout,
+  //   redirect: '/table/index',
+  //   name: 'Table',
+  //   icon: 'tubiaoleixingzhengchang',
+  //   noDropdown: true,
+  //   children: [{ path: 'index', component: Table, name: 'Table', meta: { role: ['admin'] } }]
+  // },
   { path: '*', redirect: '/404', hidden: true }
 ];

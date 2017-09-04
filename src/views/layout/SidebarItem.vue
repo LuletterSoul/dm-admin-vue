@@ -1,7 +1,7 @@
 <template>
     <div>
         <template v-for="item in routes">
-            <router-link v-if="!item.hidden&&item.noDropdown&&item.children.length>0" :to="item.path+'/'+item.children[0].path">
+            <router-link v-if="!item.hidden&&item.noDropdown&&item.children.length>0" :to="generatePath(item)">
                 <el-menu-item :index="item.path+'/'+item.children[0].path">
                     <icon-svg v-if='item.icon' :icon-class="item.icon" /> {{item.children[0].name}}
                 </el-menu-item>
@@ -24,14 +24,22 @@
 </template>
 
 <script>
-    export default {
-      name: 'SidebarItem',
-      props: {
-        routes: {
-          type: Array
-        }
+  export default {
+    name: 'SidebarItem',
+    props: {
+      routes: {
+        type: Array
+      }
+    },
+    methods: {
+      generatePath: function (item) {
+          if(item.path ==='/'){
+            return '/' + item.children[0].path;
+          }
+        return item.path + '/' + item.children[0].path;
       }
     }
+  };
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

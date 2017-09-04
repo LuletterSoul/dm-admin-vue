@@ -37,9 +37,9 @@
         width: 100%;
         &.hideSidebar {
             .sidebar-wrapper {
-                transform: translate(-140px, 0);
+                transform: translate(-155px, 0);
                 .sidebar-container {
-                    transform: translate(132px, 0);
+                    transform: translate(152px, 0);
                 }
                 &:hover {
                     transform: translate(0, 0);
@@ -53,7 +53,7 @@
             }
         }
         .sidebar-wrapper {
-            width: 180px;
+            width: 200px;
             position: fixed;
             top: 0;
             bottom: 0;
@@ -74,7 +74,7 @@
         .main-container {
             min-height: 100%;
             transition: all .28s ease-out;
-            margin-left: 180px;
+            margin-left: 200px;
         }
     }
 </style>
