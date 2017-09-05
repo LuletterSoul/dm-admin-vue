@@ -4,10 +4,9 @@
 
 <script>
   import echarts from 'echarts';
+  import { getSystemStatistics } from 'api/dashboard';
   require('echarts/theme/macarons'); // echarts 主题
   import { debounce } from 'utils';
-
-
   export default {
     props: {
       className: {
@@ -29,8 +28,50 @@
     },
     data() {
       return {
-        chart: null
+        chart: null,
+        statistics:null,
+        currentWeekTraffic:null,
+        studentWeekTraffic:null,
+        teacherWeekTraffic:null,
+
       };
+    },
+    computed: {
+      xStudentAxisData() {
+        let xAxisData = null;
+        let map = this.studentWeekTraffic.dayTrafficMap;
+        for (var key in map) {
+          xAxisData.push(key.substring(0, 3));
+          return xAxisData;
+        }
+      },
+      yStudentAxisData() {
+        let yAxisData = null;
+          let map = this.studentWeekTraffic;
+        for (let i=0;i<map.length;i++) {
+          yAxisData.push(map[i]);
+        }
+          return yAxisData;
+        },
+      xTeacherAxisData() {
+        let xAxisData = null;
+        let map = this.teacherWeekTraffic.dayTrafficMap;
+        for (var key in map) {
+          xAxisData.push(key.substring(0, 3));
+          return xAxisData;
+        }
+      },
+      yTeacherAxisData() {
+        let yAxisData = null;
+        let map = this.studentWeekTraffic;
+        for (let i=0;i<map.length;i++) {
+          yAxisData.push(map[i]);
+        }
+        return yAxisData;
+      }
+    },
+    created() {
+      this.fetchStatisctis();
     },
     mounted() {
       this.initChart();
@@ -85,7 +126,7 @@
           },
           yAxis: {},
           series: [{
-            name: 'visitors',
+            name: 'Teacher Traffic',
             itemStyle: {
               normal: {
                 areaStyle: {}
@@ -116,6 +157,21 @@
             animationDuration: 2000,
             animationEasing: 'quadraticOut'
           }]
+        })
+      },
+      extractWeekStatistic() {
+
+      },
+      exractXAxisData(){
+
+      },
+      fetchStatisctis() {
+        let vm = this;
+        getSystemStatistics().then(response => {
+          vm.statistics = response.statistics;
+          vm.currentWeekTraffic = vm.statistics.currentWeekTraffic;
+          vm.studentWeekTraffic = vm.currentWeekTraffic.student;
+          vm.teacherWeekTraffic = vm.currentWeekTraffic.teacher;
         })
       }
     }
