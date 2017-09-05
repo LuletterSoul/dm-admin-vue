@@ -1,11 +1,11 @@
 <template>
     <div class="dashboard-admin-container">
-      <el-row :gutter="20">
-        <el-col :span="2">
+      <el-row>
+        <el-col :span="4" :offset="20">
           <el-card class="box-card">
             <div slot="header" class="box-card-header">
-              <pan-thumb class="panThumb" :image="avatar"> 你的权限:
-                <span class="pan-info-roles" :key='item' v-for="item in roles">{{item}}</span>
+              <pan-thumb class="panThumb" :image="avatar">
+                Pain and pleasure,like light and darkness,succeed each other.
               </pan-thumb>
             </div>
             <span class="display_name">{{name}}</span>
@@ -13,7 +13,7 @@
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="10">
+        <el-col :span="24">
           <line-chart></line-chart>
         </el-col>
       </el-row>
@@ -26,13 +26,13 @@
   import panThumb from 'components/PanThumb';
   import ElRow from "element-ui/packages/row/src/row";
   import PanThumb from "../../../components/PanThumb/index.vue";
-
   export default {
     name: 'app',
     components: {
       PanThumb,
       ElRow,
-      lineChart},
+      lineChart
+    },
     data() {
       return {}
     },
@@ -48,12 +48,26 @@
 
 <style scoped>
   .box-card{
-    width: 200px;
+    width: 100%;
     margin: 20px auto;
   }
   .display_name{
     font-size: 30px;
     display: block;
     text-align: center;
+  }
+
+  .box-card-header {
+    position: relative;
+    height: 160px;
+  }
+  .panThumb {
+    z-index: 100;
+    height: 150px;
+    width: 150px;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    margin: auto;
   }
 </style>

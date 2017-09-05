@@ -1,5 +1,5 @@
 <template>
-	<div class="pan-item" :style="{zIndex:zIndex,height:height,width:width}">
+	<div class="pan-item" :style="avatarStyle">
 		<div class="pan-info">
 			<div class="pan-info-roles-container">
 				<slot></slot>
@@ -28,6 +28,20 @@
       height: {
         type: String,
         default: '150px'
+      }
+    },
+    computed: {
+      avatarStyle() {
+        return{
+          zIndex:this.zIndex,
+          height:this.height,
+          width:this.width,
+          left: '50%',
+          marginLeft:this.marginLeftPx
+        }
+      },
+      marginLeftPx() {
+        return -(parseInt(this.width.split("px")[0])/2)+'px';
       }
     }
   };
