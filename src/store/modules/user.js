@@ -10,7 +10,8 @@ const user = {
     name: '',
     avatar: '',
     introduction: '',
-    roles: []
+    roles: [],
+    lastLoginTime :''
   },
 
   mutations: {
@@ -26,11 +27,17 @@ const user = {
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar;
     },
+    SET_STATUS: (state,status)=>{
+      state.status = status;
+    },
     SET_INTRODUCTION: (state, introduction) => {
       state.introduction = introduction;
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles;
+    },
+    SET_LAST_LOGIN_TIME:(state,lastLoginTime) =>{
+      state.lastLoginTime = lastLoginTime;
     }
   },
 
@@ -60,6 +67,8 @@ const user = {
           commit('SET_NAME', profile.name);
           commit('SET_AVATAR', profile.avatar);
           commit('SET_INTRODUCTION', profile.introduction);
+          commit('SET_LAST_LOGIN_TIME', profile.lastLoginTime);
+          commit('SET_STATUS', profile.status);
           resolve(response);
         }).catch(error => {
           reject(error);

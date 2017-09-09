@@ -15,7 +15,6 @@ import Velocity from 'velocity-animate/velocity'
 import VelocityUI from 'velocity-animate/velocity.ui'
 import IconSvg from '@/components/Icon-svg/index.vue'
 import {getToken} from '@/utils/auth'
-
 // var Velocity = require('velocity-animate');
 // require('velocity-animate/velocity.ui');
 window.Velocity = window.velocity = Velocity;

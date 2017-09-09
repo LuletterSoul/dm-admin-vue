@@ -1,18 +1,65 @@
 <template>
     <div class="dashboard-admin-container">
+      <sweet-modal ref="modal" icon="warning" title="登出">
+        确认退出系统吗?
+        <el-button type="info" slot="button" @click="logout">确认</el-button>
+        <el-button :plain="true" type="success" slot="button" @click="$refs.modal.close()">取消</el-button>
+      </sweet-modal>
       <el-row>
-        <el-col :span="4" :offset="20">
+        <el-col :span="6">
+          <el-card class="user-profile-content">
+            <balloon :balloon-count="10">
+            </balloon>
+            <div slot="header">
+              <colorful-button :link="''" :button-style="{float: 'right',marginRight:'-7px'}">
+                设置
+              </colorful-button>
+              <colorful-button @click="confirmLogout" :color="'red-btn'" :button-style="{float: 'right',marginRight:'5px'}">
+                注销
+              </colorful-button>
+              <span style="line-height: 36px;">用户信息</span>
+            </div>
+            <div>
+              <p>用户名: {{  userProfile.name }}</p>
+              <p>个性签名: {{  userProfile.introduction }}</p>
+              <p>上一次登录时间:  {{ userProfile.lastLoginTime }}</p>
+              <p>管理状态: {{  userProfile.status }}</p>
+            </div>
+            <!--<div v-for="o in 4" :key="o" class="text item">-->
+            <!--{{'列表内容 ' + o }}-->
+            <!--</div>-->
+          </el-card>
+        </el-col>
+        <el-col :span="10" :offset="1">
+          <div class="todoList-container">
+            <todo-list></todo-list>
+          </div>
+
+        </el-col>
+        <el-col :span="6" :offset="1">
           <el-card class="box-card">
             <div slot="header" class="box-card-header">
               <pan-thumb class="panThumb" :image="avatar">
                 Pain and pleasure,like light and darkness,succeed each other.
               </pan-thumb>
             </div>
-            <span class="display_name">{{name}}</span>
+            <div class="user-card-content">
+              <span class="display_name">{{name}}</span>
+              <div class="info-user-item">
+                <icon-svg :icon-class="'browse'" ></icon-svg>
+                <countTo class="info-item-num" :startVal='0' :endVal='statisticsData.permissionCount' :duration='3400'></countTo>
+                <span class="info-item-text">权限数</span>
+              </div>
+              <div class="info-user-item">
+                <icon-svg :icon-class="'operation'"></icon-svg>
+                <countTo class="info-item-num" :startVal='0' :endVal='statisticsData.operationCount' :duration='3600'></countTo>
+                <span class="info-item-text">操作数</span>
+              </div>
+            </div>
           </el-card>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="10">
         <el-col :span="24">
           <line-chart></line-chart>
         </el-col>
@@ -22,25 +69,56 @@
 
 <script>
   import { mapGetters } from 'vuex';
+  import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
   import lineChart from './lineChart';
-  import panThumb from 'components/PanThumb';
+  import PanThumb from 'components/PanThumb';
+  import countTo from 'vue-count-to';
   import ElRow from "element-ui/packages/row/src/row";
-  import PanThumb from "../../../components/PanThumb/index.vue";
+//  import PanThumb from "../../../components/PanThumb/index.vue";
+  import Balloon from 'components/balloon';
+  import ColorfulButton from 'components/button';
+  import TodoList from 'components/TodoList'
   export default {
     name: 'app',
     components: {
       PanThumb,
+      countTo,
       ElRow,
-      lineChart
+      lineChart,
+      Balloon,
+      ColorfulButton,
+      SweetModal,
+      SweetModalTab,
+      TodoList
     },
     data() {
-      return {}
+      return {
+        statisticsData: {
+          permissionCount: 10,
+          comment_count: 102400,
+          latest_article: [],
+          month_article_count: 28,
+          operationCount: 1024
+        }
+      }
+    },
+    methods: {
+      logout() {
+        this.$store.dispatch('LogOut').then(() => {
+          location.reload();  // 为了重新实例化vue-router对象 避免bug
+        });
+      },
+      confirmLogout() {
+        this.$refs.modal.open();
+      }
     },
     computed: {
       ...mapGetters([
         'name',
         'avatar',
-        'roles'
+        'roles',
+        'status',
+        'userProfile'
       ])
     }
   };
@@ -49,12 +127,12 @@
 <style scoped>
   .box-card{
     width: 100%;
-    margin: 20px auto;
+    /*margin: 20px auto;*/
   }
+
   .display_name{
     font-size: 30px;
     display: block;
-    text-align: center;
   }
 
   .box-card-header {
@@ -70,4 +148,19 @@
     right: 0px;
     margin: auto;
   }
+  .info-user-item {
+    margin-top: 12px;
+  }
+  .user-profile-content{
+    height: 300px;
+  }
+  .user-card-content{
+    position: relative;
+    left: 50%;
+    margin-left: -55px;
+  }
+
+ .todoList-container{
+   height: 300px;
+ }
 </style>
