@@ -29,3 +29,27 @@ export function updateStudent(student) {
     data:student
   })
 }
+
+export function deleteStudentBatch(studentIds) {
+  return fetch({
+    url:'/student/deleteWithIdArray',
+    method:'delete',
+    data:studentIds
+  })
+}
+
+export function markStudent(studentIds) {
+  return fetch({
+    url:'/student/markStudentsWithArray',
+    method:'put',
+    data:studentIds
+  })
+}
+
+export function unMakrStudent(studentIds) {
+  return fetch({
+    url:'/student/unMarkStudentWithArray',
+    method:'put',
+    data:studentIds
+  })
+}

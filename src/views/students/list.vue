@@ -1,16 +1,16 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="标题" v-model="listQuery.title">
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="学号" v-model="listQuery.studentId">
       </el-input>
 
-      <el-select clearable style="width: 90px" class="filter-item" v-model="listQuery.importance" placeholder="重要性">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item">
+      <el-select clearable style="width: 100px" class="filter-item" v-model="listQuery.grade" placeholder="年级">
+        <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
         </el-option>
       </el-select>
 
-      <el-select clearable class="filter-item" style="width: 130px" v-model="listQuery.type" placeholder="类型">
-        <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key">
+      <el-select clearable class="filter-item" style="width: 130px" v-model="listQuery.className" placeholder="班级">
+        <el-option v-for="item in  classNameOptions" :key="item.key" :label="item" :value="item">
         </el-option>
       </el-select>
 
@@ -19,17 +19,26 @@
         </el-option>
       </el-select>
 
-      <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">搜索</el-button>
+      <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">筛选</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="plus">添加</el-button>
       <el-button class="filter-item" type="primary" icon="document" @click="handleDownload">导出</el-button>
-      <el-button class="filter-item" type="primary" icon="edit" @click="handleDownload">编辑模式</el-button>
-      <!--<el-checkbox class="filter-item" @change='tableKey=tableKey+1' v-model="showAuditor">显示审核人</el-checkbox>-->
+      <el-button class="filter-item" type="primary" icon="delete" v-waves @click="handleBatchDelete" :disabled="!multipleSelection.length">批量删除</el-button>
+      <el-button class="filter-item" type="warning" icon="star-on" v-waves @click="markFavoriteStudent" v-if="multipleSelection.length" >收藏</el-button>
+      <el-button class="filter-item" type="warning" icon="star-off" :plain="true" v-waves @click="unMarkFavoriteStudent" v-if="multipleSelection.length" >取消收藏</el-button>
     </div>
-    <el-table :key='tableKey' :data="studentList" v-loading.body="listLoading" border fit highlight-current-row style="width: 100%">
-
+    <el-table :key='tableKey' :data="studentList"
+              ref="studentTable"
+              v-loading.body="listLoading"
+              border fit
+              highlight-current-row style="width: 100%"
+              @selection-change="handleSelectionChange"
+              @row-click="handleRowClicked">
+      <el-table-column v-if="multipleSelection.length" type="selection" width="55"></el-table-column>
       <el-table-column align="center" label="学号" width="180px">
         <template scope="scope">
-          <span>{{scope.row.studentId}}</span>
+          <el-tooltip class="item" effect="light" :content="scope.row.studentId" placement="top-start">
+            <span>{{scope.row.studentId}}</span>
+          </el-tooltip>
         </template>
       </el-table-column>
 
@@ -53,7 +62,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="130px" align="center" label="专业">
+      <el-table-column width="150px" align="center" label="专业">
         <template scope="scope">
           <span>{{scope.row.profession}}</span>
         </template>
@@ -86,7 +95,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" align="center"  label="任务状态" width="200">
+      <el-table-column class-name="status-col" align="center"  label="任务状态" width="180">
         <template scope="scope">
           <!--<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>-->
           <span>
@@ -95,7 +104,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-if="true" align="center" class-name="status-col" label="标记" width="100px">
+      <el-table-column  align="center" class-name="status-col" label="标记" width="100px">
         <template scope="scope">
           <!--<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>-->
           <el-tag v-if="scope.row.favorite.value" type="warning">
@@ -109,14 +118,8 @@
 
       <el-table-column align="center"  label="操作" min-width="200px">
         <template scope="scope">
-          <!--<el-button v-if="scope.row.status!='published'" size="small" type="success" @click="handleModifyStatus(scope.row,'published')">发布-->
-          <!--</el-button>-->
-          <!--<el-button v-if="scope.row.status!='draft'" size="small" @click="handleModifyStatus(scope.row,'draft')">草稿-->
-          <!--</el-button>-->
-          <!--<el-button v-if="scope.row.status!='deleted'" size="small" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除-->
-          <!--</el-button>-->
-          <el-button size="small" type = "success" @click="handleUpdate(scope.row)">更新</el-button>
-          <el-button size="small" type = "danger" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button size="small" icon="edit"  type = "success" @click="handleUpdate(scope.row)">更新</el-button>
+          <el-button size="small" icon="delete" type = "danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -171,24 +174,19 @@
         <el-button v-else type="primary" @click="update">确 定</el-button>
       </div>
     </el-dialog>
-
-    <el-dialog title="阅读数统计" :visible.sync="dialogPvVisible" size="small">
-      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="渠道"> </el-table-column>
-        <el-table-column prop="pv" label="pv"> </el-table-column>
-      </el-table>
-      <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="dialogPvVisible = false">确 定</el-button>
-    </span>
-    </el-dialog>
-
   </div>
 </template>
 
 <script>
   import { fetchList, fetchPv } from 'api/article_table';
   import { parseTime } from 'utils';
-  import { fetchStudentList ,deleteStudent , createStudent,updateStudent} from 'api/students';
+  import { fetchStudentList,
+           deleteStudent ,
+          createStudent,
+          updateStudent,
+          deleteStudentBatch,
+          markStudent,
+          unMakrStudent} from 'api/students';
 
   const calendarTypeOptions = [
     { key: 'CN', display_name: '中国' },
@@ -204,20 +202,21 @@
   }, {});
 
   export default {
-    name: 'table_demo',
+    name: 'StudentTable',
     data() {
       return {
         total: null,
         listLoading: true,
         listQuery: {
+          studentId: undefined,
+          studentName: undefined,
+          className: undefined,
+          profession:undefined,
+          grade:undefined,
           page: 1,
           limit: 20,
-          importance: undefined,
-          title: undefined,
-          type: undefined,
           sort: '+id'
         },
-        rateValue:3,
         temp: {
           studentId:'',
           studentName:'',
@@ -229,10 +228,13 @@
           finishedTaskCount:0
         },
         studentList: [],
-        importanceOptions: [1, 2, 3],
-        calendarTypeOptions,
-        sortOptions: [{label: '按ID升序列', key: '+id'}, {label: '按ID降序', key: '-id'}],
-//        statusOptions: ['published', 'draft', 'deleted'],
+        queryTypeOptions:[
+          '姓名',
+          '学号'
+        ],
+        sortOptions: [{label: '按学号升序', key: '+id'}, {label: '按学号降序', key: '-id'}],
+        multipleSelection:[],
+        isDisplayFavoriteColumn:false,
         gradeOptions:[
           '2012级',
           '2013级',
@@ -264,7 +266,6 @@
         },
         dialogPvVisible: false,
         pvData: [],
-        showAuditor: false,
         tableKey: 0
       };
     },
@@ -286,20 +287,23 @@
       }
     },
     methods: {
-//      getList() {
-//        this.listLoading = true;
-//        fetchList(this.listQuery).then(response => {
-//          this.list = response.data.items;
-//          this.total = response.data.total;
-//          this.listLoading = false;
-//        })
-//      },
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
+      handleRowClicked(row,event,column) {
+        let lable = column.label;
+        if(lable==='操作'||lable==='姓名'){
+          return;
+        }
+        this.$refs.studentTable.toggleRowSelection(row);
+        this.isDisplayFavoriteColumn = !this.isDisplayFavoriteColumn;
+      },
       getStudentList() {
         let that = this;
         this.listLoading = true;
         fetchStudentList(this.listQuery).then(response => {
           this.studentList = response.students;
-//          this.total = response.students.length;
+          this.total = response.total;
           this.listLoading = false;
         }).catch(error =>{
           that.$message({
@@ -318,6 +322,81 @@
       handleCurrentChange(val) {
         this.listQuery.page = val;
         this.getStudentList();
+      },
+      handleBatchDelete() {
+        let confirmMessage = '您将删除所有被选择学生的信息,是否继续?';
+        let feedbackMessage = '';
+        let studentIds = this.multipleSelection.map(item => item.studentId);
+        let that =this;
+        this.$confirm(confirmMessage,'批量删除学生',{
+          confirmButtonText:'确认',
+          cancelButtonText:'取消',
+          beforeClose: (action,instance,done) =>{
+            if(action ==='confirm'){
+              //显示加载按钮
+              instance.confirmButtonLoading = true;
+              return new Promise((resolve,reject) =>{
+                //通过API发送批量删除请求
+                deleteStudentBatch(studentIds).then(response =>{
+                  instance.confirmButtonLoading=false;
+                  that.feedbackMessage = response.message;
+                  resolve(response);
+                  done();
+                }).catch(error =>{
+                  //捕获错误;
+                  reject(error);
+                  done();
+                })
+              })
+            }
+            //关闭确认框
+            done();
+          }
+        }).then((message) =>{
+          //删除被选中的行
+//          that.studentList = that.studentList.filter(student =>
+//          !that.multipleSelection.some(row => row.studentId === student.studentId));
+          that.getStudentList();
+          that.$message({
+            message: that.feedbackMessage,
+            type: 'success',
+            duration: 1500
+          });
+        }).catch(() =>{
+          this.$message({
+            message: '取消批量删除操作',
+            type: 'info',
+            duration: 1500
+          });
+        })
+      },
+      markFavoriteStudent() {
+        let favoriteStudents = this.multipleSelection.filter(row => !row.favorite.value);
+        let studentIds = favoriteStudents.map(student => student.studentId);
+        let that = this;
+          markStudent(studentIds).then(response =>{
+            favoriteStudents.forEach(student => {
+              student.favorite = {key: '已收藏', value: true};
+            });
+            that.$message({
+              type:'success',
+              message:'收藏成功'
+            })
+          })
+      },
+      unMarkFavoriteStudent() {
+        let favoriteStudents = this.multipleSelection.filter(row => row.favorite.value);
+        let studentIds = favoriteStudents.map(student => student.studentId);
+        let that = this;
+        markStudent(studentIds).then(response =>{
+          favoriteStudents.forEach(student => {
+            student.favorite = {key: '未收藏', value: false};
+          });
+          that.$message({
+            type:'success',
+            message:'已取消收藏'
+          })
+        })
       },
       timeFilter(time) {
         if (!time[0]) {
@@ -347,7 +426,7 @@
       },
       handleDelete(row) {
         let confirmMessage = '您将删除学号为\'' + row.studentId + '\' '
-                              + row.studentName + ' 的所有信息,是否继续?';
+          + row.studentName + ' 的所有信息,是否继续?';
         let that =this;
         let feedbackMessage = '';
         this.$confirm(confirmMessage,'删除学生',{
@@ -454,7 +533,7 @@
             return v[j]
           }
         }))
-      }
+      },
     }
   }
 </script>
