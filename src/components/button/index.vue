@@ -14,7 +14,6 @@
     },
     methods: {
       commitEvent() {
-        console.log("This component is clicked.");
         this.$emit('click');
       }
     },

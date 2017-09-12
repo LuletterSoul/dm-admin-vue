@@ -11,16 +11,21 @@ import 'nprogress/nprogress.css'
 import 'normalize.css/normalize.css'
 import '@/assets/iconfont/iconfont'
 import 'animate.css'
+import vueWaves from './directive/waves';// 水波纹指令
 import Velocity from 'velocity-animate/velocity'
 import VelocityUI from 'velocity-animate/velocity.ui'
 import IconSvg from '@/components/Icon-svg/index.vue'
 import {getToken} from '@/utils/auth'
+import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
 // var Velocity = require('velocity-animate');
 // require('velocity-animate/velocity.ui');
 window.Velocity = window.velocity = Velocity;
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.component('icon-svg', IconSvg);
+Vue.component('sweet-modal', SweetModal);
+Vue.component('sweet-modal-tab', SweetModalTab);
+Vue.use(vueWaves);
 
 const whiteList = ['/login'];
 router.beforeEach((to, from, next) => {
@@ -31,7 +36,7 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.roles.length === 0) {
         store.dispatch('GetInfo').then(res => {
-          const roles = res.userProfile.role;
+          const roles = res.userProfile.roles;
           store.dispatch('GenerateRoutes', {roles}).then(() => {
             router.addRoutes(store.getters.addRouters);
             next({...to});

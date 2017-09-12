@@ -8,10 +8,14 @@ const user = {
     code: '',
     token: getToken(),
     name: '',
+    birthday:'',
     avatar: '',
     introduction: '',
     roles: [],
-    lastLoginTime :''
+    lastLoginTime :'',
+    regionCode:'',
+    gender:'',
+    userProfile: {}
   },
 
   mutations: {
@@ -38,6 +42,15 @@ const user = {
     },
     SET_LAST_LOGIN_TIME:(state,lastLoginTime) =>{
       state.lastLoginTime = lastLoginTime;
+    },
+    SET_REGION_CODE:(state,regionCode) =>{
+      state.regionCode = regionCode;
+    },
+    SET_GENDER(state,gender) {
+      state.gender = gender;
+    },
+    SET_USER_PROFILE(state,profile) {
+      state.userProfile = profile;
     }
   },
 
@@ -63,12 +76,15 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(response => {
           const profile = response.userProfile;
-          commit('SET_ROLES', profile.role);
+          commit('SET_ROLES', profile.roles);
           commit('SET_NAME', profile.name);
           commit('SET_AVATAR', profile.avatar);
           commit('SET_INTRODUCTION', profile.introduction);
           commit('SET_LAST_LOGIN_TIME', profile.lastLoginTime);
           commit('SET_STATUS', profile.status);
+          commit('SET_REGION_CODE', profile.regionCode);
+          commit('SET_GENDER', profile.gender);
+          commit('SET_USER_PROFILE', profile);
           resolve(response);
         }).catch(error => {
           reject(error);

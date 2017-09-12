@@ -71,6 +71,21 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/index',
+
+    hidden: true,
+    children:[
+      {
+        path: 'index',component: _import('user/index'),name: '用户'
+      },
+      {
+        path: 'update',component:_import('user/update'),name: '资料更新'
+      }
+    ]
+  },
+  {
     path:'/students',
     component: Layout,
     redirect: '/students/index',
@@ -78,7 +93,10 @@ export const asyncRouterMap = [
     icon: 'bussinessman',
     children:[
       {
-        path: 'index',component: _import('students/index'),name: 'Students Information'
+        path: 'index',component: _import('students/index'),name: '概览',icon:'survey1'
+      },
+      {
+        path:'list',component:_import('students/list'),name: '学生列表',icon:'group'
       }
     ]
   },

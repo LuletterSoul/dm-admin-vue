@@ -11,11 +11,15 @@
             <balloon :balloon-count="10">
             </balloon>
             <div slot="header">
-              <colorful-button :link="''" :button-style="{float: 'right',marginRight:'-7px'}">
-                设置
+              <colorful-button :link="'/user/update'"
+                               :button-style="{float: 'right',marginRight:'-7px'}">
+                更新
               </colorful-button>
-              <colorful-button @click="confirmLogout" :color="'red-btn'" :button-style="{float: 'right',marginRight:'5px'}">
-                注销
+              <colorful-button :link="'/user'"
+                               @click="$refs.modal.open();"
+                               :color="'light-blue-btn'"
+                               :button-style="{float: 'right',marginRight:'5px'}">
+                详情
               </colorful-button>
               <span style="line-height: 36px;">用户信息</span>
             </div>
@@ -69,12 +73,12 @@
 
 <script>
   import { mapGetters } from 'vuex';
-  import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
+//  import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
   import lineChart from './lineChart';
   import PanThumb from 'components/PanThumb';
   import countTo from 'vue-count-to';
   import ElRow from "element-ui/packages/row/src/row";
-//  import PanThumb from "../../../components/PanThumb/index.vue";
+//  import PanThumb from "../../../components/PanThumb/update.vue";
   import Balloon from 'components/balloon';
   import ColorfulButton from 'components/button';
   import TodoList from 'components/TodoList'
@@ -87,8 +91,6 @@
       lineChart,
       Balloon,
       ColorfulButton,
-      SweetModal,
-      SweetModalTab,
       TodoList
     },
     data() {
@@ -107,9 +109,6 @@
         this.$store.dispatch('LogOut').then(() => {
           location.reload();  // 为了重新实例化vue-router对象 避免bug
         });
-      },
-      confirmLogout() {
-        this.$refs.modal.open();
       }
     },
     computed: {
