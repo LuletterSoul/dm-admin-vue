@@ -388,6 +388,7 @@
         let favoriteStudents = this.multipleSelection.filter(row => row.favorite.value);
         let studentIds = favoriteStudents.map(student => student.studentId);
         let that = this;
+        console.log(studentIds);
         markStudent(studentIds).then(response =>{
           favoriteStudents.forEach(student => {
             student.favorite = {key: '未收藏', value: false};

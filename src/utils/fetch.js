@@ -2,8 +2,9 @@ import axios from 'axios';
 import { Message } from 'element-ui';
 import store from '../store';
 import { getToken } from '@/utils/auth';
-
-
+import HMAC_SHA256 from "crypto-js/hmac-sha256"
+import SHA256 from  "crypto-js/sha256"
+var decodeBase64 = require("crypto-js/enc-base64");
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.BASE_API, // api的base_url
@@ -12,6 +13,15 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use(config => {
+  // // var digest = decodeBase64.stringify(SHA256('123','123'));
+  // var content = '1';
+  // let key = '123';
+  //   // content = HMAC_SHA256(content,key);
+  //   content = content + key;
+  //   for(let i=0;i<5;i++){
+  //     content = SHA256(content);
+  //   }
+  // console.log("content:",decodeBase64.stringify(content));
   if (store.getters.token) {
     config.headers['X-Token'] = getToken(); // 让每个请求携带自定义token 请根据实际情况自行修改
   }
