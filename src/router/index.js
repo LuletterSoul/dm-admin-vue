@@ -53,20 +53,20 @@ export default new Router({
 
 export const asyncRouterMap = [
   {
-    path: '/dataSets',
+    path: '/dataSet',
     component: Layout,
-    redirect: '/dataSets/index',
+    redirect: '/dataSet/index',
     name: 'Data Sets',
     icon: 'data' ,
     children:[
     {
-      path: 'index', component: _import('datasets/index'),name: 'Abstract',icon: 'table'
+      path: 'index', component: _import('datasets/index'),name: '摘要',icon: 'survey'
     },
     {
-      path: 'upload', component: _import('datasets/upload'),name: 'Upload'
+      path: 'upload', component: _import('datasets/upload'),name: '上传',icon:'folder'
     },
       {
-        path: 'edit', component: _import('datasets/edit'),name: 'Edit'
+        path: 'edit', component: _import('datasets/edit'),name: '编辑',icon:'color-filling'
       }
     ]
   },
@@ -74,7 +74,6 @@ export const asyncRouterMap = [
     path: '/user',
     component: Layout,
     redirect: '/user/index',
-
     hidden: true,
     children:[
       {

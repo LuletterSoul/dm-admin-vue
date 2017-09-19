@@ -1,5 +1,5 @@
 <template>
-    <div class="dashboard-admin-container">
+    <div class= "dashboard-admin-container app-container">
       <sweet-modal ref="modal" icon="warning" title="登出">
         确认退出系统吗?
         <el-button type="info" slot="button" @click="logout">确认</el-button>
