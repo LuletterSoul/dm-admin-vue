@@ -5,7 +5,7 @@ export function login(email, password) {
     method: 'post',
     data: {
       email,
-      password
+      password,
     }
   });
 }

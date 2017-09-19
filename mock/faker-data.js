@@ -20,7 +20,6 @@ module.exports = function () {
     dataSetsAbstract: _.times(100,function (n) {
       return{
         id:faker.random.uuid(),
-        
       }
     })
   }

@@ -268,3 +268,11 @@ export function deepClone(source) {
   }
   return targetObj;
 }
+
+export function deepCopyObject(origin) {
+  let copy = {};
+  for(var key in origin) {
+    copy[key] = origin[key];
+  }
+  return copy;
+}

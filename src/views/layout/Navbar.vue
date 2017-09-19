@@ -1,5 +1,10 @@
 <template>
     <el-menu class="navbar" mode="horizontal">
+      <sweet-modal ref="modal" icon="warning" title="登出">
+        确认退出系统吗?
+        <el-button type="info" slot="button" @click="logout">确认</el-button>
+        <el-button :plain="true" type="success" slot="button" @click="$refs.modal.close()">取消</el-button>
+      </sweet-modal>
         <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
         <levelbar></levelbar>
         <el-dropdown class="avatar-container" trigger="click">
@@ -13,7 +18,7 @@
                         Home
                     </el-dropdown-item>
                 </router-link>
-                <el-dropdown-item divided><span @click="logout" style="display:block;">LogOut</span></el-dropdown-item>
+                <el-dropdown-item divided><span @click="$refs.modal.open()" style="display:block;">LogOut</span></el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
     </el-menu>
@@ -21,13 +26,17 @@
 
 <script>
     import { mapGetters } from 'vuex';
+    import ColorfulButton from '@/components/button'
     import Levelbar from './Levelbar';
     import Hamburger from '@/components/Hamburger';
+    import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
 
     export default {
       components: {
         Levelbar,
-        Hamburger
+        Hamburger,
+        SweetModal,
+        SweetModalTab
       },
       computed: {
         ...mapGetters([
