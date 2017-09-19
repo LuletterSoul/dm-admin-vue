@@ -111,6 +111,18 @@ export const asyncRouterMap = [
       }
     ]
   },
+  {
+    path:'/algorithm',
+    component: Layout,
+    redirect:'/algorithm/index',
+    name:"Algorithm Stock",
+    icon:'raw',
+    children:[
+      {
+        path:'index',component:_import('algorithm/index'),name:'算法列表',icon:'Calculator'
+      }
+    ]
+  },
   // {
   //   path: '/table',
   //   component: Layout,
