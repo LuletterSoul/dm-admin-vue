@@ -1,13 +1,10 @@
 <template>
     <div id="app" class="app-container" >
 
-      <div id="title">
+      <div class="title">
         <Icon type="ios-cloud-upload-outline"></Icon>上传数据集
       </div>
 
-      <!--<div id="line">-->
-        <!--<img src="../../assets/line.png"/>-->
-      <!--</div>-->
 
       <div id="upload">
         <Upload action="//jsonplaceholder.typicode.com/posts/">
@@ -16,95 +13,91 @@
       </div>
 
 
-      <div id="form">
         <template>
-          <h2 style="margin-bottom: 20px">上传描述信息：</h2>
-          <Form :model="formItem" label-position="top" >
-          <FormItem label="Abstract">
-            <Input v-model="formItem.abstract" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
-          </FormItem>
-          <FormItem label="Data Set Characteristics">
-            <CheckboxGroup v-model="formItem.characteristics">
-              <Checkbox label="Multivariate"></Checkbox>
-              <Checkbox label="Univariate"></Checkbox>
-              <Checkbox label="Sequential"></Checkbox>
-              <Checkbox label="Time-Series"></Checkbox>
-              <Checkbox label="Text"></Checkbox>
-              <Checkbox label="Domain-Theory"></Checkbox>
-              <Checkbox label="Other"></Checkbox>
+          <div class="form">
+          <Form :model="formItem" label-position="top" class="font">
+            <FormItem label="数据集名称" >
+              <Row>
+                <Col span="10">
+                  <Input v-model="formItem.collectionName" placeholder="请输入"></Input>
+                </Col>
+              </Row>
+            </FormItem>
+            <FormItem label="描述摘要" >
+              <Input v-model="formItem.abstractInfo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
+            </FormItem>
+          <FormItem label="特征">
+            <CheckboxGroup v-model="formItem.characteristics" >
+              <Checkbox style="font-size: 16px;" label="Multivariate">Multivariate</Checkbox>
+              <Checkbox style="font-size: 16px;" label="Univariate">Univariate</Checkbox>
+              <Checkbox style="font-size: 16px;" label="Sequential">Sequential</Checkbox>
+              <Checkbox style="font-size: 16px;" label="Time-Series">Time-Series</Checkbox>
+              <Checkbox style="font-size: 16px;" label="Text">Text</Checkbox>
+              <Checkbox style="font-size: 16px;" label="Domain-Theory">Domain-Theory</Checkbox>
+              <Checkbox style="font-size: 16px;" label="Other">Other</Checkbox>
             </CheckboxGroup>
           </FormItem>
-          <FormItem label="Attribute Characteristics">
-            <CheckboxGroup v-model="formItem.attributeType">
-              <Checkbox label="Categorical"></Checkbox>
-              <Checkbox label="Integer"></Checkbox>
-              <Checkbox label="Real"></Checkbox>
+          <FormItem label="属性类型">
+            <CheckboxGroup v-model="formItem.attributeTypes">
+              <Checkbox style="font-size: 16px;" label="Categorical"></Checkbox>
+              <Checkbox style="font-size: 16px;" label="Integer"></Checkbox>
+              <Checkbox style="font-size: 16px;" label="Real"></Checkbox>
             </CheckboxGroup>
           </FormItem>
-          <FormItem label="Associated Tasks">
+          <FormItem label="相关任务">
             <CheckboxGroup v-model="formItem.associatedTasks">
-              <Checkbox label="Classification"></Checkbox>
-              <Checkbox label="Regression"></Checkbox>
-              <Checkbox label="Clustering"></Checkbox>
-              <Checkbox label="Other"></Checkbox>
+              <Checkbox style="font-size: 16px;" label="Classification"></Checkbox>
+              <Checkbox style="font-size: 16px;" label="Regression"></Checkbox>
+              <Checkbox style="font-size: 16px;" label="Clustering"></Checkbox>
+              <Checkbox style="font-size: 16px;" label="Other"></Checkbox>
             </CheckboxGroup>
           </FormItem>
-          <FormItem label="Number of Instances">
-            <Input v-model="formItem.instances" placeholder="请输入"></Input>
-          </FormItem>
-          <FormItem label="Missing Values?">
-            <RadioGroup v-model="formItem.enableMissing">
-              <Radio label="yes">Yes</Radio>
-              <Radio label="no">No</Radio>
-            </RadioGroup>
-          </FormItem>
-          <FormItem label="Area">
-            <RadioGroup v-model="formItem.area">
-              <Radio label="Life">Life</Radio>
-              <Radio label="Physical">Physical</Radio>
-              <Radio label="Computer">Computer</Radio>
-              <Radio label="Social">Social</Radio>
-              <Radio label="Financial">Financial</Radio>
-              <Radio label="Business">Business</Radio>
-              <Radio label="Game">Game</Radio>
-              <Radio label="Other">Other</Radio>
-            </RadioGroup>
-          </FormItem>
-          <FormItem label="Date Donated">
+          <FormItem label="实例数">
             <Row>
               <Col span="10">
-              <DatePicker type="date" placeholder="选择日期" v-model="formItem.dateDonated"></DatePicker>
+                <Input v-model="formItem.instances" placeholder="请输入"></Input>
               </Col>
             </Row>
           </FormItem>
-          <!--<FormItem label="Number of Web Hits">-->
-            <!--<Input v-model="formItem.numOfWebHits" placeholder="请输入"></Input>-->
-          <!--</FormItem>-->
-          <!--<FormItem label="Source">-->
-            <!--<Input v-model="formItem.source" type="textarea" :autosize="{minRows: 2,maxRows: 50}" placeholder="请输入..."></Input>-->
-          <!--</FormItem>-->
-          <!--<FormItem label="Data Set Information" >-->
-            <!--<Input v-model="formItem.dataSetInfo" type="textarea" :autosize="{minRows: 2,maxRows: 50}" placeholder="请输入..."></Input>-->
-          <!--</FormItem>-->
-          <!--<FormItem label="Attribute Information" >-->
-            <!--<Input v-model="formItem.attInfo" type="textarea" :autosize="{minRows: 2,maxRows: 50}" placeholder="请输入..."></Input>-->
-          <!--</FormItem>-->
-          <FormItem label="Relevant Papers" >
-            <Input v-model="formItem.relevantePapers" type="textarea" :autosize="{minRows: 2,maxRows: 50}" placeholder="请输入..."></Input>
+          <FormItem label="允许缺省?">
+            <RadioGroup v-model="formItem.enableMissing">
+              <Radio style="font-size: 16px;" label="yes">Yes</Radio>
+              <Radio style="font-size: 16px;" label="no">No</Radio>
+            </RadioGroup>
           </FormItem>
-          <!--<FormItem label="Papers That Cite This Data Set" >-->
-            <!--<Input v-model="formItem.papers" type="textarea" :autosize="{minRows: 2,maxRows: 50}" placeholder="请输入..."></Input>-->
-          <!--</FormItem>-->
-          <!--<FormItem label="Citation Request" >-->
-            <!--<Input v-model="formItem.citation" type="textarea" :autosize="{minRows: 2,maxRows: 50}" placeholder="请输入..."></Input>-->
-          <!--</FormItem>-->
-          <FormItem id="title">
-            <Button type="primary" v-model="formItem.submit">提交</Button>
-            <Button type="ghost" style="margin-left: 8px">取消</Button>
+          <FormItem label="来自地区">
+            <RadioGroup v-model="formItem.area">
+              <Radio style="font-size: 16px;" label="Life">Life</Radio>
+              <Radio style="font-size: 16px;" label="Physical">Physical</Radio>
+              <Radio style="font-size: 16px;" label="Computer">Computer</Radio>
+              <Radio style="font-size: 16px;" label="Social">Social</Radio>
+              <Radio style="font-size: 16px;" label="Financial">Financial</Radio>
+              <Radio style="font-size: 16px;" label="Business">Business</Radio>
+              <Radio style="font-size: 16px;" label="Game">Game</Radio>
+              <Radio style="font-size: 16px;" label="Other">Other</Radio>
+            </RadioGroup>
+          </FormItem>
+          <FormItem label="捐赠时间">
+            <Row>
+              <Col span="10">
+              <DatePicker :type="date" placeholder="选择日期" v-model="formItem.dateDonated"></DatePicker>
+              </Col>
+            </Row>
+          </FormItem>
+          <FormItem label="Number of Web Hits">
+            <Input v-model="formItem.hit" placeholder="请输入"></Input>
+          </FormItem>
+          <FormItem label="相关论文" >
+            <Input v-model="formItem.relevantPapers" type="textarea" :autosize="{minRows: 2,maxRows: 50}" placeholder="请输入..."></Input>
+          </FormItem>
+          <FormItem class="title">
+            <Button style="font-size: 16px;" type="primary" v-model="formItem.submit">提交</Button>
+            <Button type="ghost" style="margin-left: 8px;font-size: 16px;">取消</Button>
           </FormItem>
         </Form>
+          </div>
       </template>
-      </div>
+
 
 
   </div>
@@ -119,22 +112,22 @@
         data() {
             return {
               formItem: {
-                abstract: '',
+                collectionName:'',
+                abstractInfo: '',
                 characteristics:[],
-                attributeType:[],
+                attributeTypes:[],
                 associatedTasks:[],
                 instances:'',
                 enableMissing:'',
                 area:'',
-                dateDonated: '',
- //               numOfWebHits:'',
-//                source:'',
- //               dataSetInfo:'',
-  //              attInfo:'',
-                relevantePapers:'',
-//                papers:'',
- //               citation:'',
-   //             submit:''
+                dateDonated: new Date(),
+                hits:0,
+                relevantPapers:'',
+                submit:''
+              },
+              missingMap:{
+                "yes":true,
+                "no":false
               }
             }
         }
@@ -146,20 +139,22 @@
     background-color:transparent;
     margin:0px auto;
   }
-  #title{
+  .title{
+    margin-top: 20px;
+    margin-bottom: 20px;
     width:20%;
     font:bold 36px 微软雅黑;
-  }
-  #line{
-    width:58%;
   }
   #upload{
     width:12%;
     margin-top: 20px;
     margin-bottom: 20px;
   }
-  #form{
-    width:50%;
-    font-size:14px ;
+  .form{
+    width:80%;
+  }
+  .font.ivu-form .ivu-form-item-label{
+    font-size:16px;
+    font-weight:bold;
   }
 </style>

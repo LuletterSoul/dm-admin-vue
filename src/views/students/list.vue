@@ -1,5 +1,8 @@
 <template>
-  <div class="calendar-list-container">
+  <div class="calendar-list-container test">
+    <div class="title">
+      学生信息管理
+    </div>
     <div class="filter-container">
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="学号" v-model="listQuery.studentId">
       </el-input>
@@ -74,18 +77,6 @@
         </template>
       </el-table-column>
 
-
-      <!--<el-table-column width="110px" v-if='showAuditor' align="center" label="审核人">-->
-      <!--<template scope="scope">-->
-      <!--<span style='color:red;'>{{scope.row.auditor}}</span>-->
-      <!--</template>-->
-      <!--</el-table-column>-->
-
-      <!--<el-table-column width="80px" label="重要性">-->
-      <!--<template scope="scope">-->
-      <!--<icon-svg v-for="n in +scope.row.importance" icon-class="wujiaoxing" class="meta-item__icon" :key="n"></icon-svg>-->
-      <!--</template>-->
-      <!--</el-table-column>-->
 
       <el-table-column align="center" label="参与任务数" width="120px">
         <template scope="scope">
@@ -541,11 +532,24 @@
 
 <style lang="scss">
   .filter-container {
-    padding-bottom: 10px;
+    padding-right: 20px;
+    float:right;
     .filter-item {
       display: inline-block;
       vertical-align: middle;
       margin-bottom: 10px;
     }
+  }
+  .test{
+    padding: 20px;
+  }
+  .title{
+    margin-bottom: 20px;
+    width:22%;
+    font:bold 36px 微软雅黑;
+  }
+  div{
+    background-color:transparent;
+    margin:0px auto;
   }
 </style>

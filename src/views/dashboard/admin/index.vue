@@ -1,12 +1,35 @@
 <template>
-    <div class= "dashboard-admin-container app-container">
-      <sweet-modal ref="modal" icon="warning" title="登出">
+    <div>
+      <div class="title">主页</div>
+
+      <sweet-modal class="ask" ref="modal" icon="warning" title="登出">
         确认退出系统吗?
         <el-button type="info" slot="button" @click="logout">确认</el-button>
         <el-button :plain="true" type="success" slot="button" @click="$refs.modal.close()">取消</el-button>
       </sweet-modal>
-      <el-row>
-        <el-col :span="6">
+
+      <div class="first-div">
+      <div class="welcome">
+        <el-card class="user-profile-content">
+          <balloon :balloon-count="10">
+          </balloon>
+          <div slot="header">
+            <span style="line-height: 20px; font-size: 20px; font-weight: bold;">欢迎</span>
+          </div>
+          <div>
+            <p style="font-size: 16px;"><router-link to="../dataSet/index"><Icon type="ios-analytics-outline"></Icon>数据集管理</router-link></p><br>
+            <p style="font-size: 16px;"><router-link to="../students/list"><Icon type="person"></Icon>学生信息管理</router-link></p><br>
+            <p style="font-size: 16px;"><router-link to="../tasks/index"><Icon type="ios-alarm-outline"></Icon>实践任务管理</router-link></p><br>
+            <!--<p style="font-size: 16px;"><router-link to="../algorithm/index"><Icon type="ios-list-outline"></Icon>数据挖掘管理</router-link></p>-->
+          </div>
+        </el-card>
+      </div>
+
+      <div class="todoList-container">
+        <todo-list></todo-list>
+      </div>
+
+        <div class="info">
           <el-card class="user-profile-content">
             <balloon :balloon-count="10">
             </balloon>
@@ -15,15 +38,15 @@
                                :button-style="{float: 'right',marginRight:'-7px'}">
                 更新
               </colorful-button>
-              <colorful-button :link="'/user'"
-                               @click="$refs.modal.open();"
-                               :color="'light-blue-btn'"
-                               :button-style="{float: 'right',marginRight:'5px'}">
-                详情
-              </colorful-button>
-              <span style="line-height: 36px;">用户信息</span>
+              <!--<colorful-button :link="'/user'"-->
+                               <!--@click="$refs.modal.open();"-->
+                               <!--:color="'light-blue-btn'"-->
+                               <!--:button-style="{float: 'right',marginRight:'5px'}">-->
+                <!--详情-->
+              <!--</colorful-button>-->
+              <span style="line-height: 36px; font-size: 20px; font-weight: bold">用户信息</span>
             </div>
-            <div>
+            <div style="font-size: 16px;">
               <p>用户名: {{  userProfile.name }}</p>
               <p>个性签名: {{  userProfile.introduction }}</p>
               <p>上一次登录时间:  {{ userProfile.lastLoginTime }}</p>
@@ -33,41 +56,40 @@
             <!--{{'列表内容 ' + o }}-->
             <!--</div>-->
           </el-card>
-        </el-col>
-        <el-col :span="10" :offset="1">
-          <div class="todoList-container">
-            <todo-list></todo-list>
-          </div>
+        </div>
 
-        </el-col>
-        <el-col :span="6" :offset="1">
-          <el-card class="box-card">
-            <div slot="header" class="box-card-header">
-              <pan-thumb class="panThumb" :image="avatar">
-                Pain and pleasure,like light and darkness,succeed each other.
-              </pan-thumb>
-            </div>
-            <div class="user-card-content">
-              <span class="display_name">{{name}}</span>
-              <div class="info-user-item">
-                <icon-svg :icon-class="'browse'" ></icon-svg>
-                <countTo class="info-item-num" :startVal='0' :endVal='statisticsData.permissionCount' :duration='3400'></countTo>
-                <span class="info-item-text">权限数</span>
-              </div>
-              <div class="info-user-item">
-                <icon-svg :icon-class="'operation'"></icon-svg>
-                <countTo class="info-item-num" :startVal='0' :endVal='statisticsData.operationCount' :duration='3600'></countTo>
-                <span class="info-item-text">操作数</span>
-              </div>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-      <el-row :gutter="10">
-        <el-col :span="24">
-          <line-chart></line-chart>
-        </el-col>
-      </el-row>
+      </div>
+
+
+    <div class="second-div">
+
+      <div class="chart">
+        <line-chart></line-chart>
+      </div>
+
+      <div class="user">
+        <div slot="header" class="box-card-header">
+          <pan-thumb class="panThumb" :image="avatar">
+            Pain and pleasure,like light and darkness,succeed each other.
+          </pan-thumb>
+        </div>
+        <div class="user-card-content">
+          <span class="display_name">{{name}}</span>
+          <div class="info-user-item">
+            <icon-svg :icon-class="'browse'" ></icon-svg>
+            <countTo class="info-item-num" :startVal='0' :endVal='statisticsData.permissionCount' :duration='3400'></countTo>
+            <span class="info-item-text">权限数</span>
+          </div>
+          <div class="info-user-item">
+            <icon-svg :icon-class="'operation'"></icon-svg>
+            <countTo class="info-item-num" :startVal='0' :endVal='statisticsData.operationCount' :duration='3600'></countTo>
+            <span class="info-item-text">操作数</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
     </div>
 </template>
 
@@ -123,12 +145,23 @@
   };
 </script>
 
-<style scoped>
-  .box-card{
-    width: 100%;
-    /*margin: 20px auto;*/
+<style>
+  .title{
+    width:15%;
+    font:bold 36px 微软雅黑;
   }
-
+  .first-div{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 300px;
+  }
+  .welcome{
+    font-size: 16px;
+    background-color: transparent;
+    width:20%;
+    height: 300px;
+    float: left;
+  }
   .display_name{
     font-size: 30px;
     display: block;
@@ -149,17 +182,44 @@
   }
   .info-user-item {
     margin-top: 12px;
+    font-size: 16px;
   }
   .user-profile-content{
     height: 300px;
+    background-color: transparent;
   }
   .user-card-content{
     position: relative;
     left: 50%;
     margin-left: -55px;
+    background-color: transparent;
   }
-
+  .user{
+    width:20%;
+    height: 300px;
+    float: left;
+  }
  .todoList-container{
    height: 300px;
+   width:45%;
+   float: left;
+   margin-left:20px;
+   margin-right:20px;
  }
+  .second-div{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 300px;
+  }
+  .chart{
+    height: 300px;
+    width: 80%;
+    float: left;
+  }
+  .info{
+    height: 300px;
+    width: 30%;
+    float: left;
+
+  }
 </style>
