@@ -11,7 +11,7 @@
       </div>
 
 
-      <div style="margin-top:60px;clear:right;">
+      <div style="margin-top:60px;clear:right;padding: 20px;">
         <template>
           <Table border :columns="dataSetTable1" :data="dataSet1" @on-selection-change="change" stripe ></Table>
             <div style="margin: 10px;overflow: hidden">
@@ -33,10 +33,10 @@
 
          <Form :model="temp" :label-width="80">
            <FormItem label="Name">
-             <Input v-model="temp.setName" placeholder="请输入"></Input>
+             <Input v-model="temp.collectionName" placeholder="请输入"></Input>
            </FormItem>
            <FormItem label="Data Types">
-             <CheckboxGroup v-model="temp.dataTypes">
+             <CheckboxGroup v-model="temp.characteristics">
                <Checkbox label="Multivariate"></Checkbox>
                <Checkbox label="Univariate"></Checkbox>
                <Checkbox label="Sequential"></Checkbox>
@@ -55,7 +55,7 @@
              </CheckboxGroup>
            </FormItem>
            <FormItem label="Attribute Types">
-             <CheckboxGroup v-model="temp.attributeType">
+             <CheckboxGroup v-model="temp.attributeTypes">
                <Checkbox label="Categorical"></Checkbox>
                <Checkbox label="Integer"></Checkbox>
                <Checkbox label="Real"></Checkbox>
@@ -90,19 +90,6 @@
     updateDataSet,
     deleteDataSetsBatch} from 'api/datasets';
 
-  const calendarTypeOptions = [
-    { key: 'CN', display_name: '中国' },
-    { key: 'US', display_name: '美国' },
-    { key: 'JP', display_name: '日本' },
-    { key: 'EU', display_name: '欧元区' }
-  ];
-
-  // arr to obj
-  const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
-    acc[cur.key] = cur.display_name;
-    return acc
-  }, {});
-
   export default {
         name: 'app',
         data () {
@@ -113,14 +100,14 @@
               width: 60,
               align: 'center'
             },
-            {
-              title: '编号',
-              key: 'dataSetId',
-              sortable: true
-            },
+//            {
+//              title: '编号',
+//              key: 'collectionId',
+//              sortable: true
+//            },
             {
               title: '名称',
-              key: 'setName',
+              key: 'collectionName',
               sortable: true
             },
             {
@@ -135,7 +122,7 @@
             },
             {
               title: '属性类型',
-              key: 'attributeType',
+              key: 'attributeTypes',
               sortable: true
             },
             {
@@ -200,33 +187,33 @@
           ],
           dataSet1: [
             {
-              dataSetId:'111',
-              setName:'mino',
+              collectionId:'111',
+              collectionName:'mino',
               characteristics:'roro',
               associatedTasks:'hoony',
-              attributeType:'yoon',
+              attributeTypes:'yoon',
               instances:0,
               dateDonated:'jinu'
             }
           ],
           listQuery: {
-            dataSetId: undefined,
-            setName: undefined,
-            characteristics:undefined,
-            associatedTasks:undefined,
-            attributeType:undefined,
-            instances:0,
-            dateDonated:undefined,
+//            collectionId: undefined,
+//            collectionName: undefined,
+//            characteristics:undefined,
+//            associatedTasks:undefined,
+//            attributeTypes:undefined,
+//            instances:0,
+//            dateDonated:undefined,
             page: 1,
-            limit: 20,
-            sort: '+id'
+            size: 20,
+            sort: 'collectionName'
           },
           temp:{
-            dataSetId:'',
-            setName:'',
-            characteristics:'',
-            associatedTasks:'',
-            attributeType:'',
+            collectionId:'',
+            collectionName:'',
+            characteristics:[],
+            associatedTasks:[],
+            attributeTypes:[],
             instances:0,
             dateDonated:''
           },
@@ -239,19 +226,6 @@
       },
       created() {
         this.getDatasetList();
-      },
-      filters: {
-        statusFilter(status) {
-          const statusMap = {
-            published: 'success',
-            draft: 'gray',
-            deleted: 'danger'
-          };
-          return statusMap[status]
-        },
-        typeFilter(type) {
-          return calendarTypeKeyValue[type]
-        }
       },
       methods: {
         getDatasetList() {
@@ -278,14 +252,14 @@
         show (index) {
           this.$Modal.info({
             title: 'information',
-            content: `编号：${this.dataSet1[index].dataSetId}<br>名称：${this.dataSet1[index].setName}<br>数据特征：${this.dataSet1[index].characteristics}
-                    <br>相关任务：${this.dataSet1[index].associatedTasks}<br>属性类型：${this.dataSet1[index].attributeType}<br>实例数：${this.dataSet1[index].attributeType}
+            content: `编号：${this.dataSet1[index].collectionId}<br>名称：${this.dataSet1[index].collectionName}<br>数据特征：${this.dataSet1[index].characteristics}
+                    <br>相关任务：${this.dataSet1[index].associatedTasks}<br>属性类型：${this.dataSet1[index].attributeTypes}<br>实例数：${this.dataSet1[index].attributeTypes}
                     <br>捐赠时间：${this.dataSet1[index].dateDonated}`
           })
         },
         remove (index) {
-          let confirmMessage = '您将删除序号为\'' + index.dataSetId + '\' '
-            + index.setName + ' 的所有信息,是否继续?';
+          let confirmMessage = '您将删除序号为\'' + index.collectionId + '\' '
+            + index.collectionName + ' 的所有信息,是否继续?';
           let that =this;
           let feedbackMessage = '';
           this.$confirm(confirmMessage,'删除数据集',{
@@ -296,7 +270,7 @@
               if(action==='confirm'){
                 instance.confirmButtonLoading = true;
                 return new Promise((resolve, reject) => {
-                  deleteDataset(row.dataSetId).then((response) => {
+                  deleteDataset(row.collectionId).then((response) => {
                     feedbackMessage = response.message;
                     instance.confirmButtonLoading = false;
                     this.$Message.info('删除成功');
@@ -329,7 +303,7 @@
           updateDatasets(this.temp).then(response =>{
             let message = response.message;
             for (const v of this.datasetsList) {
-              if (v.dataSetId === this.temp.dataSetId) {
+              if (v.collectionId === this.temp.collectionId) {
                 const index = this.datasetList.indexOf(v);
                 this.datasetList.splice(index, 1, this.temp);
                 break;
@@ -352,7 +326,7 @@
         delrow(){
           let confirmMessage = '您将删除所选数据集,是否继续?';
           let feedbackMessage = '';
-          let dataSetId = this.selection.map(item => item.dataSetId);
+          let dataSetId = this.selection.map(item => item.collectionId);
           let that =this;
           this.$confirm(confirmMessage,'批量删除数据集',{
             confirmButtonText:'确认',
@@ -389,7 +363,7 @@
 //        showdata(){
 //          this.$Modal.info({
 //            title: 'information2',
-//            content: `a：${this.selection[0].setName}<br>年龄：${this.selection.length}`
+//            content: `a：${this.selection[0].collectionName}<br>年龄：${this.selection.length}`
 //          })
 //        },
         handleSizeChange(val) {
@@ -403,12 +377,16 @@
   div{
     background-color:transparent;
     margin:0px auto;
+    font-size:16px;
   }
   #title{
+    margin-top: 20px;
+    margin-bottom: 20px;
     width:22%;
     font:bold 36px 微软雅黑;
   }
   .upload{
+    padding-right: 20px;
     margin-top:20px;
     float:right;
   }

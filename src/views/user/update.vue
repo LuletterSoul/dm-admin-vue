@@ -1,5 +1,5 @@
 <template>
-    <div id="updateUser">
+    <div id="updateUser" class="app-container">
       <el-row>
         <el-col :span="16">
           <div class="demo-block demo-box">

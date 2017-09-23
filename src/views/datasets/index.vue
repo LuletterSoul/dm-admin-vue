@@ -1,12 +1,12 @@
 <template>
-    <div id="app" class="app-container">
+    <div id="app">
 
       <div id="title">
         数据集库展示
       </div>
 
 
-      <div style="margin-top:20px">
+      <div style="margin-top:20px ;padding: 20px;">
         <template>
           <Table :columns="dataSetTable0" :data="dataSet0" stripe></Table>
             <div style="margin: 10px;overflow: hidden">
@@ -33,14 +33,14 @@
       data () {
         return {
           dataSetTable0: [
-            {
-              title: '编号',
-              key: 'dataSetId',
-              sortable: true
-            },
+//            {
+//              title: '编号',
+//              key: 'collectionId',
+//              sortable: true
+//            },
             {
               title: '名称',
-              key: 'setName',
+              key: 'collectionName',
               sortable: true
             },
             {
@@ -55,14 +55,14 @@
             },
             {
               title: '属性类型',
-              key: 'attributeType',
+              key: 'attributeTypes',
               sortable: true
             },
-            {
-              title: '实例数',
-              key: 'instances',
-              sortable: true
-            },
+//            {
+//              title: '实例数',
+//              key: 'instances',
+//              sortable: true
+//            },
             {
               title: '捐赠时间',
               key: 'dateDonated',
@@ -71,11 +71,11 @@
           ],
           dataSet0: [
             {
-              dataSetId: '111',
-              setName: 'mino',
+              collectionId: '111',
+              collectionName: 'mino',
               characteristics: 'roro',
               associatedTasks: 'hoony',
-              attributeType: 'yoon',
+              attributeTypes: 'yoon',
               instances: 0,
               dateDonated: 'jinu'
             }
@@ -94,8 +94,11 @@
   div{
     background-color:transparent;
     margin:0px auto;
+    font-size:16px;
   }
   #title{
+    margin-top: 20px;
+    margin-bottom: 20px;
     width:22%;
     font:bold 36px 微软雅黑;
   }

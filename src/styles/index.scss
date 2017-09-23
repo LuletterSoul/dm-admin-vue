@@ -58,10 +58,6 @@ a:hover {
   min-height: 100%
 }
 
-.app-container {
-
-}
-
 .svg-icon {
   width: 1em;
   height: 1em;
@@ -80,7 +76,10 @@ a:hover {
 }
 
 .pagination-container {
-  margin-top: 30px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-right: 20px;
+  float:right;
 }
 
 .app-container{

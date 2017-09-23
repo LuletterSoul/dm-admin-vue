@@ -10,14 +10,14 @@ export function fetchDataSetList(query) {
 
 export function deleteDataSet(dataSetId) {
   return fetch({
-    url:'/dataSet/'+dataSetId,
+    url:'/dataSets/'+dataSetId,
     method:'delete'
   })
 }
 
 export function createDataSet(dataSet) {
   return fetch({
-    url:'/dataSet',
+    url:'/dataSets',
     method:'post',
     data:dataSet
   })
@@ -25,16 +25,16 @@ export function createDataSet(dataSet) {
 
 export function updateDataSet(dataSet) {
   return fetch({
-    url:'/dataSet',
+    url:'/dataSets',
     method:'put',
     data:dataSet
   })
 }
 
-export function deleteDataSetsBatch(dataSetIds) {
+export function deleteDataSetsBatch(collectionIds) {
   return fetch({
-    url:'/dataSet/deleteWithIdArray',
+    url:'/dataSets/deleteWithArray',
     method:'delete',
-    data:dataSetIds
+    data:collectionIds
   })
 }

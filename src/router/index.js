@@ -21,28 +21,28 @@ const Table = _import('table/index');
 
 Vue.use(Router);
 
- /**
-  * icon : the icon show in the sidebar
-  * hidden : if `hidden:true` will not show in the sidebar
-  * redirect : if `redirect:noredirect` will not redirct in the levelbar
-  * noDropdown : if `noDropdown:true` will not has submenu in the sidebar
-  * meta : `{ role: ['admin'] }`  will control the page role
-  **/
+/**
+ * icon : the icon show in the sidebar
+ * hidden : if `hidden:true` will not show in the sidebar
+ * redirect : if `redirect:noredirect` will not redirct in the levelbar
+ * noDropdown : if `noDropdown:true` will not has submenu in the sidebar
+ * meta : `{ role: ['admin'] }`  will control the page role
+ **/
 export const constantRouterMap = [
   { path: '/login', component: _import('login/index'), hidden: true },
   { path: '/404', component: Err404, hidden: true },
-   {
-     path: '/',
-     component: Layout,Dashboard,
-     redirect: '/home/index',
-     icon: 'home',
-     noDropdown:true,
-     children:[
-       {
-         path:'home/index',component:_import('dashboard/index'),name: 'Home'
-       }
-     ]
-   }
+  {
+    path: '/',
+    component: Layout,Dashboard,
+    redirect: '/home/index',
+    icon: 'home',
+    noDropdown:true,
+    children:[
+      {
+        path:'home/index',component:_import('dashboard/index'),name: '主页'
+      }
+    ]
+  }
 ];
 
 export default new Router({
@@ -56,17 +56,20 @@ export const asyncRouterMap = [
     path: '/dataSet',
     component: Layout,
     redirect: '/dataSet/index',
-    name: 'Data Sets',
+    name: '数据集',
     icon: 'data' ,
     children:[
-    {
-      path: 'index', component: _import('datasets/index'),name: '摘要',icon: 'survey'
-    },
-    {
-      path: 'upload', component: _import('datasets/upload'),name: '上传',icon:'folder'
-    },
+      {
+        path: 'index', component: _import('datasets/index'),name: '摘要',icon: 'survey'
+      },
+      {
+        path: 'upload', component: _import('datasets/upload'),name: '上传',icon:'folder'
+      },
       {
         path: 'edit', component: _import('datasets/edit'),name: '编辑',icon:'color-filling'
+      },
+      {
+        path: 'dataSet', component: _import('datasets/dataSet'),name: '具体页',icon:'survey1'
       }
     ]
   },
@@ -88,12 +91,12 @@ export const asyncRouterMap = [
     path:'/students',
     component: Layout,
     redirect: '/students/index',
-    name: 'Students',
+    name: '学生',
     icon: 'bussinessman',
     children:[
-      {
-        path: 'index',component: _import('students/index'),name: '概览',icon:'survey1'
-      },
+      // {
+      //   path: 'index',component: _import('students/index'),name: '概览',icon:'survey1'
+      // },
       {
         path:'list',component:_import('students/list'),name: '学生列表',icon:'group'
       }
@@ -103,23 +106,17 @@ export const asyncRouterMap = [
     path: '/tasks',
     component: Layout,
     redirect: '/tasks/index',
-    name:"Data Mining Tasks",
+    name:"任务",
     icon: 'task-management',
     children: [
       {
-        path: 'index',component: _import('tasks/index')
-      }
-    ]
-  },
-  {
-    path:'/algorithm',
-    component: Layout,
-    redirect:'/algorithm/index',
-    name:"Algorithm Stock",
-    icon:'raw',
-    children:[
+        path: 'index',component: _import('tasks/index'),name: '任务列表',icon:'survey1'
+      },
       {
-        path:'index',component:_import('algorithm/index'),name:'算法列表',icon:'Calculator'
+        path: 'create',component: _import('tasks/create'),name: '新建任务',icon:'home'
+      },
+      {
+        path: 'concreteTask',component: _import('tasks/concreteTask'),name: '任务信息',icon:'home'
       }
     ]
   },
