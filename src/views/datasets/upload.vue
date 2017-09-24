@@ -1,13 +1,13 @@
 <template>
     <div id="app" class="app-container" >
 
-      <div class="title">
+      <div class="UploadTitle">
         <Icon type="ios-cloud-upload-outline"></Icon>上传数据集
       </div>
 
 
-      <div id="upload">
-        <Upload action="//jsonplaceholder.typicode.com/posts/">
+      <div class="upload">
+        <Upload multiple action="//jsonplaceholder.typicode.com/posts/">
           <Button type="ghost" icon="ios-cloud-upload-outline">上传数据集</Button>
         </Upload>
       </div>
@@ -26,7 +26,7 @@
             <FormItem label="描述摘要" >
               <Input v-model="formItem.abstractInfo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
             </FormItem>
-          <FormItem label="特征">
+          <FormItem label="数据特征">
             <CheckboxGroup v-model="formItem.characteristics" >
               <Checkbox style="font-size: 16px;" label="Multivariate">Multivariate</Checkbox>
               <Checkbox style="font-size: 16px;" label="Univariate">Univariate</Checkbox>
@@ -139,13 +139,13 @@
     background-color:transparent;
     margin:0px auto;
   }
-  .title{
+  .UploadTitle{
     margin-top: 20px;
     margin-bottom: 20px;
     width:20%;
     font:bold 36px 微软雅黑;
   }
-  #upload{
+  .upload{
     width:12%;
     margin-top: 20px;
     margin-bottom: 20px;

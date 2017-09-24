@@ -1,7 +1,7 @@
 <template>
     <div id="app" class="app-container">
 
-      <div id="title">
+      <div class="dataSetTabletitle">
          数据集库管理
       </div>
 
@@ -46,6 +46,13 @@
                <Checkbox label="Other"></Checkbox>
              </CheckboxGroup>
            </FormItem>
+           <FormItem label="Attribute Types">
+             <CheckboxGroup v-model="temp.attributeTypes">
+               <Checkbox label="Categorical"></Checkbox>
+               <Checkbox label="Integer"></Checkbox>
+               <Checkbox label="Real"></Checkbox>
+             </CheckboxGroup>
+           </FormItem>
            <FormItem label="Default Task">
              <CheckboxGroup v-model="temp.associatedTasks">
                <Checkbox label="Classification"></Checkbox>
@@ -54,29 +61,18 @@
                <Checkbox label="Other"></Checkbox>
              </CheckboxGroup>
            </FormItem>
-           <FormItem label="Attribute Types">
-             <CheckboxGroup v-model="temp.attributeTypes">
-               <Checkbox label="Categorical"></Checkbox>
-               <Checkbox label="Integer"></Checkbox>
-               <Checkbox label="Real"></Checkbox>
-             </CheckboxGroup>
+           <FormItem label="instances">
+              <Input v-model="temp.instances" placeholder="请输入"></Input>
            </FormItem>
-             <FormItem label="#instances">
-               <Input v-model="temp.instances" placeholder="请输入"></Input>
-             </FormItem>
-             <FormItem label="Date Donated">
-               <Row>
-                 <Col span="10">
+           <FormItem label="Date Donated">
+             <Row>
+               <Col span="10">
                  <DatePicker type="date" placeholder="选择日期" v-model="temp.dateDonated"></DatePicker>
-                 </Col>
-               </Row>
-             </FormItem>
+               </Col>
+             </Row>
+           </FormItem>
          </Form>
-
       </Modal>
-
-
-
 
     </div>
 </template>
@@ -100,13 +96,8 @@
               width: 60,
               align: 'center'
             },
-//            {
-//              title: '编号',
-//              key: 'collectionId',
-//              sortable: true
-//            },
             {
-              title: '名称',
+              title: '数据集名称',
               key: 'collectionName',
               sortable: true
             },
@@ -237,29 +228,16 @@
             this.$Message.info('出错');
           })
         },
-        handleFilter() {
-          this.getStudentList();
-        },
-        timeFilter(time) {
-          if (!time[0]) {
-            this.listQuery.start = undefined;
-            this.listQuery.end = undefined;
-            return;
-          }
-          this.listQuery.start = parseInt(+time[0] / 1000);
-          this.listQuery.end = parseInt((+time[1] + 3600 * 1000 * 24) / 1000);
-        },
         show (index) {
           this.$Modal.info({
             title: 'information',
-            content: `编号：${this.dataSet1[index].collectionId}<br>名称：${this.dataSet1[index].collectionName}<br>数据特征：${this.dataSet1[index].characteristics}
-                    <br>相关任务：${this.dataSet1[index].associatedTasks}<br>属性类型：${this.dataSet1[index].attributeTypes}<br>实例数：${this.dataSet1[index].attributeTypes}
-                    <br>捐赠时间：${this.dataSet1[index].dateDonated}`
+            content: `数据集名称：${this.dataSet1[index].collectionName}<br>数据特征：${this.dataSet1[index].characteristics}
+                    <br>相关任务：${this.dataSet1[index].associatedTasks}<br>属性类型：${this.dataSet1[index].attributeTypes}<br>
+                    实例数：${this.dataSet1[index].attributeTypes}<br>捐赠时间：${this.dataSet1[index].dateDonated}`
           })
         },
         remove (index) {
-          let confirmMessage = '您将删除序号为\'' + index.collectionId + '\' '
-            + index.collectionName + ' 的所有信息,是否继续?';
+          let confirmMessage = '您将数据集 ' + index.collectionName + ' 的所有信息,是否继续?';
           let that =this;
           let feedbackMessage = '';
           this.$confirm(confirmMessage,'删除数据集',{
@@ -360,12 +338,6 @@
             this.$Message.info('取消批量删除');
           })
         },
-//        showdata(){
-//          this.$Modal.info({
-//            title: 'information2',
-//            content: `a：${this.selection[0].collectionName}<br>年龄：${this.selection.length}`
-//          })
-//        },
         handleSizeChange(val) {
           console.log(`每页 ${val} 条`);
         }
@@ -379,7 +351,7 @@
     margin:0px auto;
     font-size:16px;
   }
-  #title{
+  .dataSetTabletitle{
     margin-top: 20px;
     margin-bottom: 20px;
     width:22%;
@@ -390,4 +362,5 @@
     margin-top:20px;
     float:right;
   }
+
 </style>

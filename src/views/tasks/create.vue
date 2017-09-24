@@ -13,13 +13,22 @@
           </el-input>
         </el-form-item>
 
-        <el-form-item label="数据集编号">
-          <el-checkbox-group  v-model="temp.selectionId">
-            <el-checkbox-button v-for="dataSet in dataSets" :label="dataSet" :key="dataSet">{{dataSet}}</el-checkbox-button>
-          </el-checkbox-group>
+        <el-form-item
+          v-for="(domain, index) in domains"
+          :key="domain.key"
+          :prop="'domains.' + index + '.value'"
+          :label="'选择数据集' + index">
+          <el-cascader
+            :options="dataSetOptions"
+            v-model="domain.value"
+            @change="handleChange">
+          </el-cascader>
+          <el-button @click.prevent="removeDomain(domain)">删除</el-button>
         </el-form-item>
+          <el-button @click="addDomain" class="add">关联数据集</el-button>
 
-        <el-form-item label="算法编号">
+
+        <el-form-item label="选择算法">
           <el-select style="width: 450px;" v-model="temp.algorithmId" multiple placeholder="请选择">
             <el-option
               v-for="item in options"
@@ -54,12 +63,12 @@
 </template>
 
 <script type="text/javascript">
-  const dataSetOptions = ['01','02','03','04','05','06','07','08','09'];
+
   export default {
     name: 'app',
     data () {
       return {
-        labelPosition:'top',
+        labelPosition: 'top',
         options: [{
           value: '选项1',
           label: '01'
@@ -75,16 +84,178 @@
         }, {
           value: '选项5',
           label: '05'
-        }],
-        temp:{
+        }
+        ],
+        temp: {
           taskId: '',
           selectionId: [],
           algorithmId: [],
-          startTime:'',
-          finishTime:''
+          startTime: '',
+          finishTime: ''
         },
-        dataSets: dataSetOptions
-      }
+        dataSetOptions: [{
+          value: 'characteristics',
+          label: '数据特征',
+          children: [{
+            value: 'Multivariate',
+            label: '多变量',
+            children: [{
+              value: 'lalalal',
+              label: '一致数据集'
+            }, {
+              value: 'fankui',
+              label: '反馈数据集'
+            }, {
+              value: 'xiaolv',
+              label: '效率数据集'
+            }]
+          },
+            {
+              value: 'Univariate',
+              label: '单变量',
+              children: [{
+                value: 'cexiangdaohang',
+                label: '侧向导航'
+              }, {
+                value: 'dingbudaohang',
+                label: '顶部导航'
+              }]
+            },
+            {
+              value: 'Sequential',
+              label: '按序',
+              children: [{
+                value: 'cexiangdaohang',
+                label: '侧向导航'
+              }, {
+                value: 'dingbudaohang',
+                label: '顶部导航'
+              }]
+            },
+            {
+              value: 'Time-Series',
+              label: '时序',
+              children: [{
+                value: 'cexiangdaohang',
+                label: '侧向导航'
+              }, {
+                value: 'dingbudaohang',
+                label: '顶部导航'
+              }]
+            },
+            {
+              value: 'Text',
+              label: '文本',
+              children: [{
+                value: 'cexiangdaohang',
+                label: '侧向导航'
+              }, {
+                value: 'dingbudaohang',
+                label: '顶部导航'
+              }]
+            },
+            {
+              value: 'Domain-Theory',
+              label: '畴理论',
+              children: [{
+                value: 'cexiangdaohang',
+                label: '侧向导航'
+              }, {
+                value: 'dingbudaohang',
+                label: '顶部导航'
+              }]
+            }
+          ]
+        }, {
+          value: 'attributeTypes',
+          label: '属性类型',
+          children: [{
+            value: 'Categorical',
+            label: '分类的',
+            children: [{
+              value: 'layout',
+              label: 'Layout 布局'
+            }, {
+              value: 'color',
+              label: 'Color 色彩'
+            }]
+          }, {
+            value: 'Integer',
+            label: '整型',
+            children: [{
+              value: 'radio',
+              label: 'Radio 单选框'
+            }, {
+              value: 'checkbox',
+              label: 'Checkbox 多选框'
+            }]
+          }, {
+            value: 'Real',
+            label: '实数',
+            children: [{
+              value: 'table',
+              label: 'Table 表格'
+            }, {
+              value: 'tag',
+              label: 'Tag 标签'
+            }]
+          }]
+        }, {
+          value: 'associatedTasks',
+          label: '相关任务',
+          children: [{
+            value: 'Classification',
+            label: '分类',
+            children: [{
+              value: 'lalalal',
+              label: '一致数据集'
+            }, {
+              value: 'fankui',
+              label: '反馈数据集'
+            }, {
+              value: 'xiaolv',
+              label: '效率数据集'
+            }]
+          },
+            {
+              value: 'Regression',
+              label: '回归',
+              children: [{
+                value: 'cexiangdaohang',
+                label: '侧向导航'
+              }, {
+                value: 'dingbudaohang',
+                label: '顶部导航'
+              }]
+            },
+            {
+              value: 'Clustering',
+              label: '聚类',
+              children: [{
+                value: 'cexiangdaohang',
+                label: '侧向导航'
+              }, {
+                value: 'dingbudaohang',
+                label: '顶部导航'
+              }]
+            },
+            {
+              value: 'Other',
+              label: '其他',
+              children: [{
+                value: 'cexiangdaohang',
+                label: '侧向导航'
+              }, {
+                value: 'dingbudaohang',
+                label: '顶部导航'
+              }]
+            }
+          ]}
+        ],
+        domains: [{
+          value: ''
+        }],
+      };
     },
     methods:{
       create() {
@@ -98,6 +269,18 @@
           this.taskList.unshift(this.temp);
         });
       },
+      removeDomain(item) {
+        var index = this.domains.indexOf(item)
+        if (index !== -1) {
+          this.domains.splice(index, 1)
+        }
+      },
+      addDomain() {
+        this.domains.push({
+          value: '',
+          key: Date.now()
+        });
+      }
     }
   }
 </script>
@@ -117,13 +300,6 @@
     height: 100%;
     padding: 30px;
   }
-  .form2{
-    width:450px;
-    height: 100%;
-    padding: 30px;
-    float: left;
-    font-size: 16px;
-  }
   .page{
     padding:20px;
   }
@@ -132,5 +308,10 @@
     margin-top: 40px;
     margin-bottom: 20px;
     width:40%;
+  }
+  .add{
+    position:absolute;
+    top:275px;
+    left:862px;
   }
 </style>

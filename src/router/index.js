@@ -99,6 +99,9 @@ export const asyncRouterMap = [
       // },
       {
         path:'list',component:_import('students/list'),name: '学生列表',icon:'group'
+      },
+      {
+        path:'group',component:_import('students/group'),name: '分组列表',icon:'group'
       }
     ]
   },

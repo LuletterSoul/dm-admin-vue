@@ -1,17 +1,16 @@
 <template>
   <div id="app" class="app-container">
 
-    <div id="title">数据集展示</div>
-
     <div class="information">
 
-      <div style="font-size:32px">{{ title }}</div>
+      <div class="dataSetTitle">{{ collectionName }}</div>
+
       <div class="updown">
         <Button type="ghost"><a href="">下载数据集</a></Button>
         <Button type="ghost"><a href="">下载数据集描述信息</a></Button>
       </div>
 
-      <Card :bordered="false" class="card">
+      <Card :bordered="false" class="dataSetCard">
         <p slot="title" style="font-size: 16px">描述摘要:</p>
         <p >{{ abstractInfo }}</p>
       </Card>
@@ -23,7 +22,7 @@
         <Table :columns="columns3" :data="data3"></Table>
       </template>
 
-      <Card :bordered="false" class="card"
+      <Card :bordered="false" class="dataSetCard"
             v-for="todo in todos"
             v-bind:key="todo.id"
             v-bind:title="todo.title">
@@ -44,7 +43,9 @@
     name: 'app',
     data () {
       return {
-        abstractInfo:'19930330',
+        collectionName:'PM2.5 Data of Five Chinese Cities Data Set ',
+        abstractInfo:'This hourly data set contains the PM2.5 data in Beijing, Shanghai, Guangzhou, Chengdu and Shenyang.' +
+        ' Meanwhile, meteorological data for each city are also included.',
         columns1: [
           {
             title: '特征',
@@ -61,9 +62,9 @@
         ],
         data1: [
           {
-            characteristics: 'N/A',
-            attributeTypes: 'Integer',
-            associatedTasks: 'Classification, Regression'
+            characteristics: 'Multivariate, Time-Series',
+            attributeTypes: 'Integer, Real',
+            associatedTasks: 'Regression'
           }
         ],
         columns2: [
@@ -78,8 +79,8 @@
         ],
         data2: [
           {
-            instances: 504,
-            enableMissing: 'N/A'
+            instances: 52854,
+            enableMissing: 'Yes'
           }
         ],
         columns3: [
@@ -98,25 +99,25 @@
         ],
         data3: [
           {
-            area: 'Business',
-            dateDonated: '2017-07-23',
-            hits:0
+            area: 'Physical',
+            dateDonated: '2017-07-18',
+            hits:6558
           }
         ],
-
         todos: [
           {
             id: 1,
             title: '来源:',
-            info: 'providerId'
+            info: 'Song Xi Chen, csx \'@\' gsm.pku.edu.cn, Guanghua School of Management, ' +
+            'Center for Statistical Science, Peking University.'
           },
           {
             id:4,
             title:'相关论文:',
-            info:'MINO'
+            info:'Liang, X., S. Li, S. Zhang, H. Huang, and S. X. Chen (2016), PM2.5 data reliability, ' +
+            'consistency, and air quality assessment in five Chinese cities, J. Geophys. Res. Atmos., 121, 10220â€“10236.'
           },
-        ],
-        title:'data set title',
+        ]
       }
     }
   }
@@ -128,10 +129,9 @@
     margin:0px auto;
     font-size:16px;
   }
-  #title{
+  .dataSetTitle{
     margin-top: 20px;
     margin-bottom: 20px;
-    width:20%;
     font:bold 36px 微软雅黑;
   }
   .updown{
@@ -142,7 +142,7 @@
   .information{
     width:60%;
   }
-  .card{
+  .dataSetCard{
     background-color: transparent;
     font-size:16px;
   }
