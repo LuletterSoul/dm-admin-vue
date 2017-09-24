@@ -98,7 +98,7 @@
       this.chinaRegionData = regionData;
       this.newUserProfile = deepCopyObject(this.userProfile);
       this.roles = this.newUserProfile.roles;
-      this.isAvailable = this.newUserProfile.status === "可用";
+      this.isAvailable = this.newUserProfile.status === "A";
     },
     computed: {
       ...mapGetters([

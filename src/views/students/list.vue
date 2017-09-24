@@ -205,7 +205,7 @@
           profession:undefined,
           grade:undefined,
           page: 1,
-          limit: 20,
+          size: 20,
           sort: '+id'
         },
         temp: {

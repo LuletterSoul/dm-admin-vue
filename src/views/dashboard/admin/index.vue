@@ -47,10 +47,10 @@
               <span style="line-height: 36px; font-size: 20px; font-weight: bold">用户信息</span>
             </div>
             <div style="font-size: 16px;">
-              <p>用户名: {{  userProfile.name }}</p>
-              <p>个性签名: {{  userProfile.introduction }}</p>
-              <p>上一次登录时间:  {{ userProfile.lastLoginTime }}</p>
-              <p>管理状态: {{  userProfile.status }}</p>
+              <p >用户名: {{  userProfile.name }}</p>
+              <p style="margin-top: 10px">个性签名: {{  userProfile.introduction }}</p>
+              <p style="margin-top: 10px">上一次登录时间:  {{ userProfile.lastLoginTime }}</p>
+              <p style="margin-top: 10px">管理状态: {{  userProfile.accessStatus }}</p>
             </div>
             <!--<div v-for="o in 4" :key="o" class="text item">-->
             <!--{{'列表内容 ' + o }}-->
@@ -140,7 +140,10 @@
         'roles',
         'status',
         'userProfile'
-      ])
+      ]),
+//      accountStatus() {
+//        return this.userProfile.accessStatus ? "可用" : "不可用";
+//      }
     }
   };
 </script>

@@ -19,6 +19,7 @@ import IconSvg from '@/components/Icon-svg/index.vue'
 import {getToken} from '@/utils/auth'
 import 'iview/dist/styles/iview.css';    // 使用 CSS
 import {SweetModal, SweetModalTab} from 'sweet-modal-vue'
+import {getAccountInfo, getEncryptPassword, getUsername} from "./utils/auth";
 // var Velocity = require('velocity-animate');
 // require('velocity-animate/velocity.ui');
 window.Velocity = window.velocity = Velocity;
@@ -30,19 +31,48 @@ Vue.component('sweet-modal', SweetModal);
 Vue.component('sweet-modal-tab', SweetModalTab);
 Vue.use(vueWaves);
 
+// router.beforeEach((to, from, next) => {
+//   NProgress.start();
+//   if (getUsername()&&store.getters.password) {
+//     if (to.path === '/login') {
+//       next({path: '/'});
+//     } else {
+//       if (store.getters.roles.length === 0) {
+//         store.dispatch('GetInfo',getUsername()).then(() => {
+//           store.dispatch('GetUserRoles',getUsername()).then(result =>{
+//             store.dispatch('GenerateRoutes', {roles: result}).then(() => {
+//               router.addRoutes(store.getters.addRouters);
+//               next({...to});
+//           })
+//           })
+//         })
+//       } else {
+//         next();
+//       }
+//     }
+//   } else {
+//     if (whiteList.indexOf(to.path) !== -1) {
+//       next()
+//     } else {
+//       next('/login');
+//       NProgress.done();
+//     }
+//   }
+// });
 const whiteList = ['/login'];
 router.beforeEach((to, from, next) => {
   NProgress.start();
-  if (getToken()) {
+  if (store.getters.username&&store.getters.password) {
     if (to.path === '/login') {
       next({path: '/'});
     } else {
       if (store.getters.roles.length === 0) {
-        store.dispatch('GetInfo').then(res => {
-          const roles = res.userProfile.roles;
-          store.dispatch('GenerateRoutes', {roles}).then(() => {
-            router.addRoutes(store.getters.addRouters);
-            next({...to});
+        store.dispatch('GetInfo',store.getters.username).then(() => {
+          store.dispatch('GetUserRoles',store.getters.username).then(res =>{
+            store.dispatch('GenerateRoutes', {roles: res}).then(() => {
+              router.addRoutes(store.getters.addRouters);
+              next({...to});
+            })
           })
         })
       } else {
@@ -58,7 +88,6 @@ router.beforeEach((to, from, next) => {
     }
   }
 });
-
 router.afterEach(() => {
   NProgress.done();
 });
