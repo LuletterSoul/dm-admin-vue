@@ -1,6 +1,7 @@
 import fetch from 'utils/fetch';
 
 export function fetchStudentList(query) {
+  console.log("Query: ", query);
   return fetch({
     url:'/students',
     method:'get',
@@ -34,28 +35,22 @@ export function deleteStudentBatch(studentIds) {
   return fetch({
     url:'/students/deleteWithArray',
     method:'delete',
-    data:{
-      studentIds:studentIds
-    }
+    data:studentIds
   })
 }
 
 export function markStudent(studentIds) {
   return fetch({
-    url:'/student/markStudentsWithArray',
+    url:'/students/markStudentsWithArray',
     method:'put',
-    data:{
-      studentIds:studentIds
-    }
+    data:studentIds
   })
 }
 
 export function unMakrStudent(studentIds) {
   return fetch({
-    url:'/student/unMarkStudentWithArray',
+    url:'/students/unMarkStudentWithArray',
     method:'put',
-    data:{
-      studentIds:studentIds
-    }
+    data:studentIds
   })
 }

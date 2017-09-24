@@ -23,8 +23,8 @@ service.interceptors.request.use(config => {
         config['params'] = {};
       }
       config.params['username'] = username;
-      config.params['clientDigest'] =
-        clientDigest(store.getters.password, token, config.params);
+      config.params['clientDigest'] = clientDigest(store.getters.password, token, config.params);
+      resolve(config);
     }).catch(error =>{
         reject(error);
       });

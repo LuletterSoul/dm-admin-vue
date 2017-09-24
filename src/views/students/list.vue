@@ -204,7 +204,7 @@
           className: undefined,
           profession:undefined,
           grade:undefined,
-          page: 0,
+          page: 1,
           size: 20,
           sort: '+id'
         },
@@ -317,8 +317,7 @@
       getStudentList() {
         let that = this;
         this.listLoading = true;
-        fetchStudentList(this.listQuery).then(response => {
-          console.log(response);
+        fetchStudentList(Object.assign({}, this.listQuery)).then(response => {
           this.studentList = response.content;
           this.total = response.totalElements;
           this.listLoading = false;
@@ -330,19 +329,21 @@
         })
       },
       handleFilter() {
+        debugger;
         this.getStudentList();
       },
       handleSizeChange(val) {
+        debugger;
         this.listQuery.limit = val;
         this.getStudentList();
       },
       handleCurrentChange(val) {
+        debugger;
         this.listQuery.page = val;
         this.getStudentList();
       },
       handleBatchDelete() {
         let confirmMessage = '您将删除所有被选择学生的信息,是否继续?';
-        let feedbackMessage = '';
         let studentIds = this.multipleSelection.map(item => item.studentId);
         let that =this;
         this.$confirm(confirmMessage,'批量删除学生',{
@@ -356,7 +357,6 @@
                 //通过API发送批量删除请求
                 deleteStudentBatch(studentIds).then(response =>{
                   instance.confirmButtonLoading=false;
-                  that.feedbackMessage = response.message;
                   resolve(response);
                   done();
                 }).catch(error =>{
@@ -375,7 +375,7 @@
 //          !that.multipleSelection.some(row => row.studentId === student.studentId));
           that.getStudentList();
           that.$message({
-            message: that.feedbackMessage,
+            message: '批量删除成功',
             type: 'success',
             duration: 1500
           });
@@ -456,10 +456,9 @@
               instance.confirmButtonLoading = true;
               return new Promise((resolve, reject) => {
                 deleteStudent(row.studentId).then((response) => {
-                  feedbackMessage = response.message;
                   instance.confirmButtonLoading = false;
                   this.$message({
-                    message: feedbackMessage,
+                    message: '删除成功',
                     type: 'success',
                     duration: 1500
                   });
@@ -489,9 +488,8 @@
       },
       create() {
         createStudent(this.temp).then(response => {
-          let message = response.message;
           this.$message({
-            message:message,
+            message:'添加成功',
             type:'success',
             duration:1500
           });
@@ -501,7 +499,6 @@
       },
       update() {
         updateStudent(this.temp).then(response =>{
-          let message = response.message;
           for (const v of this.studentList) {
             if (v.studentId === this.temp.studentId) {
               const index = this.studentList.indexOf(v);
@@ -511,7 +508,7 @@
           }
           this.$message({
             type: 'success',
-            message:message
+            message:'更新成功'
           });
         });
         this.dialogFormVisible = false;

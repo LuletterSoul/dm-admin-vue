@@ -161,6 +161,7 @@ const user = {
           // commit('SET_REGION_CODE', profile.regionCode);
           // commit('SET_GENDER', profile.gender);
           commit('SET_USER_PROFILE', response);
+          console.log("Response", response);
           resolve(response);
         }).catch(error => {
           reject(error);
