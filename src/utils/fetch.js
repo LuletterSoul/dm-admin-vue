@@ -14,18 +14,23 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(config => {
     const username = store.getters.username;
-    config.headers['X-timestamp'] = new Date().Format('yyyy-MM-dd HH:mm:ss');
-    config.headers['Username'] = username;
-    if(config.params===undefined) {
-      config['params'] = {};
-    }
-    config.params['username'] = username;
     //每次请求发送前都需要申请一次token认证服务;
-    store.dispatch('GetToken', username).then(()=>{
+    return new Promise((resolve, reject) => {
+      return store.dispatch('GetToken', username).then((token) => {
+      config.headers['X-timestamp'] = new Date().Format('yyyy-MM-dd HH:mm:ss');
+      config.headers['Username'] = username;
+      if (config.params === undefined) {
+        config['params'] = {};
+      }
+      config.params['username'] = username;
       config.params['clientDigest'] =
-        clientDigest(store.getters.password, store.getters.token, config.params);
-    });
-    return config;
+        clientDigest(store.getters.password, token, config.params);
+      console.log("Client Digest : ", config.params['clientDigest']);
+        resolve(config);
+    }).catch(error =>{
+        reject(error);
+      });
+  });
 }, error => {
   // Do something with request error
   console.log(error); // for debug

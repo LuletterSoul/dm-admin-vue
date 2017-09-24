@@ -102,9 +102,8 @@ const user = {
         commit('SET_USERNAME', username);
         getPublicSalt(username).then(salt => {
           let password =computeEncryptPassword(userInfo.password, salt);
-          console.log("Token information:", salt);
           commit('SET_PASSWORD',password);
-          resolve();
+          resolve(password);
         }).catch(error => {
           reject(error);
         })
