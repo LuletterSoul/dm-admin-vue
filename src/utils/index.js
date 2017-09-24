@@ -2,6 +2,30 @@
  * Created by jiachenpan on 16/11/18.
  */
 
+export function deleteEmptyProperty(object){
+  for (var i in object) {
+    var value = object[i];
+    if (typeof value === 'object') {
+      if (Array.isArray(value)) {
+        if (value.length == 0) {
+          delete object[i];
+          continue;
+        }
+      }
+      deleteEmptyProperty(value);
+      if (isEmpty(value)) {
+        delete object[i];
+      }
+    } else {
+      if (value === '' || value === null || value === undefined) {
+        delete object[i];
+      } else {
+      }
+    }
+  }
+  return object;
+}
+
 export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
     return null;

@@ -1,13 +1,15 @@
-import { login, logout, getInfo } from '@/api/login';
-import { getToken, setToken, removeToken } from '@/utils/auth';
+import { login, logout,getToken,getPublicSalt,getUserInfo,getUserRoles } from '@/api/login';
+import { removeToken,setUsername,getUsername} from '@/utils/auth';
+import { computeEncryptPassword } from "@/utils/compute"
 
 const user = {
   state: {
     username:'',
+    password:'',
     user: '',
     status: '',
     code: '',
-    token: getToken(),
+    token: '',
     name: '',
     birthday:'',
     avatar: '',
@@ -16,15 +18,25 @@ const user = {
     lastLoginTime :'',
     regionCode:'',
     gender:'',
-    userProfile: {}
+    userProfile: {},
+    timeOutToken:{},
   },
 
   mutations: {
+    SET_USERNAME:(state,username)=>{
+      state.username = username;
+    },
     SET_CODE:(state,code)=> {
       state.code = code;
     },
     SET_TOKEN: (state, token) => {
       state.token = token;
+    },
+    SET_TIME_OUT_TOKEN(state,timeOutToken) {
+      state.timeOutToken = timeOutToken;
+    },
+    SET_PASSWORD(state,password) {
+      state.password = password
     },
     SET_NAME: (state, name) => {
       state.name = name;
@@ -57,14 +69,41 @@ const user = {
 
   actions: {
     // 登录
+    // Login({ commit }, userInfo) {
+    //   const username = userInfo.username.trim();
+    //   return new Promise((resolve, reject) => {
+    //     login(username, userInfo.password).then(response => {
+    //       const data = response.data;
+    //       setToken(data.token);
+    //       setUsername(userInfo.username);
+    //       commit('SET_TOKEN', data.token);
+    //       resolve();
+    //     }).catch(error => {
+    //       reject(error);
+    //     })
+    //   });
+    // },
+
+    // Login({ commit }, userInfo) {
+    //   const email = userInfo.username.trim();
+    //   return new Promise((resolve, reject) => {
+    //     login(email, userInfo.password).then(response => {
+    //       setUsername(userInfo.username);
+    //       resolve();
+    //     }).catch(error => {
+    //       reject(error);
+    //     })
+    //   });
+    // },
+
     Login({ commit }, userInfo) {
-      const email = userInfo.email.trim();
+      const username = userInfo.username.trim();
       return new Promise((resolve, reject) => {
-        login(email, userInfo.password).then(response => {
-          const data = response.data;
-          setToken(data.token);
-          commit('SET_TOKEN', data.token);
-          resolve();
+        commit('SET_USERNAME', username);
+        getPublicSalt(username).then(salt => {
+          let password =computeEncryptPassword(userInfo.password, salt);
+          commit('SET_PASSWORD',password);
+          resolve(password);
         }).catch(error => {
           reject(error);
         })
@@ -72,25 +111,73 @@ const user = {
     },
 
 
+    // GetTimeOutToken({commit},timeOutToken) {
+    //   commit('SET_TIME_OUT_TOKEN', timeOutToken);
+    // },
+
+
+    // // 获取用户信息
+    // GetInfo({ commit, state }) {
+    //   return new Promise((resolve, reject) => {
+    //     getInfo(state.token).then(response => {
+    //       const profile = response.userProfile;
+    //       commit('SET_ROLES', profile.roles);
+    //       commit('SET_NAME', profile.name);
+    //       commit('SET_AVATAR', profile.avatar);
+    //       commit('SET_INTRODUCTION', profile.introduction);
+    //       commit('SET_LAST_LOGIN_TIME', profile.lastLoginTime);
+    //       commit('SET_STATUS', profile.status);
+    //       commit('SET_REGION_CODE', profile.regionCode);
+    //       commit('SET_GENDER', profile.gender);
+    //       commit('SET_USER_PROFILE', profile);
+    //       resolve(response);
+    //     }).catch(error => {
+    //       reject(error);
+    //     });
+    //   });
+    // },
+    GetToken({commit},username){
+      return new Promise((resolve,reject) =>{
+        getToken(username).then((token) =>{
+          commit("SET_TOKEN", token);
+          resolve(token);
+        }).catch(error =>{
+          reject(error);
+        })
+      })
+    },
+
     // 获取用户信息
-    GetInfo({ commit, state }) {
+    GetInfo({commit},username) {
       return new Promise((resolve, reject) => {
-        getInfo(state.token).then(response => {
-          const profile = response.userProfile;
-          commit('SET_ROLES', profile.roles);
-          commit('SET_NAME', profile.name);
-          commit('SET_AVATAR', profile.avatar);
-          commit('SET_INTRODUCTION', profile.introduction);
-          commit('SET_LAST_LOGIN_TIME', profile.lastLoginTime);
-          commit('SET_STATUS', profile.status);
-          commit('SET_REGION_CODE', profile.regionCode);
-          commit('SET_GENDER', profile.gender);
-          commit('SET_USER_PROFILE', profile);
+        getUserInfo(username).then(response => {
+          // const profile = response.userProfile;
+          // commit('SET_ROLES', profile.roles);
+          // commit('SET_NAME', profile.name);
+          // commit('SET_AVATAR', profile.avatar);
+          // commit('SET_INTRODUCTION', profile.introduction);
+          // commit('SET_LAST_LOGIN_TIME', profile.lastLoginTime);
+          // commit('SET_STATUS', profile.status);
+          // commit('SET_REGION_CODE', profile.regionCode);
+          // commit('SET_GENDER', profile.gender);
+          commit('SET_USER_PROFILE', response);
           resolve(response);
         }).catch(error => {
           reject(error);
         });
       });
+    },
+
+
+    GetUserRoles({commit},username){
+       return new Promise((resolve,reject) =>{
+         getUserRoles(username).then((result)=>{
+           commit('SET_ROLES', result);
+           resolve(result);
+         }).catch(error =>{
+           reject(error);
+         });
+       })
     },
 
     // 登出

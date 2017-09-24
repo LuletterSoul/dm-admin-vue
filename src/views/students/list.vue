@@ -170,7 +170,7 @@
 
 <script>
   import { fetchList, fetchPv } from 'api/article_table';
-  import { parseTime } from 'utils';
+  import { parseTime,deleteEmptyProperty } from 'utils';
   import { fetchStudentList,
            deleteStudent ,
           createStudent,
@@ -204,8 +204,8 @@
           className: undefined,
           profession:undefined,
           grade:undefined,
-          page: 1,
-          limit: 20,
+          page: 0,
+          size: 20,
           sort: '+id'
         },
         temp: {
@@ -214,8 +214,16 @@
           grade:'',
           className:'',
           profession:'',
-          status:{},
-          favorite:{},
+          status:{
+            statusId:3,
+            chineseValue:'空闲',
+            englishValue:'available',
+          },
+          favorite:{
+            favoriteId:0,
+            chineseValue:'已收藏',
+            englishValue:'favorite'
+          },
           finishedTaskCount:0
         },
         studentList: [],
@@ -223,6 +231,23 @@
           '姓名',
           '学号'
         ],
+        statusOptions:[{
+          statusId:0,
+          chineseValue:'任务进行中',
+          englishValue:'executing',
+        },{
+          statusId:1,
+          chineseValue:'锁定',
+          englishValue:'unavailable',
+        },{
+          statusId:2,
+          chineseValue:'任务完成',
+          englishValue:'finished',
+        },{
+          statusId:3,
+          chineseValue:'空闲',
+          englishValue:'available',
+        }],
         sortOptions: [{label: '按学号升序', key: '+id'}, {label: '按学号降序', key: '-id'}],
         multipleSelection:[],
         isDisplayFavoriteColumn:false,
@@ -293,8 +318,9 @@
         let that = this;
         this.listLoading = true;
         fetchStudentList(this.listQuery).then(response => {
-          this.studentList = response.students;
-          this.total = response.total;
+          console.log(response);
+          this.studentList = response.content;
+          this.total = response.totalElements;
           this.listLoading = false;
         }).catch(error =>{
           that.$message({
@@ -497,8 +523,16 @@
           grade:'',
           className:'',
           profession:'',
-          status:{},
-          favorite:{},
+          status:{
+            statusId:3,
+            chineseValue:'空闲',
+            englishValue:'available',
+          },
+          favorite:{
+            favoriteId:0,
+            chineseValue:'已收藏',
+            englishValue:'favorite'
+          },
           finishedTaskCount:0
         };
       },

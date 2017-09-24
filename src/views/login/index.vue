@@ -18,7 +18,7 @@
                 <span class="svg-container">
                 <icon-svg icon-class="accountfilling"></icon-svg>
                 </span>
-                    <el-input name="email" type="text" v-model="loginForm.email" autoComplete="on" placeholder="邮箱"></el-input>
+                    <el-input name="email" type="text" v-model="loginForm.username" autoComplete="on" placeholder="邮箱"></el-input>
                   </el-form-item>
                   <el-form-item prop="password">
                 <span class="svg-container">
@@ -58,7 +58,7 @@
     name: 'login',
     data() {
       const validateEmail = (rule, value, callback) => {
-        if (!isWscnEmail(value)) {
+        if (false) {
           callback(new Error('请输入正确的合法邮箱'));
         } else {
           callback();
@@ -73,11 +73,11 @@
       };
       return {
         loginForm: {
-          email: 'admin@wallstreetcn.com',
-          password: '111111'
+          username: 'qq313700046',
+          password: 'liuxiangde'
         },
         loginRules: {
-          email: [
+          username: [
             {required: true, trigger: 'blur', validator: validateEmail}
           ],
           password: [
@@ -96,7 +96,7 @@
         var vm = this;
         this.$refs.loginForm.validate(valid => {
           if (valid) {
-//            this.loading = true;
+            this.loading = true;
             this.isLoginFormDisplay = false;
             this.$store.dispatch('Login', this.loginForm).then(() => {
               setTimeout(function () {
@@ -160,13 +160,13 @@
     left: 50%;
     top: 50%;
     input:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
-      -webkit-text-fill-color: #fff !important;
+       -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
+       -webkit-text-fill-color: #fff !important;
     }
     input {
       background: transparent;
       border: 0px;
-      -webkit-appearance: none;
+       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
       color: #eeeeee;

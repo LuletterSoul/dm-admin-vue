@@ -2,41 +2,37 @@ import fetch from 'utils/fetch';
 
 export function fetchStudentList(query) {
   return fetch({
-    url:'/student',
+    url:'/students',
     method:'get',
     params: query
   })
 }
 export function deleteStudent(studentId) {
   return fetch({
-    url:'/student/'+studentId,
+    url:'/students/'+studentId,
     method:'delete'
   })
 }
 
 export function createStudent(student) {
   return fetch({
-    url:'/student',
+    url:'/students',
     method:'post',
-    data:{
-      student:student
-    }
+    data:student
   })
 }
 
 export function updateStudent(student) {
   return fetch({
-    url:'/student',
+    url:'/students',
     method:'put',
-    data:{
-      student:student
-    }
+    data:student
   })
 }
 
 export function deleteStudentBatch(studentIds) {
   return fetch({
-    url:'/student/deleteWithIdArray',
+    url:'/students/deleteWithArray',
     method:'delete',
     data:{
       studentIds:studentIds
