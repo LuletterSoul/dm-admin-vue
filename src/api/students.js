@@ -18,9 +18,7 @@ export function createStudent(student) {
   return fetch({
     url:'/students',
     method:'post',
-    data:{
-      student:student
-    }
+    data:student
   })
 }
 
@@ -28,15 +26,13 @@ export function updateStudent(student) {
   return fetch({
     url:'/students',
     method:'put',
-    data:{
-      student:student
-    }
+    data:student
   })
 }
 
 export function deleteStudentBatch(studentIds) {
   return fetch({
-    url:'/students/deleteWithIdArray',
+    url:'/students/deleteWithArray',
     method:'delete',
     data:{
       studentIds:studentIds

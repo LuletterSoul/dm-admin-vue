@@ -14,9 +14,12 @@ export function computeEncryptPassword(submitPlain, publicSalt) {
 //生成消息摘要
 export function digest(message,params) {
   let paramString = '';
-  for(let i =0;i<params.length;++i) {
-    paramString+=params[i];
+  for(var key in params) {
+    if(params[key]!==undefined) {
+      paramString = paramString + params[key];
+    }
   }
+  console.log("Params String:",paramString);
   return DecodeBase64.stringify(HMAC_SHA256(message, paramString));
 }
 
@@ -25,6 +28,5 @@ export function clientDigest(encryptPassword,token,params) {
   for(let i =0;i<1000;i++) {
     clientDigest = SHA256(clientDigest);
   }
-
   return DecodeBase64.stringify(clientDigest);
 }
