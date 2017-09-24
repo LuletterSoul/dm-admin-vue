@@ -1,7 +1,7 @@
 <template>
     <div id="app">
 
-      <div id="title">
+      <div class="dataSetTableTitle">
         数据集库展示
       </div>
 
@@ -33,11 +33,6 @@
       data () {
         return {
           dataSetTable0: [
-//            {
-//              title: '编号',
-//              key: 'collectionId',
-//              sortable: true
-//            },
             {
               title: '名称',
               key: 'collectionName',
@@ -49,13 +44,13 @@
               sortable: true
             },
             {
-              title: '相关任务',
-              key: 'associatedTasks',
+              title: '属性类型',
+              key: 'attributeTypes',
               sortable: true
             },
             {
-              title: '属性类型',
-              key: 'attributeTypes',
+              title: '相关任务',
+              key: 'associatedTasks',
               sortable: true
             },
 //            {
@@ -76,7 +71,6 @@
               characteristics: 'roro',
               associatedTasks: 'hoony',
               attributeTypes: 'yoon',
-              instances: 0,
               dateDonated: 'jinu'
             }
           ]
@@ -96,7 +90,7 @@
     margin:0px auto;
     font-size:16px;
   }
-  #title{
+  .dataSetTableTitle{
     margin-top: 20px;
     margin-bottom: 20px;
     width:22%;

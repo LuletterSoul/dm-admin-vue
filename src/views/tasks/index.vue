@@ -16,7 +16,6 @@
 
       <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">筛选</el-button>
       <!--<el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="plus"><router-link to="create">添加</router-link></el-button>-->
-      <el-button class="filter-item" type="primary" icon="plus" @click="handleAddStudent">添加学生</el-button>
       <el-button class="filter-item" type="primary" icon="document" @click="handleDownload">导出</el-button>
       <el-button class="filter-item" type="primary" icon="delete" v-waves @click="handleBatchDelete" :disabled="!multipleSelection.length">批量删除</el-button>
     </div>
@@ -62,14 +61,6 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="学生组号" width="100px">
-        <template scope="scope">
-          <el-tooltip class="item" effect="light" :content="scope.row.groupId" placement="top-start">
-            <span>{{scope.row.studentId}}</span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-
       <el-table-column class-name="status-col" align="center"  label="任务状态" width="150">
         <template scope="scope">
           <!--<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>-->
@@ -99,6 +90,7 @@
         <template scope="scope">
           <el-button size="small" icon="edit"  type = "success" @click="handleUpdate(scope.row)">更新</el-button>
           <el-button size="small" icon="delete" type = "danger" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button size="small" icon="plus" type="primary" @click="handleAddStudent">添加分组</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -158,12 +150,9 @@
 
     <el-dialog :title="addStudentTitle" :visible.sync="dialogFormVisible2">
       <el-form class="small-space" :model="temp" label-position="left" label-width="70px">
-        <p style="margin-bottom: 20px;">选择学生</p>
+        <p style="margin-bottom: 20px;">选择分组</p>
         <el-transfer
-          filterable
-          :filter-method="filterMethod"
-          filter-placeholder="请输入学生姓名缩写"
-          :titles="['所有学生','已选学生']"
+          :titles="['所有分组','已选分组']"
           v-model="value2"
           :data="data2">
         </el-transfer>
@@ -186,31 +175,16 @@
 //    updateTask,
 //    deleteTaskBatch} from 'api/tasks';
 
-  const calendarTypeOptions = [
-    { key: 'CN', display_name: '中国' },
-    { key: 'US', display_name: '美国' },
-    { key: 'JP', display_name: '日本' },
-    { key: 'EU', display_name: '欧元区' }
-  ];
-
-  // arr to obj
-  const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
-    acc[cur.key] = cur.display_name;
-    return acc
-  }, {});
-
   export default {
     name: 'TaskTable',
     data() {
       const generateData2 = _ => {
         const data = [];
         const students = ['姜昇润','宋旻浩','李昇勋','金秦禹'];
-        const pinyin = ['ksy','smh','lsh','kjw'];
         students.forEach((student, index) => {
           data.push({
             label: student,
             key: index,
-            pinyin: pinyin[index]
           });
         });
         return data;
@@ -219,16 +193,16 @@
         total: null,
         listLoading: true,
         listQuery: {
-          taskId: undefined,
-          collectionId: undefined,
-          algorithmId: undefined,
-          groupId:undefined,
-          studentId:[],
-          startTime:undefined,
-          finishTime:undefined,
+//          taskId: undefined,
+//          collectionId: undefined,
+//          algorithmId: undefined,
+//          groupId:undefined,
+//          studentId:[],
+//          startTime:undefined,
+//          finishTime:undefined,
           page: 1,
           limit: 20,
-          sort: '+id'
+          sort: 'taskName'
         },
         temp: {
           taskId: '',
@@ -297,19 +271,6 @@
     },
     created() {
       this.getTaskList();
-    },
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger'
-        };
-        return statusMap[status]
-      },
-      typeFilter(type) {
-        return calendarTypeKeyValue[type]
-      }
     },
     methods: {
       handleSelectionChange(val) {
@@ -394,15 +355,6 @@
             duration: 1500
           });
         })
-      },
-      timeFilter(time) {
-        if (!time[0]) {
-          this.listQuery.start = undefined;
-          this.listQuery.end = undefined;
-          return;
-        }
-        this.listQuery.start = parseInt(+time[0] / 1000);
-        this.listQuery.end = parseInt((+time[1] + 3600 * 1000 * 24) / 1000);
       },
       handleModifyStatus(row, status) {
         this.$message({
