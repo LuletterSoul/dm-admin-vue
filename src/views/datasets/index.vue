@@ -4,34 +4,54 @@
       <div class="dataSetTableTitle">
         数据集库展示
       </div>
-
-
       <div style="margin-top:20px ;padding: 20px;">
         <template>
-          <Table :columns="dataSetTable0" :data="dataSet0" stripe></Table>
+            <Table :loading="loading" :columns="dataSetTable0" :data="dataSetInfo" stripe></Table>
             <div style="margin: 10px;overflow: hidden">
                <div style="float: right;">
-                 <Page :total="total" :current="1"
+                 <Page :total="totalElements" :current="1"
                        :page-size-opts="[10, 20, 30, 40]"
+                       @on-change="handlePageChange"
                        @on-page-size-change="handleSizeChange"
-                       show-sizer></Page>
+                       show-sizer>
+                 </Page>
                </div>
             </div>
         </template>
       </div>
-
-
     </div>
 </template>
-
 <script>
-    import ElCol from "element-ui/packages/col/src/col";
-
+    import {
+      fetchOptions,
+      fetchCollectionList,
+      deleteCollection,
+      createCollection,
+      updateCollection,
+      deleteCollectionsBatch,
+      getDataSetContainer,
+      getRelFilePath,
+      createDataSetContainer,
+      uploadDataSetiContainer,
+      downloadContianerFile,
+      updateDataSetContainer,
+      deleteDataSetContainer,
+      deleteBatchDataSetContainers
+    } from 'api/datasets';
     export default {
-      components: {ElCol},
-      name: 'app',
+      name: 'DataSetIndex',
+      created(){
+        this.getCollectionList();
+      },
       data () {
         return {
+          loading:true,
+          dataSetCollectionList:[],
+          listQuery: {
+            page: 1,
+            size: 10,
+            sort: 'collectionName'
+          },
           dataSetTable0: [
             {
               title: '名称',
@@ -53,18 +73,18 @@
               key: 'associatedTasks',
               sortable: true
             },
-//            {
-//              title: '实例数',
-//              key: 'instances',
-//              sortable: true
-//            },
+            {
+              title: '实例数',
+              key: 'instances',
+              sortable: true
+            },
             {
               title: '捐赠时间',
               key: 'dateDonated',
               sortable: true
-            },
+            }
           ],
-          dataSet0: [
+          dataSets: [
             {
               collectionId: '111',
               collectionName: 'mino',
@@ -73,12 +93,45 @@
               attributeTypes: 'yoon',
               dateDonated: 'jinu'
             }
-          ]
+          ],
+          totalElements:1,
         }
       },
       methods: {
         handleSizeChange(val) {
-          console.log(`每页 ${val} 条`);
+          this.listQuery.size = val;
+          this.getCollectionList();
+        },
+        handlePageChange(val){
+          this.listQuery.page = val;
+          this.getCollectionList();
+        },
+
+        handleRemoveCollection (index) {
+          this.dataSetCollectionList.splice(index, 1);
+        },
+        getCollectionList() {
+          let that =this;
+          this.loading = true;
+          fetchCollectionList(Object.assign({}, this.listQuery)).then(response =>{
+            that.dataSetCollectionList = response.content;
+            that.totalElements = response.totalElements;
+            that.loading = false;
+          }).catch(error =>{
+            console.log(error);
+          })
+        },
+      },
+      computed:{
+        dataSetInfo(){
+          return this.dataSetCollectionList.map(set => {
+            let newFormattedSet = Object.assign({}, set);
+            newFormattedSet.characteristics = set.characteristics.map(char => char.englishName).join();
+            newFormattedSet.associatedTasks = set.associatedTasks.map(task => task.englishName).join();
+            newFormattedSet.attributeTypes=set.attributeTypes.map(attr =>attr.englishName).join();
+            newFormattedSet['instances'] =Math.ceil(Math.random() * 100000);
+            return newFormattedSet;
+          })
         }
       }
     };
@@ -95,5 +148,17 @@
     margin-bottom: 20px;
     width:22%;
     font:bold 36px 微软雅黑;
+  }
+  .list-item {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .list-enter-active, .list-leave-active {
+    transition: all 1s;
+  }
+  .list-enter, .list-leave-to
+    /* .list-leave-active for below version 2.1.8 */ {
+    opacity: 0;
+    transform: translateY(-30px);
   }
 </style>

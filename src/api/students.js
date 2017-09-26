@@ -1,7 +1,6 @@
 import fetch from 'utils/fetch';
 
 export function fetchStudentList(query) {
-  console.log("Query: ", query);
   return fetch({
     url:'/students',
     method:'get',

@@ -161,7 +161,6 @@ const user = {
           // commit('SET_REGION_CODE', profile.regionCode);
           // commit('SET_GENDER', profile.gender);
           commit('SET_USER_PROFILE', response);
-          console.log("Response", response);
           resolve(response);
         }).catch(error => {
           reject(error);
@@ -205,18 +204,4 @@ const user = {
     }
   }
 };
-
-
-function sleep(delay) {
-  return function () {
-    return new Promise((resolve, reject) =>{
-      console.log("Begin sleep.");
-      setTimeout(test(), 4000);
-      console.log("Sleep end.");
-    });
-  };
-}
-function test() {
-  console.log("test");
-}
 export default user;

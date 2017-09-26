@@ -121,7 +121,6 @@
         this.isLoadingModuleActive = !this.isLoadingModuleActive;
       },
       redirect: function () {
-        console.log("Enter redirect.");
         this.$router.push({path: '/'});
       }
     },

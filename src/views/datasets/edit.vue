@@ -5,19 +5,28 @@
          数据集库管理
       </div>
 
-      <div class="upload">
+      <!--<div class="upload">-->
+
+      <!--</div>-->
+      <Row>
+        <Col span="1" offset="20">
         <Button type="ghost"><router-link to="upload">上传数据集</router-link></Button>
-        <Button type="ghost"  @click="delrow">删除</Button>
-      </div>
+        </Col>
+        <Col span="2" offset="1">
+         <Button type="error"  @click="handleDeleteBatch" :disabled="selectionIds.length===0">批量删除</Button>
+        </Col>
+      </Row>
 
 
-      <div style="margin-top:60px;clear:right;padding: 20px;">
+
+      <div style="margin-top:20px;clear:right;padding: 20px;">
         <template>
-          <Table border :columns="dataSetTable1" :data="dataSet1" @on-selection-change="change" stripe ></Table>
+          <Table :loading="loading" border :columns="dataSetTable1" :data="dataSetInfo" @on-selection-change="handleSelectionChange" stripe ></Table>
             <div style="margin: 10px;overflow: hidden">
               <div style="float: right;">
-                <Page :total="total" :current="1"
+                <Page :total="totalElements" :current="1"
                       :page-size-opts="[10, 20, 30, 40]"
+                      @on-change="handlePageChange"
                       @on-page-size-change="handleSizeChange"
                       show-sizer></Page>
               </div>
@@ -79,16 +88,27 @@
 <script type="text/javascript">
 
   import { parseTime } from 'utils';
-  import { fetchDataSetList,
-    deleteDataSet ,
-    createDataSet,
-    updateDataSet,
-    deleteDataSetsBatch} from 'api/datasets';
-
+  import {
+    fetchOptions,
+    fetchCollectionList,
+    deleteCollection,
+    createCollection,
+    updateCollection,
+    deleteCollectionsBatch,
+    getDataSetContainer,
+    getRelFilePath,
+    createDataSetContainer,
+    uploadDataSetiContainer,
+    downloadContianerFile,
+    updateDataSetContainer,
+    deleteDataSetContainer,
+    deleteBatchDataSetContainers
+  } from 'api/datasets';
   export default {
         name: 'app',
         data () {
         return {
+          loading:true,
           dataSetTable1: [
             {
               type: 'selection',
@@ -156,7 +176,7 @@
                     },
                     on: {
                       click: () => {
-                        this.remove(params.index)
+                        this.handleRemoveCollection(params.index)
                       }
                     }
                   }, '删除'),
@@ -167,7 +187,7 @@
                     },
                     on: {
                       click: () => {
-                        this.edit(params.index)
+                        this.handleUpdate(params.index)
                       }
                     }
                   }, '修改')
@@ -186,6 +206,7 @@
               dateDonated:'jinu'
             }
           ],
+
           listQuery: {
 //            collectionId: undefined,
 //            collectionName: undefined,
@@ -195,7 +216,7 @@
 //            instances:0,
 //            dateDonated:undefined,
             page: 1,
-            size: 20,
+            size: 10,
             sort: 'collectionName'
           },
           temp:{
@@ -208,23 +229,24 @@
             dateDonated:''
           },
           dataSetModel: false,
-          listLoading: true,
-          datasetList:[],
-          total:null,
-          selection:[],
+          dataSetList:[],
+          totalElements:null,
+          selectionIds:[],
         }
       },
       created() {
-        this.getDatasetList();
+        this.getCollectionList();
       },
       methods: {
-        getDatasetList() {
-          let that = this;
-          fetchDatasetsList(this.listQuery).then(response => {
-            this.datasetList = response.dataset;
-            this.total = response.total;
+        getCollectionList() {
+          let that =this;
+          this.loading = true;
+          fetchCollectionList(Object.assign({}, this.listQuery)).then(response =>{
+            that.dataSetList = response.content;
+            that.totalElements = response.totalElements;
+            that.loading = false;
           }).catch(error =>{
-            this.$Message.info('出错');
+            console.log(error);
           })
         },
         show (index) {
@@ -235,10 +257,9 @@
                     实例数：${this.dataSet1[index].attributeTypes}<br>捐赠时间：${this.dataSet1[index].dateDonated}`
           })
         },
-        remove (index) {
-          let confirmMessage = '您将数据集 ' + index.collectionName + ' 的所有信息,是否继续?';
+        handleRemoveCollection (index) {
+          let confirmMessage = '您将数据集 ' + this.dataSetList[index].collectionName + ' 的所有信息,是否继续?';
           let that =this;
-          let feedbackMessage = '';
           this.$confirm(confirmMessage,'删除数据集',{
             confirmButtonText:'确定',
             cancelButtonText:'取消',
@@ -247,8 +268,7 @@
               if(action==='confirm'){
                 instance.confirmButtonLoading = true;
                 return new Promise((resolve, reject) => {
-                  deleteDataset(row.collectionId).then((response) => {
-                    feedbackMessage = response.message;
+                  deleteCollection(this.dataSetList[index].collectionId).then((response) => {
                     instance.confirmButtonLoading = false;
                     this.$Message.info('删除成功');
                     done();
@@ -262,14 +282,17 @@
               done();
             }
           }).then(() =>{
-            const index = that.datasetList.indexOf(index);
-            that.datasetList.splice(index, 1);
+            const index = that.dataSetList.indexOf(index);
+            that.dataSetList.splice(index, 1);
           }).catch(() =>{
             this.$Message.info('取消删除');
           });
         },
-        edit (index){
-          this.temp = Object.assign({}, index);
+        handleSelectionChange(selections) {
+          this.selectionIds = selections.map(selection => selection.collectionId);
+        },
+        handleUpdate (index){
+          this.temp = Object.assign({}, this.dataSetList[index]);
           this.dataSetModel = true;
         },
         ok () {
@@ -281,8 +304,8 @@
             let message = response.message;
             for (const v of this.datasetsList) {
               if (v.collectionId === this.temp.collectionId) {
-                const index = this.datasetList.indexOf(v);
-                this.datasetList.splice(index, 1, this.temp);
+                const index = this.dataSetList.indexOf(v);
+                this.dataSetList.splice(index, 1, this.temp);
                 break;
               }
             }
@@ -300,10 +323,8 @@
         change(selection) {
           this.selection = selection;
         },
-        delrow(){
+        handleDeleteBatch(){
           let confirmMessage = '您将删除所选数据集,是否继续?';
-          let feedbackMessage = '';
-          let dataSetId = this.selection.map(item => item.collectionId);
           let that =this;
           this.$confirm(confirmMessage,'批量删除数据集',{
             confirmButtonText:'确认',
@@ -314,7 +335,7 @@
                 instance.confirmButtonLoading = true;
                 return new Promise((resolve,reject) =>{
                   //通过API发送批量删除请求
-                  deleteDatasetBatch(dataSetIds).then(response =>{
+                  deleteCollectionsBatch(that.selectionIds).then(response =>{
                     instance.confirmButtonLoading=false;
                     that.feedbackMessage = response.message;
                     resolve(response);
@@ -327,20 +348,39 @@
                 })
               }
               //关闭确认框
+              instance.confirmButtonLoading=false;
               done();
             }
           }).then((message) =>{
             //删除被选中的行
-            that.getDatasetList();
+            that.getCollectionList();
             this.$Message.info('批量删除成功');
+            that.selectionIds =[] ;
           }).catch(() =>{
             this.$Message.info('取消批量删除');
           })
         },
         handleSizeChange(val) {
-          console.log(`每页 ${val} 条`);
+          this.listQuery.size = val;
+          this.getCollectionList();
+        },
+        handlePageChange(val){
+          this.listQuery.page = val;
+          this.getCollectionList();
         }
+      },
+    computed:{
+      dataSetInfo(){
+        return this.dataSetList.map(set => {
+          let newFormattedSet = Object.assign({}, set);
+          newFormattedSet.characteristics = set.characteristics.map(char => char.englishName).join();
+          newFormattedSet.associatedTasks = set.associatedTasks.map(task => task.englishName).join();
+          newFormattedSet.attributeTypes=set.attributeTypes.map(attr =>attr.englishName).join();
+          newFormattedSet['instances'] =Math.ceil(Math.random() * 100000);
+          return newFormattedSet;
+        })
       }
+    }
     }
 </script>
 

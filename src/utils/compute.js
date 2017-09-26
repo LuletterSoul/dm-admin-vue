@@ -19,7 +19,6 @@ export function digest(message,params) {
       paramString = paramString + params[key];
     }
   }
-  console.log("Params String:",paramString);
   return DecodeBase64.stringify(HMAC_SHA256(message, paramString));
 }
 

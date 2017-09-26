@@ -134,7 +134,6 @@
         })
       },
       updateOptions(){
-        console.log(this.xAxisData);
         this.options.xAxis.data = this.xAxisData;
         this.options.series[1].data = this.yStudentAxisData;
         this.options.series[0].data = this.yTeacherAxisData;

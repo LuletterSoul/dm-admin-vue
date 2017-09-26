@@ -90,7 +90,7 @@
         <template scope="scope">
           <!--<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>-->
           <span>
-              {{ scope.row.status.value }}
+              {{ scope.row.status.chineseValue }}
               </span>
         </template>
       </el-table-column>
@@ -99,10 +99,10 @@
         <template scope="scope">
           <!--<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>-->
           <el-tag v-if="scope.row.favorite.value" type="warning">
-            {{ scope.row.favorite.key }}
+            {{ scope.row.favorite.chineseValue }}
           </el-tag>
           <el-tag v-else>
-            {{ scope.row.favorite.key }}
+            {{ scope.row.favorite.chineseValue }}
           </el-tag>
         </template>
       </el-table-column>
@@ -329,16 +329,13 @@
         })
       },
       handleFilter() {
-        debugger;
         this.getStudentList();
       },
       handleSizeChange(val) {
-        debugger;
         this.listQuery.limit = val;
         this.getStudentList();
       },
       handleCurrentChange(val) {
-        debugger;
         this.listQuery.page = val;
         this.getStudentList();
       },
@@ -405,7 +402,6 @@
         let favoriteStudents = this.multipleSelection.filter(row => row.favorite.value);
         let studentIds = favoriteStudents.map(student => student.studentId);
         let that = this;
-        console.log(studentIds);
         markStudent(studentIds).then(response =>{
           favoriteStudents.forEach(student => {
             student.favorite = {key: '未收藏', value: false};

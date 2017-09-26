@@ -63,7 +63,6 @@
               delay: vm.fadeOutDelay,
               complete:function () {
                 vm.$emit('slideOutEnd');
-                console.log("Commit slide out end event to component.");
               }
             },
           done
