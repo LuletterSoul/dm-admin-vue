@@ -69,7 +69,7 @@ export const asyncRouterMap = [
         path: 'edit', component: _import('datasets/edit'),name: '编辑',icon:'color-filling'
       },
       {
-        path: 'dataSet', component: _import('datasets/dataSet'),name: '具体页',icon:'survey1'
+        path: 'setDetails', component: _import('datasets/setDetails'),name: '具体页',icon:'survey1',hidden: true
       }
     ]
   },

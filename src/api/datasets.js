@@ -23,6 +23,13 @@ export function createCollection(dataSet) {
   })
 }
 
+export function getCollection(collectionId) {
+  return fetch({
+    url:'/dataSets/'+collectionId,
+    method:'get'
+  })
+}
+
 export function updateCollection(dataSet) {
   return fetch({
     url:'/dataSets',

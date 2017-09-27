@@ -37,22 +37,46 @@
 
 <script type="text/javascript">
   import ElCol from "element-ui/packages/col/src/col";
-
+  import {
+    fetchOptions,
+    getCollection,
+    fetchCollectionList,
+  } from 'api/datasets';
   export default {
     components: {ElCol},
     props:{
-      dataSet:{
-        type:Object,
-        default:null
+      dataSet: {
+        type: Object,
+        default:function() {
+          return {
+            loading :true,
+            collectionName: '',
+            abstractInfo: '',
+            instances: 0,
+            enableMissing: '',
+            dateDonated: null,
+            hits: 0,
+            relevantPapers: '',
+            characteristics: [],
+            associatedTasks: [],
+            attributeTypes: [],
+            area: []
+          }
+        }
       }
     },
     name: 'DataSet',
+    created() {
+      let collectionId = this.$route.query.collectionId;
+      if(collectionId&&this.dataSet.collectionName==='') {
+        this.getCollectionById(collectionId);
+      }
+    },
+//    mounted(){
+//      console.log(this.$router.query);
+//    },
     data () {
       return {
-        collectionName: 'PM2.5 Data of Five Chinese Cities Data Set ',
-        abstractInfo: 'This hourly data set contains the PM2.5 data in Beijing, Shanghai, Guangzhou, Chengdu and Shenyang.' +
-        ' Meanwhile, meteorological data for each city are also included.',
-        dataSetInfo: this.dataSet,
         columns1: [
           {
             title: '特征',
@@ -78,12 +102,7 @@
             key: 'enableMissing'
           }
         ],
-        data2: [
-          {
-            instances: this.dataSet.instances,
-            enableMissing: this.dataSet.enableMissing
-          }
-        ],
+
         columns3: [
           {
             title: '来自地区',
@@ -96,13 +115,6 @@
           {
             title: 'Number of Web Hits',
             key: 'hits'
-          }
-        ],
-        data3: [
-          {
-            area: this.dataSet.area.englishName,
-            dateDonated: this.dataSet.dateDonated,
-            hits: 6558
           }
         ],
         todos: [
@@ -121,16 +133,28 @@
         ],
       };
     },
+    methods:{
+      getCollectionById(collectionId) {
+        let that =this;
+        this.loading = true;
+        getCollection(collectionId).then(response =>{
+          that.dataSet = response;
+          that.loading = false;
+        }).catch(error =>{
+          console.log(error);
+        })
+      },
+    },
     computed:{
-//      characteristics(){
-//        return this.dataSetInfo.characteristics;
-//      },
-//      attributeTypes(){
-//        return this.dataSetInfo.attributeTypes;
-//      },
-//      associatedTasks(){
-//        return this.dataSetInfo.associatedTasks;
-//      },
+      collectionName(){
+        return this.dataSet.collectionName;
+      },
+      abstractInfo(){
+        return this.dataSet.abstractInfo;
+      },
+      dataSetInfo(){
+        return this.dataSet;
+      },
       data1(){
         return [
           {
@@ -139,7 +163,22 @@
             associatedTasks: this.dataSet.associatedTasks.map(task => task.englishName).join()
           }
           ]
-      }
+      },
+      data2(){
+        return [{
+            instances: this.dataSet.instances,
+            enableMissing: this.dataSet.enableMissing
+          }]
+      } ,
+      data3(){
+        return  [
+          {
+            area: this.dataSet.area.englishName,
+            dateDonated: this.dataSet.dateDonated,
+            hits: 6558
+          }
+        ]
+      },
     }
   }
 </script>

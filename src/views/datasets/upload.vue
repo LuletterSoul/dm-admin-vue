@@ -195,7 +195,7 @@
 
 <script type="text/javascript">
     import ElCol from "element-ui/packages/col/src/col";
-    import DataSet from "./dataSet.vue";
+    import DataSet from "./setDetails.vue";
     import {
       fetchOptions,
       fetchOptionalTaskTypes,
@@ -350,13 +350,14 @@
           this.createCollectionAfter();
         },
         createCollectionAfter(){
-          debugger;
+          let vm = this;
           createCollection(this.formItem).then(collection => {
             this.$message({
               message: '上传成功',
               type: 'info',
               duration: 1500
             });
+            vm.$router.push({path: '/dataSet/index'});
           });
         },
         next () {

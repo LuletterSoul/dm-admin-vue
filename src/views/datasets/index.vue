@@ -82,26 +82,54 @@
               title: '捐赠时间',
               key: 'dateDonated',
               sortable: true
-            }
-          ],
-          dataSets: [
+            },
             {
-              collectionId: '111',
-              collectionName: 'mino',
-              characteristics: 'roro',
-              associatedTasks: 'hoony',
-              attributeTypes: 'yoon',
-              dateDonated: 'jinu'
+              title: '操作',
+              key: 'action',
+              width: 200,
+              align: 'center',
+              render: (h, params) => {
+                return h('div', [
+                  h('Button', {
+                    props: {
+                      type: 'primary',
+                      size: 'small'
+                    },
+                    style: {
+                      marginRight: '5px'
+                    },
+                    on: {
+                      click: () => {
+                        this.handleCheck(params.index)
+                      }
+                    }
+                  }, '详情')
+                ]);
+              }
             }
           ],
+
+//          dataSets: [
+//            {
+//              collectionId: '111',
+//              collectionName: 'mino',
+//              characteristics: 'roro',
+//              associatedTasks: 'hoony',
+//              attributeTypes: 'yoon',
+//              dateDonated: 'jinu'
+//            }
+//          ],
           totalElements:1,
         }
       },
       methods: {
+        handleCheck(index){
+          this.$router.push({path: '/dataSet/setDetails', query: { collectionId: this.dataSetCollectionList[index].collectionId }});
+        },
         handleSizeChange(val) {
           this.listQuery.size = val;
           this.getCollectionList();
-        },
+          query     },
         handlePageChange(val){
           this.listQuery.page = val;
           this.getCollectionList();

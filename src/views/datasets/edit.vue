@@ -37,48 +37,69 @@
        <Modal
         v-model="dataSetModel"
         title="修改"
-        @on-ok="ok"
+        @on-ok="update"
         @on-cancel="cancel">
-
          <Form :model="temp" :label-width="80">
            <FormItem label="Name">
              <Input v-model="temp.collectionName" placeholder="请输入"></Input>
            </FormItem>
-           <FormItem label="Data Types">
-             <CheckboxGroup v-model="temp.characteristics">
-               <Checkbox label="Multivariate"></Checkbox>
-               <Checkbox label="Univariate"></Checkbox>
-               <Checkbox label="Sequential"></Checkbox>
-               <Checkbox label="Time-Series"></Checkbox>
-               <Checkbox label="Text"></Checkbox>
-               <Checkbox label="Domain-Theory"></Checkbox>
-               <Checkbox label="Other"></Checkbox>
+           <FormItem label="数据特征" prop="characteristicIds">
+             <CheckboxGroup v-model="temp.characteristicIds" >
+               <transition-group name="list">
+                 <Checkbox  v-for="item in charOptions" :key="item" :label="item.charId">
+                   {{ item.englishName }}-{{ item.chineseName }}
+                 </Checkbox>
+               </transition-group>
              </CheckboxGroup>
            </FormItem>
-           <FormItem label="Attribute Types">
-             <CheckboxGroup v-model="temp.attributeTypes">
-               <Checkbox label="Categorical"></Checkbox>
-               <Checkbox label="Integer"></Checkbox>
-               <Checkbox label="Real"></Checkbox>
+           <!--<FormItem label="Data Types">-->
+             <!--<CheckboxGroup v-model="temp.characteristics">-->
+               <!--<Checkbox label="Multivariate"></Checkbox>-->
+               <!--<Checkbox label="Univariate"></Checkbox>-->
+               <!--<Checkbox label="Sequential"></Checkbox>-->
+               <!--<Checkbox label="Time-Series"></Checkbox>-->
+               <!--<Checkbox label="Text"></Checkbox>-->
+               <!--<Checkbox label="Domain-Theory"></Checkbox>-->
+               <!--<Checkbox label="Other"></Checkbox>-->
+             <!--</CheckboxGroup>-->
+           <!--</FormItem>-->
+           <FormItem label="属性类型" prop="attributeTypeIds">
+             <CheckboxGroup v-model="temp.attributeTypeIds">
+               <transition-group name="list">
+                 <Checkbox  v-for="item in attributeTypeOptions" :key="item" :label="item.typeId">
+                   {{ item.englishName }}
+                 </Checkbox>
+               </transition-group>
+               <!--<Checkbox style="font-size: 16px;" label="Categorical"></Checkbox>-->
+               <!--<Checkbox style="font-size: 16px;" label="Integer"></Checkbox>-->
+               <!--<Checkbox style="font-size: 16px;" label="Real"></Checkbox>-->
              </CheckboxGroup>
            </FormItem>
-           <FormItem label="Default Task">
-             <CheckboxGroup v-model="temp.associatedTasks">
-               <Checkbox label="Classification"></Checkbox>
-               <Checkbox label="Regression"></Checkbox>
-               <Checkbox label="Clustering"></Checkbox>
-               <Checkbox label="Other"></Checkbox>
+           <FormItem label="相关任务" prop="associatedTaskIds">
+             <CheckboxGroup v-model="temp.associatedTaskIds">
+               <transition-group name="list">
+                 <Checkbox  v-for="item in miningTaskTypeOptions" :key="item" :label="item.typeId">
+                   {{ item.englishName }}
+                 </Checkbox>
+               </transition-group>
+               <!--<Checkbox style="font-size: 16px;" label="Classification"></Checkbox>-->
+               <!--<Checkbox style="font-size: 16px;" label="Regression"></Checkbox>-->
+               <!--<Checkbox style="font-size: 16px;" label="Clustering"></Checkbox>-->
+               <!--<Checkbox style="font-size: 16px;" label="Other"></Checkbox>-->
              </CheckboxGroup>
            </FormItem>
-           <FormItem label="instances">
+           <FormItem label="实例数">
               <Input v-model="temp.instances" placeholder="请输入"></Input>
            </FormItem>
-           <FormItem label="Date Donated">
+           <FormItem label="捐赠日期">
              <Row>
                <Col span="10">
                  <DatePicker type="date" placeholder="选择日期" v-model="temp.dateDonated"></DatePicker>
                </Col>
              </Row>
+           </FormItem>
+           <FormItem label="描述摘要" >
+             <Input v-model="temp.abstractInfo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
            </FormItem>
          </Form>
       </Modal>
@@ -118,7 +139,7 @@
             {
               title: '数据集名称',
               key: 'collectionName',
-              sortable: true
+              sortable: true,
             },
             {
               title: '数据特征',
@@ -162,7 +183,7 @@
                     },
                     on: {
                       click: () => {
-                        this.show(params.index)
+                        this.handleCheck(params.index)
                       }
                     }
                   }, '查看'),
@@ -222,22 +243,39 @@
           temp:{
             collectionId:'',
             collectionName:'',
-            characteristics:[],
-            associatedTasks:[],
-            attributeTypes:[],
             instances:0,
-            dateDonated:''
+            areaId:1111,
+            dateDonated:new Date(),
+            characteristicIds: [0],
+            associatedTaskIds:[0],
+            attributeTypeIds:[0],
+            abstractInfo:'',
           },
           dataSetModel: false,
           dataSetList:[],
           totalElements:null,
           selectionIds:[],
+          miningTaskTypeOptions:[],
+          areaTypeOptions:[],
+          charOptions:[],
+          attributeTypeOptions:[],
         }
       },
       created() {
         this.getCollectionList();
+        this.fetchOptionals();
       },
       methods: {
+        fetchOptionals() {
+          fetchOptions().then(response =>{
+            this.charOptions = response.charOptions;
+            this.miningTaskTypeOptions = response.miningTaskTypeOptions;
+            this.attributeTypeOptions = response.attributeTypeOptions;
+            this.areaTypeOptions = response.areaTypeOptions;
+          }).catch(error =>{
+            console.error(error);
+          })
+        },
         getCollectionList() {
           let that =this;
           this.loading = true;
@@ -249,16 +287,17 @@
             console.log(error);
           })
         },
-        show (index) {
+        handleCheck (index) {
           this.$Modal.info({
             title: 'information',
-            content: `数据集名称：${this.dataSet1[index].collectionName}<br>数据特征：${this.dataSet1[index].characteristics}
-                    <br>相关任务：${this.dataSet1[index].associatedTasks}<br>属性类型：${this.dataSet1[index].attributeTypes}<br>
-                    实例数：${this.dataSet1[index].attributeTypes}<br>捐赠时间：${this.dataSet1[index].dateDonated}`
+            content: `数据集名称：${this.dataSetInfo[index].collectionName}<br>数据特征：${this.dataSetInfo[index].characteristics}
+                    <br>相关任务：${this.dataSetInfo[index].associatedTasks}<br>属性类型：${this.dataSetInfo[index].attributeTypes}<br>
+                    实例数：${this.dataSetInfo[index].attributeTypes}<br>捐赠时间：${this.dataSetInfo[index].dateDonated}
+                   <br>摘要： ${this.dataSetInfo[index].abstractInfo}`
           })
         },
         handleRemoveCollection (index) {
-          let confirmMessage = '您将数据集 ' + this.dataSetList[index].collectionName + ' 的所有信息,是否继续?';
+          let confirmMessage = '您将删除数据集 ' + this.dataSetList[index].collectionName + ' 的所有信息,是否继续?';
           let that =this;
           this.$confirm(confirmMessage,'删除数据集',{
             confirmButtonText:'确定',
@@ -291,28 +330,54 @@
         handleSelectionChange(selections) {
           this.selectionIds = selections.map(selection => selection.collectionId);
         },
+        resetTemp() {
+          this.temp = {
+            collectionId: '',
+            collectionName: '',
+            instances: 0,
+            areaId: 1111,
+            dateDonated: new Date(),
+            characteristicIds: [0],
+            associatedTaskIds: [0],
+            attributeTypeIds: [0],
+            abstractInfo: '',
+          }
+        },
         handleUpdate (index){
-          this.temp = Object.assign({}, this.dataSetList[index]);
+          let set = this.dataSetList[index];
+          this.resetTemp();
+          this.temp.collectionId = set.collectionId;
+          this.temp.collectionName =set.collectionName;
+          this.temp.instances = Math.ceil(Math.random() * 10000);
+//          this.temp.areaId = set.area.areaId;
+          this.temp.dateDonated = set.dateDonated;
+          this.temp.characteristicIds = set.characteristics.map(char => char.charId);
+          this.temp.associatedTaskIds = set.associatedTasks.map(task => task.typeId);
+          this.temp.attributeTypeIds = set.attributeTypes.map(attr => attr.typeId);
+          this.abstractInfo = set.abstractInfo;
           this.dataSetModel = true;
         },
-        ok () {
+        confirmUpdate () {
           this.$Message.info('确定修改');
-          updata();
+          this.update();
         },
-        update() {
-          updateDatasets(this.temp).then(response =>{
-            let message = response.message;
-            for (const v of this.datasetsList) {
-              if (v.collectionId === this.temp.collectionId) {
-                const index = this.dataSetList.indexOf(v);
-                this.dataSetList.splice(index, 1, this.temp);
-                break;
-              }
-            }
+        update(index) {
+          updateCollection(this.temp).then(result =>{
+            let newCollection = result;
+//            for (const v of this.datasetsList) {
+//              if (v.collectionId === this.temp.collectionId) {
+//                const index = this.dataSetList.indexOf(v);
+//
+//                break;
+//              }
+//            }
+            this.dataSetList.splice(index, 1, newCollection);
             this.$message({
               type: 'success',
-              message:message
+              message:'更新成功'
             });
+          }).catch(error =>{
+            console.log(error);
           });
           this.dataSetModel = false;
         },
@@ -369,6 +434,7 @@
           this.getCollectionList();
         }
       },
+
     computed:{
       dataSetInfo(){
         return this.dataSetList.map(set => {
