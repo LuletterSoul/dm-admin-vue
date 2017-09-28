@@ -308,7 +308,7 @@
       },
       handleRowClicked(row,event,column) {
         let lable = column.label;
-        if(lable==='操作'||lable==='姓名'){
+        if(lable==='操作'||lable==='算法配置'){
           return;
         }
         this.$refs.studentTable.toggleRowSelection(row);

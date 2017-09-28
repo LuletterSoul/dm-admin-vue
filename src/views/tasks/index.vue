@@ -14,6 +14,8 @@
         </el-option>
       </el-select>
 
+
+      <el-button class="filter-item" type="primary" icon="plus" @click="handleAdd">添加</el-button>
       <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">筛选</el-button>
       <!--<el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="plus"><router-link to="create">添加</router-link></el-button>-->
       <el-button class="filter-item" type="primary" icon="document" @click="handleDownload">导出</el-button>
@@ -29,48 +31,48 @@
               @row-click="handleRowClicked">
       <el-table-column v-if="multipleSelection.length" type="selection" width="55"></el-table-column>
 
-      <el-table-column align="center" label="任务编号" width="100px">
+      <el-table-column align="center" label="任务名" width="100px">
         <template scope="scope">
-          <el-tooltip class="item" effect="light" :content="scope.row.taskId" placement="top-start">
-            <span>{{scope.row.taskId}}</span>
+          <el-tooltip class="item" effect="light" :content="scope.row.taskName" placement="top-start">
+            <span>{{scope.row.taskName}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="数据集编号" width="120px">
-        <template scope="scope">
-          <el-tooltip class="item" effect="light" :content="scope.row.collectionId" placement="top-start">
-            <span>{{scope.row.collectionId}}</span>
-          </el-tooltip>
-        </template>
+      <!--<el-table-column align="center" label="数据集编号" width="120px">-->
+        <!--<template scope="scope">-->
+          <!--<el-tooltip class="item" effect="light" :content="scope.row.collectionId" placement="top-start">-->
+            <!--<span>{{scope.row.collectionId}}</span>-->
+          <!--</el-tooltip>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+
+      <el-table-column align="center" label="算法配置" width="250px">
+          <template scope="scope">
+            <el-tag
+              v-for="(tag,index) in scope.row.algorithms"
+              :key="tag.algorithmId"
+              :closable="true"
+              :close-transition="false"
+              :type="index <=4 ? tagTypes[index] : tagTypes[index%5]"
+              @close="handleTagClose(scope.row,tag)"
+            >
+              {{tag.algorithmName}}
+            </el-tag>
+          </template>
       </el-table-column>
 
-      <el-table-column align="center" label="算法编号" width="120px">
-        <template scope="scope">
-          <el-tooltip class="item" effect="light" :content="scope.row.algorithmId" placement="top-start">
-            <span>{{scope.row.algorithmId}}</span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="学生组号" width="100px">
-        <template scope="scope">
-          <el-tooltip class="item" effect="light" :content="scope.row.groupId" placement="top-start">
-            <span>{{scope.row.groupId}}</span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
 
       <el-table-column class-name="status-col" align="center"  label="任务状态" width="150">
         <template scope="scope">
           <!--<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>-->
           <span>
-              {{ scope.row.status.value }}
+              未分配
               </span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="开始时间" width="180px">
+      <el-table-column align="center" label="开始时间" width="250px">
         <template scope="scope">
           <el-tooltip class="item" effect="light" :content="scope.row.startTime" placement="top-start">
             <span>{{scope.row.startTime}}</span>
@@ -78,7 +80,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="截止时间" width="180px">
+      <el-table-column align="center" label="截止时间" width="250px">
         <template scope="scope">
           <el-tooltip class="item" effect="light" :content="scope.row.finishTime" placement="top-start">
             <span>{{scope.row.finishTime}}</span>
@@ -97,31 +99,33 @@
 
     <div v-show="!listLoading" class="pagination-container">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.size" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.size" layout="total, sizes, prev, pager, next, jumper" :total="totalElements">
       </el-pagination>
     </div>
 
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
-        <el-form-item label="任务编号" label-width="85px">
-          <el-input v-model="temp.taskId">
-          </el-input>
-        </el-form-item>
 
         <el-form-item label="任务名称" label-width="85px">
           <el-input v-model="temp.taskName">
           </el-input>
         </el-form-item>
 
-        <el-form-item label="数据集编号" label-width="85px">
-          <el-input v-model="temp.collectionId">
-          </el-input>
-        </el-form-item>
+        <!--<el-form-item label="数据集编号" label-width="85px">-->
+          <!--<el-input v-model="temp.collectionId">-->
+          <!--</el-input>-->
+        <!--</el-form-item>-->
 
-        <el-form-item label="算法编号" label-width="85px">
-          <el-input v-model="temp.algorithmId">
-          </el-input>
+        <el-form-item label="算法配置">
+          <el-select style="width: 450px;" v-model="temp.a" multiple placeholder="请选择">
+            <el-option
+              v-for="item in algorithms"
+              :key="item.algorithmId"
+              :label="item.algorithmName"
+              :value="item.algorithmId">
+            </el-option>
+          </el-select>
         </el-form-item>
 
         <el-form-item label="学生组号" label-width="85px">
@@ -198,15 +202,15 @@
           sort: 'taskName'
         },
         temp: {
-          taskId: '',
+          taskId:'',
           taskName:'',
-          collectionId: '',
-          algorithmId: '',
-          groupId:'',
-          studentId:[],
-          startTime:'',
-          finishTime:'',
-          status:{},
+          taskDescription:'',
+          startTime: '',
+          finishTime: '',
+//          groupIds:[],
+          collectionIds:[],
+          algorithmIds:[],
+          groupIds:[]
         },
         taskList: [],
         queryTypeOptions:[
@@ -217,6 +221,9 @@
         sortOptions: [{label: '按编号升序', key: '+id'}, {label: '按编号降序', key: '-id'}],
         multipleSelection:[],
         isDisplayFavoriteColumn:false,
+        tagTypes:[
+          'gray','primary','success','warning','danger'
+        ],
         dataSetOptions:[
           '01',
           '02',
@@ -266,12 +273,19 @@
       this.getTaskList();
     },
     methods: {
+      handleAdd() {
+        this.$router.push({path:'/tasks/create'});
+      },
+      handleTagClose(row,tag) {
+        let algorithms = row.algorithms;
+        algorithms.splice(algorithms.indexOf(tag), 1);
+      },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
       handleRowClicked(row,event,column) {
         let lable = column.label;
-        if(lable==='操作'||lable==='姓名'){
+        if(lable==='操作'||lable==='算法配置'){
           return;
         }
         this.$refs.taskTable.toggleRowSelection(row);
@@ -299,7 +313,6 @@
         this.getTaskList();
       },
       handleCurrentChange(val) {
-        console.log("Val~~~~", val);
         this.listQuery.page = val;
         this.getTaskList();
       },
@@ -363,9 +376,8 @@
         this.dialogFormVisible = true;
       },
       handleDelete(row) {
-        let confirmMessage = '您将删除编号为\'' + row.taskId + '\' 的所有信息,是否继续?';
+        let confirmMessage = '您将任务名为\'' + row.taskName + '\' 的所有信息,是否继续?';
         let that =this;
-        let feedbackMessage = '';
         this.$confirm(confirmMessage,'删除学生',{
           confirmButtonText:'确定',
           cancelButtonText:'取消',
@@ -375,10 +387,9 @@
               instance.confirmButtonLoading = true;
               return new Promise((resolve, reject) => {
                 deleteTask(row.taskId).then((response) => {
-                  feedbackMessage = response.message;
                   instance.confirmButtonLoading = false;
                   this.$message({
-                    message: feedbackMessage,
+                    message: '删除成功',
                     type: 'success',
                     duration: 1500
                   });

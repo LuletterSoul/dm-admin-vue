@@ -24,11 +24,10 @@
         <el-form-item
           v-for="(domain, index) in domains"
           :key="domain.key"
-          :prop="'domains.' + index + '.value'"
           :label="'选择数据集' + index">
           <el-cascader
             :options="dataSetOptions"
-            v-model="selectedOptions"
+            v-model="domain.selections"
             @change="">
           </el-cascader>
           <el-button @click.prevent="removeDomain(domain)">删除</el-button>
@@ -36,13 +35,13 @@
           <el-button @click="addDomain" class="add">关联数据集</el-button>
 
 
-        <el-form-item label="选择算法">
-          <el-select style="width: 450px;" v-model="temp.algorithmId" multiple placeholder="请选择">
+        <el-form-item label="算法配置">
+          <el-select style="width: 450px;" v-model="temp.algorithmIds" multiple placeholder="请选择">
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              v-for="item in algorithms"
+              :key="item.algorithmId"
+              :label="item.algorithmName"
+              :value="item.algorithmId">
             </el-option>
           </el-select>
         </el-form-item>
@@ -77,6 +76,10 @@
     deleteTaskBatch} from 'api/tasks';
 
   import {
+    fetchAlgorithms
+  } from  'api/algorithms'
+
+  import {
     fetchCollectionList,
     fetchOptions
   } from 'api/datasets';
@@ -86,11 +89,13 @@
       this.getTaskList();
       this.getCollectionList();
       this.fetchOptionals();
+      this.getAlgorithms();
     },
     data () {
       return {
         labelPosition: 'top',
         taskList:[],
+        algorithms:[],
         collectionList:[],
         selectedOptions: [],
         miningTaskTypeOptions:[],
@@ -115,17 +120,16 @@
         ],
         temp: {
           taskName:'',
-          collectionId: [],
-          algorithmId: [],
           taskDescription:'',
           startTime: '',
           finishTime: '',
-          groupIds:[],
+//          groupIds:[],
           collectionIds:[],
           algorithmIds:[]
         },
         domains: [{
-          value: ''
+          selections:[],
+          key: Date.now()
         }],
       };
     },
@@ -137,6 +141,13 @@
           this.attributeTypeOptions = response.attributeTypeOptions;
         }).catch(error =>{
           console.error(error);
+        });
+      },
+      getAlgorithms() {
+        fetchAlgorithms().then(response => {
+          this.algorithms = response;
+        }).catch(error =>{
+          console.log(error);
         })
       },
       getTaskList() {
@@ -165,13 +176,14 @@
         })
       },
       create() {
-        this.temp.collectionId = this.selectedOptions[2];
+        this.temp.collectionIds = this.computedCollectionIds;
         createTask(this.temp).then(response => {
           this.$message({
             message:'创建成功',
             type:'success',
             duration:1500
           });
+          this.$router.push({path:'/tasks'});
         });
       },
       removeDomain(item) {
@@ -182,7 +194,7 @@
       },
       addDomain() {
         this.domains.push({
-          value: '',
+          selections:[],
           key: Date.now()
         });
       },
@@ -253,6 +265,9 @@
       },
       characteristicsCascade(){
         return this.handleMapping(this.charOptions, 'characteristics');
+      },
+      computedCollectionIds() {
+        return this.domains.map(domain => domain.selections[2]);
       }
     }
   }
