@@ -97,7 +97,7 @@
 
     <div v-show="!listLoading" class="pagination-container">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.size" layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
 
@@ -169,11 +169,11 @@
 
 <script>
 //  import { parseTime } from 'utils';
-//  import { fetchTaskList,
-//    deleteTask ,
-//    createTask,
-//    updateTask,
-//    deleteTaskBatch} from 'api/tasks';
+  import { fetchTaskList,
+    deleteTask ,
+    createTask,
+    updateTask,
+    deleteTaskBatch} from 'api/tasks';
 
   export default {
     name: 'TaskTable',
@@ -190,18 +190,11 @@
         return data;
       };
       return {
-        total: null,
+        totalElements: 0,
         listLoading: true,
         listQuery: {
-//          taskId: undefined,
-//          collectionId: undefined,
-//          algorithmId: undefined,
-//          groupId:undefined,
-//          studentId:[],
-//          startTime:undefined,
-//          finishTime:undefined,
           page: 1,
-          limit: 20,
+          size: 10,
           sort: 'taskName'
         },
         temp: {
@@ -287,9 +280,9 @@
       getTaskList() {
         let that = this;
         this.listLoading = true;
-        fetchTaskList(this.listQuery).then(response => {
-          this.taskList = response.tasks;
-          this.total = response.total;
+        fetchTaskList(Object.assign({}, this.listQuery)).then(response => {
+          this.taskList = response.content;
+          this.totalElements = response.totalElements;
           this.listLoading = false;
         }).catch(error =>{
           that.$message({
@@ -302,10 +295,11 @@
         this.getTaskList();
       },
       handleSizeChange(val) {
-        this.listQuery.limit = val;
+        this.listQuery.size = val;
         this.getTaskList();
       },
       handleCurrentChange(val) {
+        console.log("Val~~~~", val);
         this.listQuery.page = val;
         this.getTaskList();
       },

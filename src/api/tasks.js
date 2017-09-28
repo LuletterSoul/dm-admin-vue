@@ -18,9 +18,7 @@ export function createTask(task) {
   return fetch({
     url:'/tasks',
     method:'post',
-    data:{
-      task:task
-    }
+    data:task
   })
 }
 
@@ -28,9 +26,7 @@ export function updateTask(task) {
   return fetch({
     url:'/tasks',
     method:'put',
-    data:{
-      task:task
-    }
+    data:task
   })
 }
 
@@ -38,8 +34,6 @@ export function deleteTaskBatch(taskIds) {
   return fetch({
     url:'/tasks/deleteWithIdArray',
     method:'delete',
-    data:{
-      taskIds:taskIds
-    }
+    data:taskIds
   })
 }

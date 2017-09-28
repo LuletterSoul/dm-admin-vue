@@ -185,7 +185,7 @@
             <Button type="ghost" style="font-size: 16px;">取消</Button>
           </FormItem>
             <FormItem v-if="currentStep===2" style="width: 540px;">
-              <Button type="success" style="margin-top: 20px" size="large" waves long @click="handleCreate">确认录入</Button>
+              <Button :loading="uploadWaiting" type="success" style="margin-top: 20px" size="large" waves long @click="handleCreate">确认录入</Button>
               <Button style="margin-top: 10px" type="ghost" size="large" long @click="currentStep-=1">上一步</Button>
             </FormItem>
         </Form>
@@ -221,54 +221,55 @@
         ElCol},
       name: 'app',
         data() {
-            return {
-              ruleInline: {
-                collectionName:[
-                  { required: true, message: '请填写数据集名', trigger: 'blur' }
-                ],
-                characteristicIds: [
-                  { required: true, message: '至少选择一个数据特征', trigger: 'blur' }
-                ],
-                associatedTaskIds: [
-                  { required: true, message: '至少选择一个任务类型', trigger: 'blur' }
-                ],
-                attributeTypeIds: [
-                  { required: true, message: '至少选择一个属性类型', trigger: 'blur' },
-                  { type: 'string', min: 6, message: '密码长度不能小于6位', trigger: 'blur' }],
-                areaId:
-                  [{ required: true, message: '请选择主题地区', trigger: 'blur' }]
-              },
-              loadingStatus:false,
-              files:[],
-              formDynamic: {
-                items: [
-                  {
-                    file:null,
-                    fileDescription:''
-                  }
-                ],
-              },
-              currentStep:0,
-              formItem: {
-                collectionName:'Parkinson Disease Spiral Drawings Using Digitized Graphics Tablet Data Set ',
-                abstractInfo: 'For Further information about the variables see the file in the data folder.',
-                instances:0,
-                enableMissing:'Yes',
-                areaId:1111,
-                dateDonated: new Date(),
-                hits:0,
-                relevantPapers:'Liang, X., S. Li, S. Zhang, H. Huang, and S. X. Chen (2016), PM2.5 data reliability, consistency, and air quality assessment in five Chinese cities, J. Geophys. Res. Atmos., 121, 10220â€“10236, [Web Link].\n' +
-                '\n',
-                characteristicIds: [0],
-                associatedTaskIds:[0],
-                attributeTypeIds:[0],
-                containerIds:[]
-              },
-              miningTaskTypeOptions:[],
-              areaTypeOptions:[],
-              charOptions:[],
-              attributeTypeOptions:[],
-            }
+          return {
+            uploadWaiting: false,
+            ruleInline: {
+              collectionName: [
+                {required: true, message: '请填写数据集名', trigger: 'blur'}
+              ],
+              characteristicIds: [
+                {required: true, message: '至少选择一个数据特征', trigger: 'blur'}
+              ],
+              associatedTaskIds: [
+                {required: true, message: '至少选择一个任务类型', trigger: 'blur'}
+              ],
+              attributeTypeIds: [
+                {required: true, message: '至少选择一个属性类型', trigger: 'blur'},
+                {type: 'string', min: 6, message: '密码长度不能小于6位', trigger: 'blur'}],
+              areaId:
+                [{required: true, message: '请选择主题地区', trigger: 'blur'}]
+            },
+            loadingStatus: false,
+            files: [],
+            formDynamic: {
+              items: [
+                {
+                  file: null,
+                  fileDescription: ''
+                }
+              ],
+            },
+            currentStep: 0,
+            formItem: {
+              collectionName: 'Parkinson Disease Spiral Drawings Using Digitized Graphics Tablet Data Set ',
+              abstractInfo: 'For Further information about the variables see the file in the data folder.',
+              instances: 0,
+              enableMissing: 'Yes',
+              areaId: 1111,
+              dateDonated: new Date(),
+              hits: 0,
+              relevantPapers: 'Liang, X., S. Li, S. Zhang, H. Huang, and S. X. Chen (2016), PM2.5 data reliability, consistency, and air quality assessment in five Chinese cities, J. Geophys. Res. Atmos., 121, 10220â€“10236, [Web Link].\n' +
+              '\n',
+              characteristicIds: [0],
+              associatedTaskIds: [0],
+              attributeTypeIds: [0],
+              containerIds: []
+            },
+            miningTaskTypeOptions: [],
+            areaTypeOptions: [],
+            charOptions: [],
+            attributeTypeOptions: [],
+          };
         },
       created() {
         this.fetchOptionals();
@@ -333,16 +334,16 @@
         handleCreate() {
           let that = this;
           //先构建好数据集容器
+          this.uploadWaiting = true;
           for (let i =0;i<that.files.length;++i) {
                 createDataSetContainer({fileDescription: that.formDynamic.items[i].fileDescription})
                   .then(container => {
                     let containerId = container.containerId;
                     that.formItem.containerIds.push(containerId);
-                  uploadDataSetContainer(containerId, that.files[i]).then(filePath => {
-                    console.log(filePath);
-                  }).catch(error => {
-                    console.log(error);
-                  })
+//                  uploadDataSetContainer(containerId, that.files[i]).then(filePath => {
+//                  }).catch(error => {
+//                    console.log(error);
+//                  })
                   }).catch(error => {
                   console.log(error);
                 });
@@ -352,6 +353,7 @@
         createCollectionAfter(){
           let vm = this;
           createCollection(this.formItem).then(collection => {
+            this.uploadWaiting = false;
             this.$message({
               message: '上传成功',
               type: 'info',

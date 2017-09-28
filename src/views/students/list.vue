@@ -116,7 +116,7 @@
     </el-table>
     <div v-show="!listLoading" class="pagination-container">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.size" layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
 
@@ -199,13 +199,13 @@
         total: null,
         listLoading: true,
         listQuery: {
-          studentId: undefined,
-          studentName: undefined,
-          className: undefined,
-          profession:undefined,
-          grade:undefined,
+//          studentId: undefined,
+//          studentName: undefined,
+//          className: undefined,
+//          profession:undefined,
+//          grade:undefined,
           page: 1,
-          size: 20,
+          size: 10,
           sort: '+id'
         },
         temp: {
@@ -332,7 +332,7 @@
         this.getStudentList();
       },
       handleSizeChange(val) {
-        this.listQuery.limit = val;
+        this.listQuery.size = val;
         this.getStudentList();
       },
       handleCurrentChange(val) {

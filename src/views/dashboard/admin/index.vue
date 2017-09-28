@@ -1,6 +1,6 @@
 <template>
     <div>
-      <div class="title">主页</div>
+      <!--<div class="title">主页</div>-->
 
       <sweet-modal class="ask" ref="modal" icon="warning" title="登出">
         确认退出系统吗?
@@ -49,15 +49,14 @@
             <div style="font-size: 16px;">
               <p >用户名: {{  userProfile.name }}</p>
               <p style="margin-top: 10px">个性签名: {{  userProfile.introduction }}</p>
-              <p style="margin-top: 10px">上一次登录时间:  {{ userProfile.lastLoginTime }}</p>
-              <p style="margin-top: 10px">管理状态: {{  userProfile.accessStatus }}</p>
+              <p style="margin-top: 10px">上一次登录时间:  2017-09-29 13:03:55</p>
+              <p style="margin-top: 10px">管理状态: 可用</p>
             </div>
             <!--<div v-for="o in 4" :key="o" class="text item">-->
             <!--{{'列表内容 ' + o }}-->
             <!--</div>-->
           </el-card>
         </div>
-
       </div>
 
 
@@ -69,7 +68,7 @@
 
       <div class="user">
         <div slot="header" class="box-card-header">
-          <pan-thumb class="panThumb" :image="avatar">
+          <pan-thumb class="panThumb" :image="userProfile.avatar">
             Pain and pleasure,like light and darkness,succeed each other.
           </pan-thumb>
         </div>
@@ -122,7 +121,7 @@
           comment_count: 102400,
           latest_article: [],
           month_article_count: 28,
-          operationCount: 1024
+          operationCount: 789
         }
       }
     },

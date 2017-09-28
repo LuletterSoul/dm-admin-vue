@@ -16,9 +16,9 @@
               <el-form-item label="生日">
                 <el-col :span="11">
                   <el-date-picker type="date"
-                                  v-model="newUserProfile.birthday"
                                   style="width: 100%;"
-                                  :default-value="newUserProfile.birthday">
+                                  v-model="newUserProfile.birthday"
+                                  >
                   </el-date-picker>
                 </el-col>
               </el-form-item>
@@ -39,8 +39,8 @@
                 <!--<el-switch on-text="" off-text="" v-model=""></el-switch>-->
               </el-form-item>
               <el-form-item label="权限角色">
-                <el-checkbox-group v-model="newUserProfile.roles">
-                  <el-checkbox v-for="role in roles" :label="role" :key="role">{{ role }}</el-checkbox>
+                <el-checkbox-group>
+                  <el-checkbox v-model="roles1" v-for="role in roles" :label="role" :key="role">{{ role }}</el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
               <el-form-item>
@@ -86,23 +86,26 @@
     data() {
       return {
         imageCropperShow: false,
+        imageCropperShow: false,
         imageCropperKey: 0,
         singlePlace: '450981',
         chinaRegionData: {},
         newUserProfile: {},
-        roles: [],
+        roles1: ['admin'],
+        roles2:[],
+        birthday:null,
         isAvailable: false
       };
     },
     mounted() {
       this.chinaRegionData = regionData;
       this.newUserProfile = deepCopyObject(this.userProfile);
-      this.roles = this.newUserProfile.roles;
-      this.isAvailable = this.newUserProfile.status === "A";
+      this.isAvailable = true;
     },
     computed: {
       ...mapGetters([
-        'userProfile'
+        'userProfile',
+        'roles'
       ])
     },
     methods: {
@@ -142,12 +145,17 @@
                 instance.confirmButtonLoading = true;
                 return new Promise((resolve,reject) =>{
                   update(that.newUserProfile).then(response => {
+                    this.$store.dispatch('GetInfo', response.username).then(() => {
+                    }).catch(error => console.log(error));
+                      setTimeout(function () {
+                        vm.$router.push({path: '/'});
+                      },4000);
                     setTimeout(() => {
                       instance.confirmButtonLoading = false;
                     }, 1000);
                     that.$message({
                       type: 'success',
-                      message: response.data
+                      message: '更新成功'
                     });
                     that.returnHome();
                     resolve(response);

@@ -2,7 +2,7 @@
     <div id="app">
 
       <div class="dataSetTableTitle">
-        数据集库展示
+        数据集信息
       </div>
       <div style="margin-top:20px ;padding: 20px;">
         <template>
@@ -174,7 +174,7 @@
   .dataSetTableTitle{
     margin-top: 20px;
     margin-bottom: 20px;
-    width:22%;
+    width:20%;
     font:bold 36px 微软雅黑;
   }
   .list-item {

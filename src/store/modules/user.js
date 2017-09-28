@@ -15,7 +15,7 @@ const user = {
     avatar: '',
     introduction: '',
     roles: [],
-    lastLoginTime :'',
+    lastLoginTime :'2017-09-29 13:03:55',
     regionCode:'',
     gender:'',
     userProfile: {},
@@ -160,6 +160,7 @@ const user = {
           // commit('SET_STATUS', profile.status);
           // commit('SET_REGION_CODE', profile.regionCode);
           // commit('SET_GENDER', profile.gender);
+          commit('SET_AVATAR',response.avatar);
           commit('SET_USER_PROFILE', response);
           resolve(response);
         }).catch(error => {

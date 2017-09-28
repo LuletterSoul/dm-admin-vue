@@ -17,8 +17,6 @@ const Err404 = _import('404');
 
 /* demo page */
 const Form = _import('page/form');
-const Table = _import('table/index');
-
 Vue.use(Router);
 
 /**
