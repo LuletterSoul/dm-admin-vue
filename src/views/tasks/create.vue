@@ -134,6 +134,17 @@
       };
     },
     methods:{
+      resetTemp(){
+        this.temp =  {
+          taskName:'',
+          taskDescription:'',
+          startTime: '',
+          finishTime: '',
+          groupIds:[],
+          collectionIds:[],
+          algorithmIds:[]
+        }
+      },
       fetchOptionals() {
         fetchOptions().then(response =>{
           this.charOptions = response.charOptions;
@@ -183,6 +194,7 @@
             type:'success',
             duration:1500
           });
+          this.resetTemp();
           this.$router.push({path:'/tasks'});
         });
       },

@@ -16,14 +16,15 @@ service.interceptors.request.use(config => {
     const username = store.getters.username;
     //每次请求发送前都需要申请一次token认证服务;
     return new Promise((resolve, reject) => {
-      return store.dispatch('GetToken', username).then((token) => {
+      return store.dispatch('GetToken', username).then((certificate) => {
       config.headers['X-timestamp'] = new Date().Format('yyyy-MM-dd HH:mm:ss');
       config.headers['Username'] = username;
+      config.headers['X-ApiKey'] = certificate.apiKey;
       if (config.params === undefined) {
         config['params'] = {};
       }
       config.params['username'] = username;
-      config.params['clientDigest'] = clientDigest(store.getters.password, token, config.params);
+      config.params['clientDigest'] = clientDigest(store.getters.password, certificate.token, config.params);
       resolve(config);
     }).catch(error =>{
         reject(error);
