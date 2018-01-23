@@ -14,7 +14,7 @@ export function login(email, password) {
 
 export function getToken(username) {
   return token({
-    url:'/user/'+username+'/token',
+    url:'/token/'+username,
     method:'get'
   })
 }
@@ -29,24 +29,24 @@ export function getToken(username) {
 
 export function getPublicSalt(username) {
   return token({
-    url:'/user/'+username+'/publicSalt',
+    url:'/public_salt/'+username,
     method:'get'
   })
 }
 
-export function getUserInfo(username) {
-  return fetch({
-    url:'/user/'+username,
-    method:'get'
-  })
-}
-
-export function getUserRoles(username) {
-  return fetch({
-    url:'/user/'+username+'/roles',
-    method:'get'
-  })
-}
+// export function getUserInfo(username) {
+//   return fetch({
+//     url:'/user/'+username,
+//     method:'get'
+//   })
+// }
+//
+// export function getUserRoles(username) {
+//   return fetch({
+//     url:'/user/'+username+'/roles',
+//     method:'get'
+//   })
+// }
 
 export function logout() {
   return fetch({

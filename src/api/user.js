@@ -8,3 +8,17 @@ export function update(newProfile) {
     data: newProfile
   });
 }
+
+export function getUserInfo(username) {
+  return fetch({
+    url:'/user/'+username,
+    method:'get'
+  })
+}
+
+export function getUserRoles(username) {
+  return fetch({
+    url:'/user/'+username+'/roles',
+    method:'get'
+  })
+}

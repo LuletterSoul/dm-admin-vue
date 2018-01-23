@@ -7,7 +7,7 @@ import { clientDigest } from "./compute"
 import { getToken } from  "@/api/login"
 // 创建axios实例
 const service = axios.create({
-  baseURL: process.env.BASE_API, // api的base_url
+  baseURL: process.env.BASE_API+"/api/v1", // api的base_url
   // timeout: 20000                  // 请求超时时间
 });
 
@@ -20,6 +20,7 @@ service.interceptors.request.use(config => {
       config.headers['X-timestamp'] = new Date().Format('yyyy-MM-dd HH:mm:ss');
       config.headers['Username'] = username;
       config.headers['X-ApiKey'] = certificate.apiKey;
+        console.log(config.headers['X-ApiKey']);
       if (config.params === undefined) {
         config['params'] = {};
       }

@@ -48,12 +48,12 @@
 
 
         <el-form-item label="开始时间">
-           <el-date-picker type="date" placeholder="选择日期" v-model="temp.startTime">
+           <el-date-picker type="date" placeholder="选择日期" v-model="temp.startTime" @change="handleBeginDateChange">
            </el-date-picker>
         </el-form-item>
 
         <el-form-item label="截止时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="temp.finishTime">
+          <el-date-picker type="date" placeholder="选择日期" v-model="temp.finishTime" @change="handleEndDateChange">
           </el-date-picker>
         </el-form-item>
 
@@ -86,7 +86,6 @@
   export default {
     name: 'app',
     created(){
-      this.getTaskList();
       this.getCollectionList();
       this.fetchOptionals();
       this.getAlgorithms();
@@ -101,6 +100,10 @@
         miningTaskTypeOptions:[],
         charOptions:[],
         attributeTypeOptions:[],
+        listQuery: {
+          page: 1,
+          size: 50
+        },
         options: [{
           value: '选项1',
           label: '01'
@@ -209,6 +212,12 @@
           selections:[],
           key: Date.now()
         });
+      },
+      handleBeginDateChange(date){
+        this.temp.startTime = date;
+      },
+      handleEndDateChange(date) {
+        this.temp.finishTime = date;
       },
       handleMapping(multiple,name) {
         return multiple.map(m => {

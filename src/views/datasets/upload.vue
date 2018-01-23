@@ -155,7 +155,7 @@
                     <FormItem   label="备注" style="margin-top: 10px">
                       <Row>
                         <Col span="12">
-                        <Input style="font-size: 16px" type="text" v-model="item.fileDescription" placeholder="请输入..."></Input>
+                        <Input style="font-size: 16px" type="text" v-model="item.fileDescription" placeholder="请输入..."/>
                         </Col>
                       </Row>
                     </FormItem>
