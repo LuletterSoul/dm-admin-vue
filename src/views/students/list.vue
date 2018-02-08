@@ -4,15 +4,15 @@
       学生信息管理
     </div>
     <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="学号" v-model="listQuery.studentId">
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" @change='handleFilter' class="filter-item" placeholder="学号" v-model="listQuery.studentId">
       </el-input>
 
-      <el-select clearable style="width: 100px" class="filter-item" v-model="listQuery.grade" placeholder="年级">
+      <el-select clearable style="width: 100px" @change='handleFilter' class="filter-item" v-model="listQuery.grade" placeholder="年级">
         <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
         </el-option>
       </el-select>
 
-      <el-select clearable class="filter-item" style="width: 130px" v-model="listQuery.className" placeholder="班级">
+      <el-select clearable class="filter-item" @change='handleFilter' style="width: 130px" v-model="listQuery.className" placeholder="班级">
         <el-option v-for="item in  classNameOptions" :key="item.key" :label="item" :value="item">
         </el-option>
       </el-select>
@@ -199,14 +199,14 @@
         total: null,
         listLoading: true,
         listQuery: {
-//          studentId: undefined,
-//          studentName: undefined,
-//          className: undefined,
-//          profession:undefined,
-//          grade:undefined,
-          page: 1,
+          studentId: "",
+          studentName: "",
+          className: "",
+          profession:"",
+          grade:"",
+          page: 0,
           size: 10,
-          sort: '+id'
+          sort:"studentId,ASC",
         },
         temp: {
           studentId:'',
@@ -248,7 +248,7 @@
           chineseValue:'空闲',
           englishValue:'available',
         }],
-        sortOptions: [{label: '按学号升序', key: '+id'}, {label: '按学号降序', key: '-id'}],
+        sortOptions: [{label: '按学号升序', key: 'studentId,ASC'}, {label: '按学号降序', key: 'studentId,DESC'}],
         multipleSelection:[],
         isDisplayFavoriteColumn:false,
         gradeOptions:[
@@ -336,7 +336,7 @@
         this.getStudentList();
       },
       handleCurrentChange(val) {
-        this.listQuery.page = val;
+        this.listQuery.page = val -1;
         this.getStudentList();
       },
       handleBatchDelete() {
@@ -358,6 +358,7 @@
                   done();
                 }).catch(error =>{
                   //捕获错误;
+                  instance.confirmButtonLoading=false;
                   reject(error);
                   done();
                 })
@@ -451,7 +452,9 @@
             if(action==='confirm'){
               instance.confirmButtonLoading = true;
               return new Promise((resolve, reject) => {
-                deleteStudent(row.studentId).then((response) => {
+                let studentIds = [];
+                studentIds.push(row.studentId);
+                deleteStudentBatch(studentIds).then((response) => {
                   instance.confirmButtonLoading = false;
                   this.$message({
                     message: '删除成功',
@@ -461,6 +464,7 @@
                   done();
                   resolve(response);
                 }).catch(error => {
+                  instance.confirmButtonLoading = false;
                   done();
                   this.$message({
                     message: error,

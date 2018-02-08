@@ -2,7 +2,7 @@ import fetch from 'utils/fetch';
 
 export function fetchCollectionList(query) {
   return fetch({
-    url:'/dataSets',
+    url:'/data_sets',
     method:'get',
     params: query
   })
@@ -10,14 +10,14 @@ export function fetchCollectionList(query) {
 
 export function deleteCollection(dataSetId) {
   return fetch({
-    url:'/dataSets/'+dataSetId,
+    url:'/data_sets/'+dataSetId,
     method:'delete'
   })
 }
 
 export function createCollection(dataSet) {
   return fetch({
-    url:'/dataSets',
+    url:'/data_sets',
     method:'post',
     data:dataSet
   })
@@ -25,14 +25,14 @@ export function createCollection(dataSet) {
 
 export function getCollection(collectionId) {
   return fetch({
-    url:'/dataSets/'+collectionId,
+    url:'/data_sets/'+collectionId,
     method:'get'
   })
 }
 
 export function updateCollection(dataSet) {
   return fetch({
-    url:'/dataSets',
+    url:'/data_sets',
     method:'put',
     data:dataSet
   })
@@ -40,7 +40,7 @@ export function updateCollection(dataSet) {
 
 export function deleteCollectionsBatch(collectionIds) {
   return fetch({
-    url:'/dataSets/deleteWithArray',
+    url:'/data_sets',
     method:'delete',
     data:collectionIds
   })
@@ -123,7 +123,7 @@ export function fetchOptionalTaskTypes() {
 
 export function fetchOptionaAttributeTypes() {
   return fetch({
-    url:'/attributeTypes',
+    url:'/attributeChars',
     method:'get'
   })
 }

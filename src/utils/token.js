@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {Message} from 'element-ui';
 import store from '../store';
+import {formatDate} from "./compute"
 import {getUsername} from "./auth";
 
 var decodeBase64 = require("crypto-js/enc-base64");
@@ -13,7 +14,7 @@ const tokenService = axios.create({
 
 // request拦截器
 tokenService.interceptors.request.use(config => {
-  config.headers['X-timestamp'] = new Date().Format('yyyy-MM-dd hh:mm:ss');
+  config.headers['X-timestamp'] = formatDate(new Date(),'yyyy-MM-dd HH:mm:ss');
   config.headers['Username'] = store.getters.username;
   return config;
 }, error => {
@@ -37,20 +38,20 @@ tokenService.interceptors.response.use(
   }
 );
 
-Date.prototype.Format = function (fmt) { //author: meizz
-  var o = {
-    "M+": this.getMonth() + 1, //月份
-    "d+": this.getDate(), //日
-    "h+": this.getHours(), //小时
-    "m+": this.getMinutes(), //分
-    "s+": this.getSeconds(), //秒
-    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-    "S": this.getMilliseconds() //毫秒
-  };
-  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-  for (var k in o)
-    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-  return fmt;
-};
+// Date.prototype.Format = function (fmt) { //author: meizz
+//   var o = {
+//     "M+": this.getMonth() + 1, //月份
+//     "d+": this.getDate(), //日
+//     "h+": this.getHours(), //小时
+//     "m+": this.getMinutes(), //分
+//     "s+": this.getSeconds(), //秒
+//     "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+//     "S": this.getMilliseconds() //毫秒
+//   };
+//   if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+//   for (var k in o)
+//     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+//   return fmt;
+// };
 
 export default tokenService;

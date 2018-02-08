@@ -57,9 +57,9 @@
             dateDonated: null,
             hits: 0,
             relevantPapers: '',
-            characteristics: [],
+            dataSetCharacteristics: [],
             associatedTasks: [],
-            attributeTypes: [],
+            attributeCharacteristics: [],
             area: []
           }
         }
@@ -80,11 +80,11 @@
         columns1: [
           {
             title: '特征',
-            key: 'characteristics'
+            key: 'dataSetChars'
           },
           {
             title: '属性类型',
-            key: 'attributeTypes'
+            key: 'attributeChars'
           },
           {
             title: '相关任务',
@@ -95,11 +95,11 @@
         columns2: [
           {
             title: '实例数',
-            key: 'instances'
+            key: 'numberOfAttributes'
           },
           {
             title: '允许缺省?',
-            key: 'enableMissing'
+            key: 'isMissingValues'
           }
         ],
 
@@ -158,16 +158,16 @@
       data1(){
         return [
           {
-            characteristics: this.dataSet.characteristics.map(char => char.englishName).join(),
-            attributeTypes: this.dataSet.attributeTypes.map(attr =>attr.englishName).join(),
+            dataSetChars: this.dataSet.dataSetCharacteristics.map(char => char.englishName).join(),
+            attributeChars: this.dataSet.attributeCharacteristics.map(attr =>attr.englishName).join(),
             associatedTasks: this.dataSet.associatedTasks.map(task => task.englishName).join()
           }
           ]
       },
       data2(){
         return [{
-            instances: this.dataSet.instances,
-            enableMissing: this.dataSet.enableMissing
+            instances: this.dataSet.numberOfInstances,
+            enableMissing: this.dataSet.isMissingValues
           }]
       } ,
       data3(){

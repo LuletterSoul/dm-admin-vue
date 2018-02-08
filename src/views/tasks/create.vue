@@ -98,9 +98,9 @@
         algorithms:[],
         collectionList:[],
         selectedOptions: [],
-        miningTaskTypeOptions:[],
-        charOptions:[],
-        attributeTypeOptions:[],
+        associatedTaskOptions:[],
+        dataSetCharOptions:[],
+        attrCharOptions:[],
         options: [{
           value: '选项1',
           label: '01'
@@ -147,9 +147,9 @@
       },
       fetchOptionals() {
         fetchOptions().then(response =>{
-          this.charOptions = response.charOptions;
-          this.miningTaskTypeOptions = response.miningTaskTypeOptions;
-          this.attributeTypeOptions = response.attributeTypeOptions;
+          this.dataSetCharOptions = response.dataSetCharOptions;
+          this.associatedTaskOptions = response.associatedTaskOptions;
+          this.attrCharOptions = response.attrCharOptions;
         }).catch(error =>{
           console.error(error);
         });
@@ -245,12 +245,12 @@
       dataSetOptions() {
         return [
           {
-            value: 'characteristics',
+            value: 'dataSetChars',
             label: '数据特征',
             children: this.characteristicsCascade
           },
           {
-            value: 'attributeTypes',
+            value: 'attributeChars',
             label: '属性类型',
             children:this.attributeTypesCascade
           }, {
@@ -261,7 +261,7 @@
         ]
       },
       charsCascade(){
-        return this.charOptions.map(char => {
+        return this.dataSetCharOptions.map(char => {
           return {
             value: char.englishName,
             label: char.chineseName
@@ -270,13 +270,13 @@
       },
       //数据集分类器
       miningTaskTypesCascade(){
-        return this.handleMapping(this.miningTaskTypeOptions, 'associatedTasks');
+        return this.handleMapping(this.associatedTaskOptions, 'associatedTasks');
       },
       attributeTypesCascade(){
-        return this.handleMapping(this.attributeTypeOptions, 'attributeTypes');
+        return this.handleMapping(this.attrCharOptions, 'attributeChars');
       },
       characteristicsCascade(){
-        return this.handleMapping(this.charOptions, 'characteristics');
+        return this.handleMapping(this.dataSetCharOptions, 'dataSetChars');
       },
       computedCollectionIds() {
         return this.domains.map(domain => domain.selections[2]);

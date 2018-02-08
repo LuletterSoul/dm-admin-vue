@@ -7,12 +7,6 @@ export function fetchStudentList(query) {
     params: query
   })
 }
-export function deleteStudent(studentId) {
-  return fetch({
-    url:'/students/'+studentId,
-    method:'delete'
-  })
-}
 
 export function createStudent(student) {
   return fetch({
@@ -32,7 +26,7 @@ export function updateStudent(student) {
 
 export function deleteStudentBatch(studentIds) {
   return fetch({
-    url:'/students/deleteWithArray',
+    url:'/students',
     method:'delete',
     data:studentIds
   })

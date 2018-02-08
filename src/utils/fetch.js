@@ -3,11 +3,11 @@ import {Message} from 'element-ui';
 import store from '../store';
 // import {getToken} from '@/utils/auth';
 import {getUsername} from "./auth";
-import { clientDigest } from "./compute"
+import {formatDate,clientDigest } from "./compute"
 import { getToken } from  "@/api/login"
 // 创建axios实例
 const service = axios.create({
-  baseURL: process.env.BASE_API, // api的base_url
+  baseURL: process.env.SERVER_API, // api的base_url
   // timeout: 20000                  // 请求超时时间
 });
 
@@ -17,7 +17,7 @@ service.interceptors.request.use(config => {
     //每次请求发送前都需要申请一次token认证服务;
     return new Promise((resolve, reject) => {
       return store.dispatch('GetToken', username).then((certificate) => {
-      config.headers['X-timestamp'] = new Date().Format('yyyy-MM-dd HH:mm:ss');
+      config.headers['X-timestamp'] = formatDate(new Date(),'yyyy-MM-dd HH:mm:ss');
       config.headers['Username'] = username;
       config.headers['X-ApiKey'] = certificate.apiKey;
       if (config.params === undefined) {
@@ -77,20 +77,20 @@ service.interceptors.response.use(
   }
 );
 
-Date.prototype.Format = function (fmt) { //author: meizz
-  var o = {
-    "M+": this.getMonth() + 1, //月份
-    "d+": this.getDate(), //日
-    "h+": this.getHours(), //小时
-    "m+": this.getMinutes(), //分
-    "s+": this.getSeconds(), //秒
-    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-    "S": this.getMilliseconds() //毫秒
-  };
-  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-  for (var k in o)
-    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-  return fmt;
-};
+// Date.prototype.Format = function (fmt) { //author: meizz
+//   var o = {
+//     "M+": this.getMonth() + 1, //月份
+//     "d+": this.getDate(), //日
+//     "h+": this.getHours(), //小时
+//     "m+": this.getMinutes(), //分
+//     "s+": this.getSeconds(), //秒
+//     "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+//     "S": this.getMilliseconds() //毫秒
+//   };
+//   if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+//   for (var k in o)
+//     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+//   return fmt;
+// };
 
 export default service;

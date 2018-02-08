@@ -1,4 +1,5 @@
-import { login, logout,getToken,getPublicSalt,getUserInfo,getUserRoles } from '@/api/login';
+import { login, logout,getUserInfo,getUserRoles } from '@/api/login';
+import { getToken,getPublicSalt } from '@/api/token';
 import { removeToken,setUsername,getUsername} from '@/utils/auth';
 import { computeEncryptPassword } from "@/utils/compute"
 
