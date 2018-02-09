@@ -4,30 +4,17 @@
       学生信息管理
     </div>
     <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" @change='handleFilter' class="filter-item" placeholder="学号" v-model="listQuery.studentId">
-      </el-input>
-
-      <el-select clearable style="width: 100px" @change='handleFilter' class="filter-item" v-model="listQuery.grade" placeholder="年级">
-        <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
-        </el-option>
-      </el-select>
-
-      <el-select clearable class="filter-item" @change='handleFilter' style="width: 130px" v-model="listQuery.className" placeholder="班级">
-        <el-option v-for="item in  classNameOptions" :key="item.key" :label="item" :value="item">
-        </el-option>
-      </el-select>
-
-      <el-select @change='handleFilter' style="width: 120px" class="filter-item" v-model="listQuery.sort" placeholder="排序">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
-        </el-option>
-      </el-select>
-
-      <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">筛选</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-plus">添加</el-button>
-      <el-button class="filter-item" type="primary" icon="el-icon-document" @click="handleDownload">导出</el-button>
-      <el-button class="filter-item" type="primary" icon="el-icon-delete" v-waves @click="handleBatchDelete" :disabled="!multipleSelection.length">批量删除</el-button>
-      <el-button class="filter-item" type="warning" icon="el-icon-star-on" v-waves @click="markFavoriteStudent" v-if="multipleSelection.length" >收藏</el-button>
-      <el-button class="filter-item" type="warning" icon="el-icon-star-off" :plain="true" v-waves @click="unMarkFavoriteStudent" v-if="multipleSelection.length" >取消收藏</el-button>
+      <el-upload class="filter-item"
+        action="https://jsonplaceholder.typicode.com/posts/"
+        :auto-upload="false"
+        :on-preview="handleFilePreview"
+        :on-remove="handleFileRemove"
+        :before-remove="beforeFileRemove"
+        :file-list="fileList">
+        <el-button type="primary" plain icon="el-icon-upload" @click="handleImport">导入</el-button>
+        <!--<div slot="tip" class="el-upload__tip">只能上传服务器提供.xlsx文件</div>-->
+      </el-upload>
+      <el-button class="filter-item" type="success" icon="el-icon-document" @click="handleDownload">下载模板</el-button>
     </div>
     <el-table :key='tableKey' :data="studentList"
               ref="studentTable"
@@ -109,7 +96,7 @@
 
       <el-table-column align="center"  label="操作" min-width="200px">
         <template slot-scope="scope">
-          <el-button size="small" icon="edit"  type = "success" @click="handleUpdate(scope.row)">更新</el-button>
+          <el-button size="small" icon="edit"  type = "primary" @click="handleUpdate(scope.row)">更新</el-button>
           <el-button size="small" icon="delete" type = "danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -169,8 +156,9 @@
 </template>
 
 <script>
-  import { fetchList, fetchPv } from 'api/article_table';
+  import FileSaver from 'file-saver'
   import { parseTime,deleteEmptyProperty } from 'utils';
+  import {downloadStudentExcelModule} from 'api/excel_modules'
   import { fetchStudentList,
            deleteStudent ,
           createStudent,
@@ -196,6 +184,7 @@
     name: 'StudentTable',
     data() {
       return {
+        fileList:[],
         total: null,
         listLoading: true,
         listQuery: {
@@ -303,6 +292,15 @@
       }
     },
     methods: {
+      handleFileRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handleFilePreview(file) {
+        console.log(file);
+      },
+      beforeFileRemove(file, fileList) {
+        return this.$confirm(`确定移除 ${ file.name }？`);
+      },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
@@ -331,9 +329,6 @@
       handleImport() {
 
       },
-      handleFilter() {
-        this.getStudentList();
-      },
       handleSizeChange(val) {
         this.listQuery.size = val;
         this.getStudentList();
@@ -341,80 +336,6 @@
       handleCurrentChange(val) {
         this.listQuery.page = val -1;
         this.getStudentList();
-      },
-      handleBatchDelete() {
-        let confirmMessage = '您将删除所有被选择学生的信息,是否继续?';
-        let studentIds = this.multipleSelection.map(item => item.studentId);
-        let that =this;
-        this.$confirm(confirmMessage,'批量删除学生',{
-          confirmButtonText:'确认',
-          cancelButtonText:'取消',
-          beforeClose: (action,instance,done) =>{
-            if(action ==='confirm'){
-              //显示加载按钮
-              instance.confirmButtonLoading = true;
-              return new Promise((resolve,reject) =>{
-                //通过API发送批量删除请求
-                deleteStudentBatch(studentIds).then(response =>{
-                  instance.confirmButtonLoading=false;
-                  resolve(response);
-                  done();
-                }).catch(error =>{
-                  //捕获错误;
-                  instance.confirmButtonLoading=false;
-                  reject(error);
-                  done();
-                })
-              })
-            }
-            //关闭确认框
-            done();
-          }
-        }).then((message) =>{
-          //删除被选中的行
-//          that.studentList = that.studentList.filter(student =>
-//          !that.multipleSelection.some(row => row.studentId === student.studentId));
-          that.getStudentList();
-          that.$message({
-            message: '批量删除成功',
-            type: 'success',
-            duration: 1500
-          });
-        }).catch(() =>{
-          this.$message({
-            message: '取消批量删除操作',
-            type: 'info',
-            duration: 1500
-          });
-        })
-      },
-      markFavoriteStudent() {
-        let favoriteStudents = this.multipleSelection.filter(row => !row.favorite.value);
-        let studentIds = favoriteStudents.map(student => student.studentId);
-        let that = this;
-          markStudent(studentIds).then(response =>{
-            favoriteStudents.forEach(student => {
-              student.favorite = {key: '已收藏', value: true};
-            });
-            that.$message({
-              type:'success',
-              message:'收藏成功'
-            })
-          })
-      },
-      unMarkFavoriteStudent() {
-        let favoriteStudents = this.multipleSelection.filter(row => row.favorite.value);
-        let studentIds = favoriteStudents.map(student => student.studentId);
-        let that = this;
-        markStudent(studentIds).then(response =>{
-          favoriteStudents.forEach(student => {
-            student.favorite = {key: '未收藏', value: false};
-          });
-          that.$message({
-            type:'success',
-            message:'已取消收藏'
-          })
-        })
       },
       timeFilter(time) {
         if (!time[0]) {
@@ -543,13 +464,12 @@
         })
       },
       handleDownload() {
-        require.ensure([], () => {
-          const { export_json_to_excel } = require('vendor/Export2Excel');
-          const tHeader = ['学号', '姓名', '年级', '专业', '班级','参与任务数'];
-          const filterVal = ['studentId', 'studentName', 'grade', 'profession', 'className','finishedTaskCount'];
-          const data = this.formatJson(filterVal, this.list);
-          export_json_to_excel(tHeader, data, '学生基本信息表');
-        })
+        downloadStudentExcelModule().then(response => {
+          const effectiveFileName = "student_module.xlsx";
+          FileSaver.saveAs(response, effectiveFileName);
+        }).catch((response) => {
+          console.error("Could not download the Excel module from the backend.", response);
+        });
       },
       formatJson(filterVal, jsonData) {
         return jsonData.map(v => filterVal.map(j => {

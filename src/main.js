@@ -66,7 +66,6 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next({path: '/'});
     } else {
-
       if (store.getters.roles.length === 0) {
         store.dispatch('GetInfo',store.getters.username).then(() => {
           store.dispatch('GetUserRoles',store.getters.username).then(res =>{

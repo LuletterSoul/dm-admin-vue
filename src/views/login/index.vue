@@ -101,9 +101,11 @@
             this.$store.dispatch('Login', this.loginForm).then(() => {
               setTimeout(function () {
                 vm.$router.push({path: '/'});
-              },4000);
+              },2000);
             }).catch(() => {
               this.loading = false;
+              console.log("登录出错");
+              vm.$router.push({path: '/login'});
             });
           } else {
             console.log('error submit!!');

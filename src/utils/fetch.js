@@ -10,7 +10,6 @@ const service = axios.create({
   baseURL: process.env.SERVER_API, // api的base_url
   // timeout: 20000                  // 请求超时时间
 });
-
 // request拦截器
 service.interceptors.request.use(config => {
     const username = store.getters.username;

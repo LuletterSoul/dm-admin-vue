@@ -32,7 +32,7 @@
       <el-table-column v-if="multipleSelection.length" type="selection" width="55"></el-table-column>
 
       <el-table-column align="center" label="任务名" width="100px">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-tooltip class="item" effect="light" :content="scope.row.taskName" placement="top-start">
             <span>{{scope.row.taskName}}</span>
           </el-tooltip>
@@ -40,7 +40,7 @@
       </el-table-column>
 
       <!--<el-table-column align="center" label="数据集编号" width="120px">-->
-        <!--<template scope="scope">-->
+        <!--<template slot-scope="scope">-->
           <!--<el-tooltip class="item" effect="light" :content="scope.row.collectionId" placement="top-start">-->
             <!--<span>{{scope.row.collectionId}}</span>-->
           <!--</el-tooltip>-->
@@ -48,7 +48,7 @@
       <!--</el-table-column>-->
 
       <el-table-column align="center" label="算法配置" width="250px">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-tag
               v-for="(tag,index) in scope.row.algorithms"
               :key="tag.algorithmId"
@@ -64,7 +64,7 @@
 
 
       <el-table-column class-name="status-col" align="center"  label="任务状态" width="150">
-        <template scope="scope">
+        <template slot-scope="scope">
           <!--<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>-->
           <span>
               未分配
@@ -73,7 +73,7 @@
       </el-table-column>
 
       <el-table-column align="center" label="开始时间" width="250px">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-tooltip class="item" effect="light" :content="scope.row.startTime" placement="top-start">
             <span>{{scope.row.startTime}}</span>
           </el-tooltip>
@@ -81,7 +81,7 @@
       </el-table-column>
 
       <el-table-column align="center" label="截止时间" width="250px">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-tooltip class="item" effect="light" :content="scope.row.finishTime" placement="top-start">
             <span>{{scope.row.finishTime}}</span>
           </el-tooltip>
@@ -89,7 +89,7 @@
       </el-table-column>
 
       <el-table-column align="center"  label="操作" min-width="200px">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button size="small" icon="edit"  type = "success" @click="handleUpdate(scope.row)">更新</el-button>
           <el-button size="small" icon="delete" type = "danger" @click="handleDelete(scope.row)">删除</el-button>
           <el-button size="small" icon="plus" type="primary" @click="handleAddStudent">添加分组</el-button>
@@ -507,6 +507,7 @@
       display: inline-block;
       vertical-align: middle;
       margin-bottom: 10px;
+      margin-left: 5px;
     }
   }
   .test{

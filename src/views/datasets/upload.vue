@@ -127,7 +127,7 @@
                         </Input>
                         </Col>
                         <Col span="2" offset="1">
-                        <Button type="ghost" style="font-size: 14px" @click="handleRemove(index,files[index])">删除</Button>
+                        <Button type="ghost" style="font-size: 14px" @click="handleFileRemove(index,files[index])">删除</Button>
                         </Col>
                         <Col span="4">
                         <Upload
@@ -328,7 +328,7 @@
             value: ''
           });
         },
-        handleRemove (index,file) {
+        handleFileRemove (index, file) {
           this.files.splice(file, 1);
           this.formDynamic.items.splice(index, 1);
         },

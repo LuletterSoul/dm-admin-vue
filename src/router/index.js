@@ -100,6 +100,9 @@ export const asyncRouterMap = [
       },
       {
         path:'group',component:_import('students/group'),name: '分组列表',icon:'group'
+      },
+      {
+        path:'import',component:_import('students/import'),name: 'Excel导入',icon:'exl'
       }
     ]
   },
