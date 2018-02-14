@@ -97,15 +97,20 @@
         this.$refs.loginForm.validate(valid => {
           if (valid) {
             this.loading = true;
-            this.isLoginFormDisplay = false;
             this.$store.dispatch('Login', this.loginForm).then(() => {
-              setTimeout(function () {
-                vm.$router.push({path: '/'});
-              },2000);
-            }).catch(() => {
+              vm.$store.dispatch('GetToken', this.loginForm.username).then(() => {
+                this.isLoginFormDisplay = false;
+                setTimeout(function () {
+                  vm.$router.push({path: '/'});
+                },4000);
+                vm.$message.success("登录成功.");
+              }).catch(error =>{
+                this.loading = false;
+                this.isLoginFormDisplay = true;
+              });
+            }).catch((error) =>{
               this.loading = false;
-              console.log("登录出错");
-              vm.$router.push({path: '/login'});
+              this.isLoginFormDisplay = true;
             });
           } else {
             console.log('error submit!!');
@@ -161,13 +166,13 @@
     left: 50%;
     top: 50%;
     input:-webkit-autofill {
-       -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
-       -webkit-text-fill-color: #fff !important;
+         -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
+         -webkit-text-fill-color: #fff !important;
     }
     input {
       background: transparent;
       border: 0px;
-       -webkit-appearance: none;
+         -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
       color: #eeeeee;

@@ -3,31 +3,44 @@ import SHA256 from "crypto-js/sha256"
 import DecodeBase64 from "crypto-js/enc-base64";
 
 //hash加密
-export function computeEncryptPassword(submitPlain, publicSalt) {
+export function  computeEncryptPassword(submitPlain, publicSalt) {
   let encryptPassword = submitPlain + publicSalt;
     for(let i = 0;i<1000;i++) {
       encryptPassword = SHA256(encryptPassword);
     }
-  return DecodeBase64.stringify(encryptPassword);
+  let final = DecodeBase64.stringify(encryptPassword) + publicSalt;
+  for(let i = 0;i<1000;i++) {
+    final = SHA256(final);
+  }
+  return DecodeBase64.stringify(final);
 }
 
 //生成消息摘要
 export function digest(message,params) {
-  let paramString = '';
+  let paramString = 'X-init';
   for(var key in params) {
     if(params[key]!==undefined) {
       paramString = paramString + params[key];
     }
   }
+  console.log("Param string:",paramString);
   return DecodeBase64.stringify(HMAC_SHA256(message, paramString));
 }
 
-export function clientDigest(encryptPassword,token,params) {
-  let clientDigest = digest(token + encryptPassword, params);
-  for(let i =0;i<1000;i++) {
+export function clientDigest(accessToken,disposableToken,params) {
+  let clientDigest ='';
+  if(disposableToken !==undefined && disposableToken !== '') {
+    clientDigest = digest(accessToken + disposableToken , params);
+  }
+  else{
+    clientDigest = digest(accessToken, params);
+  }
+  for(let i =0;i<100;i++) {
     clientDigest = SHA256(clientDigest);
   }
-  return DecodeBase64.stringify(clientDigest);
+  let decode = DecodeBase64.stringify(clientDigest);
+  console.log("Digest disposableToken is:",disposableToken,"Corresponding digest is:",decode);
+  return decode;
 }
 
 export function formatDate(date,fmt) {

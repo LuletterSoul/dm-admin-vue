@@ -1,95 +1,106 @@
 import axios from 'axios';
-import {Message} from 'element-ui';
+import {Message,MessageBox} from 'element-ui';
 import store from '../store';
-// import {getToken} from '@/utils/auth';
-import {getUsername} from "./auth";
-import {formatDate,clientDigest } from "./compute"
-import { getToken } from  "@/api/login"
+import { getCookiesToken,
+          setCookiesToken,
+          removeCookiesToken,
+          wrapApplyToken,
+          wrapAccessCredentials,
+          wrapClientDigest,
+          updateDisposableToken
+       } from '@/utils/auth';
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.SERVER_API, // api的base_url
   // timeout: 20000                  // 请求超时时间
 });
+let requestCount = 1;
+let awaitNewDisposableToken = false;
+// function wrapAccessCredentials(config, username) {
+//   config.headers['X-Timestamp'] = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss');
+//   config.headers['X-Username'] = username;
+//   config.headers['X-Access-Token'] = getCookiesToken();
+// }
+//
+// function wrapClientDigest(config, token) {
+//   if (config.params === undefined) {
+//     config['params'] = {};
+//   }
+//   config.headers['X-Client-Digest'] = clientDigest(getCookiesToken(), token, config.params);
+// }
+
 // request拦截器
 service.interceptors.request.use(config => {
-    const username = store.getters.username;
-    //每次请求发送前都需要申请一次token认证服务;
-    return new Promise((resolve, reject) => {
-      return store.dispatch('GetToken', username).then((certificate) => {
-      config.headers['X-timestamp'] = formatDate(new Date(),'yyyy-MM-dd HH:mm:ss');
-      config.headers['Username'] = username;
-      config.headers['X-ApiKey'] = certificate.apiKey;
-      if (config.params === undefined) {
-        config['params'] = {};
-      }
-      config.params['username'] = username;
-      config.params['clientDigest'] = clientDigest(store.getters.password, certificate.token, config.params);
-      resolve(config);
-    }).catch(error =>{
-        reject(error);
-      });
-  });
+        wrapAccessCredentials(config, store.getters.username);
+        wrapClientDigest(config, store.getters.disposableToken);
+        console.log("Send request:",requestCount,"Disposable Token:",store.getters.disposableToken,)
+  return config;
 }, error => {
-  // Do something with request error
-  console.log(error); // for debug
   Promise.reject(error);
 });
 
 // respone拦截器
 service.interceptors.response.use(
   response => {
-    /**
-     * code为非20000是抛错 可结合自己业务进行修改
-     */
     const res = response.data;
-    // if (res.code !== 20000) {
-    //   Message({
-    //     message: res.data,
-    //     type: 'error',
-    //     duration:2 * 1000
-    //   });
-    //   // 50008:非法的token; 50012:其他客户端登录了;  50014:Token 过期了;
-    //   if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-    //     MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
-    //       confirmButtonText: '重新登录',
-    //       cancelButtonText: '取消',
-    //       type: 'warning'
-    //     }).then(() => {
-    //       store.dispatch('FedLogOut').then(() => {
-    //         location.reload();// 为了重新实例化vue-router对象 避免bug
-    //       });
-    //     })
-    //   }
-    //   return Promise.reject('error');
-    // } else {
+      if(res.errorCode !== undefined) {
+        if(res.errorCode=== 50004 || res.errorCode === 50010) {
+          Message.error(res.tip);
+        }
+        else if(res.errorCode === 50005){
+          Message.error(res.tip);
+          return new Promise((resolve,reject) =>{
+            reject(res.errorCode);
+          })
+        }
+        else if(res.errorCode === 50006) {
+          store.dispatch('LogOut').then(() => {
+            location.reload();
+            Message.warning(res.tip,);
+          });
+        }
+        else if(res.errorCode ===50000) {
+          Message.warning(res.tip);
+        }
+      }
+      console.log("Receive repose :",requestCount,". Receive new token:",response.headers['x-disposable-token']);
+    requestCount++;
+    updateDisposableToken(response,store);
     return response.data;
-    // }
   },
   error => {
-    console.log('err' + error);// for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    });
-    return Promise.reject(error);
+    let errorRes = error.response.data;
+    console.log(errorRes);
+    if (errorRes.errorCode !== undefined) {
+      if (errorRes.errorCode === 50002) {
+        Message.confirm(errorRes.tip, '确定登出', {
+          confirmButtonText: '重新登录',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch('LogOut').then(() => {
+            location.reload();// 为了重新实例化vue-router对象 避免bug
+          });
+        })
+      }
+      else if (errorRes.errorCode === 50004 || errorRes.errorCode === 50010 || errorRes.errorCode === 50005) {
+        Message.error(errorRes.tip);
+      }
+      else if (errorRes.errorCode === 50006) {
+        store.dispatch('LogOut').then(() => {
+          location.reload();
+          Message.warning({message:errorRes.tip,showClose: true,duration:0});
+        });
+      }
+      else if(errorRes.errorCode === 50011){
+        location.reload();
+        Message.warning(errorRes.tip);
+      }
+      else if (errorRes.errorCode === 50000) {
+        Message.warning(errorRes.tip);
+      }
+      return Promise.reject(errorRes);
+    }
   }
 );
-
-// Date.prototype.Format = function (fmt) { //author: meizz
-//   var o = {
-//     "M+": this.getMonth() + 1, //月份
-//     "d+": this.getDate(), //日
-//     "h+": this.getHours(), //小时
-//     "m+": this.getMinutes(), //分
-//     "s+": this.getSeconds(), //秒
-//     "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-//     "S": this.getMilliseconds() //毫秒
-//   };
-//   if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-//   for (var k in o)
-//     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-//   return fmt;
-// };
-
 export default service;

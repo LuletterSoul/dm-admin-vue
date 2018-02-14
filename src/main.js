@@ -19,9 +19,7 @@ import IconSvg from '@/components/Icon-svg/index.vue'
 import {getToken} from '@/utils/auth'
 import 'iview/dist/styles/iview.css';    // 使用 CSS
 import {SweetModal, SweetModalTab} from 'sweet-modal-vue'
-import {getAccountInfo, getEncryptPassword, getUsername} from "./utils/auth";
-// var Velocity = require('velocity-animate');
-// require('velocity-animate/velocity.ui');
+import { getCookiesToken, setCookiesToken, removeCookiesToken} from '@/utils/auth';
 window.Velocity = window.velocity = Velocity;
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
@@ -62,20 +60,23 @@ Vue.use(vueWaves);
 const whiteList = ['/login'];
 router.beforeEach((to, from, next) => {
   NProgress.start();
-  if (store.getters.username&&store.getters.password) {
+  // removeCookiesToken();
+  if (getCookiesToken()) {
     if (to.path === '/login') {
       next({path: '/'});
+      NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
       if (store.getters.roles.length === 0) {
-        store.dispatch('GetInfo',store.getters.username).then(() => {
-          store.dispatch('GetUserRoles',store.getters.username).then(res =>{
-            store.dispatch('GenerateRoutes', {roles: res}).then(() => {
+        store.dispatch('GetInfo').then((res) => {
+            store.dispatch('GenerateRoutes', {roles: res.roles}).then(() => {
               router.addRoutes(store.getters.addRouters);
               next({...to});
-            })
           })
+        }).catch(err=>{
+          // console.log(err);
         })
-      } else {
+      }
+      else {
         next();
       }
     }

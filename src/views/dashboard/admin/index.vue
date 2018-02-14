@@ -127,8 +127,11 @@
     },
     methods: {
       logout() {
+        let vm = this;
         this.$store.dispatch('LogOut').then(() => {
           location.reload();  // 为了重新实例化vue-router对象 避免bug
+          debugger;
+          vm.$message.success("注销成功.");
         });
       }
     },

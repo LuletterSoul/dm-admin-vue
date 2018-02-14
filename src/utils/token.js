@@ -2,6 +2,14 @@ import axios from 'axios';
 import {Message} from 'element-ui';
 import store from '../store';
 import {formatDate} from "./compute"
+import { getCookiesToken,
+  setCookiesToken,
+  removeCookiesToken,
+  wrapApplyToken,
+  wrapAccessCredentials,
+  wrapClientDigest,
+  updateDisposableToken
+} from '@/utils/auth';
 import {getUsername} from "./auth";
 
 var decodeBase64 = require("crypto-js/enc-base64");
@@ -12,46 +20,65 @@ const tokenService = axios.create({
   // timeout: 5000
 });
 
+// function wrapApplyToken(config) {
+//   config.headers['X-timestamp'] = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss');
+//   config.headers['X-Username'] = store.getters.username;
+//   config.headers['X-Apply-Credential'] = store.getters.applyCredential;
+// }
+
 // request拦截器
 tokenService.interceptors.request.use(config => {
-  config.headers['X-timestamp'] = formatDate(new Date(),'yyyy-MM-dd HH:mm:ss');
-  config.headers['Username'] = store.getters.username;
+  wrapApplyToken(config,store);
   return config;
 }, error => {
+  console.log(error);
   Promise.reject(error);
 });
 
 // response拦截器
 tokenService.interceptors.response.use(
   response => {
+    updateDisposableToken(response,store);
     const res = response.data;
     return response.data;
   },
   error => {
-    console.log('err' + error);// for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    });
-    return Promise.reject(error);
+    let errorRes = error.response.data;
+    console.log(errorRes);
+    if (errorRes.errorCode !== undefined) {
+      if (errorRes.errorCode === 50002) {
+        Message.confirm(errorRes.tip, '确定登出', {
+          confirmButtonText: '重新登录',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch('LogOut').then(() => {
+            location.reload();// 为了重新实例化vue-router对象 避免bug
+          });
+        })
+      }
+      else if (errorRes.errorCode === 50004 || errorRes.errorCode === 50010 || errorRes.errorCode === 50005) {
+        Message.error(errorRes.tip);
+      }
+      else if (errorRes.errorCode === 50006) {
+        store.dispatch('LogOut').then(() => {
+          location.reload();
+          Message.warning({message:errorRes.tip,showClose: true,duration:0});
+        });
+      }
+      else if(errorRes.errorCode === 50011){
+        location.reload();
+        Message.error(errorRes.tip);
+      }
+      else if (errorRes.errorCode === 50000) {
+        Message.warning(errorRes.tip);
+      }
+      else if(errorRes.errorCode ===60001) {
+        location.reload();
+        Message.error(errorRes.tip);
+      }
+      return Promise.reject(errorRes);
+    }
   }
 );
-
-// Date.prototype.Format = function (fmt) { //author: meizz
-//   var o = {
-//     "M+": this.getMonth() + 1, //月份
-//     "d+": this.getDate(), //日
-//     "h+": this.getHours(), //小时
-//     "m+": this.getMinutes(), //分
-//     "s+": this.getSeconds(), //秒
-//     "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-//     "S": this.getMilliseconds() //毫秒
-//   };
-//   if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-//   for (var k in o)
-//     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-//   return fmt;
-// };
-
 export default tokenService;

@@ -31,14 +31,16 @@
     </div>
     <el-table :key='tableKey' :data="studentList"
               ref="studentTable"
-              v-loading.body="listLoading"
+              v-loading="listLoading"
               border fit
-              highlight-current-row style="width: 100%"
+              highlight-current-row
+              style="width: 100%"
               @selection-change="handleSelectionChange"
-              @row-click="handleRowClicked">
+              @row-click="handleRowClicked"
+    >
       <el-table-column v-if="multipleSelection.length" type="selection" width="55"></el-table-column>
       <el-table-column align="center" label="学号" width="180px">
-        <template slot-scope="scope">
+        <template scope="scope">
           <el-tooltip class="item" effect="light" :content="scope.row.studentId" placement="top-start">
             <span>{{scope.row.studentId}}</span>
           </el-tooltip>
@@ -46,7 +48,7 @@
       </el-table-column>
 
       <el-table-column width="120px" align="center" label="姓名">
-        <template slot-scope="scope">
+        <template scope="scope">
           <el-tooltip class="item" effect="dark" content="信息明细" placement="top">
             <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.studentName }}</span>
           </el-tooltip>
@@ -54,32 +56,32 @@
       </el-table-column>
 
       <!--<el-table-column min-width="300px" label="标题">-->
-      <!--<template slot-scope="scope">-->
+      <!--<template scope="scope">-->
       <!--<span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.title}}</span>-->
       <!--<el-tag>{{scope.row.type | typeFilter}}</el-tag>-->
       <!--</template>-->
       <!--</el-table-column>-->
       <el-table-column width="110px" align="center" label="年级">
-        <template slot-scope="scope">
+        <template scope="scope">
           <span>{{scope.row.grade}}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="150px" align="center" label="专业">
-        <template slot-scope="scope">
+        <template scope="scope">
           <span>{{scope.row.profession}}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="110px" align="center" label="班级">
-        <template slot-scope="scope">
+        <template scope="scope">
           <span>{{ scope.row.className }}</span>
         </template>
       </el-table-column>
 
 
       <el-table-column align="center" label="参与任务数" width="120px">
-        <template slot-scope="scope">
+        <template scope="scope">
           <span>
             {{ scope.row.finishedTaskCount }}
           </span>
@@ -87,7 +89,7 @@
       </el-table-column>
 
       <el-table-column class-name="status-col" align="center"  label="任务状态" width="180">
-        <template slot-scope="scope">
+        <template scope="scope">
           <!--<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>-->
           <span>
               {{ scope.row.status.chineseValue }}
@@ -96,7 +98,7 @@
       </el-table-column>
 
       <el-table-column  align="center" class-name="status-col" label="标记" width="100px">
-        <template slot-scope="scope">
+        <template scope="scope">
           <!--<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>-->
           <el-tag v-if="scope.row.favorite.value" type="warning">
             {{ scope.row.favorite.chineseValue }}
@@ -108,7 +110,7 @@
       </el-table-column>
 
       <el-table-column align="center"  label="操作" min-width="200px">
-        <template slot-scope="scope">
+        <template scope="scope">
           <el-button size="small" icon="edit"  type = "success" @click="handleUpdate(scope.row)">更新</el-button>
           <el-button size="small" icon="delete" type = "danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
@@ -198,6 +200,10 @@
       return {
         total: null,
         listLoading: true,
+        table:{
+          studentName:'学生姓名',
+          className:'班级',
+        },
         listQuery: {
           studentId: "",
           studentName: "",
@@ -340,7 +346,7 @@
       },
       handleCurrentChange(val) {
         this.listQuery.page = val -1;
-        this.getStudentList();
+//        this.getStudentList();
       },
       handleBatchDelete() {
         let confirmMessage = '您将删除所有被选择学生的信息,是否继续?';
@@ -416,15 +422,6 @@
           })
         })
       },
-      timeFilter(time) {
-        if (!time[0]) {
-          this.listQuery.start = undefined;
-          this.listQuery.end = undefined;
-          return;
-        }
-        this.listQuery.start = parseInt(+time[0] / 1000);
-        this.listQuery.end = parseInt((+time[1] + 3600 * 1000 * 24) / 1000);
-      },
       handleModifyStatus(row, status) {
         this.$message({
           message: '操作成功',
@@ -481,7 +478,7 @@
           }
         }).then(() =>{
           const index = that.studentList.indexOf(row);
-          that.studentList.splice(index, 1);
+//          that.studentList.splice(index, 1);
         }).catch(() =>{
           that.$message({
             type:'info',
@@ -496,7 +493,7 @@
             type:'success',
             duration:1500
           });
-          this.studentList.unshift(this.temp);
+//          this.studentList.unshift(this.temp);
           this.dialogFormVisible = false;
         });
       },
@@ -505,7 +502,7 @@
           for (const v of this.studentList) {
             if (v.studentId === this.temp.studentId) {
               const index = this.studentList.indexOf(v);
-              this.studentList.splice(index, 1, this.temp);
+//              this.studentList.splice(index, 1, this.temp);
               break;
             }
           }

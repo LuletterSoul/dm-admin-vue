@@ -1,12 +1,14 @@
-import { login, logout,getUserInfo,getUserRoles } from '@/api/login';
-import { getToken,getPublicSalt } from '@/api/token';
-import { removeToken,setUsername,getUsername} from '@/utils/auth';
+import { login,getUserInfo,getUserRoles } from '@/api/login';
+import { getToken,getPublicSalt,deleteToken } from '@/api/token';
+import { getCookiesToken, setCookiesToken, removeCookiesToken} from '@/utils/auth';
 import { computeEncryptPassword } from "@/utils/compute"
 
 const user = {
   state: {
     username:'',
-    password:'',
+    accessToken:'',
+    disposableToken:'',
+    applyCredential:'',
     user: '',
     status: '',
     code: '',
@@ -19,8 +21,7 @@ const user = {
     lastLoginTime :'2017-09-29 13:03:55',
     regionCode:'',
     gender:'',
-    userProfile: {},
-    timeOutToken:{},
+    userProfile: {}
   },
 
   mutations: {
@@ -33,11 +34,14 @@ const user = {
     SET_TOKEN: (state, token) => {
       state.token = token;
     },
-    SET_TIME_OUT_TOKEN(state,timeOutToken) {
-      state.timeOutToken = timeOutToken;
+    SET_APPLY_CREDENTIAL(state,applyCredential) {
+      state.applyCredential = applyCredential;
     },
-    SET_PASSWORD(state,password) {
-      state.password = password
+    SET_DISPOSABLE_TOKEN(state,disposableToken) {
+      state.disposableToken = disposableToken;
+    },
+    SET_ACCESS_TOKEN(state,accessToken) {
+      state.accessToken = accessToken
     },
     SET_NAME: (state, name) => {
       state.name = name;
@@ -102,9 +106,9 @@ const user = {
       return new Promise((resolve, reject) => {
         commit('SET_USERNAME', username);
         getPublicSalt(username).then(salt => {
-          let password =computeEncryptPassword(userInfo.password, salt);
-          commit('SET_PASSWORD',password);
-          resolve(password);
+          let credential =computeEncryptPassword(userInfo.password, salt);
+          commit('SET_APPLY_CREDENTIAL', credential);
+          resolve(credential);
         }).catch(error => {
           reject(error);
         })
@@ -112,8 +116,8 @@ const user = {
     },
 
 
-    // GetTimeOutToken({commit},timeOutToken) {
-    //   commit('SET_TIME_OUT_TOKEN', timeOutToken);
+    // GetTimeOutToken({commit},disposableToken) {
+    //   commit('SET_TIME_OUT_TOKEN', disposableToken);
     // },
 
 
@@ -139,30 +143,27 @@ const user = {
     // },
     GetToken({commit},username){
       return new Promise((resolve,reject) =>{
-        getToken(username).then((token) =>{
-          commit("SET_TOKEN", token);
-          resolve(token);
+        getToken(username).then((accessToken) =>{
+          commit('SET_ACCESS_TOKEN',accessToken);
+          setCookiesToken(accessToken);
+          resolve(accessToken);
         }).catch(error =>{
           reject(error);
         })
       })
     },
+    SetDisposableToken({commit},token){
+        commit("SET_DISPOSABLE_TOKEN", token)
+    },
 
     // 获取用户信息
-    GetInfo({commit},username) {
+    GetInfo({commit},state) {
       return new Promise((resolve, reject) => {
-        getUserInfo(username).then(response => {
-          // const profile = response.userProfile;
-          // commit('SET_ROLES', profile.roles);
-          // commit('SET_NAME', profile.name);
-          // commit('SET_AVATAR', profile.avatar);
-          // commit('SET_INTRODUCTION', profile.introduction);
-          // commit('SET_LAST_LOGIN_TIME', profile.lastLoginTime);
-          // commit('SET_STATUS', profile.status);
-          // commit('SET_REGION_CODE', profile.regionCode);
-          // commit('SET_GENDER', profile.gender);
+        getUserInfo().then(response => {
           commit('SET_AVATAR',response.avatar);
+          commit('SET_ROLES',response.roles);
           commit('SET_USER_PROFILE', response);
+          commit('SET_USERNAME', response.username);
           resolve(response);
         }).catch(error => {
           reject(error);
@@ -185,9 +186,13 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout().then(() => {
-          commit('SET_TOKEN', '');
+        deleteToken().then(() => {
           commit('SET_ROLES', []);
+          commit('SET_TOKEN', '');
+          commit('SET_APPLY_CREDENTIAL', '');
+          commit('SET_ACCESS_TOKEN', '');
+          commit('SET_DISPOSABLE_TOKEN', '');
+          removeCookiesToken();
           resolve();
         }).catch(error => {
           reject(error);
@@ -199,7 +204,7 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '');
-        removeToken();
+        removeCookiesToken();
         resolve();
       });
     }

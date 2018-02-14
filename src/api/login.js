@@ -13,24 +13,10 @@ export function login(email, password) {
   });
 }
 
-export function getToken(username) {
-  return token({
-    url:'/users/'+username+'/token',
-    method:'get'
-  })
-}
 
-
-export function getPublicSalt(username) {
-  return token({
-    url:'/users/'+username+'/public_salt',
-    method:'get'
-  })
-}
-
-export function getUserInfo(username) {
+export function getUserInfo() {
   return fetch({
-    url:'/users/'+username,
+    url:'/users/profile',
     method:'get'
   })
 }
@@ -42,12 +28,6 @@ export function getUserRoles(username) {
   })
 }
 
-export function logout() {
-  return fetch({
-    url: '/users/logout',
-    method: 'post'
-  });
-}
 
 
 

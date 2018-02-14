@@ -1,6 +1,5 @@
 <template>
     <div id="app">
-
       <div class="dataSetTableTitle">
         数据集信息
       </div>

@@ -14,3 +14,10 @@ export function getPublicSalt(username) {
     method:'get'
   })
 }
+
+export function deleteToken() {
+  return token({
+    url: '/tokens/',
+    method: 'delete'
+  });
+}
