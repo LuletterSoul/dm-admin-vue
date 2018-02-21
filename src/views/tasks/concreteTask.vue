@@ -3,7 +3,7 @@
 
     <div class="taskTitle">任务信息</div>
 
-    <div class="information">
+    <div class="details-container">
       <el-collapse v-model="activeNames" @change="handleChange">
         <el-collapse-item title="团队信息" name="1">
 
@@ -68,7 +68,7 @@
 
 
         <el-collapse-item title="使用数据集" name="2">
-          <div v-for="value in dataSet">
+          <div v-for="value in collection">
                 {{ value }}
           </div>
         </el-collapse-item>
@@ -172,7 +172,7 @@
     width:20%;
     font:bold 36px 微软雅黑;
   }
-  .information{
+  .details-container{
     margin-top: 20px;
     margin-bottom: 20px;
     width:80%;

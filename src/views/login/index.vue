@@ -8,8 +8,8 @@
         <fade-transition :fade-out-duration="1000" :fade-out-only="true" :is-active="isLoginModuleActive" @fadeOutEnd="switchLoadingContainer">
           <div class="login-wrap">
             <divide-animation></divide-animation>
-            <slide-up-big-transition  @slideOutEnd="closeLoginModuleContainer">
-              <div class="login-form-container" v-show="isLoginFormDisplay">
+            <single-transition  @OutEnd="closeLoginModuleContainer">
+              <div class="login-form-container" v-if="isLoginFormDisplay">
                 <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
                          class="card-box login-form">
                   <img src="../../assets/logo@2x.png" class="logo-align" height="300" width="300">
@@ -34,7 +34,7 @@
                   <!--</el-form-item>-->
                 </el-form>
               </div>
-            </slide-up-big-transition>
+            </single-transition>
           </div>
         </fade-transition>
       </div>
@@ -52,7 +52,8 @@
   import { isWscnEmail } from '@/utils/validate';
   import DivideAnimation from '@/components/animate_svg/DivideAnimation';
   import Loading from '@/components/animate_svg/Loading';
-  import SlideUpBigTransition from '@/components/transition/SlideUpBigTransition';
+  import AnimateTransition from '@/components/transition/AnimateTransition';
+  import SingleTransition from '@/components/transition/SingleTransition.vue';
   import FadeTransition from '@/components/transition/FadeTransition';
   export default {
     name: 'login',
@@ -134,8 +135,8 @@
     components: {
       DivideAnimation,
       Loading,
-      SlideUpBigTransition,
-      FadeTransition
+      FadeTransition,
+      SingleTransition
     }
   };
 </script>

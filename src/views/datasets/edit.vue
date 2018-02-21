@@ -316,7 +316,6 @@
               done();
             }
           }).then(() =>{
-//            const index = that.dataSetList.indexOf(index);
             that.dataSetList.splice(index, 1);
           }).catch(() =>{
             this.$Message.info('取消删除');

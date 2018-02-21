@@ -51,9 +51,9 @@ export default new Router({
 
 export const asyncRouterMap = [
   {
-    path: '/dataSet',
+    path: '/collection',
     component: Layout,
-    redirect: '/dataSet/index',
+    redirect: '/collection/index',
     name: '数据集',
     icon: 'data' ,
     children:[

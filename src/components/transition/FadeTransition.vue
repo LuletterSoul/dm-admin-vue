@@ -1,19 +1,19 @@
 <template>
-    <div id="fadeTransition">
-      <transition :class="false"
-                  @before-enter="beforeEnter"
-                  @enter="enter"
-                  @after-enter="afterEnter"
-                  @before-leave="beforeLeave"
-                  @leave="leave"
-                  @after-leave="afterLeave"
-                  @appear="appear"
-                  @before-appear="beforeAppear">
-          <div v-show="activeStatus">
-            <slot></slot>
-          </div>
-      </transition>
-    </div>
+  <div id="fadeTransition">
+    <transition :class="false"
+                @before-enter="beforeEnter"
+                @enter="enter"
+                @after-enter="afterEnter"
+                @before-leave="beforeLeave"
+                @leave="leave"
+                @after-leave="afterLeave"
+                @appear="appear"
+                @before-appear="beforeAppear">
+      <div v-show="activeStatus">
+        <slot></slot>
+      </div>
+    </transition>
+  </div>
 </template>
 <script type="text/javascript">
   export default {
@@ -107,7 +107,6 @@
     },
     methods: {
       beforeEnter:function (el){
-//        debugger;
       },
       enter: function(el, done) {
         let vm = this;
@@ -130,7 +129,6 @@
 //        this.$emit('fadeInEnd');
       },
       beforeLeave: function(el){
-
       },
       leave: function(el,done) {
         let vm = this;

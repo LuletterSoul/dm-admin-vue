@@ -131,7 +131,9 @@
                         </Col>
                         <Col span="4">
                         <Upload
+                          ref="setUpload"
                           :before-upload="handleUpload"
+                          :show-upload-list="false"
                           action="">
                           <Button type="ghost" style="font-size: 14px"  icon="ios-cloud-upload-outline">选择要上传的数据集</Button>
                         </Upload>
@@ -180,12 +182,13 @@
       <template>
         <Form>
           <FormItem  v-if="currentStep!==2" style="margin-left: 540px">
+            <!--<Button style="font-size: 16px;" type="success" v-waves @click="handleUploadSubmit">一键上传</Button>-->
             <Button style="font-size: 16px;" type="primary" v-waves @click="pre">上一步</Button>
             <Button style="font-size: 16px;" type="primary" v-waves @click="next">下一步</Button>
             <Button type="ghost" style="font-size: 16px;">取消</Button>
           </FormItem>
             <FormItem v-if="currentStep===2" style="width: 540px;">
-              <Button :loading="uploadWaiting" type="success" style="margin-top: 20px" size="large" waves long @click="handleCreate">确认录入</Button>
+              <Button :loading="uploadWaiting" type="success" style="margin-top: 20px" size="large" waves long @click="handleUploadSubmit">确认录入</Button>
               <Button style="margin-top: 10px" type="ghost" size="large" long @click="currentStep-=1">上一步</Button>
             </FormItem>
         </Form>
@@ -206,6 +209,7 @@
       deleteCollection,
       createCollection,
       updateCollection,
+      addSet,
       deleteCollectionsBatch,
       getDataSetContainer,
       getRelFilePath,
@@ -251,6 +255,7 @@
             },
             currentStep: 0,
             rowDonatedDate:new Date(),
+            collectionId:'',
             collectionModel: {
               collectionName: 'Parkinson Disease Spiral Drawings Using Digitized Graphics Tablet Data Set ',
               abstractInfo: 'For Further information about the variables see the file in the data folder.',
@@ -274,6 +279,8 @@
         },
       created() {
         this.fetchOptionals();
+      },
+      mounted () {
       },
       computed:{
         dataSetInfo(){
@@ -309,16 +316,29 @@
         }
       },
       methods:{
-        handleUpload (file) {
-          this.files.push(file);
-          return false;
+        async handleUploadSubmit(){
+          let collection = await createCollection(this.collectionModel);
+          //更新已创建容器的Id
+          this.collectionId = collection.collectionId;
+          this.files.forEach(this.handlePerFile);
+          this.createCollectionAfter();
         },
-        upload () {
-          this.loadingStatus = true;
-          setTimeout(() => {
-            this.loadingStatus = false;
-            this.$Message.success('上传成功')
-          }, 1500);
+        async handlePerFile(file) {
+          let vm = this;
+          //新建一个Form data 类型的文件
+          let fd = new FormData();
+          fd.append('file', file);
+          //发起上传请求
+          //生成一个上传进度查询key
+          const uuid_v1 = require('uuid/v1');
+          let progress_uuid = uuid_v1();
+          addSet(this.collectionId, fd,progress_uuid).then((res) => {
+          }).catch(error => {
+            console.log(error);
+          });
+        },
+        async handleUpload(file) {
+          this.files.push(file);
         },
         handleReset (name) {
           this.$refs[name].resetFields();
@@ -333,38 +353,19 @@
           this.formDynamic.items.splice(index, 1);
         },
         handleCreate() {
-//          let that = this;
-//          //先构建好数据集容器
-//          this.uploadWaiting = true;
-//          for (let i =0;i<that.files.length;++i) {
-//                createDataSetContainer({fileDescription: that.formDynamic.items[i].fileDescription})
-//                  .then(container => {
-//                    let containerId = container.containerId;
-//                    that.collectionModel.containerIds.push(containerId);
-////                  uploadDataSetContainer(containerId, that.files[i]).then(filePath => {
-////                  }).catch(error => {
-////                    console.log(error);
-////                  })
-//                  }).catch(error => {
-//                  console.log(error);
-//                });
-//              }
-          this.createCollectionAfter();
+          this.handleUploadSubmit();
         },
         formatDonatedDate: function () {
           this.collectionModel.dateDonated = formatDate(this.rowDonatedDate, 'yyyy-MM-dd HH:mm:ss');
-        }, createCollectionAfter(){
+        },
+        createCollectionAfter(){
           let vm = this;
-          this.formatDonatedDate();
-          createCollection(this.collectionModel).then(collection => {
-            this.uploadWaiting = false;
-            this.$message({
-              message: '上传成功',
-              type: 'info',
-              duration: 1500
-            });
-            vm.$router.push({path: '/dataSet/index'});
+          this.$message({
+            message: '上传成功',
+            type: 'info',
+            duration: 1500
           });
+          vm.$router.push({path: '/collection/index'});
         },
         next () {
           if (this.currentStep === 2) {

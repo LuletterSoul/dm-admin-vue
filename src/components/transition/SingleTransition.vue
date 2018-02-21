@@ -1,6 +1,7 @@
 <template>
-    <div id="slideUpBig">
-      <transition ：class="false"
+    <div id="singleTransition">
+      <transition
+                  :css="false"
                   @before-enter="beforeEnter"
                   @enter="enter"
                   @after-enter="afterEnter"
@@ -18,51 +19,58 @@
   export default {
     name: 'SlideUpBig',
     props: {
-      fadeInDuration: {
+      duration: {
         type: Number,
         default: 1200
       },
-      fadeInDelay: {
-        type: Number,
-        default: 300
-    },
-      fadeOutDelay: {
+      delay: {
         type: Number,
         default: 500
       },
-
+      inStyle:{
+        type: String,
+        default: 'transition.slideUpBigIn'
+      },
+      outStyle:{
+        type: String,
+        default: 'transition.slideUpBigOut'
+      },
+        linkIndex:{
+        type: Boolean,
+        default: false
+      }
     },
     data() {
       return {}
     },
     methods: {
       beforeEnter: function(el){
+        el.style = 'display:none';
       },
       enter: function(el,done){
         let vm = this;
-        Velocity(el, "transition.slideUpBigIn",
-                      { duration:vm.fadeInDuration,
-                        delay : vm.fadeInDelay,
+        Velocity(el, vm.inStyle,
+                      { duration:vm.duration,
+                        delay : vm.delay,
                         complete:function () {
-                          vm.$emit('sileInEnd');
-                          console.log("Commit current transition component.");
+                          vm.$emit('InEnd');
                         }
                       },done);
       },
       afterEnter: function (el) {
-        this.$emit('sileInEnd');
+        this.$emit('InEnd');
       },
       beforeLeave:function (el){
         let vm = this;
       },
       leave:function(el,done) {
         let vm = this;
-        Velocity(el, "transition.slideUpBigOut"
+        Velocity(el, vm.outStyle
           ,{
-              duration: vm.fadeOutDuration,
-              delay: vm.fadeOutDelay,
+              duration: vm.duration,
+              delay: vm.delay,
               complete:function () {
-                vm.$emit('slideOutEnd');
+                vm.$emit('OutEnd');
               }
             },
           done
@@ -72,13 +80,13 @@
 //        this.$emit('slideOutEnd');
       },
       beforeAppear:function(el){
-        el.style = 'display:none;';
+        el.style = 'display:none';
       },
       appear:function (el,done) {
         let vm = this;
-        Velocity(el, "transition.slideUpBigIn",
-          { duration:vm.fadeInDuration,
-            delay : vm.fadeInDelay},done);
+        Velocity(el, vm.inStyle,
+          { duration:vm.duration,
+            delay : vm.delay},done);
       }
     }
   };

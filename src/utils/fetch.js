@@ -14,8 +14,6 @@ const service = axios.create({
   baseURL: process.env.SERVER_API, // api的base_url
   // timeout: 20000                  // 请求超时时间
 });
-let requestCount = 1;
-let awaitNewDisposableToken = false;
 // function wrapAccessCredentials(config, username) {
 //   config.headers['X-Timestamp'] = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss');
 //   config.headers['X-Username'] = username;
@@ -33,7 +31,6 @@ let awaitNewDisposableToken = false;
 service.interceptors.request.use(config => {
         wrapAccessCredentials(config, store.getters.username);
         wrapClientDigest(config, store.getters.disposableToken);
-        console.log("Send request:",requestCount,"Disposable Token:",store.getters.disposableToken,)
   return config;
 }, error => {
   Promise.reject(error);
@@ -43,60 +40,50 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
   response => {
     const res = response.data;
+    const suggestedFilename = response.headers['x-suggested-filename'];
+    updateDisposableToken(response,store);
       if(res.errorCode !== undefined) {
-        if(res.errorCode=== 50004 || res.errorCode === 50010) {
-          Message.error(res.tip);
-        }
-        else if(res.errorCode === 50005){
-          Message.error(res.tip);
-          return new Promise((resolve,reject) =>{
-            reject(res.errorCode);
-          })
-        }
-        else if(res.errorCode === 50006) {
-          store.dispatch('LogOut').then(() => {
-            location.reload();
-            Message.warning(res.tip,);
-          });
-        }
-        else if(res.errorCode ===50000) {
-          Message.warning(res.tip);
+        if (res.errorCode === 30002) {
+          Message.info(res.tip);
         }
       }
-      console.log("Receive repose :",requestCount,". Receive new token:",response.headers['x-disposable-token']);
-    requestCount++;
-    updateDisposableToken(response,store);
+      if(suggestedFilename!==undefined&&suggestedFilename!=='') {
+        return response;
+      }
     return response.data;
   },
   error => {
     let errorRes = error.response.data;
     console.log(errorRes);
-    if (errorRes.errorCode !== undefined) {
-      if (errorRes.errorCode === 50002) {
-        Message.confirm(errorRes.tip, '确定登出', {
+    let code = errorRes.errorCode;
+    if (code !== undefined) {
+      if(code ===40001) {
+        Message.error(errorRes.reason);
+      }
+      else if (code === 50002 || code === 50006) {
+        MessageBox.confirm(errorRes.tip+"你可以留在当前页面或登出.", '确定登出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           store.dispatch('LogOut').then(() => {
             location.reload();// 为了重新实例化vue-router对象 避免bug
-          });
+            Message.success("登出成功");
+      });
+        }).catch(()=>{
+          Message("取消登出.");
         })
       }
-      else if (errorRes.errorCode === 50004 || errorRes.errorCode === 50010 || errorRes.errorCode === 50005) {
+      else if (code === 50004 || code === 50010
+              || code === 50005 ||code ===30001
+              || code ===30002) {
         Message.error(errorRes.tip);
       }
-      else if (errorRes.errorCode === 50006) {
-        store.dispatch('LogOut').then(() => {
-          location.reload();
-          Message.warning({message:errorRes.tip,showClose: true,duration:0});
-        });
-      }
-      else if(errorRes.errorCode === 50011){
+      else if(code === 50011){
         location.reload();
         Message.warning(errorRes.tip);
       }
-      else if (errorRes.errorCode === 50000) {
+      else if (code === 50000) {
         Message.warning(errorRes.tip);
       }
       return Promise.reject(errorRes);

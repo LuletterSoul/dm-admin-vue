@@ -123,7 +123,7 @@
       },
       methods: {
         handleCheck(index){
-          this.$router.push({path: '/dataSet/setDetails', query: { collectionId: this.dataSetCollectionList[index].collectionId }});
+          this.$router.push({path: '/collection/setDetails', query: { collectionId: this.dataSetCollectionList[index].collectionId }});
         },
         handleSizeChange(val) {
           this.listQuery.size = val;

@@ -23,7 +23,6 @@ export function digest(message,params) {
       paramString = paramString + params[key];
     }
   }
-  console.log("Param string:",paramString);
   return DecodeBase64.stringify(HMAC_SHA256(message, paramString));
 }
 
@@ -39,7 +38,6 @@ export function clientDigest(accessToken,disposableToken,params) {
     clientDigest = SHA256(clientDigest);
   }
   let decode = DecodeBase64.stringify(clientDigest);
-  console.log("Digest disposableToken is:",disposableToken,"Corresponding digest is:",decode);
   return decode;
 }
 

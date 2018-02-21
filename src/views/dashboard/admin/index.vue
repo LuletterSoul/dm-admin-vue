@@ -17,7 +17,7 @@
             <span style="line-height: 20px; font-size: 20px; font-weight: bold;">欢迎</span>
           </div>
           <div>
-            <p style="font-size: 16px;"><router-link to="../dataSet/index"><Icon type="ios-analytics-outline"></Icon>数据集管理</router-link></p><br>
+            <p style="font-size: 16px;"><router-link to="../collection/index"><Icon type="ios-analytics-outline"></Icon>数据集管理</router-link></p><br>
             <p style="font-size: 16px;"><router-link to="../students/list"><Icon type="person"></Icon>学生信息管理</router-link></p><br>
             <p style="font-size: 16px;"><router-link to="../tasks/index"><Icon type="ios-alarm-outline"></Icon>实践任务管理</router-link></p><br>
             <!--<p style="font-size: 16px;"><router-link to="../algorithm/index"><Icon type="ios-list-outline"></Icon>数据挖掘管理</router-link></p>-->

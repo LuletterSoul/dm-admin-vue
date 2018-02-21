@@ -51,7 +51,6 @@
         logout() {
           let vm = this;
           this.$store.dispatch('LogOut').then(() => {
-            debugger;
             location.reload();  // 为了重新实例化vue-router对象 避免bug
             vm.$message.success("注销成功.");
           });

@@ -5,21 +5,21 @@
       任务信息管理
     </div>
 
-    <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="编号" v-model="listQuery.taskId">
+    <div class="btn-import-container">
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="btn-item" placeholder="编号" v-model="listQuery.taskId">
       </el-input>
 
-      <el-select @change='handleFilter' style="width: 120px" class="filter-item" v-model="listQuery.sort" placeholder="排序">
+      <el-select @change='handleFilter' style="width: 120px" class="btn-item" v-model="listQuery.sort" placeholder="排序">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
         </el-option>
       </el-select>
 
 
-      <el-button class="filter-item" type="primary" icon="plus" @click="handleAdd">添加</el-button>
-      <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">筛选</el-button>
+      <el-button class="btn-item" type="primary" icon="plus" @click="handleAdd">添加</el-button>
+      <el-button class="btn-item" type="primary" v-waves icon="search" @click="handleFilter">筛选</el-button>
       <!--<el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="plus"><router-link to="create">添加</router-link></el-button>-->
-      <el-button class="filter-item" type="primary" icon="document" @click="handleDownload">导出</el-button>
-      <el-button class="filter-item" type="primary" icon="delete" v-waves @click="handleBatchDelete" :disabled="!multipleSelection.length">批量删除</el-button>
+      <el-button class="btn-item" type="primary" icon="document" @click="handleDownload">导出</el-button>
+      <el-button class="btn-item" type="primary" icon="delete" v-waves @click="handleBatchDelete" :disabled="!multipleSelection.length">批量删除</el-button>
     </div>
 
     <el-table :key='tableKey' :data="taskList"
@@ -501,9 +501,9 @@
 </script>
 
 <style lang="scss">
-  .filter-container {
+  .btn-import-container {
     padding-bottom: 10px;
-    .filter-item {
+    .btn-item {
       display: inline-block;
       vertical-align: middle;
       margin-bottom: 10px;
