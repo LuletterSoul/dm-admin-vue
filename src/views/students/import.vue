@@ -47,7 +47,7 @@
       </el-dialog>
       <el-button class="btn-item" type="success" icon="el-icon-document" @click="handleDownload">下载模板</el-button>
     </div>
-    <Table size='default' :row-class-name="rowClassName" :columns="studentTableColumns" :data="studentList" class='import-table-container'></Table>
+    <Table :loading="listLoading" :no-data-text="'你来到了没有数据的废墟...'" size='default' :row-class-name="rowClassName" :columns="studentTableColumns" :data="studentList" class='import-table-container'></Table>
     <div v-show="!listLoading" class="pagination-container">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="fixPage"
                      :page-sizes="[10,20,30, 50]" :page-size="listQuery.size"
@@ -111,7 +111,7 @@
         ],
         fileList: [],
         total: null,
-        listLoading: true,
+        listLoading: false,
         uploadDialogVisible: false,
         listQuery: {
           studentId: "",
@@ -461,7 +461,7 @@
   }
 
   .ivu-table .demo-table-info-cell-age {
-    background-color: #ff6600;
+    background-color: #187;
     color: #fff;
   }
 

@@ -96,10 +96,35 @@ export const asyncRouterMap = [
       //   path: 'index',component: _import('students/index'),name: '概览',icon:'survey1'
       // },
       {
-        path:'list',component:_import('students/list'),name: '学生列表',icon:'group'
+        path:'list',
+        component:_import('students/list'),
+        name: '学生列表',
+        icon:'group'
       },
       {
-        path:'group',component:_import('students/group'),name: '分组列表',icon:'group'
+        path:'/group',
+        name: '学生分组',
+        icon:'group',
+        children:[
+          {
+            path:'details',
+            component:_import('students/group/details'),
+            name:'队伍详情',
+            icon:'group'
+          },
+          {
+            path:'divide',
+            component:_import('students/group/divide'),
+            name:'分组配置',
+            icon:'group'
+          },
+          {
+            path:'group_list',
+            component:_import('students/group/list'),
+            name:'分组列表',
+            icon:'group'
+          },
+        ]
       },
       {
         path:'import',component:_import('students/import'),name: 'Excel导入',icon:'exl'

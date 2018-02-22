@@ -49,13 +49,16 @@
       },
       enter: function(el,done){
         let vm = this;
+        let dynamicDelay;
+        let isDynamicDelay = false;
         //渲染延迟特效
         if(this.linkIndex&&el.dataset.index!==undefined) {
-          vm.delay = el.dataset.index * 150;
+          dynamicDelay = el.dataset.index * 150;
+          isDynamicDelay = true;
         }
         Velocity(el, vm.inStyle,
                       { duration:vm.duration,
-                        delay : vm.delay,
+                        delay : isDynamicDelay?dynamicDelay:vm.delay ,
                         opacity: 1, height: '1.6em',
                         complete:function () {
                           vm.$emit('InEnd');
@@ -70,9 +73,9 @@
       },
       leave:function(el,done) {
         let vm = this;
-        if(this.linkIndex&&el.dataset.index!==undefined) {
-          vm.delay = el.dataset.index * 150;
-        }
+//        if(this.linkIndex&&el.dataset.index!==undefined) {
+//          vm.delay = el.dataset.index * 150;
+//        }
         Velocity(el, vm.outStyle
           ,{
             duration: vm.duration,

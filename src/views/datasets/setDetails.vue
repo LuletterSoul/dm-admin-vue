@@ -81,7 +81,7 @@
             刷新
           </a>
             <CheckboxGroup v-model="checkedSetIds">
-              <animate-transition :link-index="true"
+              <animate-transition :link-index="linkIndex"
                                   :in-style="'transition.bounceLeftIn'"
                                   :out-style="'transition.bounceRightOut'">
                 <Alert v-for="(item, index) in dataSets"
@@ -99,8 +99,17 @@
                   </li>
                 </Alert>
               </animate-transition>
-
             </CheckboxGroup>
+          <Page :total="totalSets"
+                :page-size="listQuery.size"
+                :current.sync="fixPage"
+                @on-change="handlePageChange"
+                @on-page-size-change="handleSizeChange"
+                class="page-style"
+                size="small"
+                show-elevator
+                show-total
+                show-sizer></Page>
         </Card>
       </div>
       </Col>
@@ -141,6 +150,13 @@
         uploadDialogVisible:false,
         isDataSetRefresh:false,
         checkedSetIds:[],
+        listQuery: {
+          page: 0,
+          size: 10,
+          sort:"containerId,ASC",
+        },
+        linkIndex:true,
+        totalSets:0,
         columns1: [
           {
             title: '特征',
@@ -265,6 +281,26 @@
           console.error("Could not download the zip files from the backend.", res);
         });
       },
+      handleSizeChange(val) {
+        this.listQuery.size = val;
+        this.getDataSets(this.collectionId);
+      },
+      handlePageChange(val){
+        this.listQuery.page = val-1;
+        this.getDataSets(this.collectionId);
+      },
+      checkedContainers() {
+        let vm = this;
+        let checkedContainers = [];
+        this.checkedSetIds.forEach(c=>{
+          vm.dataSets.forEach(d =>{
+            if(d.containerId === c) {
+              checkedContainers.push(d);
+            }
+          })
+        });
+        return checkedContainers;
+      },
       handleDeleteSets() {
         let vm = this;
         this.$confirm('此操作将删除对应的数据集文件, 是否继续?', '确定删除', {
@@ -278,10 +314,12 @@
               type: 'success',
               duration: 1500
             });
-            this.checkedContainers.forEach(s => {
-              this.dataSets.splice(s, 1);
+            let checked = vm.checkedContainers();
+            checked.forEach(s => {
+              let index = vm.dataSets.indexOf(s);
+              vm.dataSets.splice(index, 1);
             });
-            this.checkedSetIds = [];
+            vm.checkedSetIds = [];
           }).catch(error => {
 
           });
@@ -307,9 +345,11 @@
       },
       getDataSets(collectionId) {
         let vm = this;
+        vm.linkIndex = true;
         this.isDataSetRefresh = true;
-          getSets(collectionId).then(sets => {
-            vm.dataSets = sets;
+          getSets(collectionId,Object.assign({}, this.listQuery)).then(res => {
+            vm.dataSets = res.content;
+            vm.totalSets = res.totalElements;
             this.isDataSetRefresh = false;
           })
       },
@@ -321,17 +361,8 @@
       collectionName(){
         return this.collection.collectionName;
       },
-      checkedContainers() {
-        let vm = this;
-        let checkedContainers = [];
-        this.checkedSetIds.forEach(c=>{
-          return vm.dataSets.forEach(d =>{
-            if(d.containerId === c) {
-              checkedContainers.push(d);
-            }
-          })
-        });
-        return checkedContainers;
+      fixPage() {
+        return this.listQuery.page + 1;
       },
       dataSetSizes() {
         var numeral = require('numeral');
@@ -403,6 +434,11 @@
     cursor: pointer;
     transition: color .2s ease;
   }
+
+  .page-style{
+    margin-top: 50px;
+  }
+
   .file-alert{
     margin-top: 3px;
     border: 1px solid #d5e8fc;

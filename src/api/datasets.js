@@ -43,9 +43,10 @@ export async function addSet(collectionId,file,progress_uuid) {
   });
 }
 
-export async function getSets(collectionId) {
+export async function getSets(collectionId,query) {
   return fetch({
     url: COLLECTION_BASE_PATH.concat("/").concat(collectionId).concat("/containers"),
+    params:query,
     method:'get'
   });
 }
