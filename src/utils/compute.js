@@ -56,3 +56,7 @@ export function formatDate(date,fmt) {
     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
   return fmt;
 }
+
+export function getSpecialDateStr(begin,day) {
+  return formatDate(new Date(begin + day),'yyyy-MM-dd HH:mm:ss');
+}

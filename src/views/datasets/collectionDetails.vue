@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-      <div class="dataSetTableTitle">
+      <div class="data-set-table-title">
         数据集信息
       </div>
       <div style="margin-top:20px ;padding: 20px;">
@@ -123,7 +123,7 @@
       },
       methods: {
         handleCheck(index){
-          this.$router.push({path: '/collection/setDetails', query: { collectionId: this.dataSetCollectionList[index].collectionId }});
+          this.$router.push({path: '/collection/set_details', query: { collectionId: this.dataSetCollectionList[index].collectionId }});
         },
         handleSizeChange(val) {
           this.listQuery.size = val;
@@ -170,7 +170,7 @@
     margin:0px auto;
     font-size:16px;
   }
-  .dataSetTableTitle{
+  .data-set-table-title{
     margin-top: 20px;
     margin-bottom: 20px;
     width:20%;

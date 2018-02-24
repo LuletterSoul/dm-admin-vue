@@ -53,21 +53,21 @@ export const asyncRouterMap = [
   {
     path: '/collection',
     component: Layout,
-    redirect: '/collection/index',
+    redirect: '/collection/collection_details',
     name: '数据集',
     icon: 'data' ,
     children:[
       {
-        path: 'index', component: _import('datasets/index'),name: '摘要',icon: 'survey'
+        path: 'collection_details', component: _import('datasets/collectionDetails'),name: '集合摘要',icon: 'survey'
       },
       {
-        path: 'upload', component: _import('datasets/upload'),name: '上传',icon:'folder'
+        path: 'new', component: _import('datasets/upload'),name: '新增集合',icon:'folder'
       },
       {
-        path: 'edit', component: _import('datasets/edit'),name: '编辑',icon:'color-filling'
+        path: 'management', component: _import('datasets/edit'),name: '集合管理',icon:'color-filling'
       },
       {
-        path: 'setDetails', component: _import('datasets/setDetails'),name: '具体页',icon:'survey1',hidden: true
+        path: 'set_details', component: _import('datasets/setDetails'),name: '数据集详情',icon:'survey1',hidden: true
       }
     ]
   },
@@ -102,14 +102,16 @@ export const asyncRouterMap = [
         icon:'group'
       },
       {
-        path:'/group',
+        path:'/students/group',
+        redirect:'/students/group/details',
         name: '学生分组',
+        component:_import('students/group/index'),
         icon:'group',
         children:[
           {
-            path:'details',
-            component:_import('students/group/details'),
-            name:'队伍详情',
+            path:'list',
+            component:_import('students/group/list'),
+            name:'分组列表',
             icon:'group'
           },
           {
@@ -119,11 +121,11 @@ export const asyncRouterMap = [
             icon:'group'
           },
           {
-            path:'group_list',
-            component:_import('students/group/list'),
-            name:'分组列表',
+            path:'details',
+            component:_import('students/group/details'),
+            name:'队伍详情',
             icon:'group'
-          },
+          }
         ]
       },
       {

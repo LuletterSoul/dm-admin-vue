@@ -5,20 +5,28 @@
         </div>
         <div class="main-container">
             <navbar></navbar>
-            <tags-view></tags-view>
+
+          <div class="tags-view-wrapper">
+            <tags-view class="tags-view-container"></tags-view>
+          </div>
+
+          <Back-top :height="200">
+            <em-add icon="arrow-up-c"></em-add>
+          </Back-top>
             <app-main></app-main>
         </div>
     </div>
 </template>
 
 <script>
-    import { Navbar, Sidebar, AppMain ,TagsView} from '@/views/layout';
+    import { Navbar, Sidebar, AppMain ,TagsView,EmAdd} from '@/views/layout';
 
     export default {
       name: 'layout',
       components: {
         TagsView,
         Navbar,
+        EmAdd,
         Sidebar,
         AppMain
       },
@@ -73,6 +81,11 @@
             right: -17px;
             overflow-y: scroll;
         }
+      .tags-view-wrapper{
+        transform: translate(0, 0px);
+        transition: all .28s ease-out;
+      }
+
         .main-container {
             min-height: 100%;
             transition: all .28s ease-out;

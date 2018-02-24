@@ -94,12 +94,10 @@
 
 <script>
   import { mapGetters } from 'vuex';
-//  import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
   import lineChart from './lineChart';
   import PanThumb from 'components/PanThumb';
   import countTo from 'vue-count-to';
   import ElRow from "element-ui/packages/row/src/row";
-//  import PanThumb from "../../../components/PanThumb/update.vue";
   import Balloon from 'components/balloon';
   import ColorfulButton from 'components/button';
   import TodoList from 'components/TodoList'
@@ -130,7 +128,6 @@
         let vm = this;
         this.$store.dispatch('LogOut').then(() => {
           location.reload();  // 为了重新实例化vue-router对象 避免bug
-          debugger;
           vm.$message.success("注销成功.");
         });
       }
@@ -218,7 +215,7 @@
   }
   .chart{
     height: 300px;
-    width: 80%;
+    width: 60%;
     float: left;
   }
   .info{

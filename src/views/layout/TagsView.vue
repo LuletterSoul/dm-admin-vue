@@ -1,9 +1,9 @@
 <template>
-  <div class="tags-view-container">
+  <div class="tags-view-container ">
     <scroll-pane class='tags-view-wrapper' ref='scrollPane'>
       <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)"
         :to="tag.path" :key="tag.path" @contextmenu.prevent.native="openMenu(tag,$event)">
-        {{generateTitle(tag.title)}}
+        {{ tag.name }}
         <span class='el-icon-close' @click.prevent.stop='closeSelectedTag(tag)'></span>
       </router-link>
     </scroll-pane>
@@ -17,9 +17,8 @@
 
 <script>
 import ScrollPane from '@/components/ScrollPane'
-import { generateTitle } from '@/utils/i18n'
-
 export default {
+  name:'TagsView',
   components: { ScrollPane },
   data() {
     return {
@@ -36,8 +35,8 @@ export default {
   },
   watch: {
     $route() {
-      this.addViewTags()
-      this.moveToCurrentTag()
+      this.addViewTags();
+      this.moveToCurrentTag();
     },
     visible(value) {
       if (value) {
@@ -51,7 +50,6 @@ export default {
     this.addViewTags()
   },
   methods: {
-    generateTitle, // generateTitle by vue-i18n
     generateRoute() {
       if (this.$route.name) {
         return this.$route
@@ -117,11 +115,13 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 .tags-view-container {
   .tags-view-wrapper {
-    background: #fff;
+    transition: all .28s ease-out;
     height: 34px;
+    transform: translate(0, 0px);
     border-bottom: 1px solid #d8dce5;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
     .tags-view-item {
+      transition: all .28s ease-out;
       display: inline-block;
       position: relative;
       height: 26px;

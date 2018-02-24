@@ -1,5 +1,6 @@
 import fetch from 'utils/fetch';
 
+
 export function fetchTaskList(query) {
   return fetch({
     url:'/tasks',
@@ -7,6 +8,7 @@ export function fetchTaskList(query) {
     params: query
   })
 }
+
 export function deleteTask(taskId) {
   return fetch({
     url:'/tasks/'+taskId,

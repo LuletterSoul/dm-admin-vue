@@ -1,5 +1,8 @@
 <template>
-    <el-menu mode="vertical" theme="dark" :default-active="$route.path">
+    <el-menu @mouseenter="console.log('mouseenter')"
+             mode="vertical"
+             theme="dark"
+             :default-active="$route.path">
         <sidebar-item :routes='permission_routers'></sidebar-item>
     </el-menu>
 </template>

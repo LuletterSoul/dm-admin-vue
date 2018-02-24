@@ -1,18 +1,18 @@
 <template>
   <div class="calendar-list-container test">
-    <div class="title">
-      学生信息管理
-    </div>
     <div class="btn-import-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" @change='handleFilter' class="btn-item" placeholder="学号" v-model="listQuery.studentId">
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" @change='handleFilter' class="btn-item"
+                placeholder="学号" v-model="listQuery.studentId">
       </el-input>
 
-      <el-select clearable style="width: 100px" @change='handleFilter' class="btn-item" v-model="listQuery.grade" placeholder="年级">
+      <el-select clearable style="width: 100px" @change='handleFilter' class="btn-item" v-model="listQuery.grade"
+                 placeholder="年级">
         <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
         </el-option>
       </el-select>
 
-      <el-select clearable class="btn-item" @change='handleFilter' style="width: 130px" v-model="listQuery.className" placeholder="班级">
+      <el-select clearable class="btn-item" @change='handleFilter' style="width: 130px" v-model="listQuery.className"
+                 placeholder="班级">
         <el-option v-for="item in  classNameOptions" :key="item.key" :label="item" :value="item">
         </el-option>
       </el-select>
@@ -23,132 +23,36 @@
       </el-select>
 
       <el-button class="btn-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">筛选</el-button>
-      <el-button class="btn-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-plus">添加</el-button>
+      <el-button class="btn-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-plus">
+        添加
+      </el-button>
       <el-button class="btn-item" type="primary" icon="el-icon-document" @click="handleDownload">导出</el-button>
-      <el-button class="btn-item" type="primary" icon="el-icon-delete" v-waves @click="handleBatchDelete" :disabled="!multipleSelection.length">批量删除</el-button>
-      <el-button class="btn-item" type="warning" icon="el-icon-star-on" v-waves @click="markFavoriteStudent" v-if="multipleSelection.length" >收藏</el-button>
-      <el-button class="btn-item" type="warning" icon="el-icon-star-off" :plain="true" v-waves @click="unMarkFavoriteStudent" v-if="multipleSelection.length" >取消收藏</el-button>
+      <el-button class="btn-item" type="primary" icon="el-icon-delete" v-waves @click="handleBatchDelete"
+                 :disabled="!multipleSelection.length">批量删除
+      </el-button>
+      <el-button class="btn-item" type="warning" icon="el-icon-star-on" v-waves @click="markFavoriteStudent"
+                 v-if="multipleSelection.length">收藏
+      </el-button>
+      <el-button class="btn-item" type="warning" icon="el-icon-star-off" :plain="true" v-waves
+                 @click="unMarkFavoriteStudent" v-if="multipleSelection.length">取消收藏
+      </el-button>
     </div>
-    <!--<el-table :data="studentList"-->
-              <!--ref="studentTable"-->
-              <!--v-loading="listLoading"-->
-              <!--border fit-->
-              <!--highlight-current-row-->
-              <!--@selection-change="handleSelectionChange"-->
-              <!--style="width: 100%">-->
-
-      <!--<el-table-column-->
-        <!--align="center"-->
-        <!--type="selection"-->
-        <!--width="55">-->
-      <!--</el-table-column>-->
-
-      <!--<el-table-column-->
-        <!--label="序号"-->
-        <!--type="index"-->
-        <!--:index="1"-->
-        <!--align="center"-->
-        <!--width="55"-->
-      <!--&gt;-->
-      <!--</el-table-column>-->
-
-      <!--&lt;!&ndash;<el-table-column align="center" label="序号" width="80">&ndash;&gt;-->
-        <!--&lt;!&ndash;<template slot-scope="scope">&ndash;&gt;-->
-          <!--&lt;!&ndash;<span>{{tableKey}}</span>&ndash;&gt;-->
-        <!--&lt;!&ndash;</template>&ndash;&gt;-->
-      <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
-
-      <!--&lt;!&ndash;<el-table-column v-if="multipleSelection.length" type="selection" width="55"></el-table-column>&ndash;&gt;-->
-      <!--<el-table-column align="center" label="学号" width="180px">-->
-        <!--<template scope="scope">-->
-            <!--<span>{{scope.row.studentId}}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-
-      <!--<el-table-column width="120px" align="center" label="姓名">-->
-        <!--<template scope="scope">-->
-            <!--<span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.studentName }}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-
-      <!--&lt;!&ndash;<el-table-column min-width="300px" label="标题">&ndash;&gt;-->
-      <!--&lt;!&ndash;<template scope="scope">&ndash;&gt;-->
-      <!--&lt;!&ndash;<span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.title}}</span>&ndash;&gt;-->
-      <!--&lt;!&ndash;<el-tag>{{scope.row.type | typeFilter}}</el-tag>&ndash;&gt;-->
-      <!--&lt;!&ndash;</template>&ndash;&gt;-->
-      <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
-      <!--<el-table-column width="110px" align="center" label="年级">-->
-        <!--<template scope="scope">-->
-          <!--<span>{{scope.row.grade}}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-
-      <!--<el-table-column width="150px" align="center" label="专业">-->
-        <!--<template scope="scope">-->
-          <!--<span>{{scope.row.profession}}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-
-      <!--<el-table-column width="110px" align="center" label="班级">-->
-        <!--<template scope="scope">-->
-          <!--<span>{{ scope.row.className }}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-
-
-      <!--<el-table-column align="center" label="参与任务数" width="120px">-->
-        <!--<template scope="scope">-->
-          <!--<span>-->
-            <!--{{ scope.row.finishedTaskCount }}-->
-          <!--</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-
-      <!--&lt;!&ndash;<el-table-column class-name="status-col" align="center"  label="任务状态" width="180">&ndash;&gt;-->
-        <!--&lt;!&ndash;<template scope="scope">&ndash;&gt;-->
-          <!--&lt;!&ndash;&lt;!&ndash;<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>&ndash;&gt;&ndash;&gt;-->
-          <!--&lt;!&ndash;<span>&ndash;&gt;-->
-              <!--&lt;!&ndash;{{ scope.row.status.chineseValue }}&ndash;&gt;-->
-              <!--&lt;!&ndash;</span>&ndash;&gt;-->
-        <!--&lt;!&ndash;</template>&ndash;&gt;-->
-      <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
-
-      <!--&lt;!&ndash;<el-table-column  align="center" class-name="status-col" label="标记" width="100px">&ndash;&gt;-->
-        <!--&lt;!&ndash;<template scope="scope">&ndash;&gt;-->
-          <!--&lt;!&ndash;&lt;!&ndash;<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>&ndash;&gt;&ndash;&gt;-->
-          <!--&lt;!&ndash;<el-tag v-if="scope.row.favorite.value" type="warning">&ndash;&gt;-->
-            <!--&lt;!&ndash;{{ scope.row.favorite.chineseValue }}&ndash;&gt;-->
-          <!--&lt;!&ndash;</el-tag>&ndash;&gt;-->
-          <!--&lt;!&ndash;<el-tag v-else>&ndash;&gt;-->
-            <!--&lt;!&ndash;{{ scope.row.favorite.chineseValue }}&ndash;&gt;-->
-          <!--&lt;!&ndash;</el-tag>&ndash;&gt;-->
-        <!--&lt;!&ndash;</template>&ndash;&gt;-->
-      <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
-
-      <!--<el-table-column align="center"  label="操作" min-width="200px">-->
-        <!--<template scope="scope">-->
-          <!--<el-button size="small" icon="edit"  type = "success" @click="handleUpdate(scope.row)">更新</el-button>-->
-          <!--<el-button size="small" icon="delete" type = "danger" @click="handleDelete(scope.row)">删除</el-button>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-    <!--</el-table>-->
-
     <Table border size='default'
            :loading="listLoading"
            :columns="studentColumns"
-           :data="studentList"
+           :data="groupList"
            @on-selection-change="handleSelectionChange"
            class="student-list-container"
            stripe></Table>
-
     <div v-show="!listLoading" class="pagination-container">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="fixPage"
-                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.size" layout="total, sizes, prev, pager, next, jumper" :total="total">
+                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.size"
+                     layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
-
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
+      <el-form class="small-space" :model="temp" label-position="left" label-width="70px"
+               style='width: 400px; margin-left:50px;'>
         <el-form-item label="学号" label-width="85px">
           <el-input v-model="temp.studentId">
           </el-input>
@@ -196,28 +100,19 @@
 </template>
 
 <script>
-  import { fetchList, fetchPv } from 'api/article_table';
-  import { parseTime,deleteEmptyProperty } from 'utils';
-  import { fetchStudentList,
-           deleteStudent ,
-          createStudent,
-          updateStudent,
-          deleteStudentBatch,
-          markStudent,
-          unMakrStudent} from 'api/students';
-
-  const calendarTypeOptions = [
-    { key: 'CN', display_name: '中国' },
-    { key: 'US', display_name: '美国' },
-    { key: 'JP', display_name: '日本' },
-    { key: 'EU', display_name: '欧元区' }
-  ];
-
-  // arr to obj
-  const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
-    acc[cur.key] = cur.display_name;
-    return acc
-  }, {});
+  import {parseTime, deleteEmptyProperty} from 'utils';
+  import {
+    getGroupList,
+    getLeisureStudents,
+    createGroupPreview,
+    getGroupPreview,
+    getGroup,
+    deleteGroups,
+    updateGroup,
+    getMembers,
+    updateLeader,
+    configureMembers
+  } from 'api/groups';
 
   export default {
     name: 'StudentTable',
@@ -226,7 +121,7 @@
         studentColumns: [
           {
             type: 'selection',
-            align:'center',
+            align: 'center',
             width: 60,
           },
           {
@@ -236,29 +131,37 @@
             align: 'center'
           },
           {
-            title: '学号',
+            title: '队名',
             align: 'center',
-            key: 'studentId'
+            key: 'groupName'
           },
           {
-            title: '姓名',
+            title: '分组编号',
             align: 'center',
-            key: 'studentName'
+            key: 'arrangementId'
           },
           {
-            title: '年级',
+            title: '建立时间',
             align: 'center',
-            key: 'grade'
+            key: 'buildTime'
           },
           {
-            title: '专业',
+            title: '组长',
             align: 'center',
-            key: 'profession'
+            key: 'groupLeader.student.studentName'
           },
           {
-            title: '班级',
+            title: '任务',
             align: 'center',
             key: 'className',
+          },
+          {
+            title:'组员',
+            align:'center',
+//            key:'members',
+            type:'expand',
+//            render: (h, params) => {
+//            }
           },
           {
             title: '管理',
@@ -312,9 +215,9 @@
         ],
         total: null,
         listLoading: false,
-        table:{
-          studentName:'学生姓名',
-          className:'班级',
+        table: {
+          studentName: '学生姓名',
+          className: '班级',
         },
         listQuery: {
           studentId: "",
@@ -322,54 +225,56 @@
           className: "",
           profession:"",
           grade:"",
+          beginDate:'',
+          endDate:'',
           page: 0,
           size: 10,
-          sort:"studentId,ASC",
+          sort: "groupId,ASC",
         },
         temp: {
-          studentId:'',
-          studentName:'',
-          grade:'',
-          className:'',
-          profession:'',
-          status:{
-            statusId:3,
-            chineseValue:'空闲',
-            englishValue:'available',
+          studentId: '',
+          studentName: '',
+          grade: '',
+          className: '',
+          profession: '',
+          status: {
+            statusId: 3,
+            chineseValue: '空闲',
+            englishValue: 'available',
           },
-          favorite:{
-            favoriteId:0,
-            chineseValue:'已收藏',
-            englishValue:'favorite'
+          favorite: {
+            favoriteId: 0,
+            chineseValue: '已收藏',
+            englishValue: 'favorite'
           },
-          finishedTaskCount:0
+          finishedTaskCount: 0
         },
-        studentList: [],
-        queryTypeOptions:[
+        groupList: [],
+        queryTypeOptions: [
           '姓名',
           '学号'
         ],
-        statusOptions:[{
-          statusId:0,
-          chineseValue:'任务进行中',
-          englishValue:'executing',
-        },{
-          statusId:1,
-          chineseValue:'锁定',
-          englishValue:'unavailable',
-        },{
-          statusId:2,
-          chineseValue:'任务完成',
-          englishValue:'finished',
-        },{
-          statusId:3,
-          chineseValue:'空闲',
-          englishValue:'available',
+        statusOptions: [{
+          statusId: 0,
+          chineseValue: '任务进行中',
+          englishValue: 'executing',
+        }, {
+          statusId: 1,
+          chineseValue: '锁定',
+          englishValue: 'unavailable',
+        }, {
+          statusId: 2,
+          chineseValue: '任务完成',
+          englishValue: 'finished',
+        }, {
+          statusId: 3,
+          chineseValue: '空闲',
+          englishValue: 'available',
         }],
         sortOptions: [{label: '按学号升序', key: 'studentId,ASC'}, {label: '按学号降序', key: 'studentId,DESC'}],
-        multipleSelection:[],
-        isDisplayFavoriteColumn:false,
-        gradeOptions:[
+        multipleSelection: [],
+        isDisplayFavoriteColumn: false,
+        gradeOptions: [
           '2012级',
           '2013级',
           '2014级',
@@ -377,13 +282,13 @@
           '2016级',
           '2017级',
         ],
-        professionOptions:[
+        professionOptions: [
           '软件工程',
           '计算机科学与技术',
           '人工智能',
           '网络工程'
         ],
-        classNameOptions:[
+        classNameOptions: [
           '计科一班',
           '计科二班',
           '软工一班',
@@ -404,24 +309,10 @@
       };
     },
     created() {
-//      this.getList();
-      this.getStudentList();
-    },
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger'
-        };
-        return statusMap[status]
-      },
-      typeFilter(type) {
-        return calendarTypeKeyValue[type]
-      }
+      this.getGroupList();
     },
     computed: {
-      fixPage(){
+      fixPage() {
         return this.listQuery.page + 1;
       }
     },
@@ -429,25 +320,25 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      handleRowClicked(row,event,column) {
+      handleRowClicked(row, event, column) {
         let lable = column.label;
-        if(lable==='操作'||lable==='算法配置'){
+        if (lable === '操作' || lable === '算法配置') {
           return;
         }
         this.$refs.studentTable.toggleRowSelection(row);
         this.isDisplayFavoriteColumn = !this.isDisplayFavoriteColumn;
       },
-      getStudentList() {
+      getGroupList() {
         let that = this;
         this.listLoading = true;
-        fetchStudentList(Object.assign({}, this.listQuery)).then(response => {
-          this.studentList = response.content;
+        getGroupList(Object.assign({}, this.listQuery)).then(response => {
+          this.groupList = response.content;
           this.total = response.totalElements;
           this.listLoading = false;
-        }).catch(error =>{
+        }).catch(error => {
           that.$message({
             type: 'error',
-            message:error
+            message: error
           })
         })
       },
@@ -455,42 +346,42 @@
 
       },
       handleFilter() {
-        this.getStudentList();
+        this.getGroupList();
       },
       handleSizeChange(val) {
         if (this.listQuery.size === val) {
           return
         }
         this.listQuery.size = val;
-        this.getStudentList();
+        this.getGroupList();
       },
       handleCurrentChange(val) {
-        if (this.listQuery.page === val -1) {
+        if (this.listQuery.page === val - 1) {
           return
         }
-        this.listQuery.page = val -1;
-        this.getStudentList();
+        this.listQuery.page = val - 1;
+        this.getGroupList();
       },
       handleBatchDelete() {
         let confirmMessage = '您将删除所有被选择学生的信息,是否继续?';
         let studentIds = this.multipleSelection.map(item => item.studentId);
-        let that =this;
-        this.$confirm(confirmMessage,'批量删除学生',{
-          confirmButtonText:'确认',
-          cancelButtonText:'取消',
-          beforeClose: (action,instance,done) =>{
-            if(action ==='confirm'){
+        let that = this;
+        this.$confirm(confirmMessage, '批量删除学生', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
               //显示加载按钮
               instance.confirmButtonLoading = true;
-              return new Promise((resolve,reject) =>{
+              return new Promise((resolve, reject) => {
                 //通过API发送批量删除请求
-                deleteStudentBatch(studentIds).then(response =>{
-                  instance.confirmButtonLoading=false;
+                deleteStudentBatch(studentIds).then(response => {
+                  instance.confirmButtonLoading = false;
                   resolve(response);
                   done();
-                }).catch(error =>{
+                }).catch(error => {
                   //捕获错误;
-                  instance.confirmButtonLoading=false;
+                  instance.confirmButtonLoading = false;
                   reject(error);
                   done();
                 })
@@ -499,18 +390,18 @@
             //关闭确认框
             done();
           }
-        }).then((message) =>{
+        }).then((message) => {
           //删除被选中的行
-          that.studentList = that.studentList.filter(student =>
-          !that.multipleSelection.some(row => row.studentId === student.studentId));
-//          that.getStudentList();
+          that.groupList = that.groupList.filter(student =>
+            !that.multipleSelection.some(row => row.studentId === student.studentId));
+//          that.getGroupList();
           that.$message({
             message: '批量删除成功',
             type: 'success',
             duration: 1500
           });
-          that.getStudentList();
-        }).catch(() =>{
+          that.getGroupList();
+        }).catch(() => {
           this.$message({
             message: '取消批量删除操作',
             type: 'info',
@@ -522,27 +413,27 @@
         let favoriteStudents = this.multipleSelection.filter(row => !row.favorite.value);
         let studentIds = favoriteStudents.map(student => student.studentId);
         let that = this;
-          markStudent(studentIds).then(response =>{
-            favoriteStudents.forEach(student => {
-              student.favorite = {key: '已收藏', value: true};
-            });
-            that.$message({
-              type:'success',
-              message:'收藏成功'
-            })
+        markStudent(studentIds).then(response => {
+          favoriteStudents.forEach(student => {
+            student.favorite = {key: '已收藏', value: true};
+          });
+          that.$message({
+            type: 'success',
+            message: '收藏成功'
           })
+        })
       },
       unMarkFavoriteStudent() {
         let favoriteStudents = this.multipleSelection.filter(row => row.favorite.value);
         let studentIds = favoriteStudents.map(student => student.studentId);
         let that = this;
-        markStudent(studentIds).then(response =>{
+        markStudent(studentIds).then(response => {
           favoriteStudents.forEach(student => {
             student.favorite = {key: '未收藏', value: false};
           });
           that.$message({
-            type:'success',
-            message:'已取消收藏'
+            type: 'success',
+            message: '已取消收藏'
           })
         })
       },
@@ -601,8 +492,8 @@
 //            done();
 //          }
 //        }).then(() =>{
-//          const index = that.studentList.indexOf(row);
-//          that.studentList.splice(index, 1);
+//          const index = that.groupList.indexOf(row);
+//          that.groupList.splice(index, 1);
 //        }).catch(() =>{
 //          that.$message({
 //            type:'info',
@@ -611,17 +502,17 @@
 //        });
 //      },
       handleDelete(index) {
-        let row = this.studentList[index];
+        let row = this.groupList[index];
         let confirmMessage = '您将删除学号为\'' + row.studentId + '\' '
           + row.studentName + ' 的所有信息,是否继续?';
-        let that =this;
+        let that = this;
         let feedbackMessage = '';
-        this.$confirm(confirmMessage,'删除学生',{
-          confirmButtonText:'确定',
-          cancelButtonText:'取消',
-          type:'warning',
-          beforeClose: (action,instance,done) =>{
-            if(action==='confirm'){
+        this.$confirm(confirmMessage, '删除学生', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
               instance.confirmButtonLoading = true;
               return new Promise((resolve, reject) => {
                 let studentIds = [];
@@ -648,60 +539,60 @@
             }
             done();
           }
-        }).then(() =>{
-          that.studentList.splice(index, 1);
-        }).catch(() =>{
+        }).then(() => {
+          that.groupList.splice(index, 1);
+        }).catch(() => {
           that.$message({
-            type:'info',
-            message:'取消删除'
+            type: 'info',
+            message: '取消删除'
           })
         });
       },
       create() {
         createStudent(this.temp).then(response => {
           this.$message({
-            message:'添加成功',
-            type:'success',
-            duration:1500
+            message: '添加成功',
+            type: 'success',
+            duration: 1500
           });
-//          this.studentList.unshift(this.temp);
+//          this.groupList.unshift(this.temp);
           this.dialogFormVisible = false;
         });
       },
       update() {
-        updateStudent(this.temp).then(response =>{
-          for (const v of this.studentList) {
+        updateStudent(this.temp).then(response => {
+          for (const v of this.groupList) {
             if (v.studentId === this.temp.studentId) {
-              const index = this.studentList.indexOf(v);
-//              this.studentList.splice(index, 1, this.temp);
+              const index = this.groupList.indexOf(v);
+//              this.groupList.splice(index, 1, this.temp);
               break;
             }
           }
           this.$message({
             type: 'success',
-            message:'更新成功'
+            message: '更新成功'
           });
         });
         this.dialogFormVisible = false;
       },
       resetTemp() {
         this.temp = {
-          studentId:'',
-          studentName:'',
-          grade:'',
-          className:'',
-          profession:'',
-          status:{
-            statusId:3,
-            chineseValue:'空闲',
-            englishValue:'available',
+          studentId: '',
+          studentName: '',
+          grade: '',
+          className: '',
+          profession: '',
+          status: {
+            statusId: 3,
+            chineseValue: '空闲',
+            englishValue: 'available',
           },
-          favorite:{
-            favoriteId:0,
-            chineseValue:'已收藏',
-            englishValue:'favorite'
+          favorite: {
+            favoriteId: 0,
+            chineseValue: '已收藏',
+            englishValue: 'favorite'
           },
-          finishedTaskCount:0
+          finishedTaskCount: 0
         };
       },
       handleFetchPv(pv) {
@@ -712,9 +603,9 @@
       },
       handleDownload() {
         require.ensure([], () => {
-          const { export_json_to_excel } = require('vendor/Export2Excel');
-          const tHeader = ['学号', '姓名', '年级', '专业', '班级','参与任务数'];
-          const filterVal = ['studentId', 'studentName', 'grade', 'profession', 'className','finishedTaskCount'];
+          const {export_json_to_excel} = require('vendor/Export2Excel');
+          const tHeader = ['学号', '姓名', '年级', '专业', '班级', '参与任务数'];
+          const filterVal = ['studentId', 'studentName', 'grade', 'profession', 'className', 'finishedTaskCount'];
           const data = this.formatJson(filterVal, this.list);
           export_json_to_excel(tHeader, data, '学生基本信息表');
         })
@@ -733,12 +624,14 @@
 </script>
 
 <style lang="scss">
-  .student-list-container{
+  .student-list-container {
     margin-top: 90px;
-  },
+  }
+
+  ,
   .btn-import-container {
     padding-right: 20px;
-    float:right;
+    float: right;
     .btn-item {
       display: inline-block;
       vertical-align: middle;
@@ -746,16 +639,19 @@
       margin-left: 5px;
     }
   }
-  .test{
+
+  .test {
     padding: 20px;
   }
-  .title{
+
+  .title {
     margin-bottom: 20px;
-    width:22%;
-    font:bold 36px 微软雅黑;
+    width: 22%;
+    font: bold 36px 微软雅黑;
   }
-  div{
-    background-color:transparent;
-    margin:0px auto;
+
+  div {
+    background-color: transparent;
+    margin: 0px auto;
   }
 </style>

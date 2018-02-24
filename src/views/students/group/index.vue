@@ -8,10 +8,10 @@
 
 <script>
 export default {
-  name: 'TableMain',
+  name: 'StudentGroup',
   computed: {
     cachedViews() {
-      return this.$store.state.tagsView.cachedViews
+      return this.$store.state.tagsView.cachedViews.join();
     }
   }
 }
