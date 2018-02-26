@@ -15,7 +15,7 @@ import VueLocalStorage from 'vue-ls'
 import EmHeader from './components/EmHeader'
 import EmSpot from './components/EmSpots'
 
-import 'element-ui/lib/theme-default/index.css'
+import 'element-ui/lib/theme-chalk/index.css'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import 'normalize.css/normalize.css'
