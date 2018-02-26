@@ -60,14 +60,14 @@
               </FormItem>
               <FormItem :label="$t('p.group.divide.oneKey.taskForm.students.label')">
                   <Transfer
-                    :data="data3"
-                    :target-keys="targetKeys3"
+                    :data="assignedStudents"
+                    :selected-keys="selectedStudents"
                     :list-style="listStyle"
-                    :render-format="render3"
-                    filterable
-                    @on-change="handleChange3">
+                    label="studentId"
+                    :filter-method="filterStudents"
+                    :render-format="studentRender">
                     <div :style="{float: 'right', margin: '5px'}">
-                      <Button type="ghost" size="small" @click="reloadMockData">Refresh</Button>
+                      <Button type="ghost" size="small" @click="reloadMockData">重置</Button>
                     </div>
                   </Transfer>
               </FormItem>
@@ -153,13 +153,13 @@ export default {
         size: 20,
         sort: ''
       },
-      assignedStudents:[],
+      assignedStudents: [],
       selectedStudents:[],
       value4: '',
       data3: this.getMockData(),
-      targetKeys3: this.getTargetKeys(),
+      selectedStudentInfo: this.getSelectedStudents(),
       listStyle: {
-        width: '250px',
+        width: '300px',
         height: '300px'
       },
       data4: [
@@ -241,8 +241,8 @@ export default {
     },
     getStudents() {
       let vm = this;
-      getLeisureStudents(Object.assign({}, this.studentQuery)).then((students) => {
-        vm.assignedStudents = students;
+      getLeisureStudents(Object.assign({}, this.studentQuery)).then((res) => {
+        vm.assignedStudents = res.content;
       }).catch(error => {
       });
     },
@@ -278,21 +278,27 @@ export default {
       this.taskQuery.builtTimeBegin = moment().subtract(day,'days').format('YYYY-MM-DD HH:mm:ss');
       this.taskQuery.builtTimeEnd = moment().format('YYYY-MM-DD HH:mm:ss');
     },
-    getTargetKeys() {
+    getSelectedStudents() {
       return this.getMockData()
         .filter(() => Math.random() * 2 > 1)
         .map(item => item.key);
     },
-    handleChange3 (newTargetKeys) {
-      this.targetKeys3 = newTargetKeys;
+    filterStudents(data, query) {
+      return true;
     },
-    render3 (item) {
-      return item.label + ' - ' + item.description;
+    handleChange3 (newTargetKeys) {
+      this.selectedStudentInfo = newTargetKeys;
+    },
+    studentRender (item) {
+      return item.studentId + ' - ' + item.studentName + ' - '+item.className;
     },
     reloadMockData () {
-      this.data3 = this.getMockData();
-      this.targetKeys3 = this.getTargetKeys();
+      // this.data3 = this.getMockData();
+      this.getStudents();
     }
+  },
+  computed:{
+
   }
 }
 </script>
