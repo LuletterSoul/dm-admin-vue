@@ -73,7 +73,7 @@
           </pan-thumb>
         </div>
         <div class="user-card-content">
-          <span class="display_name">{{name}}</span>
+          <span class="display_name">{{userProfile.name}}</span>
           <div class="info-user-item">
             <icon-svg :icon-class="'browse'" ></icon-svg>
             <countTo class="info-item-num" :startVal='0' :endVal='statisticsData.permissionCount' :duration='3400'></countTo>
@@ -134,7 +134,6 @@
     },
     computed: {
       ...mapGetters([
-        'name',
         'avatar',
         'roles',
         'status',

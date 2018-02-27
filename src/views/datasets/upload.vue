@@ -30,7 +30,7 @@
               <FormItem label="数据特征" prop="dataSetChars">
                 <CheckboxGroup v-model="collectionModel.dataSetCharIds" >
                   <transition-group name="list">
-                    <Checkbox style="font-size: 16px;" v-for="item in dataSetCharOptions" :key="item" :label="item.charId">
+                    <Checkbox style="font-size: 16px;" v-for="item in dataSetCharOptions" :key="item.charId" :label="item.charId">
                       {{ item.englishName }}-{{ item.chineseName }}
                     </Checkbox>
                   </transition-group>
@@ -40,7 +40,7 @@
               <FormItem label="属性类型" prop="attributeCharIds">
                 <CheckboxGroup v-model="collectionModel.attributeCharIds">
                   <transition-group name="list">
-                    <Checkbox style="font-size: 16px;" v-for="item in attrCharOptions" :key="item" :label="item.charId">
+                    <Checkbox style="font-size: 16px;" v-for="item in attrCharOptions" :key="item.charId" :label="item.charId">
                       {{ item.englishName }}-{{ item.chineseName }}
                     </Checkbox>
                   </transition-group>
@@ -52,7 +52,7 @@
               <FormItem label="相关任务" prop="associatedTaskIds">
                 <CheckboxGroup v-model="collectionModel.associatedTaskIds">
                   <transition-group name="list">
-                    <Checkbox style="font-size: 16px;" v-for="item in associatedTaskOptions" :key="item" :label="item.typeId">
+                    <Checkbox style="font-size: 16px;" v-for="item in associatedTaskOptions" :key="item.typeId" :label="item.typeId">
                       {{ item.englishName }}-{{ item.chineseName }}
                     </Checkbox>
                   </transition-group>
@@ -84,7 +84,7 @@
               <FormItem label="来自地区" prop="areaId">
                 <RadioGroup v-model="collectionModel.areaId">
                   <transition-group name="list">
-                    <Radio v-for="item in areaTypeOptions" :label="item.areaId" :key="item" style="font-size: 16px;">
+                    <Radio v-for="item in areaTypeOptions" :label="item.areaId" :key="item.areaId" style="font-size: 16px;">
                       {{ item.chineseName }}
                     </Radio>
                   </transition-group>

@@ -141,7 +141,7 @@
     updateLeader,
     configureMembers
   } from 'api/groups';
-  import OneKeyDividing from './components/oneKeyDividing.vue';
+  import OneKeyDividing from './components/onekeydividing/oneKeyDividing.vue';
   import MemberDetails from './components/memberDetails.vue';
 
   export default {

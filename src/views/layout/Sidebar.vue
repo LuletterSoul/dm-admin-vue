@@ -1,7 +1,6 @@
 <template>
     <el-menu @mouseenter="console.log('mouseenter')"
              mode="vertical"
-             theme="dark"
              :default-active="$route.path">
         <sidebar-item :routes='permission_routers'></sidebar-item>
     </el-menu>
@@ -14,7 +13,7 @@
       components: { SidebarItem },
       computed: {
         ...mapGetters([
-          'permission_routers'
+          'permission_routers'm
         ])
       }
     }

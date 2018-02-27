@@ -47,7 +47,7 @@
            <FormItem label="数据特征" prop="dataSetChars">
              <CheckboxGroup v-model="temp.dataSetChars" >
                <transition-group name="list">
-                 <Checkbox v-for="item in dataSetCharOptions" :key="item" :label="item.charId">
+                 <Checkbox v-for="item in dataSetCharOptions" :key="item.charId" :label="item.charId">
                    {{ item.englishName }}-{{ item.chineseName }}
                  </Checkbox>
                </transition-group>
@@ -67,7 +67,7 @@
            <FormItem label="属性类型" prop="attributeCharIds">
              <CheckboxGroup v-model="temp.attributeCharIds">
                <transition-group name="list">
-                 <Checkbox v-for="item in attrCharOptions" :key="item" :label="item.typeId">
+                 <Checkbox v-for="item in attrCharOptions" :key="item.charId" :label="item.charId">
                    {{ item.englishName }}
                  </Checkbox>
                </transition-group>
@@ -79,7 +79,7 @@
            <FormItem label="相关任务" prop="associatedTaskIds">
              <CheckboxGroup v-model="temp.associatedTaskIds">
                <transition-group name="list">
-                 <Checkbox v-for="item in associatedTaskOptions" :key="item" :label="item.typeId">
+                 <Checkbox v-for="item in associatedTaskOptions" :key="item.typeId" :label="item.typeId">
                    {{ item.englishName }}
                  </Checkbox>
                </transition-group>

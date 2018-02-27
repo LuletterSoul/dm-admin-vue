@@ -60,44 +60,44 @@
 
       <!--&lt;!&ndash;<el-table-column v-if="multipleSelection.length" type="selection" width="55"></el-table-column>&ndash;&gt;-->
       <!--<el-table-column align="center" label="学号" width="180px">-->
-        <!--<template scope="scope">-->
+        <!--<template slot-scope="scope">-->
             <!--<span>{{scope.row.studentId}}</span>-->
         <!--</template>-->
       <!--</el-table-column>-->
 
       <!--<el-table-column width="120px" align="center" label="姓名">-->
-        <!--<template scope="scope">-->
+        <!--<template slot-scope="scope">-->
             <!--<span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.studentName }}</span>-->
         <!--</template>-->
       <!--</el-table-column>-->
 
       <!--&lt;!&ndash;<el-table-column min-width="300px" label="标题">&ndash;&gt;-->
-      <!--&lt;!&ndash;<template scope="scope">&ndash;&gt;-->
+      <!--&lt;!&ndash;<template slot-scope="scope">&ndash;&gt;-->
       <!--&lt;!&ndash;<span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.title}}</span>&ndash;&gt;-->
       <!--&lt;!&ndash;<el-tag>{{scope.row.type | typeFilter}}</el-tag>&ndash;&gt;-->
       <!--&lt;!&ndash;</template>&ndash;&gt;-->
       <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
       <!--<el-table-column width="110px" align="center" label="年级">-->
-        <!--<template scope="scope">-->
+        <!--<template slot-scope="scope">-->
           <!--<span>{{scope.row.grade}}</span>-->
         <!--</template>-->
       <!--</el-table-column>-->
 
       <!--<el-table-column width="150px" align="center" label="专业">-->
-        <!--<template scope="scope">-->
+        <!--<template slot-scope="scope">-->
           <!--<span>{{scope.row.profession}}</span>-->
         <!--</template>-->
       <!--</el-table-column>-->
 
       <!--<el-table-column width="110px" align="center" label="班级">-->
-        <!--<template scope="scope">-->
+        <!--<template slot-scope="scope">-->
           <!--<span>{{ scope.row.className }}</span>-->
         <!--</template>-->
       <!--</el-table-column>-->
 
 
       <!--<el-table-column align="center" label="参与任务数" width="120px">-->
-        <!--<template scope="scope">-->
+        <!--<template slot-scope="scope">-->
           <!--<span>-->
             <!--{{ scope.row.finishedTaskCount }}-->
           <!--</span>-->
@@ -105,7 +105,7 @@
       <!--</el-table-column>-->
 
       <!--&lt;!&ndash;<el-table-column class-name="status-col" align="center"  label="任务状态" width="180">&ndash;&gt;-->
-        <!--&lt;!&ndash;<template scope="scope">&ndash;&gt;-->
+        <!--&lt;!&ndash;<template slot-scope="scope">&ndash;&gt;-->
           <!--&lt;!&ndash;&lt;!&ndash;<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>&ndash;&gt;&ndash;&gt;-->
           <!--&lt;!&ndash;<span>&ndash;&gt;-->
               <!--&lt;!&ndash;{{ scope.row.status.chineseValue }}&ndash;&gt;-->
@@ -114,7 +114,7 @@
       <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
 
       <!--&lt;!&ndash;<el-table-column  align="center" class-name="status-col" label="标记" width="100px">&ndash;&gt;-->
-        <!--&lt;!&ndash;<template scope="scope">&ndash;&gt;-->
+        <!--&lt;!&ndash;<template slot-scope="scope">&ndash;&gt;-->
           <!--&lt;!&ndash;&lt;!&ndash;<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>&ndash;&gt;&ndash;&gt;-->
           <!--&lt;!&ndash;<el-tag v-if="scope.row.favorite.value" type="warning">&ndash;&gt;-->
             <!--&lt;!&ndash;{{ scope.row.favorite.chineseValue }}&ndash;&gt;-->
@@ -126,7 +126,7 @@
       <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
 
       <!--<el-table-column align="center"  label="操作" min-width="200px">-->
-        <!--<template scope="scope">-->
+        <!--<template slot-scope="scope">-->
           <!--<el-button size="small" icon="edit"  type = "success" @click="handleUpdate(scope.row)">更新</el-button>-->
           <!--<el-button size="small" icon="delete" type = "danger" @click="handleDelete(scope.row)">删除</el-button>-->
         <!--</template>-->
