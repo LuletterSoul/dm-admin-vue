@@ -2,6 +2,9 @@ export default {
   confirm: {
     title: '提示'
   },
+  table: {
+    empty:'你来到了一片没有数据的荒原....',
+  },
   p: {
     dashboard: {
       header: {
@@ -69,7 +72,7 @@ export default {
               label:'忽略',
             },
             students:{
-              placeholder:'你的人力资源极度匮乏,没有找到符合条件的抱团学生!',
+              placeholder:'你的人力资源极度匮乏,赶快加入您即将要抱团的学生吧!',
               label:'指定',
             },
             builder:{
@@ -83,7 +86,7 @@ export default {
               placeholder:'用此代号确认分组'
             },
             submit:{
-              complete:'提交',
+              preview:'预览',
               cancel:'退出',
               reset:'重置'
             }

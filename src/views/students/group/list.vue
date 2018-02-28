@@ -39,10 +39,10 @@
     </div>
     <Table border size='default'
            :loading="listLoading"
-           :columns="studentColumns"
+           :columns="groupColumns"
            :data="groupList"
            @on-selection-change="handleSelectionChange"
-           class="student-list-container"
+           class="group-list-container"
            stripe></Table>
     <div v-show="!listLoading" class="pagination-container">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="fixPage"
@@ -118,7 +118,7 @@
     name: 'StudentTable',
     data() {
       return {
-        studentColumns: [
+        groupColumns: [
           {
             type: 'selection',
             align: 'center',
@@ -624,7 +624,7 @@
 </script>
 
 <style lang="scss">
-  .student-list-container {
+  .group-list-container {
     margin-top: 90px;
   }
 

@@ -1,19 +1,24 @@
 <template>
     <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
         <div class="sidebar-wrapper">
-            <sidebar class="sidebar-container"></sidebar>
+            <sidebar class="sidebar-container">
+            </sidebar>
         </div>
         <div class="main-container">
-            <navbar></navbar>
+            <navbar>
+            </navbar>
 
           <div class="tags-view-wrapper">
-            <tags-view class="tags-view-container"></tags-view>
+            <tags-view class="tags-view-container">
+            </tags-view>
           </div>
 
           <Back-top :height="200">
-            <em-add icon="arrow-up-c"></em-add>
+            <em-add icon="arrow-up-c">
+            </em-add>
           </Back-top>
-            <app-main></app-main>
+            <app-main>
+            </app-main>
         </div>
     </div>
 </template>

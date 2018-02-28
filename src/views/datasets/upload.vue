@@ -198,7 +198,7 @@
 
 <script type="text/javascript">
     import ElCol from "element-ui/packages/col/src/col";
-    import DataSet from "./setDetails.vue";
+    import DataSet from "./detail.vue";
     import {formatDate} from '@/utils/compute';
     import {
       fetchOptions,
@@ -365,7 +365,7 @@
             type: 'info',
             duration: 1500
           });
-          vm.$router.push({path: '/collection/index'});
+          vm.$router.push({path: '/collection/digest'});
         },
         next () {
           if (this.currentStep === 2) {

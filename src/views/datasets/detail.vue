@@ -31,7 +31,6 @@
           <p slot="title" style="font-size:16px;">{{ todo.title }}</p>
           <p >{{ todo.info }}</p>
         </Card>
-
       </div>
       </Col>
       <Col span="10">
@@ -42,9 +41,8 @@
           <div slot="title" >
               <Icon type="arrow-shrink"></Icon>
               <span class="title-font-style"> 数据集文件 </span>
-
             <Button type="ghost" class="btn-download-sets" :disabled="!checkedSetIds.length" @click="handleDownloadSetZip">下载</Button>
-            <Button type="error" class="btn-download-sets" :disabled="!checkedSetIds.length" @click="handleDeleteSets">删除</Button>
+            <Button type="error" class="btn-download-sets" :disabled="!checkedSetIds.length || readOnly" @click="handleDeleteSets">删除</Button>
           </div>
           <a href="#" slot="extra" @click.prevent="uploadDialogVisible = true">
             <Icon type="plus-round"></Icon>
@@ -114,10 +112,6 @@
       </div>
       </Col>
     </Row>
-
-
-
-
   </div>
 </template>
 
@@ -135,28 +129,41 @@
     downloadSetZip,
     deleteBatchDataSets
   } from 'api/datasets';
+
   export default {
-    components: {ElCol,Balloon,AnimateTransition},
-    name: 'DataSet',
+    props: {
+      //只读
+      readOnly:false,
+      toCollection:{}
+    },
+    components: {ElCol, Balloon, AnimateTransition},
+    name: 'DataSetDetail',
     created() {
       this.collectionId = this.$route.query.collectionId;
-      if(this.collectionId) {
+      //路由直接进入
+      if (this.collectionId) {
         this.getCollectionById(this.collectionId);
         this.getDataSets(this.collectionId);
       }
+      //依赖prop传入的collection
+      else if(this.toCollection.collectionId){
+        this.collection = this.toCollection;
+        this.collectionId = this.toCollection.collectionId;
+        this.getDataSets(this.collectionId);
+      }
     },
-    data () {
+    data() {
       return {
-        uploadDialogVisible:false,
-        isDataSetRefresh:false,
-        checkedSetIds:[],
+        uploadDialogVisible: false,
+        isDataSetRefresh: false,
+        checkedSetIds: [],
         listQuery: {
           page: 0,
           size: 10,
-          sort:"containerId,ASC",
+          sort: "containerId,ASC",
         },
-        linkIndex:true,
-        totalSets:0,
+        linkIndex: true,
+        totalSets: 0,
         columns1: [
           {
             title: '特征',
@@ -209,23 +216,23 @@
             'consistency, and air quality assessment in five Chinese cities, J. Geophys. Res. Atmos., 121, 10220â€“10236.'
           },
         ],
-        collection:{
-          collectionId:'',
-          collectionName:'',
-          area:'',
-          associatedTasks:[],
-          attributeCharacteristics:[],
-          dataSetCharacteristics:[],
-          dataSetFolderPath:'',
-          descriptions:[],
-          isMissingValues:'',
-          numberOfInstances:0
+        collection: {
+          collectionId: '',
+          collectionName: '',
+          area: '',
+          associatedTasks: [],
+          attributeCharacteristics: [],
+          dataSetCharacteristics: [],
+          dataSetFolderPath: '',
+          descriptions: [],
+          isMissingValues: '',
+          numberOfInstances: 0
         },
-        dataSets:[],
-        fileList:[]
+        dataSets: [],
+        fileList: []
       };
     },
-    methods:{
+    methods: {
       async handleBeforeUpload(file) {
         //新建一个Form data 类型的文件
         let fd = new FormData();
@@ -235,7 +242,7 @@
         const uuid_v1 = require('uuid/v1');
         let progress_uuid = uuid_v1();
         let vm = this;
-        addSet(this.collectionId, fd,progress_uuid).then((res) => {
+        addSet(this.collectionId, fd, progress_uuid).then((res) => {
           this.$message({
             message: '上传成功',
             type: 'info',
@@ -255,7 +262,7 @@
           duration: 1500
         });
       },
-      handleFileChange(file,fileList) {
+      handleFileChange(file, fileList) {
         this.fileList = fileList;
       },
       handleFileRemove(file, fileList) {
@@ -273,8 +280,8 @@
       submitUpload() {
         this.$refs.uploadDataSets.submit();
       },
-      handleDownloadSetZip(){
-        downloadSetZip(this.collectionId,this.checkedSetIds).then((res)=>{
+      handleDownloadSetZip() {
+        downloadSetZip(this.collectionId, this.checkedSetIds).then((res) => {
           const effectiveFileName = res.headers['x-suggested-filename'];
           FileSaver.saveAs(res.data, effectiveFileName);
         }).catch((res) => {
@@ -285,16 +292,16 @@
         this.listQuery.size = val;
         this.getDataSets(this.collectionId);
       },
-      handlePageChange(val){
-        this.listQuery.page = val-1;
+      handlePageChange(val) {
+        this.listQuery.page = val - 1;
         this.getDataSets(this.collectionId);
       },
       checkedContainers() {
         let vm = this;
         let checkedContainers = [];
-        this.checkedSetIds.forEach(c=>{
-          vm.dataSets.forEach(d =>{
-            if(d.containerId === c) {
+        this.checkedSetIds.forEach(c => {
+          vm.dataSets.forEach(d => {
+            if (d.containerId === c) {
               checkedContainers.push(d);
             }
           })
@@ -334,12 +341,12 @@
         this.getDataSets(this.collectionId);
       },
       getCollectionById(collectionId) {
-        let vm =this;
+        let vm = this;
         this.loading = true;
-        getCollection(collectionId).then(response =>{
+        getCollection(collectionId).then(response => {
           vm.collection = response;
           vm.loading = false;
-        }).catch(error =>{
+        }).catch(error => {
           console.log(error);
         })
       },
@@ -347,18 +354,18 @@
         let vm = this;
         vm.linkIndex = true;
         this.isDataSetRefresh = true;
-          getSets(collectionId,Object.assign({}, this.listQuery)).then(res => {
-            vm.dataSets = res.content;
-            vm.totalSets = res.totalElements;
-            this.isDataSetRefresh = false;
-          })
+        getSets(collectionId, Object.assign({}, this.listQuery)).then(res => {
+          vm.dataSets = res.content;
+          vm.totalSets = res.totalElements;
+          this.isDataSetRefresh = false;
+        })
       },
       downloadDataSet(containerId) {
 
       }
     },
-    computed:{
-      collectionName(){
+    computed: {
+      collectionName() {
         return this.collection.collectionName;
       },
       fixPage() {
@@ -367,30 +374,30 @@
       dataSetSizes() {
         var numeral = require('numeral');
         numeral.defaultFormat('0.00');
-        return this.dataSets.map( d =>{
-          return numeral((d.size)/(1024*1024)).format() +' MB';
+        return this.dataSets.map(d => {
+          return numeral((d.size) / (1024 * 1024)).format() + ' MB';
         });
       },
-      abstractInfo(){
+      abstractInfo() {
         return this.collection.abstractInfo;
       },
-      data1(){
+      data1() {
         return [
           {
             dataSetChars: this.collection.dataSetCharacteristics.map(char => char.englishName).join(),
-            attributeChars: this.collection.attributeCharacteristics.map(attr =>attr.englishName).join(),
+            attributeChars: this.collection.attributeCharacteristics.map(attr => attr.englishName).join(),
             associatedTasks: this.collection.associatedTasks.map(task => task.englishName).join()
           }
-          ]
+        ]
       },
-      data2(){
+      data2() {
         return [{
-            instances: this.collection.numberOfInstances,
-            enableMissing: this.collection.isMissingValues
-          }]
-      } ,
-      data3(){
-        return  [
+          instances: this.collection.numberOfInstances,
+          enableMissing: this.collection.isMissingValues
+        }]
+      },
+      data3() {
+        return [
           {
             area: this.collection.area.englishName,
             dateDonated: this.collection.dateDonated,
@@ -399,7 +406,7 @@
         ]
       },
     }
-  }
+  };
 </script>
 
 <style scoped="scss">

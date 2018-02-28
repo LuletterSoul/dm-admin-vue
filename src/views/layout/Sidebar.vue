@@ -13,7 +13,7 @@
       components: { SidebarItem },
       computed: {
         ...mapGetters([
-          'permission_routers'm
+          'permission_routers'
         ])
       }
     }

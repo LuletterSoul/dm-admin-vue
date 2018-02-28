@@ -62,6 +62,7 @@
                :data="groupList"
                @on-selection-change="handleSelectionChange"
                class="student-list-container"
+               :no-data-text="$t('table.empty')"
                stripe></Table>
         <div v-show="!listLoading" class="pagination-container">
           <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="fixPage"
@@ -118,7 +119,8 @@
       </div>
     </TabPane>
     <TabPane label="一键分组" name="name2">
-      <one-key-dividing></one-key-dividing>
+      <one-key-dividing>
+      </one-key-dividing>
     </TabPane>
     <TabPane label="手动分组" name="name3">标签三的内容</TabPane>
     <DatePicker type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm" style="width: 200px" class="tab-extra-item" slot="extra"></DatePicker>
@@ -141,9 +143,7 @@
     updateLeader,
     configureMembers
   } from 'api/groups';
-  import OneKeyDividing from './components/onekeydividing/oneKeyDividing.vue';
-  import MemberDetails from './components/memberDetails.vue';
-
+  import OneKeyDividing from './onekeydividing/oneKeyDividing.vue';
   export default {
     components: {OneKeyDividing},
     name: 'StudentTable',
@@ -744,7 +744,7 @@
 
 <style lang="scss">
   .configure-tab{
-    height: 1400px;
+    height: 3600px;
     margin-top: 20px;
     margin-left: 20px;
   }

@@ -1,0 +1,172 @@
+<template>
+  <div class="group-details-container">
+    <Row>
+      <Col>
+      <Table border size='default'
+             :row-class-name="rowClassName"
+             :loading="listLoading"
+             :columns="groupColumns"
+             :data="groupList"
+             :highlight-row="true"
+             :no-data-text="$t('table.empty')"
+             @on-selection-change="handleSelectionChange"
+             stripe></Table>
+      </Col>
+    </Row>
+    <Row>
+      <Col>
+      <task-detail :to-task-id="task.taskId" :to-groups="groupList">
+      </task-detail>
+      </Col>
+    </Row>
+    <!--<transition name="fade">-->
+      <!--<member-details  v-if="showDetails"></member-details>-->
+    <!--</transition>-->
+  </div>
+</template>
+
+<script>
+  import GroupView from '../../../components/groupView';
+  import TaskDetail from 'src/views/tasks/detail';
+  export default {
+    name: "preview",
+    components:{
+      TaskDetail,
+      GroupView
+    },
+    props: {
+      groupList: {
+        required: Array,
+        default: []
+      },
+      task:{
+        required:Object,
+        default:''
+      }
+    },
+    data() {
+      return {
+        showDetails:false,
+        groupColumns: [
+          {
+            title: '序号',
+            type: 'index',
+            width: 70,
+            align: 'center'
+          },
+          {
+            title: '队名',
+            align: 'center',
+            key: 'groupName'
+          },
+          {
+            title: '分组编号',
+            align: 'center',
+            key: 'arrangementId'
+          },
+          {
+            title: '建立时间',
+            align: 'center',
+            key: 'builtTime'
+          },
+          {
+            title: '组长',
+            align: 'center',
+            render: function (h, params) {
+              return h('span', {
+                style: {
+                  color: '#0f79dc'
+                }
+              }, params.row.groupLeader.studentName)
+            }
+          },
+          {
+            title: '任务',
+            align: 'center',
+            render: function (h, params) {
+              return h('span', {
+                style: {
+                  color: '#25dc72'
+                }
+              }, params.row.dataMiningTask.taskName)
+            }
+          },
+          {
+            title: '组员',
+            align: 'center',
+          },
+//           {
+//             title: '管理',
+//             key: 'manage',
+//             width: 300,
+//             align: 'center',
+//             render: (h, params) => {
+//               return h('div', [
+//                 h('Button', {
+//                   props: {
+//                     type: 'primary',
+//                     size: 'default'
+//                   },
+//                   style: {
+//                     marginRight: '5px'
+//                   },
+//                   on: {
+//                     click: () => {
+// //                      this.handleCheck(params.index)
+//                     }
+//                   }
+//                 }, '查看'),
+//                 h('Button', {
+//                   props: {
+//                     type: 'error',
+//                     size: 'default'
+//                   },
+//                   style: {
+//                     marginRight: '5px'
+//                   },
+//                   on: {
+//                     click: () => {
+//                       this.handleDelete(params.index)
+//                     }
+//                   }
+//                 }, '删除'),
+//                 h('Button', {
+//                   props: {
+//                     type: 'info',
+//                     size: 'default'
+//                   },
+//                   on: {
+//                     click: () => {
+//                       this.handleUpdate(params.index)
+//                     }
+//                   }
+//                 }, '修改')
+//               ]);
+//             }
+//           }
+        ],
+        listLoading: false
+      }
+    },
+    methods: {
+      handleSelectionChange() {
+
+      },
+      rowClassName (row, index) {
+        // if (index === 1) {
+        //   return 'demo-table-info-row';
+        // } else if (index === 3) {
+        //   return 'demo-table-error-row';
+        // }
+        return 'group-details-container';
+      }
+    },
+    computed: {}
+  };
+</script>
+
+<style scoped>
+  .group-details-container{
+    transition: all .28s ease-out;
+  }
+</style>

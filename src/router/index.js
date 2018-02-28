@@ -53,12 +53,12 @@ export const asyncRouterMap = [
   {
     path: '/collection',
     component: Layout,
-    redirect: '/collection/collection_details',
+    redirect: '/collection/digest',
     name: '数据集',
     icon: 'data' ,
     children:[
       {
-        path: 'collection_details', component: _import('datasets/collectionDetails'),name: '集合摘要',icon: 'survey'
+        path: 'digest', component: _import('datasets/digest'),name: '集合摘要',icon: 'survey'
       },
       {
         path: 'new', component: _import('datasets/upload'),name: '新增集合',icon:'folder'
@@ -67,7 +67,7 @@ export const asyncRouterMap = [
         path: 'management', component: _import('datasets/edit'),name: '集合管理',icon:'color-filling'
       },
       {
-        path: 'set_details', component: _import('datasets/setDetails'),name: '数据集详情',icon:'survey1',hidden: true
+        path: 'set_detail', component: _import('datasets/detail'),name: '数据集详情',icon:'survey1',hidden: true
       }
     ]
   },
@@ -147,7 +147,7 @@ export const asyncRouterMap = [
         path: 'create',component: _import('tasks/create'),name: '新建任务',icon:'home'
       },
       {
-        path: 'concreteTask',component: _import('tasks/concreteTask'),name: '任务信息',icon:'home'
+        path: 'detail',component: _import('tasks/detail'),name: '任务信息',icon:'home'
       }
     ]
   },

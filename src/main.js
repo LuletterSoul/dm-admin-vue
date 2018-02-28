@@ -25,10 +25,11 @@ import vueWaves from './directive/waves';// 水波纹指令
 import Velocity from 'velocity-animate/velocity'
 import VelocityUI from 'velocity-animate/velocity.ui'
 import IconSvg from '@/components/Icon-svg/index.vue'
+import Balloon from '@/components/balloon/index.vue';
 import {getToken} from '@/utils/auth'
 import 'iview/dist/styles/iview.css';    // 使用 CSS
 import {SweetModal, SweetModalTab} from 'sweet-modal-vue'
-import { getCookiesToken, setCookiesToken, removeCookiesToken} from '@/utils/auth';
+import {getCookiesToken, setCookiesToken, removeCookiesToken} from '@/utils/auth';
 
 
 window.Velocity = window.velocity = Velocity;
@@ -67,6 +68,7 @@ Vue.component('sweet-modal', SweetModal);
 Vue.component('sweet-modal-tab', SweetModalTab);
 Vue.component(EmHeader.name, EmHeader);
 Vue.component(EmSpot.name, EmSpot);
+Vue.component(Balloon.name, Balloon);
 Vue.use(vueWaves);
 
 Vue.mixin({
@@ -90,11 +92,11 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.roles.length === 0) {
         store.dispatch('GetInfo').then((res) => {
-            store.dispatch('GenerateRoutes', {roles: res.roles}).then(() => {
-              router.addRoutes(store.getters.addRouters);
-              next({...to});
+          store.dispatch('GenerateRoutes', {roles: res.roles}).then(() => {
+            router.addRoutes(store.getters.addRouters);
+            next({...to});
           })
-        }).catch(err=>{
+        }).catch(err => {
           // console.log(err);
         })
       }
