@@ -284,13 +284,15 @@
         });
       },
       setTimeXDay(day) {
-        this.taskQuery.builtTimeBegin = moment().subtract(day, 'days').format('YYYY-MM-DD HH:mm:ss');
-        this.taskQuery.builtTimeEnd = moment().format('YYYY-MM-DD HH:mm:ss');
+        const m = require('moment');
+        this.taskQuery.builtTimeBegin = m().subtract(day, 'days').format('YYYY-MM-DD HH:mm:ss');
+        this.taskQuery.builtTimeEnd = m().format('YYYY-MM-DD HH:mm:ss');
       },
       //before天前,after天内
       setTimeRangeTask(before, after) {
-        this.taskQuery.builtTimeBegin = moment().subtract(after, 'days').format('YYYY-MM-DD HH:mm:ss');
-        this.taskQuery.builtTimeEnd = moment().subtract(before, 'days').format('YYYY-MM-DD HH:mm:ss');
+        const m = require('moment');
+        this.taskQuery.builtTimeBegin = m().subtract(after, 'days').format('YYYY-MM-DD HH:mm:ss');
+        this.taskQuery.builtTimeEnd = m().subtract(before, 'days').format('YYYY-MM-DD HH:mm:ss');
       },
       filterStudents(data, query) {
         return true;
