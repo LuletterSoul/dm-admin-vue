@@ -4,9 +4,7 @@
     <Row>
       <Col span="14">
       <div class="details-container">
-
         <div class="dataSetTitle">{{ collectionName }}</div>
-
         <!--<div class="updown">-->
           <!--<Button type="ghost"><a href="">下载数据集</a></Button>-->
           <!--<Button type="ghost"><a href="">下载数据集描述信息</a></Button>-->
@@ -116,10 +114,7 @@
 </template>
 
 <script type="text/javascript">
-  import ElCol from "element-ui/packages/col/src/col";
-  import Balloon from 'components/balloon';
   import FileSaver from 'file-saver'
-  import AnimateTransition from '@/components/transition/AnimateTransition';
   import {
     fetchOptions,
     getCollection,
@@ -129,14 +124,12 @@
     downloadSetZip,
     deleteBatchDataSets
   } from 'api/datasets';
-
   export default {
     props: {
       //只读
       readOnly:false,
       toCollection:{}
     },
-    components: {ElCol, Balloon, AnimateTransition},
     name: 'DataSetDetail',
     created() {
       this.collectionId = this.$route.query.collectionId;

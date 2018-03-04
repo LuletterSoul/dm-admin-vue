@@ -1,7 +1,7 @@
 <template>
   <div class="group-details-container">
     <Row>
-      <Col>
+      <Col :offset="1" :span="23">
       <Table border size='default'
              :row-class-name="rowClassName"
              :loading="listLoading"
@@ -14,7 +14,7 @@
       </Col>
     </Row>
     <Row>
-      <Col>
+      <Col :offset="1" :span="23">
       <task-detail :to-task-id="task.taskId" :to-groups="groupList">
       </task-detail>
       </Col>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import GroupView from '../../../components/groupView';
+  import GroupView from '../../../components/groupViewItem';
   import TaskDetail from 'src/views/tasks/detail';
   export default {
     name: "preview",

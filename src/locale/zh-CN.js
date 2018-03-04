@@ -58,6 +58,13 @@ export default {
           },
         },
         oneKey:{
+          process:{
+            step1:'填写分组参数:如分组梯度,分组限制,给分组分配的任务',
+            step2:'在这里预览分组情况',
+            step3:'调整分组配置',
+            step4:'完成分组'
+          },
+
           taskForm:{
             task:{
               label:'发掘任务',

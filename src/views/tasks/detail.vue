@@ -4,7 +4,7 @@
     <div class="details-container">
       <el-row>
         <el-col>
-          <el-collapse v-model="activeNames" accordion>
+          <el-collapse  v-model="activeNames" accordion>
             <el-collapse-item  name="1">
               <template slot="title">
                 <div class="title-container">
@@ -15,16 +15,34 @@
                 </span>
                 </div>
               </template>
-              <div>
-                <div class="group-container">
-                  <group-view v-for="(group,index) in currentPageGroups" :key="index"  :group="group">
-                  </group-view>
-                </div>
-              </div>
-              <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="pagination.page"
-                             :page-sizes="[2,4,6]" :page-size="pagination.size"
-                             layout="total, sizes, prev, pager, next, jumper" :total="totalElements">
-              </el-pagination>
+              <el-row>
+                <el-col>
+                  <div>
+                    <div class="group-container">
+                      <transition
+                        mode="out-in"
+                        name="custom-classes-transition"
+                        enter-active-class="animated bounceIn"
+                        leave-active-class="animated bounceOutRight">
+                        <group-view  :groups="currentPageGroups"  :key="pagination.page">
+                        </group-view>
+                      </transition>
+                    </div>
+                  </div>
+                </el-col>
+              </el-row>
+              <el-row>
+                  <el-pagination style="float: right;margin-right: 20px"
+                                 @size-change="handleSizeChange"
+                                 @current-change="handleCurrentChange"
+                                 :current-page.sync="pagination.page"
+                                 :page-sizes="[2,4,6]"
+                                 :page-size="pagination.size"
+                                 layout="total, sizes, prev, pager, next, jumper"
+                                 background
+                                 :total="totalElements">
+                  </el-pagination>
+              </el-row>
             </el-collapse-item>
             <el-collapse-item name="2">
               <template slot="title">
@@ -36,8 +54,8 @@
                 </span>
                 </div>
               </template>
-              <div v-for="(collection,index) in sets">
-                <set-detail :to-collection="collection" :read-only="true">
+              <div>
+                <set-detail v-for="(collection,index) in sets" :to-collection="collection" :key="index" :read-only="true">
                 </set-detail>
               </div>
             </el-collapse-item>
@@ -60,15 +78,15 @@
 </template>
 
 <script type="text/javascript">
-  import ElCol from "element-ui/packages/col/src/col";
+  import GroupViewItem from '../components/groupViewItem';
   import GroupView from '../components/groupView';
   import SetDetail from '../datasets/detail'
   import {getRefCollections,getRefGroups,fetchConfiguredAlgortithms} from 'api/tasks';
   export default {
     name: 'app',
     components: {
-      ElCol,
       GroupView,
+      GroupViewItem,
       SetDetail
     },
     props: {
@@ -119,7 +137,7 @@
         sets: this.toSets,
         groups: this.toGroups,
         taskId:this.toTaskId,
-        activeNames: [],
+        activeNames: ['1'],
         title: 'data set title',
         pagination:{
           page:1,
@@ -179,10 +197,6 @@
     background-color:transparent;
     margin:0px auto;
     font-size:16px;
-  }
-  .group-container{
-    border-radius: 10px;
-    box-shadow: 1px 1px 2px #93aac4;
   }
   .title-container{
     margin-left: 20px;

@@ -26,6 +26,8 @@ import Velocity from 'velocity-animate/velocity'
 import VelocityUI from 'velocity-animate/velocity.ui'
 import IconSvg from '@/components/Icon-svg/index.vue'
 import Balloon from '@/components/balloon/index.vue';
+import AnimateTransition from '@/components/transition/AnimateTransition';
+import SingleTransition from '@/components/transition/SingleTransition';
 import {getToken} from '@/utils/auth'
 import 'iview/dist/styles/iview.css';    // 使用 CSS
 import {SweetModal, SweetModalTab} from 'sweet-modal-vue'
@@ -69,6 +71,8 @@ Vue.component('sweet-modal-tab', SweetModalTab);
 Vue.component(EmHeader.name, EmHeader);
 Vue.component(EmSpot.name, EmSpot);
 Vue.component(Balloon.name, Balloon);
+Vue.component(AnimateTransition.name, AnimateTransition);
+Vue.component(SingleTransition.name, SingleTransition);
 Vue.use(vueWaves);
 
 Vue.mixin({

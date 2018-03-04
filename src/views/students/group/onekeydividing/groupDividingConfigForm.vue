@@ -1,7 +1,18 @@
 <template>
   <div>
     <Row>
-      <Col :span="12">
+      <Col :offset="2" :span="21">
+      <Alert type="success" show-icon>
+        分组参数
+        <template slot="desc">
+          <p>{{ $t('p.group.divide.tips.task.header') }}</p>
+          <li v-for="item in $t('p.group.divide.tips.task.content')">{{ item }}</li>
+        </template>
+      </Alert>
+      </Col>
+    </Row>
+    <Row>
+      <Col :offset="1" :span="22">
       <Form :model="formItem" :label-width="80">
         <FormItem :label="$t('p.group.divide.oneKey.taskForm.task.label')">
           <AutoComplete
@@ -80,33 +91,27 @@
           <Input v-model="config.buildingKey"
                  :placeholder="$t('p.group.divide.oneKey.taskForm.operationCode.placeholder')"></Input>
         </FormItem>
-        <FormItem>
-          <Button type="primary" @click="handleSubmitDividingConfig" :loading="previewLoading" style="margin-top: 10px" long>{{
-            $t('p.group.divide.oneKey.taskForm.submit.preview') }}
-          </Button>
-          <Button type="error" style="margin-top: 10px" long>{{ $t('p.group.divide.oneKey.taskForm.submit.reset') }}
-          </Button>
-          <Button type="ghost" style="margin-top: 10px" long>{{ $t('p.group.divide.oneKey.taskForm.submit.cancel') }}
-          </Button>
-        </FormItem>
       </Form>
       </Col>
-      <Col :offset="2" :span="9">
-      <Alert type="success" show-icon>
-        分组参数
-        <template slot="desc">
-          <p>{{ $t('p.group.divide.tips.task.header') }}</p>
-          <li v-for="item in $t('p.group.divide.tips.task.content')">{{ item }}</li>
-        </template>
-      </Alert>
+    </Row>
+    <Row>
+      <Col :offset="4" :span="16">
+      <Button type="primary" @click="handleSubmitDividingConfig" :loading="previewLoading" style="margin-top: 10px"
+              long>{{
+        $t('p.group.divide.oneKey.taskForm.submit.preview') }}
+      </Button>
+      <Button type="error" style="margin-top: 10px" long>{{ $t('p.group.divide.oneKey.taskForm.submit.reset') }}
+      </Button>
+      <Button type="ghost" style="margin-top: 10px" long>{{ $t('p.group.divide.oneKey.taskForm.submit.cancel') }}
+      </Button>
       </Col>
     </Row>
-
   </div>
 </template>
 <script>
   import {fetchTaskList} from 'api/tasks';
-  import {getLeisureStudents,createGroupPreview} from 'api/groups';
+  import {getLeisureStudents, createGroupPreview} from 'api/groups';
+
   const moment = require('moment');
   export default {
     name: "group-dividing-config-form",
@@ -123,7 +128,7 @@
           builderId: '',
           buildingKey: ''
         },
-        previewLoading:false,
+        previewLoading: false,
         tasks: [
           {
             title: '7天内',
@@ -225,14 +230,14 @@
         vm.previewLoading = true;
         createGroupPreview(Object.assign({}, vm.config)).then(res => {
           vm.previewGroups = res;
-          vm.$emit('on-group-preview',vm.previewGroups);
+          vm.$emit('on-group-preview', vm.previewGroups);
           vm.previewLoading = false;
           vm.$message({
             message: '创建预览分组成功',
             type: 'success',
             duration: 1500
           });
-        }).catch(error =>{
+        }).catch(error => {
           vm.previewLoading = false;
         })
       },
@@ -268,18 +273,18 @@
         }).catch(error => {
         });
       },
-      getTasks() {
+      async getTasks() {
         let vm = this;
         this.setTimeXDay(7);
-        fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
+        await fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
           vm.tasks[0].content = res.content;
         });
         this.setTimeRangeTask(7, 30);
-        fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
+        await fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
           vm.tasks[1].content = res.content;
         });
         this.setTimeRangeTask(30, 90);
-        fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
+        await fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
           vm.tasks[2].content = res.content;
         });
       },
@@ -312,14 +317,16 @@
 </script>
 
 <style scoped>
-  .task-auto-complete-item{
+  .task-auto-complete-item {
     padding: 4px 0;
     border-bottom: 1px solid #F6F6F6;
   }
-  .task-auto-complete-group{
+
+  .task-auto-complete-group {
     font-size: 12px;
     padding: 4px 6px;
   }
+
   .auto-complete-option {
     float: right;
     margin-right: 20px;

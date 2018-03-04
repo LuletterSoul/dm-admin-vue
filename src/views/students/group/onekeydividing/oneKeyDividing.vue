@@ -2,14 +2,16 @@
   <div class="step-wrap">
     <div class="step-container">
       <Row>
-        <Col>
+        <Col :offset="1">
         <Steps :current="current">
-          <Step  title="填写分组参数" content="填写分组参数:如分组梯度,分组限制,给该分组分配的任务">
+          <Step  title="填写分组参数" :content="$t('p.group.divide.oneKey.process.step1')">
           </Step>
-          <Step  title="预览分组信息" content="这里是该步骤的描述信息">
+          <Step  title="预览分组信息" :content="$t('p.group.divide.oneKey.process.step2')">
           </Step>
-          <Step title="手动调优" content="这里是该步骤的描述信息"></Step>
-          <Step title="确认分组" content="这里是该步骤的描述信息"></Step>
+          <Step title="手动调优" :content="$t('p.group.divide.oneKey.process.step3')">
+          </Step>
+          <Step title="确认分组" :content="$t('p.group.divide.oneKey.process.step4')">
+          </Step>
         </Steps>
         </Col>
       </Row>
@@ -17,7 +19,7 @@
     <div>
       <Row>
         <Col>
-        <transition name="fade">
+        <transition name="fade" mode="out-in">
           <transition name="fade">
             <keep-alive>
               <dividing-form v-if="current===0" @on-group-preview="handleGroupPreview"> </dividing-form>
@@ -28,7 +30,7 @@
       </Row>
       <Row>
         <Col :span="23">
-        <transition name="fade" :duration="1500">
+        <transition name="fade" mode="out-in">
           <preview v-if="current===1" :group-list="dataMiningGroups" :task="dataMiningTask"> </preview>
         </transition>
         </Col>

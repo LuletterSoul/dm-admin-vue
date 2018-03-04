@@ -1,7 +1,6 @@
 <template>
     <div id="animateTransition">
       <transition-group
-                  :css="false"
                   @before-enter="beforeEnter"
                   @enter="enter"
                   @after-enter="afterEnter"
@@ -10,14 +9,15 @@
                   @after-leave="afterLeave"
                   @before-appear="beforeAppear"
                   @appear="appear">
-        <slot></slot>
+        <slot>
+        </slot>
       </transition-group>
     </div>
 </template>
 
 <script type="text/javascript">
   export default {
-    name: 'SlideUpBig',
+    name: 'AnimateTransition',
     props: {
       duration: {
         type: Number,
@@ -103,5 +103,8 @@
     }
   };
 </script>
-<style>
+<style scoped>
+  .flip-list-move {
+    transition: transform 1s;
+  }
 </style>

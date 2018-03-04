@@ -1,6 +1,8 @@
 <template>
     <div id="singleTransition">
       <transition
+                  name="fade"
+                  mode="out-in"
                   :css="false"
                   @before-enter="beforeEnter"
                   @enter="enter"
@@ -10,18 +12,19 @@
                   @after-leave="afterLeave"
                   @before-appear="beforeAppear"
                   @appear="appear">
-        <slot></slot>
+        <slot>
+        </slot>
       </transition>
     </div>
 </template>
 
 <script type="text/javascript">
   export default {
-    name: 'SlideUpBig',
+    name: 'SingleTransition',
     props: {
       duration: {
         type: Number,
-        default: 1200
+        default: 1000
       },
       delay: {
         type: Number,
