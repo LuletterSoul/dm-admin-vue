@@ -1,134 +1,125 @@
 <template>
-  <Tabs value="name1" class="configure-tab">
-    <TabPane label="人力资源" name="personResource">
-      <div class="calendar-list-container test">
-        <Row>
-          <Col span="6">
-          <Alert show-icon>
-            Tips
-            <Icon type="ios-lightbulb-outline" slot="icon"></Icon>
-            <template slot="desc">
-              <p>你可以用以下条件筛选得到符合分组要求的学生信息</p>
-              <li>特定时间段内无发掘任务的学生</li>
-              <li>特定班级,专业,年级的学生</li>
-              <p>当然,您可以直接勾选心仪的学生创建分组</p>
-            </template>
-          </Alert>
-          </Col>
-          <Col span="18">
-          <div class="btn-import-container">
-            <el-input @keyup.enter.native="handleFilter" style="width: 200px;" @change='handleFilter' class="btn-item"
-                      placeholder="学号" v-model="listQuery.studentId">
-            </el-input>
+  <div class="calendar-list-container test">
+    <div v-show="!listLoading" class="pagination-container">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="fixPage"
+                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.size"
+                     layout="total, sizes, prev, pager, next, jumper" :total="total">
+      </el-pagination>
+    </div>
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+      <el-form class="small-space" :model="temp" label-position="left" label-width="70px"
+               style='width: 400px; margin-left:50px;'>
+        <el-form-item label="学号" label-width="85px">
+          <el-input v-model="temp.studentId">
+          </el-input>
+        </el-form-item>
 
-            <el-select clearable style="width: 100px" @change='handleFilter' class="btn-item" v-model="listQuery.grade"
-                       placeholder="年级">
-              <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
-              </el-option>
-            </el-select>
+        <el-form-item label="姓名" label-width="85px">
+          <el-input v-model="temp.studentName">
+          </el-input>
+        </el-form-item>
 
-            <el-select clearable class="btn-item" @change='handleFilter' style="width: 130px" v-model="listQuery.className"
-                       placeholder="班级">
-              <el-option v-for="item in  classNameOptions" :key="item.key" :label="item" :value="item">
-              </el-option>
-            </el-select>
+        <el-form-item label="年级" label-width="85px">
+          <el-select class="btn-item" v-model="temp.grade">
+            <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
+            </el-option>
+          </el-select>
+        </el-form-item>
 
-            <el-select @change='handleFilter' style="width: 120px" class="btn-item" v-model="listQuery.sort" placeholder="排序">
-              <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
-              </el-option>
-            </el-select>
+        <el-form-item label="专业" label-width="85px">
+          <el-select class="btn-item" v-model="temp.profession">
+            <el-option v-for="item in professionOptions" :key="item" :label="item" :value="item">
+            </el-option>
+          </el-select>
+        </el-form-item>
 
-            <el-button class="btn-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">筛选</el-button>
-            <el-button class="btn-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-plus">
-              添加
-            </el-button>
-            <el-button class="btn-item" type="primary" icon="el-icon-document" @click="handleDownload">导出</el-button>
-            <el-button class="btn-item" type="primary" icon="el-icon-delete" v-waves @click="handleBatchDelete"
-                       :disabled="!multipleSelection.length">批量删除
-            </el-button>
-            <el-button class="btn-item" type="warning" icon="el-icon-star-on" v-waves @click="markFavoriteStudent"
-                       v-if="multipleSelection.length">收藏
-            </el-button>
-            <el-button class="btn-item" type="warning" icon="el-icon-star-off" :plain="true" v-waves
-                       @click="unMarkFavoriteStudent" v-if="multipleSelection.length">取消收藏
-            </el-button>
-          </div>
-          </Col>
-        </Row>
+        <el-form-item label="班级" label-width="85px">
+          <el-select class="btn-item" v-model="temp.className">
+            <el-option v-for="item in classNameOptions" :key="item" :label="item" :value="item">
+            </el-option>
+          </el-select>
+        </el-form-item>
 
-        <Table border size='default'
-               :loading="listLoading"
-               :columns="studentColumns"
-               :data="groupList"
-               @on-selection-change="handleSelectionChange"
-               class="student-list-container"
-               :no-data-text="$t('table.empty')"
-               stripe></Table>
-        <div v-show="!listLoading" class="pagination-container">
-          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="fixPage"
-                         :page-sizes="[10,20,30, 50]" :page-size="listQuery.size"
-                         layout="total, sizes, prev, pager, next, jumper" :total="total">
-          </el-pagination>
-        </div>
-        <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-          <el-form class="small-space" :model="temp" label-position="left" label-width="70px"
-                   style='width: 400px; margin-left:50px;'>
-            <el-form-item label="学号" label-width="85px">
-              <el-input v-model="temp.studentId">
-              </el-input>
-            </el-form-item>
+        <el-form-item label="参与任务数" label-width="85px">
+          <el-input v-model="temp.finishedTaskCount" :disabled="dialogStatus!=='create'">
+          </el-input>
+        </el-form-item>
+      </el-form>
 
-            <el-form-item label="姓名" label-width="85px">
-              <el-input v-model="temp.studentName">
-              </el-input>
-            </el-form-item>
-
-            <el-form-item label="年级" label-width="85px">
-              <el-select class="btn-item" v-model="temp.grade">
-                <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
-                </el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="专业" label-width="85px">
-              <el-select class="btn-item" v-model="temp.profession">
-                <el-option v-for="item in professionOptions" :key="item" :label="item" :value="item">
-                </el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="班级" label-width="85px">
-              <el-select class="btn-item" v-model="temp.className">
-                <el-option v-for="item in classNameOptions" :key="item" :label="item" :value="item">
-                </el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="参与任务数" label-width="85px">
-              <el-input v-model="temp.finishedTaskCount" :disabled="dialogStatus!=='create'">
-              </el-input>
-            </el-form-item>
-          </el-form>
-
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button v-if="dialogStatus=='create'" type="primary" @click="create">确 定</el-button>
-            <el-button v-else type="primary" @click="update">确 定</el-button>
-          </div>
-        </el-dialog>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="create">确 定</el-button>
+        <el-button v-else type="primary" @click="update">确 定</el-button>
       </div>
-    </TabPane>
-    <TabPane label="一键分组" name="name2">
-      <one-key-dividing>
-      </one-key-dividing>
-    </TabPane>
-    <TabPane label="手动分组" name="name3">标签三的内容</TabPane>
+    </el-dialog>
     <DatePicker type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm" style="width: 200px" class="tab-extra-item" slot="extra"></DatePicker>
     <DatePicker type="datetime" placeholder="结点时间" format="yyyy-MM-dd HH:mm" style="width: 200px" class="tab-extra-item" slot="extra"></DatePicker>
     <Select v-model="isHasTask" :placeholder="'任务状态'" style="width:100px;margin-right: 10px" slot="extra">
       <Option v-for="item in hasTaskOptions" :value="item.label" :key="item.label">{{ item.label }}</Option>
     </Select>
-  </Tabs>
+    <Row>
+      <Col span="6">
+      <Alert show-icon>
+        Tips
+        <Icon type="ios-lightbulb-outline" slot="icon"></Icon>
+        <template slot="desc">
+          <p>你可以用以下条件筛选得到符合分组要求的学生信息</p>
+          <li>特定时间段内无发掘任务的学生</li>
+          <li>特定班级,专业,年级的学生</li>
+          <p>当然,您可以直接勾选心仪的学生创建分组</p>
+        </template>
+      </Alert>
+      </Col>
+      <Col span="18">
+      <div class="btn-import-container">
+        <el-input @keyup.enter.native="handleFilter" style="width: 200px;" @change='handleFilter' class="btn-item"
+                  placeholder="学号" v-model="listQuery.studentId">
+        </el-input>
+
+        <el-select clearable style="width: 100px" @change='handleFilter' class="btn-item" v-model="listQuery.grade"
+                   placeholder="年级">
+          <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
+          </el-option>
+        </el-select>
+
+        <el-select clearable class="btn-item" @change='handleFilter' style="width: 130px" v-model="listQuery.className"
+                   placeholder="班级">
+          <el-option v-for="item in  classNameOptions" :key="item.key" :label="item" :value="item">
+          </el-option>
+        </el-select>
+
+        <el-select @change='handleFilter' style="width: 120px" class="btn-item" v-model="listQuery.sort"
+                   placeholder="排序">
+          <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
+          </el-option>
+        </el-select>
+
+        <el-button class="btn-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">筛选</el-button>
+        <el-button class="btn-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-plus">
+          添加
+        </el-button>
+        <el-button class="btn-item" type="primary" icon="el-icon-document" @click="handleDownload">导出</el-button>
+        <el-button class="btn-item" type="primary" icon="el-icon-delete" v-waves @click="handleBatchDelete"
+                   :disabled="!multipleSelection.length">批量删除
+        </el-button>
+        <el-button class="btn-item" type="warning" icon="el-icon-star-on" v-waves @click="markFavoriteStudent"
+                   v-if="multipleSelection.length">收藏
+        </el-button>
+        <el-button class="btn-item" type="warning" icon="el-icon-star-off" :plain="true" v-waves
+                   @click="unMarkFavoriteStudent" v-if="multipleSelection.length">取消收藏
+        </el-button>
+      </div>
+      </Col>
+    </Row>
+    <Table border size='default'
+           :loading="listLoading"
+           :columns="studentColumns"
+           :data="groupList"
+           @on-selection-change="handleSelectionChange"
+           class="student-list-container"
+           :no-data-text="$t('table.empty')"
+           stripe></Table>
+  </div>
 </template>
 
 <script>
@@ -143,27 +134,25 @@
     updateLeader,
     configureMembers
   } from 'api/groups';
-  import OneKeyDividing from './onekeydividing/oneKeyDividing.vue';
   export default {
-    components: {OneKeyDividing},
-    name: 'StudentTable',
+    name: "resource",
     data() {
       return {
-        isHasTask:'',
-        hasTaskOptions:[{
-          label:'有任务',
-          value:1
-        },{
-          label:'无任务',
-          value :0
-        },{
-          label:'全部',
-          value:2
+        isHasTask: '',
+        hasTaskOptions: [{
+          label: '有任务',
+          value: 1
+        }, {
+          label: '无任务',
+          value: 0
+        }, {
+          label: '全部',
+          value: 2
         }],
         studentColumns: [
           {
             type: 'selection',
-            align:'center',
+            align: 'center',
             width: 60,
           },
           {
@@ -740,44 +729,9 @@
       },
     }
   }
+
 </script>
 
-<style lang="scss">
-  .configure-tab{
-    height: 3600px;
-    margin-top: 20px;
-    margin-left: 20px;
-  }
-  .student-list-container {
-    margin-top: 30px;
-  }
+<style scoped>
 
-  .btn-import-container {
-    padding-right: 20px;
-    float: right;
-    .btn-item {
-      display: inline-block;
-      vertical-align: middle;
-      margin-bottom: 10px;
-      margin-left: 5px;
-    }
-  }
-
-  .test {
-    padding: 20px;
-  }
-  .tab-extra-item{
-    margin-right: 15px;
-  }
-
-  .title {
-    margin-bottom: 20px;
-    width: 22%;
-    font: bold 36px 微软雅黑;
-  }
-
-  div {
-    background-color: transparent;
-    margin: 0px auto;
-  }
 </style>

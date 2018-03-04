@@ -30,6 +30,8 @@
     "numeral": "2.0.6",
     "region-picker": "0.0.17",
     "screenfull": "3.3.2",
+    "sortable": "^2.0.0",
+    "sortablejs": "^1.7.0",
     "sweet-modal-vue": "^2.0.0",
     "uuid": "3.2.1",
     "vue": "2.5.2",
@@ -39,7 +41,7 @@
     "vue-multiselect": "2.0.2",
     "vue-region-picker": "^3.0.1",
     "vue-router": "2.5.3",
-    "vuedraggable": "2.14.1",
+    "vuedraggable": "^2.14.1",
     "vuex": "2.3.1",
     "xlsx": "^0.10.8"
   },

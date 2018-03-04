@@ -24,6 +24,14 @@ export default {
         mockUse: '今日接口累积调用 | 次'
       }
     },
+    student: {
+      modal: {
+        studentId:'学号',
+        studentName:'学生姓名',
+        className:'班级',
+        profession:'专业'
+      }
+    },
     docs: {
       header: {
         title: '文档 | 更新日志',
@@ -36,11 +44,10 @@ export default {
         description: '这里将展示你所创建和管理的分组。'
       },
       modal: {
-        tab: {
-          create: '创建团队 | 团队名称 | 建议名字取特殊一点，防止别人误加入',
-          join: '加入团队 | 团队名称 | 请输入团队名称',
-          edit: '编辑团队 | 团队名称 | 建议名字取特殊一点，防止别人误加入'
-        }
+        groupName:'队名',
+        arrangementId:'分组编号',
+        groupLeader:'队长',
+        taskName:'任务名称'
       },
       divide:{
         tips:{

@@ -25,13 +25,9 @@
 </template>
 
 <script type="text/javascript">
-  import Balloon from 'components/balloon';
 
   export default {
     name: 'app',
-    components:{
-      Balloon
-    },
     data () {
       return {
         groups: [

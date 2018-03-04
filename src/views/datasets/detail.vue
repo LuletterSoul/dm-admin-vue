@@ -1,6 +1,5 @@
 <template>
   <div id="app" class="app-container">
-
     <Row>
       <Col span="14">
       <div class="details-container">

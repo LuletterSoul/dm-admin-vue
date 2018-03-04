@@ -111,7 +111,6 @@
 <script>
   import {fetchTaskList} from 'api/tasks';
   import {getLeisureStudents, createGroupPreview} from 'api/groups';
-
   const moment = require('moment');
   export default {
     name: "group-dividing-config-form",

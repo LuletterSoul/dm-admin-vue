@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import GroupView from '../../../components/groupViewItem';
+  import GroupView from '../../components/groupViewItem';
   import TaskDetail from 'src/views/tasks/detail';
   export default {
     name: "preview",
@@ -166,6 +166,11 @@
 </script>
 
 <style scoped>
+  div{
+    background-color:transparent;
+    margin:0px auto;
+    font-size:16px;
+  }
   .group-details-container{
     transition: all .28s ease-out;
   }
