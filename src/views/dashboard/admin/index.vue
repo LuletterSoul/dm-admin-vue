@@ -67,13 +67,19 @@
       </div>
 
       <div class="user">
-        <div slot="header" class="box-card-header">
+        <el-card class="user-profile-content">
+
+          <div>
+          <div class="user-image">
           <pan-thumb class="panThumb" :image="userProfile.avatar">
             Pain and pleasure,like light and darkness,succeed each other.
           </pan-thumb>
-        </div>
-        <div class="user-card-content">
+          </div>
+
+          <div class="info-user-name">
           <span class="display_name">{{userProfile.name}}</span>
+          </div>
+
           <div class="info-user-item">
             <icon-svg :icon-class="'browse'" ></icon-svg>
             <countTo class="info-item-num" :startVal='0' :endVal='statisticsData.permissionCount' :duration='3400'></countTo>
@@ -84,7 +90,8 @@
             <countTo class="info-item-num" :startVal='0' :endVal='statisticsData.operationCount' :duration='3600'></countTo>
             <span class="info-item-text">操作数</span>
           </div>
-        </div>
+          </div>
+        </el-card>
       </div>
 
     </div>
@@ -164,26 +171,30 @@
     float: left;
   }
   .display_name{
-    font-size: 30px;
     display: block;
+    float: left;
+    font-size: 40px;
   }
-
   .box-card-header {
     position: relative;
     height: 160px;
   }
   .panThumb {
     z-index: 100;
-    height: 150px;
-    width: 150px;
+    height: 300px;
     position: absolute;
     left: 0px;
     right: 0px;
-    margin: auto;
+  }
+  .info-user-name{
+    width: 50%;
+    float: left;
   }
   .info-user-item {
+    width:60%;
     margin-top: 12px;
     font-size: 16px;
+    float: left;
   }
   .user-profile-content{
     height: 300px;
@@ -196,8 +207,13 @@
     background-color: transparent;
   }
   .user{
-    width:20%;
+    width:38%;
     height: 300px;
+    float: left;
+  }
+  .user-image{
+    width:40%;
+    height: 100%;
     float: left;
   }
  .todoList-container{

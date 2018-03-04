@@ -17,8 +17,6 @@
         </Col>
       </Row>
 
-
-
       <div style="margin-top:20px;clear:right;padding: 20px;">
         <template>
           <Table :loading="loading" border :columns="dataSetTable1" :data="dataSetInfo" @on-selection-change="handleSelectionChange" stripe ></Table>
