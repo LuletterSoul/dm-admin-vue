@@ -11,7 +11,8 @@
 </script>
 <style lang="scss">
   .global-background{
-    background: url("./assets/5.jpg") repeat-y;
+    background-image: url("./assets/5.jpg");
+    background-repeat: repeat;
     background-size: 100%;
   }
   @import './styles/index.scss'; // 全局自定义的css样式
