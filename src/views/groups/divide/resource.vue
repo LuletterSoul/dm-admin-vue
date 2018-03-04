@@ -1,125 +1,101 @@
 <template>
-  <div class="calendar-list-container test">
-    <div v-show="!listLoading" class="pagination-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="fixPage"
-                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.size"
-                     layout="total, sizes, prev, pager, next, jumper" :total="total">
-      </el-pagination>
-    </div>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form class="small-space" :model="temp" label-position="left" label-width="70px"
-               style='width: 400px; margin-left:50px;'>
-        <el-form-item label="学号" label-width="85px">
-          <el-input v-model="temp.studentId">
-          </el-input>
-        </el-form-item>
+  <el-container>
+    <el-main>
+      <div>
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <Alert show-icon>
+            Tips
+            <Icon type="ios-lightbulb-outline" slot="icon"></Icon>
+            <template slot="desc">
+              <p>你可以用以下条件筛选得到符合分组要求的学生信息</p>
+              <li>特定时间段内无发掘任务的学生</li>
+              <li>特定班级,专业,年级的学生</li>
+              <p>当然,您可以直接勾选心仪的学生创建分组</p>
+            </template>
+          </Alert>
+        </el-col>
+        <el-col :offset="4" :span="14">
+          <el-row>
+            <el-col>
+              <div class="btn-import-container">
+                <el-input @keyup.enter.native="handleFilter" style="width: 200px;" @change='handleFilter' class="btn-item"
+                          placeholder="学号" v-model="listQuery.studentId">
+                </el-input>
 
-        <el-form-item label="姓名" label-width="85px">
-          <el-input v-model="temp.studentName">
-          </el-input>
-        </el-form-item>
+                <el-select clearable style="width: 100px" @change='handleFilter' class="btn-item" v-model="listQuery.grade"
+                           placeholder="年级">
+                  <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
+                  </el-option>
+                </el-select>
 
-        <el-form-item label="年级" label-width="85px">
-          <el-select class="btn-item" v-model="temp.grade">
-            <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
-            </el-option>
-          </el-select>
-        </el-form-item>
+                <el-select clearable class="btn-item" @change='handleFilter' style="width: 130px"
+                           v-model="listQuery.className"
+                           placeholder="班级">
+                  <el-option v-for="item in  classNameOptions" :key="item.key" :label="item" :value="item">
+                  </el-option>
+                </el-select>
 
-        <el-form-item label="专业" label-width="85px">
-          <el-select class="btn-item" v-model="temp.profession">
-            <el-option v-for="item in professionOptions" :key="item" :label="item" :value="item">
-            </el-option>
-          </el-select>
-        </el-form-item>
+                <el-select @change='handleFilter' style="width: 120px" class="btn-item" v-model="listQuery.sort"
+                           placeholder="排序">
+                  <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
+                  </el-option>
+                </el-select>
 
-        <el-form-item label="班级" label-width="85px">
-          <el-select class="btn-item" v-model="temp.className">
-            <el-option v-for="item in classNameOptions" :key="item" :label="item" :value="item">
-            </el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="参与任务数" label-width="85px">
-          <el-input v-model="temp.finishedTaskCount" :disabled="dialogStatus!=='create'">
-          </el-input>
-        </el-form-item>
-      </el-form>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="create">确 定</el-button>
-        <el-button v-else type="primary" @click="update">确 定</el-button>
+                <el-button class="btn-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">筛选</el-button>
+                <el-button class="btn-item" style="margin-left: 10px;" @click="handleCreate" type="primary"
+                           icon="el-icon-plus">
+                  添加
+                </el-button>
+                <el-button class="btn-item" type="primary" icon="el-icon-document" @click="handleDownload">导出</el-button>
+                <el-button class="btn-item" type="primary" icon="el-icon-delete" v-waves @click="handleBatchDelete"
+                           :disabled="!multipleSelection.length">批量删除
+                </el-button>
+                <el-button class="btn-item" type="warning" icon="el-icon-star-on" v-waves @click="markFavoriteStudent"
+                           v-if="multipleSelection.length">收藏
+                </el-button>
+                <el-button class="btn-item" type="warning" icon="el-icon-star-off" :plain="true" v-waves
+                           @click="unMarkFavoriteStudent" v-if="multipleSelection.length">取消收藏
+                </el-button>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row style="margin-top: 40px">
+            <el-col :span="6">
+              <Select v-model="isHasTask" :placeholder="'任务状态'">
+                <Option v-for="item in hasTaskOptions" :value="item.label" :key="item.label">{{ item.label }}</Option>
+              </Select>
+            </el-col>
+            <el-col :offset="2" :span="6">
+              <DatePicker type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm" style="width: 100%"></DatePicker>
+            </el-col>
+            <el-col :offset="2" :span="6">
+              <DatePicker type="datetime" placeholder="结点时间" format="yyyy-MM-dd HH:mm" style="width: 100%"></DatePicker>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+      <el-row style="margin-top: 10px">
+        <el-col>
+          <Table border size='default'
+                 :loading="listLoading"
+                 :Columns="studentColumns"
+                 :data="groupList"
+                 @on-selection-change="handleSelectionChange"
+                 class="student-list-container"
+                 :no-data-text="$t('table.empty')"
+                 stripe></Table>
+        </el-col>
+      </el-row>
+      <div v-show="!listLoading" class="pagination-container">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                       :current-page.sync="fixPage"
+                       :page-sizes="[10,20,30, 50]" :page-size="listQuery.size"
+                       layout="total, sizes, prev, pager, next, jumper" :total="total">
+        </el-pagination>
       </div>
-    </el-dialog>
-    <DatePicker type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm" style="width: 200px" class="tab-extra-item" slot="extra"></DatePicker>
-    <DatePicker type="datetime" placeholder="结点时间" format="yyyy-MM-dd HH:mm" style="width: 200px" class="tab-extra-item" slot="extra"></DatePicker>
-    <Select v-model="isHasTask" :placeholder="'任务状态'" style="width:100px;margin-right: 10px" slot="extra">
-      <Option v-for="item in hasTaskOptions" :value="item.label" :key="item.label">{{ item.label }}</Option>
-    </Select>
-    <Row>
-      <Col span="6">
-      <Alert show-icon>
-        Tips
-        <Icon type="ios-lightbulb-outline" slot="icon"></Icon>
-        <template slot="desc">
-          <p>你可以用以下条件筛选得到符合分组要求的学生信息</p>
-          <li>特定时间段内无发掘任务的学生</li>
-          <li>特定班级,专业,年级的学生</li>
-          <p>当然,您可以直接勾选心仪的学生创建分组</p>
-        </template>
-      </Alert>
-      </Col>
-      <Col span="18">
-      <div class="btn-import-container">
-        <el-input @keyup.enter.native="handleFilter" style="width: 200px;" @change='handleFilter' class="btn-item"
-                  placeholder="学号" v-model="listQuery.studentId">
-        </el-input>
-
-        <el-select clearable style="width: 100px" @change='handleFilter' class="btn-item" v-model="listQuery.grade"
-                   placeholder="年级">
-          <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
-          </el-option>
-        </el-select>
-
-        <el-select clearable class="btn-item" @change='handleFilter' style="width: 130px" v-model="listQuery.className"
-                   placeholder="班级">
-          <el-option v-for="item in  classNameOptions" :key="item.key" :label="item" :value="item">
-          </el-option>
-        </el-select>
-
-        <el-select @change='handleFilter' style="width: 120px" class="btn-item" v-model="listQuery.sort"
-                   placeholder="排序">
-          <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
-          </el-option>
-        </el-select>
-
-        <el-button class="btn-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">筛选</el-button>
-        <el-button class="btn-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-plus">
-          添加
-        </el-button>
-        <el-button class="btn-item" type="primary" icon="el-icon-document" @click="handleDownload">导出</el-button>
-        <el-button class="btn-item" type="primary" icon="el-icon-delete" v-waves @click="handleBatchDelete"
-                   :disabled="!multipleSelection.length">批量删除
-        </el-button>
-        <el-button class="btn-item" type="warning" icon="el-icon-star-on" v-waves @click="markFavoriteStudent"
-                   v-if="multipleSelection.length">收藏
-        </el-button>
-        <el-button class="btn-item" type="warning" icon="el-icon-star-off" :plain="true" v-waves
-                   @click="unMarkFavoriteStudent" v-if="multipleSelection.length">取消收藏
-        </el-button>
-      </div>
-      </Col>
-    </Row>
-    <Table border size='default'
-           :loading="listLoading"
-           :columns="studentColumns"
-           :data="groupList"
-           @on-selection-change="handleSelectionChange"
-           class="student-list-container"
-           :no-data-text="$t('table.empty')"
-           stripe></Table>
-  </div>
+    </div></el-main>
+  </el-container>
 </template>
 
 <script>
@@ -134,6 +110,7 @@
     updateLeader,
     configureMembers
   } from 'api/groups';
+
   export default {
     name: "resource",
     data() {
@@ -236,93 +213,6 @@
             }
           }
         ],
-//        studentColumns: [
-//          {
-//            type: 'selection',
-//            align: 'center',
-//            width: 60,
-//          },
-//          {
-//            title: '序号',
-//            type: 'index',
-//            width: 70,
-//            align: 'center'
-//          },
-//          {
-//            title: '队名',
-//            align: 'center',
-//            key: 'groupName'
-//          },
-//          {
-//            title: '分组编号',
-//            align: 'center',
-//            key: 'arrangementId'
-//          },
-//          {
-//            title: '建立时间',
-//            align: 'center',
-//            key: 'buildTime'
-//          },
-//          {
-//            title: '组长',
-//            align: 'center',
-//            key: 'groupLeader.student.studentName'
-//          },
-//          {
-//            title: '任务',
-//            align: 'center',
-//            key: 'className',
-//          },
-//          {
-//            title: '管理',
-//            key: 'manage',
-//            width: 300,
-//            align: 'center',
-//            render: (h, params) => {
-//              return h('div', [
-//                h('Button', {
-//                  props: {
-//                    type: 'primary',
-//                    size: 'default'
-//                  },
-//                  style: {
-//                    marginRight: '5px'
-//                  },
-//                  on: {
-//                    click: () => {
-////                      this.handleCheck(params.index)
-//                    }
-//                  }
-//                }, '查看'),
-//                h('Button', {
-//                  props: {
-//                    type: 'error',
-//                    size: 'default'
-//                  },
-//                  style: {
-//                    marginRight: '5px'
-//                  },
-//                  on: {
-//                    click: () => {
-//                      this.handleDelete(params.index)
-//                    }
-//                  }
-//                }, '删除'),
-//                h('Button', {
-//                  props: {
-//                    type: 'info',
-//                    size: 'default'
-//                  },
-//                  on: {
-//                    click: () => {
-//                      this.handleUpdate(params.index)
-//                    }
-//                  }
-//                }, '修改')
-//              ]);
-//            }
-//          }
-//        ],
         total: null,
         listLoading: false,
         table: {

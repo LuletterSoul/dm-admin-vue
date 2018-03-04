@@ -110,7 +110,7 @@ export const asyncRouterMap = [
   {
     path: '/groups',
     component: Layout,
-    redirect: '/groups/list',
+    redirect: '/groups/index',
     name: '分组',
     icon: 'group',
     children: [
@@ -127,7 +127,8 @@ export const asyncRouterMap = [
         icon: 'group',
       },
       {
-        path: 'divide',
+        //注意此种写法,使用相对路由的写法会导致到跨路由跳跃时的404,应该补全前一级路由
+        path: '/groups/divide',
         component: _import('groups/divide/index'),
         redirect: '/groups/divide/resource',
         name: '分组操作',

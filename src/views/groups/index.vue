@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'StudentGroup',
+  name: 'Groups',
   computed: {
     cachedViews() {
       return this.$store.state.tagsView.cachedViews.join();
