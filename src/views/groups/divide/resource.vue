@@ -1,5 +1,5 @@
 <template>
-  <div style="margin: 20px">
+  <div style="margin-left: 20px;margin-top: 20px;">
     <el-row >
       <el-col :span="6">
         <Alert show-icon>

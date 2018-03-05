@@ -1,20 +1,6 @@
 <template>
   <div class="step-wrap">
     <div class="step-container">
-      <Row>
-        <Col :offset="1">
-        <Steps :current="current">
-          <Step  title="填写分组参数" :content="$t('p.group.divide.oneKey.process.step1')">
-          </Step>
-          <Step  title="预览分组信息" :content="$t('p.group.divide.oneKey.process.step2')">
-          </Step>
-          <Step title="手动调优" :content="$t('p.group.divide.oneKey.process.step3')">
-          </Step>
-          <Step title="确认分组" :content="$t('p.group.divide.oneKey.process.step4')">
-          </Step>
-        </Steps>
-        </Col>
-      </Row>
     </div>
     <div>
       <Row>

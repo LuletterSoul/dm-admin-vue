@@ -1,5 +1,5 @@
 <template>
-  <div style="margin: 20px">
+  <div style="margin: 30px">
     <el-row>
       <el-col :offset="1" :span="23">
       <Table border size='default'
@@ -168,13 +168,13 @@
     },
     computed: {
       _groupInfos() {
-        return this.$store.state.group.previewGroups;
+        return this.$store.state.group.divide.previewGroups;
       },
       _task() {
-        return this.$store.state.group.previewGroups.dataMiningTask;
+        return this.$store.state.group.divide.previewGroups.dataMiningTask;
       },
       _groups() {
-        return this.$store.state.group.previewGroups.dataMiningGroups;
+        return this.$store.state.group.divide.previewGroups.dataMiningGroups;
       }
     }
   };

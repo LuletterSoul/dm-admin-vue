@@ -1,5 +1,5 @@
 <template>
-  <div style="margin: 20px">
+  <div style="margin-left: 20px;margin-top: 20px;">
     <el-row>
       <el-col :offset="2" :span="21">
         <Alert type="success" show-icon>
@@ -247,6 +247,8 @@
           vm.$store.dispatch('SetSetting', vm.config);
           //保存预览分组
           vm.$store.dispatch('SetPreviewGroups', vm.previewGroups);
+          //更新step,进行下一步
+          vm.$store.dispatch('SetStep',1);
           vm.$router.push(
             {
               path: 'preview',
@@ -290,28 +292,26 @@
       async getTasks() {
         let vm = this;
         this.setTimeXDay(7);
-        await fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
+         fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
           vm.tasks[0].content = res.content;
         });
         this.setTimeRangeTask(7, 30);
-        await fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
+         fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
           vm.tasks[1].content = res.content;
         });
         this.setTimeRangeTask(30, 90);
-        await fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
+         fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
           vm.tasks[2].content = res.content;
         });
       },
       setTimeXDay(day) {
-        const m = require('moment');
-        this.taskQuery.builtTimeBegin = m().subtract(day, 'days').format('YYYY-MM-DD HH:mm:ss');
-        this.taskQuery.builtTimeEnd = m().format('YYYY-MM-DD HH:mm:ss');
+        this.taskQuery.builtTimeBegin = moment().subtract(day, 'days').format('YYYY-MM-DD HH:mm:ss');
+        this.taskQuery.builtTimeEnd = moment().format('YYYY-MM-DD HH:mm:ss');
       },
       //before天前,after天内
       setTimeRangeTask(before, after) {
-        const m = require('moment');
-        this.taskQuery.builtTimeBegin = m().subtract(after, 'days').format('YYYY-MM-DD HH:mm:ss');
-        this.taskQuery.builtTimeEnd = m().subtract(before, 'days').format('YYYY-MM-DD HH:mm:ss');
+        this.taskQuery.builtTimeBegin = moment().subtract(after, 'days').format('YYYY-MM-DD HH:mm:ss');
+        this.taskQuery.builtTimeEnd = moment().subtract(before, 'days').format('YYYY-MM-DD HH:mm:ss');
       },
       filterStudents(data, query) {
         return true;

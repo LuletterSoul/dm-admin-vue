@@ -13,6 +13,8 @@ const getters = {
   permission_routers: state => state.permission.routers,
   addRouters: state => state.permission.addRouters,
   userProfile: state =>state.user.userProfile,
-  previewGroups:state => state.group.previewGroups
+
+  previewGroups:state => state.group.divide.previewGroups,
+  divideStep: state =>state.group.divide.step
 };
 export default getters
