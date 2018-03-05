@@ -4,18 +4,25 @@ const group = {
       previewGroups:{},
       setting:{},
       step:0
-    },
+  },
+    newGroups:[]
   },
   mutations:{
     SET_PREVIEW_GROUPS:(state,groups) =>{
       state.divide.previewGroups = groups;
-      console.log("Current previewGroups state:", state.divide.previewGroups);
     },
     SET_SETTING: (state,setting) =>{
       state.divide.setting = setting;
     },
     SET_STEP: (state,step) =>{
       state.divide.step = step;
+    },
+    SET_NEW_GROUPS: (state,groups) =>{
+      state.newGroups = groups;
+    },
+    RESET: (state) =>{
+      state.divide.previewGroups = {};
+      state.divide.setting={}
     }
   },
   actions:{
@@ -27,6 +34,12 @@ const group = {
     },
     SetStep:({commit},step) =>{
       commit('SET_STEP', step);
+    },
+    SetNewGroups({commit},newGroups) {
+      commit('SET_NEW_GROUPS', newGroups);
+    },
+    ResetDivideInfo({commit}) {
+      commit('RESET');
     }
   }
 };

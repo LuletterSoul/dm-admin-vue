@@ -19,11 +19,11 @@ export function createGroupPreview(config) {
   })
 }
 
-//获取预览分组
-export function getGroupPreview(key) {
+//确认创建分组
+export function createGroupsByKey(key) {
   return fetch({
     url:GROUP_PATH.concat('/dividing_groups').concat('/').concat(key),
-    method:'get',
+    method:'post',
   })
 }
 

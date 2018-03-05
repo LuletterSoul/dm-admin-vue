@@ -1,7 +1,9 @@
 <template>
   <div>
-    <steps>
-    </steps>
+    <transition name="fade" mode="out-in">
+      <steps>
+      </steps>
+    </transition>
     <divide-main>
     </divide-main>
   </div>
@@ -14,7 +16,7 @@
 
   export default {
     components: {DivideMain, Steps},
-    name: "DivideLayout"
+    name: "DivideLayout",
   }
 </script>
 

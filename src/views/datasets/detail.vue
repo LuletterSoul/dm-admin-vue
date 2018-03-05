@@ -5,7 +5,7 @@
       <Col span="20">
 
       <div class="details-container">
-        <div class="dataSetTitle">{{ collectionName }}</div>
+        <div class="title">{{ collectionName }}</div>
         <div class="details-container">
           <Card>
             <div slot="title">
@@ -403,7 +403,7 @@
     margin:0px auto;
     font-size:16px;
   }
-  .dataSetTitle{
+  .title{
     margin-top: 20px;
     margin-bottom: 20px;
     font:bold 36px 微软雅黑;

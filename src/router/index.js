@@ -185,8 +185,14 @@ export const asyncRouterMap = [
             component: _import('groups/divide/manualOptimization'),
             name: '手动调优',
             icon: 'group',
-          },
+          }
         ]
+      },
+      {
+        path:'new',
+        component:_import('groups/new'),
+        name:'新增队伍',
+        icon:'group'
       }
     ]
   },

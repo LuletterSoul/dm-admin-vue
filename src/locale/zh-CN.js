@@ -66,6 +66,12 @@ export default {
         },
         oneKey:{
           process:{
+            title0:'浏览',
+            title1:'填参',
+            title2:'预览',
+            title3:'调优',
+            title4:'确认',
+            step0:'浏览可分配资源',
             step1:'填写分组参数:如分组梯度,分组限制,给分组分配的任务',
             step2:'在这里预览分组情况',
             step3:'调整分组配置',

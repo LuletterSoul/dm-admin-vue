@@ -1,9 +1,12 @@
 <template>
-  <transition name="fade" mode="out-in">
-    <keep-alive :include='cachedViews'>
-      <router-view></router-view>
-    </keep-alive>
-  </transition>
+  <div>
+    <transition name="fade" mode="out-in">
+      <keep-alive :include='cachedViews'>
+        <router-view></router-view>
+      </keep-alive>
+    </transition>
+  </div>
+
 </template>
 
 <script>
@@ -1506,6 +1509,12 @@
         this.queryKey = groupPreview.queryKey;
         this.dataMiningTask = groupPreview.dataMiningTask;
         this.current++;
+      },
+      preStep() {
+        this.$store.dispatch('SetStep', this._step - 1);
+      },
+      nextStep() {
+        this.$store.dispatch('SetStep', this._step + 1);
       }
     },
     computed: {

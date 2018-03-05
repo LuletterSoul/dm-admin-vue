@@ -102,12 +102,15 @@
                @on-selection-change="handleSelectionChange"
                class="student-list-container"
                :no-data-text="$t('table.empty')"
-               stripe></Table>
+               stripe>
+        </Table>
       </el-col>
     </el-row>
     <div v-show="!listLoading" class="pagination-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+      <el-pagination @size-change="handleSizeChange"
+                     @current-change="handleCurrentChange"
                      :current-page.sync="fixPage"
+                     background
                      :page-sizes="[10,20,30, 50]" :page-size="listQuery.size"
                      layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
@@ -324,6 +327,7 @@
       };
     },
     created() {
+      this.$store.dispatch('SetStep');
       this.getGroupList();
     },
     computed: {

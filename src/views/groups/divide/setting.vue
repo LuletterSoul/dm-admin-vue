@@ -226,6 +226,7 @@
       };
     },
     created() {
+      this.$store.dispatch('SetStep',1);
       this.getTasks();
       this.getStudents();
     },
@@ -247,8 +248,6 @@
           vm.$store.dispatch('SetSetting', vm.config);
           //保存预览分组
           vm.$store.dispatch('SetPreviewGroups', vm.previewGroups);
-          //更新step,进行下一步
-          vm.$store.dispatch('SetStep',1);
           vm.$router.push(
             {
               path: 'preview',

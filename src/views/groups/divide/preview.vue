@@ -1,48 +1,59 @@
 <template>
   <div style="margin: 30px">
     <el-row>
-      <el-col :offset="1" :span="23">
-      <Table border size='default'
-             :row-class-name="rowClassName"
-             :loading="listLoading"
-             :columns="groupColumns"
-             :data="_groups"
-             :highlight-row="true"
-             :no-data-text="$t('table.empty')"
-             @on-selection-change="handleSelectionChange"
-             stripe></Table>
+      <el-col>
+        <Table border
+               size='large'
+               :row-class-name="rowClassName"
+               :loading="listLoading"
+               :columns="groupColumns"
+               :data="_groups"
+               :highlight-row="true"
+               :no-data-text="$t('table.empty')"
+               @on-selection-change="handleSelectionChange"
+               stripe></Table>
       </el-col>
     </el-row>
     <el-row>
-      <el-col :offset="1" :span="23">
-      <task-detail :to-task-id="_task.taskId" :to-groups="_groups">
-      </task-detail>
+      <el-col>
+        <task-detail :to-task-id="_task.taskId" :to-groups="_groups">
+        </task-detail>
       </el-col>
     </el-row>
-    <!--<transition name="fade">-->
-      <!--<member-details  v-if="showDetails"></member-details>-->
-    <!--</transition>-->
+    <el-row>
+      <el-col :offset="21" :span="1">
+        <Button type="success" style="margin-top: 10px" @click="handleSubmitDivideDirectly">完成</Button>
+      </el-col>
+      <el-col :span="1">
+        <Button type="primary" style="margin-top: 10px" @click="handleMutual">
+          手动调整
+        </Button>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
   import GroupView from '../../components/groupViewItem';
   import TaskDetail from 'src/views/tasks/detail';
+  import {createGroupsByKey} from 'api/groups'
+
   export default {
     name: "preview",
-    components:{
+    components: {
       TaskDetail,
       GroupView
     },
     props: {
       groupList: [],
-      task:[]
+      task: []
     },
     created() {
+      this.$store.dispatch('SetStep', 2);
     },
     data() {
       return {
-        showDetails:false,
+        showDetails: false,
         groupColumns: [
           {
             title: '序号',
@@ -145,10 +156,26 @@
       }
     },
     methods: {
+      handleSubmitDivideDirectly() {
+        let vm = this;
+        createGroupsByKey(this._key).then(res => {
+          vm.$store.dispatch('SetNewGroups', res)
+            .then(() => {
+              vm.$store.dispatch('ResetDivideInfo');
+              vm.$router.push({path: '/groups/new'});
+              vm.$message.success("分组成功.");
+            }).catch(error => {
+          });
+        }).catch(error => {
+        })
+      },
+      handleMutual() {
+        this.$router.push({path: 'manual'});
+      },
       handleSelectionChange() {
 
       },
-      rowClassName (row, index) {
+      rowClassName(row, index) {
         // if (index === 1) {
         //   return 'demo-table-info-row';
         // } else if (index === 3) {
@@ -166,18 +193,20 @@
       },
       _groups() {
         return this.$store.state.group.divide.previewGroups.dataMiningGroups;
+      },
+      _key() {
+        return this.$store.state.group.divide.previewGroups.queryKey;
       }
     }
   };
 </script>
 
 <style scoped>
-  div{
-    background-color:transparent;
-    margin:0px auto;
-    font-size:16px;
+  div {
+    background-color: transparent;
   }
-  .group-details-container{
+
+  .group-details-container {
     transition: all .28s ease-out;
   }
 </style>

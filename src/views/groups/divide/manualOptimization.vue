@@ -54,37 +54,35 @@ export default {
         this.groups[0] = response.data.items;
         this.groups[1]=this.list[0].slice();
         this.total = response.data.total
-        this.listLoading = false
-        // this.oldList = this.list.map(v => v.id)
-        // this.newList = this.oldList.slice()
+        this.listLoading = false;
         this.$nextTick(() => {
           this.setSort()
         })
       })
     },
     setSort() {
-      // const el = document.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
-      // const els = document.querySelectorAll('.el-table__body-wrapper > table > tbody');
-      // els.forEach( (el,_index) =>{
-      //   Sortable.create(el, {
-      //     group: {
-      //       name:'groups',
-      //       pull:true,
-      //       put:true},
-      //     animation:150,
-      //     ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
-      //     setData: function (dataTransfer) {
-      //       dataTransfer.setData('Text', '')
-      //     },
-      //     onStart: evt =>{
-      //       this.fromIndex = _index;
-      //     },
-      //     onAdd: evt => {
-      //       const targetRow = this.groups[this.fromIndex].splice(evt.oldIndex, 1)[0];
-      //       this.groups[_index].splice(evt.newIndex, 0, targetRow);
-      //     }
-      //   });
-      // })
+      const el = document.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
+      const els = document.querySelectorAll('.el-table__body-wrapper > table > tbody');
+      els.forEach( (el,_index) =>{
+        Sortable.create(el, {
+          group: {
+            name:'groups',
+            pull:true,
+            put:true},
+          animation:150,
+          ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
+          setData: function (dataTransfer) {
+            dataTransfer.setData('Text', '')
+          },
+          onStart: evt =>{
+            this.fromIndex = _index;
+          },
+          onAdd: evt => {
+            const targetRow = this.groups[this.fromIndex].splice(evt.oldIndex, 1)[0];
+            this.groups[_index].splice(evt.newIndex, 0, targetRow);
+          }
+        });
+      })
     }
   }
 }

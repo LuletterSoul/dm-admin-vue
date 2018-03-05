@@ -2,13 +2,15 @@
   <el-row>
     <el-col style="margin-top: 20px" :span="22" :offset="2">
       <Steps :current="_step">
-        <Step title="填写分组参数" :content="$t('p.group.divide.oneKey.process.step1')">
+        <Step :title="$t('p.group.divide.oneKey.process.title0')" :content="$t('p.group.divide.oneKey.process.step0')">
         </Step>
-        <Step title="预览分组信息" :content="$t('p.group.divide.oneKey.process.step2')">
+        <Step :title="$t('p.group.divide.oneKey.process.title1')" :content="$t('p.group.divide.oneKey.process.step1')">
         </Step>
-        <Step title="手动调优" :content="$t('p.group.divide.oneKey.process.step3')">
+        <Step :title="$t('p.group.divide.oneKey.process.title2')" :content="$t('p.group.divide.oneKey.process.step2')">
         </Step>
-        <Step title="确认分组" :content="$t('p.group.divide.oneKey.process.step4')">
+        <Step :title="$t('p.group.divide.oneKey.process.title3')" :content="$t('p.group.divide.oneKey.process.step3')">
+        </Step>
+        <Step :title="$t('p.group.divide.oneKey.process.title4')" :content="$t('p.group.divide.oneKey.process.step4')">
         </Step>
       </Steps>
     </el-col>
