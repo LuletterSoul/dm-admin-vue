@@ -16,31 +16,31 @@
       <transition name="fade" >
         <template v-if="currentStep===0">
           <div class="form">
-            <Form :model="formItem" label-position="top" class="font"  :rules="ruleInline">
+            <Form :model="collectionModel" label-position="top" class="font" :rules="ruleInline">
               <FormItem label="数据集名称" prop="collectionName">
                 <Row>
                   <Col span="10">
-                  <Input v-model="formItem.collectionName" placeholder="请输入"></Input>
+                  <Input v-model="collectionModel.collectionName" placeholder="请输入"></Input>
                   </Col>
                 </Row>
               </FormItem>
               <FormItem label="描述摘要" >
-                <Input v-model="formItem.abstractInfo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
+                <Input v-model="collectionModel.abstractInfo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
               </FormItem>
-              <FormItem label="数据特征" prop="characteristicIds">
-                <CheckboxGroup v-model="formItem.characteristicIds" >
+              <FormItem label="数据特征" prop="dataSetChars">
+                <CheckboxGroup v-model="collectionModel.dataSetCharIds" >
                   <transition-group name="list">
-                    <Checkbox style="font-size: 16px;"  v-for="item in charOptions" :key="item" :label="item.charId">
+                    <Checkbox style="font-size: 16px;" v-for="item in dataSetCharOptions" :key="item.charId" :label="item.charId">
                       {{ item.englishName }}-{{ item.chineseName }}
                     </Checkbox>
                   </transition-group>
                 </CheckboxGroup>
               </FormItem>
 
-              <FormItem label="属性类型" prop="attributeTypeIds">
-                <CheckboxGroup v-model="formItem.attributeTypeIds">
+              <FormItem label="属性类型" prop="attributeCharIds">
+                <CheckboxGroup v-model="collectionModel.attributeCharIds">
                   <transition-group name="list">
-                    <Checkbox style="font-size: 16px;"  v-for="item in attributeTypeOptions" :key="item" :label="item.typeId">
+                    <Checkbox style="font-size: 16px;" v-for="item in attrCharOptions" :key="item.charId" :label="item.charId">
                       {{ item.englishName }}-{{ item.chineseName }}
                     </Checkbox>
                   </transition-group>
@@ -50,9 +50,9 @@
                 </CheckboxGroup>
               </FormItem>
               <FormItem label="相关任务" prop="associatedTaskIds">
-                <CheckboxGroup v-model="formItem.associatedTaskIds">
+                <CheckboxGroup v-model="collectionModel.associatedTaskIds">
                   <transition-group name="list">
-                    <Checkbox style="font-size: 16px;"  v-for="item in miningTaskTypeOptions" :key="item" :label="item.typeId">
+                    <Checkbox style="font-size: 16px;" v-for="item in associatedTaskOptions" :key="item.typeId" :label="item.typeId">
                       {{ item.englishName }}-{{ item.chineseName }}
                     </Checkbox>
                   </transition-group>
@@ -65,12 +65,12 @@
               <FormItem label="实例数">
                 <Row>
                   <Col span="10">
-                  <Input v-model="formItem.instances" placeholder="请输入"></Input>
+                  <Input v-model="collectionModel.numberOfInstances" placeholder="请输入"></Input>
                   </Col>
                 </Row>
               </FormItem>
               <FormItem label="允许缺省?">
-                <RadioGroup v-model="formItem.enableMissing">
+                <RadioGroup v-model="collectionModel.isMissingValues">
                   <Radio style="font-size: 16px;" label="true">
                     <Icon type="checkmark"></Icon>
                     <span>Yes</span>
@@ -82,9 +82,9 @@
                 </RadioGroup>
               </FormItem>
               <FormItem label="来自地区" prop="areaId">
-                <RadioGroup v-model="formItem.areaId">
+                <RadioGroup v-model="collectionModel.areaId">
                   <transition-group name="list">
-                    <Radio v-for="item in areaTypeOptions" :label="item.areaId" :key="item" style="font-size: 16px;">
+                    <Radio v-for="item in areaTypeOptions" :label="item.areaId" :key="item.areaId" style="font-size: 16px;">
                       {{ item.chineseName }}
                     </Radio>
                   </transition-group>
@@ -93,15 +93,15 @@
               <FormItem label="捐赠时间">
                 <Row>
                   <Col span="10">
-                  <DatePicker type="date" placeholder="选择日期" v-model="formItem.dateDonated"></DatePicker>
+                  <DatePicker type="date" placeholder="选择日期" v-model="rowDonatedDate" value="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" ></DatePicker>
                   </Col>
                 </Row>
               </FormItem>
               <FormItem label="访问量">
-                <Input v-model="formItem.hits" placeholder="请输入"></Input>
+                <Input v-model="collectionModel.hits" placeholder="请输入"></Input>
               </FormItem>
               <FormItem label="相关论文" >
-                <Input v-model="formItem.relevantPapers" type="textarea" :autosize="{minRows: 2,maxRows: 50}" placeholder="请输入..."></Input>
+                <Input v-model="collectionModel.relevantPapers" type="textarea" :autosize="{minRows: 2,maxRows: 50}" placeholder="请输入..."></Input>
               </FormItem>
             </Form>
           </div>
@@ -127,11 +127,13 @@
                         </Input>
                         </Col>
                         <Col span="2" offset="1">
-                        <Button type="ghost" style="font-size: 14px" @click="handleRemove(index,files[index])">删除</Button>
+                        <Button type="ghost" style="font-size: 14px" @click="handleFileRemove(index,files[index])">删除</Button>
                         </Col>
                         <Col span="4">
                         <Upload
+                          ref="setUpload"
                           :before-upload="handleUpload"
+                          :show-upload-list="false"
                           action="">
                           <Button type="ghost" style="font-size: 14px"  icon="ios-cloud-upload-outline">选择要上传的数据集</Button>
                         </Upload>
@@ -180,12 +182,13 @@
       <template>
         <Form>
           <FormItem  v-if="currentStep!==2" style="margin-left: 540px">
+            <!--<Button style="font-size: 16px;" type="success" v-waves @click="handleUploadSubmit">一键上传</Button>-->
             <Button style="font-size: 16px;" type="primary" v-waves @click="pre">上一步</Button>
             <Button style="font-size: 16px;" type="primary" v-waves @click="next">下一步</Button>
             <Button type="ghost" style="font-size: 16px;">取消</Button>
           </FormItem>
             <FormItem v-if="currentStep===2" style="width: 540px;">
-              <Button :loading="uploadWaiting" type="success" style="margin-top: 20px" size="large" waves long @click="handleCreate">确认录入</Button>
+              <Button :loading="uploadWaiting" type="success" style="margin-top: 20px" size="large" waves long @click="handleUploadSubmit">确认录入</Button>
               <Button style="margin-top: 10px" type="ghost" size="large" long @click="currentStep-=1">上一步</Button>
             </FormItem>
         </Form>
@@ -195,7 +198,8 @@
 
 <script type="text/javascript">
     import ElCol from "element-ui/packages/col/src/col";
-    import DataSet from "./setDetails.vue";
+    import DataSet from "./detail.vue";
+    import {formatDate} from '@/utils/compute';
     import {
       fetchOptions,
       fetchOptionalTaskTypes,
@@ -205,6 +209,7 @@
       deleteCollection,
       createCollection,
       updateCollection,
+      addSet,
       deleteCollectionsBatch,
       getDataSetContainer,
       getRelFilePath,
@@ -227,15 +232,14 @@
               collectionName: [
                 {required: true, message: '请填写数据集名', trigger: 'blur'}
               ],
-              characteristicIds: [
+              dataSetCharIds: [
                 {required: true, message: '至少选择一个数据特征', trigger: 'blur'}
               ],
               associatedTaskIds: [
                 {required: true, message: '至少选择一个任务类型', trigger: 'blur'}
               ],
-              attributeTypeIds: [
-                {required: true, message: '至少选择一个属性类型', trigger: 'blur'},
-                {type: 'string', min: 6, message: '密码长度不能小于6位', trigger: 'blur'}],
+              attributeCharIds: [
+                {required: true, message: '至少选择一个属性类型', trigger: 'blur'}],
               areaId:
                 [{required: true, message: '请选择主题地区', trigger: 'blur'}]
             },
@@ -250,74 +254,91 @@
               ],
             },
             currentStep: 0,
-            formItem: {
+            rowDonatedDate:new Date(),
+            collectionId:'',
+            collectionModel: {
               collectionName: 'Parkinson Disease Spiral Drawings Using Digitized Graphics Tablet Data Set ',
               abstractInfo: 'For Further information about the variables see the file in the data folder.',
-              instances: 0,
-              enableMissing: 'Yes',
-              areaId: 1111,
-              dateDonated: new Date(),
+              numberOfInstances: 0,
+              isMissingValues: 'Yes',
+              areaId: 0,
+              dateDonated:"",
               hits: 0,
               relevantPapers: 'Liang, X., S. Li, S. Zhang, H. Huang, and S. X. Chen (2016), PM2.5 data reliability, consistency, and air quality assessment in five Chinese cities, J. Geophys. Res. Atmos., 121, 10220â€“10236, [Web Link].\n' +
               '\n',
-              characteristicIds: [0],
+              dataSetCharIds: [0],
               associatedTaskIds: [0],
-              attributeTypeIds: [0],
+              attributeCharIds: [0],
               containerIds: []
             },
-            miningTaskTypeOptions: [],
+            associatedTaskOptions: [],
             areaTypeOptions: [],
-            charOptions: [],
-            attributeTypeOptions: [],
+            dataSetCharOptions: [],
+            attrCharOptions: [],
           };
         },
       created() {
         this.fetchOptionals();
       },
+      mounted () {
+      },
       computed:{
         dataSetInfo(){
           return {
-            collectionName: this.formItem.collectionName,
-            abstractInfo: this.formItem.abstractInfo,
-            instances: this.formItem.instances,
-            enableMissing: this.formItem.enableMissing,
-            areaId: this.formItem.areaId,
-            dateDonated: this.formItem.dateDonated,
-            hits: this.formItem.hits,
-            relevantPapers: this.formItem.relevantPapers,
-            characteristics: this.formItem.characteristicIds.map(id => {
-              for (let i = 0; i < this.charOptions.length; ++i) {
-                if (id === this.charOptions[i].charId)
-                  return this.charOptions[i];
+            collectionName: this.collectionModel.collectionName,
+            abstractInfo: this.collectionModel.abstractInfo,
+            instances: this.collectionModel.numberOfInstances,
+            enableMissing: this.collectionModel.isMissingValues,
+            areaId: this.collectionModel.areaId,
+            dateDonated: this.rowDonatedDate,
+            hits: this.collectionModel.hits,
+            relevantPapers: this.collectionModel.relevantPapers,
+            dataSetChars: this.collectionModel.dataSetCharIds.map(id => {
+              for (let i = 0; i < this.dataSetCharOptions.length; ++i) {
+                if (id === this.dataSetCharOptions[i].charId)
+                  return this.dataSetCharOptions[i];
               }
             }),
-            associatedTasks: this.formItem.associatedTaskIds.map(id => {
-              for (let i = 0; i < this.miningTaskTypeOptions.length; ++i) {
-                if (id === this.miningTaskTypeOptions[i].typeId)
-                  return this.miningTaskTypeOptions[i];
+            associatedTasks: this.collectionModel.associatedTaskIds.map(id => {
+              for (let i = 0; i < this.associatedTaskOptions.length; ++i) {
+                if (id === this.associatedTaskOptions[i].typeId)
+                  return this.associatedTaskOptions[i];
               }
             }),
-            attributeTypes: this.formItem.attributeTypeIds.map(id => {
-              for (let i = 0; i < this.attributeTypeOptions.length; ++i) {
-                if (id === this.attributeTypeOptions[i].typeId)
-                  return this.attributeTypeOptions[i];
+            attributeChars: this.collectionModel.attributeCharIds.map(id => {
+              for (let i = 0; i < this.attrCharOptions.length; ++i) {
+                if (id === this.attrCharOptions[i].charId)
+                  return this.attrCharOptions[i];
               }
             }),
-            area: this.areaTypeOptions[this.formItem.areaId]
+            area: this.areaTypeOptions[this.collectionModel.areaId]
           };
         }
       },
       methods:{
-        handleUpload (file) {
-          this.files.push(file);
-          return false;
+        async handleUploadSubmit(){
+          let collection = await createCollection(this.collectionModel);
+          //更新已创建容器的Id
+          this.collectionId = collection.collectionId;
+          this.files.forEach(this.handlePerFile);
+          this.createCollectionAfter();
         },
-        upload () {
-          this.loadingStatus = true;
-          setTimeout(() => {
-            this.loadingStatus = false;
-            this.$Message.success('上传成功')
-          }, 1500);
+        async handlePerFile(file) {
+          let vm = this;
+          //新建一个Form data 类型的文件
+          let fd = new FormData();
+          fd.append('file', file);
+          //发起上传请求
+          //生成一个上传进度查询key
+          const uuid_v1 = require('uuid/v1');
+          let progress_uuid = uuid_v1();
+          addSet(this.collectionId, fd,progress_uuid).then((res) => {
+          }).catch(error => {
+            console.log(error);
+          });
+        },
+        async handleUpload(file) {
+          this.files.push(file);
         },
         handleReset (name) {
           this.$refs[name].resetFields();
@@ -327,40 +348,24 @@
             value: ''
           });
         },
-        handleRemove (index,file) {
+        handleFileRemove (index, file) {
           this.files.splice(file, 1);
           this.formDynamic.items.splice(index, 1);
         },
         handleCreate() {
-          let that = this;
-          //先构建好数据集容器
-          this.uploadWaiting = true;
-          for (let i =0;i<that.files.length;++i) {
-                createDataSetContainer({fileDescription: that.formDynamic.items[i].fileDescription})
-                  .then(container => {
-                    let containerId = container.containerId;
-                    that.formItem.containerIds.push(containerId);
-//                  uploadDataSetContainer(containerId, that.files[i]).then(filePath => {
-//                  }).catch(error => {
-//                    console.log(error);
-//                  })
-                  }).catch(error => {
-                  console.log(error);
-                });
-              }
-          this.createCollectionAfter();
+          this.handleUploadSubmit();
+        },
+        formatDonatedDate: function () {
+          this.collectionModel.dateDonated = formatDate(this.rowDonatedDate, 'yyyy-MM-dd HH:mm:ss');
         },
         createCollectionAfter(){
           let vm = this;
-          createCollection(this.formItem).then(collection => {
-            this.uploadWaiting = false;
-            this.$message({
-              message: '上传成功',
-              type: 'info',
-              duration: 1500
-            });
-            vm.$router.push({path: '/dataSet/index'});
+          this.$message({
+            message: '上传成功',
+            type: 'info',
+            duration: 1500
           });
+          vm.$router.push({path: '/collection/digest'});
         },
         next () {
           if (this.currentStep === 2) {
@@ -376,9 +381,9 @@
         },
         fetchOptionals() {
           fetchOptions().then(response =>{
-            this.charOptions = response.charOptions;
-            this.miningTaskTypeOptions = response.miningTaskTypeOptions;
-            this.attributeTypeOptions = response.attributeTypeOptions;
+            this.dataSetCharOptions = response.dataSetCharOptions;
+            this.associatedTaskOptions = response.associatedTaskOptions;
+            this.attrCharOptions = response.attrCharOptions;
             this.areaTypeOptions = response.areaTypeOptions;
           }).catch(error =>{
             console.error(error);

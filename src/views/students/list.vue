@@ -3,119 +3,146 @@
     <div class="title">
       学生信息管理
     </div>
-    <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="学号" v-model="listQuery.studentId">
+    <div class="btn-import-container">
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" @change='handleFilter' class="btn-item" placeholder="学号" v-model="listQuery.studentId">
       </el-input>
 
-      <el-select clearable style="width: 100px" class="filter-item" v-model="listQuery.grade" placeholder="年级">
+      <el-select clearable style="width: 100px" @change='handleFilter' class="btn-item" v-model="listQuery.grade" placeholder="年级">
         <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
         </el-option>
       </el-select>
 
-      <el-select clearable class="filter-item" style="width: 130px" v-model="listQuery.className" placeholder="班级">
+      <el-select clearable class="btn-item" @change='handleFilter' style="width: 130px" v-model="listQuery.className" placeholder="班级">
         <el-option v-for="item in  classNameOptions" :key="item.key" :label="item" :value="item">
         </el-option>
       </el-select>
 
-      <el-select @change='handleFilter' style="width: 120px" class="filter-item" v-model="listQuery.sort" placeholder="排序">
+      <el-select @change='handleFilter' style="width: 120px" class="btn-item" v-model="listQuery.sort" placeholder="排序">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
         </el-option>
       </el-select>
 
-      <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">筛选</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="plus">添加</el-button>
-      <el-button class="filter-item" type="primary" icon="document" @click="handleDownload">导出</el-button>
-      <el-button class="filter-item" type="primary" icon="delete" v-waves @click="handleBatchDelete" :disabled="!multipleSelection.length">批量删除</el-button>
-      <el-button class="filter-item" type="warning" icon="star-on" v-waves @click="markFavoriteStudent" v-if="multipleSelection.length" >收藏</el-button>
-      <el-button class="filter-item" type="warning" icon="star-off" :plain="true" v-waves @click="unMarkFavoriteStudent" v-if="multipleSelection.length" >取消收藏</el-button>
+      <el-button class="btn-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">筛选</el-button>
+      <el-button class="btn-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-plus">添加</el-button>
+      <el-button class="btn-item" type="primary" icon="el-icon-document" @click="handleDownload">导出</el-button>
+      <el-button class="btn-item" type="primary" icon="el-icon-delete" v-waves @click="handleBatchDelete" :disabled="!multipleSelection.length">批量删除</el-button>
+      <el-button class="btn-item" type="warning" icon="el-icon-star-on" v-waves @click="markFavoriteStudent" v-if="multipleSelection.length" >收藏</el-button>
+      <el-button class="btn-item" type="warning" icon="el-icon-star-off" :plain="true" v-waves @click="unMarkFavoriteStudent" v-if="multipleSelection.length" >取消收藏</el-button>
     </div>
-    <el-table :key='tableKey' :data="studentList"
-              ref="studentTable"
-              v-loading.body="listLoading"
-              border fit
-              highlight-current-row style="width: 100%"
-              @selection-change="handleSelectionChange"
-              @row-click="handleRowClicked">
-      <el-table-column v-if="multipleSelection.length" type="selection" width="55"></el-table-column>
-      <el-table-column align="center" label="学号" width="180px">
-        <template scope="scope">
-          <el-tooltip class="item" effect="light" :content="scope.row.studentId" placement="top-start">
-            <span>{{scope.row.studentId}}</span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
+    <!--<el-table :data="studentList"-->
+              <!--ref="studentTable"-->
+              <!--v-loading="listLoading"-->
+              <!--border fit-->
+              <!--highlight-current-row-->
+              <!--@selection-change="handleSelectionChange"-->
+              <!--style="width: 100%">-->
 
-      <el-table-column width="120px" align="center" label="姓名">
-        <template scope="scope">
-          <el-tooltip class="item" effect="dark" content="信息明细" placement="top">
-            <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.studentName }}</span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-
-      <!--<el-table-column min-width="300px" label="标题">-->
-      <!--<template scope="scope">-->
-      <!--<span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.title}}</span>-->
-      <!--<el-tag>{{scope.row.type | typeFilter}}</el-tag>-->
-      <!--</template>-->
+      <!--<el-table-column-->
+        <!--align="center"-->
+        <!--type="selection"-->
+        <!--width="55">-->
       <!--</el-table-column>-->
-      <el-table-column width="110px" align="center" label="年级">
-        <template scope="scope">
-          <span>{{scope.row.grade}}</span>
-        </template>
-      </el-table-column>
 
-      <el-table-column width="150px" align="center" label="专业">
-        <template scope="scope">
-          <span>{{scope.row.profession}}</span>
-        </template>
-      </el-table-column>
+      <!--<el-table-column-->
+        <!--label="序号"-->
+        <!--type="index"-->
+        <!--:index="1"-->
+        <!--align="center"-->
+        <!--width="55"-->
+      <!--&gt;-->
+      <!--</el-table-column>-->
 
-      <el-table-column width="110px" align="center" label="班级">
-        <template scope="scope">
-          <span>{{ scope.row.className }}</span>
-        </template>
-      </el-table-column>
+      <!--&lt;!&ndash;<el-table-column align="center" label="序号" width="80">&ndash;&gt;-->
+        <!--&lt;!&ndash;<template slot-scope="scope">&ndash;&gt;-->
+          <!--&lt;!&ndash;<span>{{tableKey}}</span>&ndash;&gt;-->
+        <!--&lt;!&ndash;</template>&ndash;&gt;-->
+      <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
+
+      <!--&lt;!&ndash;<el-table-column v-if="multipleSelection.length" type="selection" width="55"></el-table-column>&ndash;&gt;-->
+      <!--<el-table-column align="center" label="学号" width="180px">-->
+        <!--<template slot-scope="scope">-->
+            <!--<span>{{scope.row.studentId}}</span>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+
+      <!--<el-table-column width="120px" align="center" label="姓名">-->
+        <!--<template slot-scope="scope">-->
+            <!--<span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.studentName }}</span>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+
+      <!--&lt;!&ndash;<el-table-column min-width="300px" label="标题">&ndash;&gt;-->
+      <!--&lt;!&ndash;<template slot-scope="scope">&ndash;&gt;-->
+      <!--&lt;!&ndash;<span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.title}}</span>&ndash;&gt;-->
+      <!--&lt;!&ndash;<el-tag>{{scope.row.type | typeFilter}}</el-tag>&ndash;&gt;-->
+      <!--&lt;!&ndash;</template>&ndash;&gt;-->
+      <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
+      <!--<el-table-column width="110px" align="center" label="年级">-->
+        <!--<template slot-scope="scope">-->
+          <!--<span>{{scope.row.grade}}</span>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+
+      <!--<el-table-column width="150px" align="center" label="专业">-->
+        <!--<template slot-scope="scope">-->
+          <!--<span>{{scope.row.profession}}</span>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+
+      <!--<el-table-column width="110px" align="center" label="班级">-->
+        <!--<template slot-scope="scope">-->
+          <!--<span>{{ scope.row.className }}</span>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
 
 
-      <el-table-column align="center" label="参与任务数" width="120px">
-        <template scope="scope">
-          <span>
-            {{ scope.row.finishedTaskCount }}
-          </span>
-        </template>
-      </el-table-column>
+      <!--<el-table-column align="center" label="参与任务数" width="120px">-->
+        <!--<template slot-scope="scope">-->
+          <!--<span>-->
+            <!--{{ scope.row.finishedTaskCount }}-->
+          <!--</span>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
 
-      <el-table-column class-name="status-col" align="center"  label="任务状态" width="180">
-        <template scope="scope">
-          <!--<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>-->
-          <span>
-              {{ scope.row.status.chineseValue }}
-              </span>
-        </template>
-      </el-table-column>
+      <!--&lt;!&ndash;<el-table-column class-name="status-col" align="center"  label="任务状态" width="180">&ndash;&gt;-->
+        <!--&lt;!&ndash;<template slot-scope="scope">&ndash;&gt;-->
+          <!--&lt;!&ndash;&lt;!&ndash;<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>&ndash;&gt;&ndash;&gt;-->
+          <!--&lt;!&ndash;<span>&ndash;&gt;-->
+              <!--&lt;!&ndash;{{ scope.row.status.chineseValue }}&ndash;&gt;-->
+              <!--&lt;!&ndash;</span>&ndash;&gt;-->
+        <!--&lt;!&ndash;</template>&ndash;&gt;-->
+      <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
 
-      <el-table-column  align="center" class-name="status-col" label="标记" width="100px">
-        <template scope="scope">
-          <!--<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>-->
-          <el-tag v-if="scope.row.favorite.value" type="warning">
-            {{ scope.row.favorite.chineseValue }}
-          </el-tag>
-          <el-tag v-else>
-            {{ scope.row.favorite.chineseValue }}
-          </el-tag>
-        </template>
-      </el-table-column>
+      <!--&lt;!&ndash;<el-table-column  align="center" class-name="status-col" label="标记" width="100px">&ndash;&gt;-->
+        <!--&lt;!&ndash;<template slot-scope="scope">&ndash;&gt;-->
+          <!--&lt;!&ndash;&lt;!&ndash;<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>&ndash;&gt;&ndash;&gt;-->
+          <!--&lt;!&ndash;<el-tag v-if="scope.row.favorite.value" type="warning">&ndash;&gt;-->
+            <!--&lt;!&ndash;{{ scope.row.favorite.chineseValue }}&ndash;&gt;-->
+          <!--&lt;!&ndash;</el-tag>&ndash;&gt;-->
+          <!--&lt;!&ndash;<el-tag v-else>&ndash;&gt;-->
+            <!--&lt;!&ndash;{{ scope.row.favorite.chineseValue }}&ndash;&gt;-->
+          <!--&lt;!&ndash;</el-tag>&ndash;&gt;-->
+        <!--&lt;!&ndash;</template>&ndash;&gt;-->
+      <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
 
-      <el-table-column align="center"  label="操作" min-width="200px">
-        <template scope="scope">
-          <el-button size="small" icon="edit"  type = "success" @click="handleUpdate(scope.row)">更新</el-button>
-          <el-button size="small" icon="delete" type = "danger" @click="handleDelete(scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+      <!--<el-table-column align="center"  label="操作" min-width="200px">-->
+        <!--<template slot-scope="scope">-->
+          <!--<el-button size="small" icon="edit"  type = "success" @click="handleUpdate(scope.row)">更新</el-button>-->
+          <!--<el-button size="small" icon="delete" type = "danger" @click="handleDelete(scope.row)">删除</el-button>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+    <!--</el-table>-->
+
+    <Table border size='default'
+           :loading="listLoading"
+           :columns="studentColumns"
+           :data="studentList"
+           @on-selection-change="handleSelectionChange"
+           class="student-list-container"
+           stripe></Table>
+
     <div v-show="!listLoading" class="pagination-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="fixPage"
                      :page-sizes="[10,20,30, 50]" :page-size="listQuery.size" layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
@@ -133,21 +160,21 @@
         </el-form-item>
 
         <el-form-item label="年级" label-width="85px">
-          <el-select class="filter-item" v-model="temp.grade">
+          <el-select class="btn-item" v-model="temp.grade">
             <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
             </el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="专业" label-width="85px">
-          <el-select class="filter-item" v-model="temp.profession">
+          <el-select class="btn-item" v-model="temp.profession">
             <el-option v-for="item in professionOptions" :key="item" :label="item" :value="item">
             </el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="班级" label-width="85px">
-          <el-select class="filter-item" v-model="temp.className">
+          <el-select class="btn-item" v-model="temp.className">
             <el-option v-for="item in classNameOptions" :key="item" :label="item" :value="item">
             </el-option>
           </el-select>
@@ -196,17 +223,108 @@
     name: 'StudentTable',
     data() {
       return {
+        studentColumns: [
+          {
+            type: 'selection',
+            align:'center',
+            width: 60,
+          },
+          {
+            title: '序号',
+            type: 'index',
+            width: 70,
+            align: 'center'
+          },
+          {
+            title: '学号',
+            align: 'center',
+            key: 'studentId'
+          },
+          {
+            title: '姓名',
+            align: 'center',
+            key: 'studentName'
+          },
+          {
+            title: '年级',
+            align: 'center',
+            key: 'grade'
+          },
+          {
+            title: '专业',
+            align: 'center',
+            key: 'profession'
+          },
+          {
+            title: '班级',
+            align: 'center',
+            key: 'className',
+          },
+          {
+            title: '管理',
+            key: 'manage',
+            width: 300,
+            align: 'center',
+            render: (h, params) => {
+              return h('div', [
+                h('Button', {
+                  props: {
+                    type: 'primary',
+                    size: 'default'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+//                      this.handleCheck(params.index)
+                    }
+                  }
+                }, '查看'),
+                h('Button', {
+                  props: {
+                    type: 'error',
+                    size: 'default'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.handleDelete(params.index)
+                    }
+                  }
+                }, '删除'),
+                h('Button', {
+                  props: {
+                    type: 'info',
+                    size: 'default'
+                  },
+                  on: {
+                    click: () => {
+                      this.handleUpdate(params.index)
+                    }
+                  }
+                }, '修改')
+              ]);
+            }
+          }
+        ],
         total: null,
-        listLoading: true,
+        listLoading: false,
+        table:{
+          studentName:'学生姓名',
+          className:'班级',
+        },
         listQuery: {
-//          studentId: undefined,
-//          studentName: undefined,
-//          className: undefined,
-//          profession:undefined,
-//          grade:undefined,
-          page: 1,
+          studentId: "",
+          studentName: "",
+          className: "",
+          profession:"",
+          grade:"",
+          page: 0,
           size: 10,
-          sort: '+id'
+          sort:"studentId,ASC",
         },
         temp: {
           studentId:'',
@@ -248,7 +366,7 @@
           chineseValue:'空闲',
           englishValue:'available',
         }],
-        sortOptions: [{label: '按学号升序', key: '+id'}, {label: '按学号降序', key: '-id'}],
+        sortOptions: [{label: '按学号升序', key: 'studentId,ASC'}, {label: '按学号降序', key: 'studentId,DESC'}],
         multipleSelection:[],
         isDisplayFavoriteColumn:false,
         gradeOptions:[
@@ -302,6 +420,11 @@
         return calendarTypeKeyValue[type]
       }
     },
+    computed: {
+      fixPage(){
+        return this.listQuery.page + 1;
+      }
+    },
     methods: {
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -328,15 +451,24 @@
           })
         })
       },
+      handleImport() {
+
+      },
       handleFilter() {
         this.getStudentList();
       },
       handleSizeChange(val) {
+        if (this.listQuery.size === val) {
+          return
+        }
         this.listQuery.size = val;
         this.getStudentList();
       },
       handleCurrentChange(val) {
-        this.listQuery.page = val;
+        if (this.listQuery.page === val -1) {
+          return
+        }
+        this.listQuery.page = val -1;
         this.getStudentList();
       },
       handleBatchDelete() {
@@ -358,6 +490,7 @@
                   done();
                 }).catch(error =>{
                   //捕获错误;
+                  instance.confirmButtonLoading=false;
                   reject(error);
                   done();
                 })
@@ -368,14 +501,15 @@
           }
         }).then((message) =>{
           //删除被选中的行
-//          that.studentList = that.studentList.filter(student =>
-//          !that.multipleSelection.some(row => row.studentId === student.studentId));
-          that.getStudentList();
+          that.studentList = that.studentList.filter(student =>
+          !that.multipleSelection.some(row => row.studentId === student.studentId));
+//          that.getStudentList();
           that.$message({
             message: '批量删除成功',
             type: 'success',
             duration: 1500
           });
+          that.getStudentList();
         }).catch(() =>{
           this.$message({
             message: '取消批量删除操作',
@@ -412,15 +546,6 @@
           })
         })
       },
-      timeFilter(time) {
-        if (!time[0]) {
-          this.listQuery.start = undefined;
-          this.listQuery.end = undefined;
-          return;
-        }
-        this.listQuery.start = parseInt(+time[0] / 1000);
-        this.listQuery.end = parseInt((+time[1] + 3600 * 1000 * 24) / 1000);
-      },
       handleModifyStatus(row, status) {
         this.$message({
           message: '操作成功',
@@ -438,7 +563,55 @@
         this.dialogStatus = 'update';
         this.dialogFormVisible = true;
       },
-      handleDelete(row) {
+//      handleDelete(row) {
+//        let confirmMessage = '您将删除学号为\'' + row.studentId + '\' '
+//          + row.studentName + ' 的所有信息,是否继续?';
+//        let that =this;
+//        let feedbackMessage = '';
+//        this.$confirm(confirmMessage,'删除学生',{
+//          confirmButtonText:'确定',
+//          cancelButtonText:'取消',
+//          type:'warning',
+//          beforeClose: (action,instance,done) =>{
+//            if(action==='confirm'){
+//              instance.confirmButtonLoading = true;
+//              return new Promise((resolve, reject) => {
+//                let studentIds = [];
+//                studentIds.push(row.studentId);
+//                deleteStudentBatch(studentIds).then((response) => {
+//                  instance.confirmButtonLoading = false;
+//                  this.$message({
+//                    message: '删除成功',
+//                    type: 'success',
+//                    duration: 1500
+//                  });
+//                  done();
+//                  resolve(response);
+//                }).catch(error => {
+//                  instance.confirmButtonLoading = false;
+//                  done();
+//                  this.$message({
+//                    message: error,
+//                    type: 'error',
+//                    duration: 1500
+//                  });
+//                })
+//              });
+//            }
+//            done();
+//          }
+//        }).then(() =>{
+//          const index = that.studentList.indexOf(row);
+//          that.studentList.splice(index, 1);
+//        }).catch(() =>{
+//          that.$message({
+//            type:'info',
+//            message:'取消删除'
+//          })
+//        });
+//      },
+      handleDelete(index) {
+        let row = this.studentList[index];
         let confirmMessage = '您将删除学号为\'' + row.studentId + '\' '
           + row.studentName + ' 的所有信息,是否继续?';
         let that =this;
@@ -451,7 +624,9 @@
             if(action==='confirm'){
               instance.confirmButtonLoading = true;
               return new Promise((resolve, reject) => {
-                deleteStudent(row.studentId).then((response) => {
+                let studentIds = [];
+                studentIds.push(row.studentId);
+                deleteStudentBatch(studentIds).then((response) => {
                   instance.confirmButtonLoading = false;
                   this.$message({
                     message: '删除成功',
@@ -461,6 +636,7 @@
                   done();
                   resolve(response);
                 }).catch(error => {
+                  instance.confirmButtonLoading = false;
                   done();
                   this.$message({
                     message: error,
@@ -473,7 +649,6 @@
             done();
           }
         }).then(() =>{
-          const index = that.studentList.indexOf(row);
           that.studentList.splice(index, 1);
         }).catch(() =>{
           that.$message({
@@ -489,7 +664,7 @@
             type:'success',
             duration:1500
           });
-          this.studentList.unshift(this.temp);
+//          this.studentList.unshift(this.temp);
           this.dialogFormVisible = false;
         });
       },
@@ -498,7 +673,7 @@
           for (const v of this.studentList) {
             if (v.studentId === this.temp.studentId) {
               const index = this.studentList.indexOf(v);
-              this.studentList.splice(index, 1, this.temp);
+//              this.studentList.splice(index, 1, this.temp);
               break;
             }
           }
@@ -558,13 +733,17 @@
 </script>
 
 <style lang="scss">
-  .filter-container {
+  .student-list-container{
+    margin-top: 90px;
+  },
+  .btn-import-container {
     padding-right: 20px;
     float:right;
-    .filter-item {
+    .btn-item {
       display: inline-block;
       vertical-align: middle;
       margin-bottom: 10px;
+      margin-left: 5px;
     }
   }
   .test{

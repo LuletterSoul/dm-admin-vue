@@ -5,21 +5,21 @@
       任务信息管理
     </div>
 
-    <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="编号" v-model="listQuery.taskId">
+    <div class="btn-import-container">
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="btn-item" placeholder="编号" v-model="listQuery.taskId">
       </el-input>
 
-      <el-select @change='handleFilter' style="width: 120px" class="filter-item" v-model="listQuery.sort" placeholder="排序">
+      <el-select @change='handleFilter' style="width: 120px" class="btn-item" v-model="listQuery.sort" placeholder="排序">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
         </el-option>
       </el-select>
 
 
-      <el-button class="filter-item" type="primary" icon="plus" @click="handleAdd">添加</el-button>
-      <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">筛选</el-button>
+      <el-button class="btn-item" type="primary" icon="plus" @click="handleAdd">添加</el-button>
+      <el-button class="btn-item" type="primary" v-waves icon="search" @click="handleFilter">筛选</el-button>
       <!--<el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="plus"><router-link to="create">添加</router-link></el-button>-->
-      <el-button class="filter-item" type="primary" icon="document" @click="handleDownload">导出</el-button>
-      <el-button class="filter-item" type="primary" icon="delete" v-waves @click="handleBatchDelete" :disabled="!multipleSelection.length">批量删除</el-button>
+      <el-button class="btn-item" type="primary" icon="document" @click="handleDownload">导出</el-button>
+      <el-button class="btn-item" type="primary" icon="delete" v-waves @click="handleBatchDelete" :disabled="!multipleSelection.length">批量删除</el-button>
     </div>
 
     <el-table :key='tableKey' :data="taskList"
@@ -32,7 +32,7 @@
       <el-table-column v-if="multipleSelection.length" type="selection" width="55"></el-table-column>
 
       <el-table-column align="center" label="任务名" width="100px">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-tooltip class="item" effect="light" :content="scope.row.taskName" placement="top-start">
             <span>{{scope.row.taskName}}</span>
           </el-tooltip>
@@ -40,7 +40,7 @@
       </el-table-column>
 
       <!--<el-table-column align="center" label="数据集编号" width="120px">-->
-        <!--<template scope="scope">-->
+        <!--<template slot-scope="scope">-->
           <!--<el-tooltip class="item" effect="light" :content="scope.row.collectionId" placement="top-start">-->
             <!--<span>{{scope.row.collectionId}}</span>-->
           <!--</el-tooltip>-->
@@ -48,7 +48,7 @@
       <!--</el-table-column>-->
 
       <el-table-column align="center" label="算法配置" width="250px">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-tag
               v-for="(tag,index) in scope.row.algorithms"
               :key="tag.algorithmId"
@@ -64,7 +64,7 @@
 
 
       <el-table-column class-name="status-col" align="center"  label="任务状态" width="150">
-        <template scope="scope">
+        <template slot-scope="scope">
           <!--<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>-->
           <span>
               未分配
@@ -73,7 +73,7 @@
       </el-table-column>
 
       <el-table-column align="center" label="开始时间" width="250px">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-tooltip class="item" effect="light" :content="scope.row.startTime" placement="top-start">
             <span>{{scope.row.startTime}}</span>
           </el-tooltip>
@@ -81,7 +81,7 @@
       </el-table-column>
 
       <el-table-column align="center" label="截止时间" width="250px">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-tooltip class="item" effect="light" :content="scope.row.finishTime" placement="top-start">
             <span>{{scope.row.finishTime}}</span>
           </el-tooltip>
@@ -89,7 +89,7 @@
       </el-table-column>
 
       <el-table-column align="center"  label="操作" min-width="200px">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button size="small" icon="edit"  type = "success" @click="handleUpdate(scope.row)">更新</el-button>
           <el-button size="small" icon="delete" type = "danger" @click="handleDelete(scope.row)">删除</el-button>
           <el-button size="small" icon="plus" type="primary" @click="handleAddStudent">添加分组</el-button>
@@ -501,12 +501,13 @@
 </script>
 
 <style lang="scss">
-  .filter-container {
+  .btn-import-container {
     padding-bottom: 10px;
-    .filter-item {
+    .btn-item {
       display: inline-block;
       vertical-align: middle;
       margin-bottom: 10px;
+      margin-left: 5px;
     }
   }
   .test{

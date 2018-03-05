@@ -17,8 +17,6 @@
         </Col>
       </Row>
 
-
-
       <div style="margin-top:20px;clear:right;padding: 20px;">
         <template>
           <Table :loading="loading" border :columns="dataSetTable1" :data="dataSetInfo" @on-selection-change="handleSelectionChange" stripe ></Table>
@@ -28,7 +26,8 @@
                       :page-size-opts="[10, 20, 30, 40]"
                       @on-change="handlePageChange"
                       @on-page-size-change="handleSizeChange"
-                      show-sizer></Page>
+                      show-sizer>
+                </Page>
               </div>
             </div>
         </template>
@@ -43,17 +42,17 @@
            <FormItem label="Name">
              <Input v-model="temp.collectionName" placeholder="请输入"></Input>
            </FormItem>
-           <FormItem label="数据特征" prop="characteristicIds">
-             <CheckboxGroup v-model="temp.characteristicIds" >
+           <FormItem label="数据特征" prop="dataSetChars">
+             <CheckboxGroup v-model="temp.dataSetChars" >
                <transition-group name="list">
-                 <Checkbox  v-for="item in charOptions" :key="item" :label="item.charId">
+                 <Checkbox v-for="item in dataSetCharOptions" :key="item.charId" :label="item.charId">
                    {{ item.englishName }}-{{ item.chineseName }}
                  </Checkbox>
                </transition-group>
              </CheckboxGroup>
            </FormItem>
            <!--<FormItem label="Data Types">-->
-             <!--<CheckboxGroup v-model="temp.characteristics">-->
+             <!--<CheckboxGroup v-model="temp.dataSetChars">-->
                <!--<Checkbox label="Multivariate"></Checkbox>-->
                <!--<Checkbox label="Univariate"></Checkbox>-->
                <!--<Checkbox label="Sequential"></Checkbox>-->
@@ -63,10 +62,10 @@
                <!--<Checkbox label="Other"></Checkbox>-->
              <!--</CheckboxGroup>-->
            <!--</FormItem>-->
-           <FormItem label="属性类型" prop="attributeTypeIds">
-             <CheckboxGroup v-model="temp.attributeTypeIds">
+           <FormItem label="属性类型" prop="attributeCharIds">
+             <CheckboxGroup v-model="temp.attributeCharIds">
                <transition-group name="list">
-                 <Checkbox  v-for="item in attributeTypeOptions" :key="item" :label="item.typeId">
+                 <Checkbox v-for="item in attrCharOptions" :key="item.charId" :label="item.charId">
                    {{ item.englishName }}
                  </Checkbox>
                </transition-group>
@@ -78,7 +77,7 @@
            <FormItem label="相关任务" prop="associatedTaskIds">
              <CheckboxGroup v-model="temp.associatedTaskIds">
                <transition-group name="list">
-                 <Checkbox  v-for="item in miningTaskTypeOptions" :key="item" :label="item.typeId">
+                 <Checkbox v-for="item in associatedTaskOptions" :key="item.typeId" :label="item.typeId">
                    {{ item.englishName }}
                  </Checkbox>
                </transition-group>
@@ -89,7 +88,7 @@
              </CheckboxGroup>
            </FormItem>
            <FormItem label="实例数">
-              <Input v-model="temp.instances" placeholder="请输入"></Input>
+              <Input v-model="temp.numberOfInstances" placeholder="请输入"></Input>
            </FormItem>
            <FormItem label="捐赠日期">
              <Row>
@@ -143,7 +142,7 @@
             },
             {
               title: '数据特征',
-              key: 'characteristics',
+              key: 'dataSetChars',
               sortable: true
             },
             {
@@ -153,7 +152,7 @@
             },
             {
               title: '属性类型',
-              key: 'attributeTypes',
+              key: 'attributeChars',
               sortable: true
             },
             {
@@ -223,42 +222,35 @@
               characteristics:'roro',
               associatedTasks:'hoony',
               attributeTypes:'yoon',
-              instances:0,
+              numberOfInstances:0,
               dateDonated:'jinu'
             }
           ],
 
           listQuery: {
-//            collectionId: undefined,
-//            collectionName: undefined,
-//            characteristics:undefined,
-//            associatedTasks:undefined,
-//            attributeTypes:undefined,
-//            instances:0,
-//            dateDonated:undefined,
-            page: 1,
+            page: 0,
             size: 10,
-            sort: 'collectionName'
+            direction:'DESC',
           },
           temp:{
             collectionId:'',
             collectionName:'',
-            instances:0,
+            numberOfInstances:0,
             areaId:1111,
             dateDonated:new Date(),
-            characteristicIds: [0],
+            dataSetCharIds: [0],
             associatedTaskIds:[0],
-            attributeTypeIds:[0],
+            attributeCharIds:[0],
             abstractInfo:'',
           },
           dataSetModel: false,
           dataSetList:[],
           totalElements:null,
           selectionIds:[],
-          miningTaskTypeOptions:[],
+          associatedTaskOptions:[],
           areaTypeOptions:[],
-          charOptions:[],
-          attributeTypeOptions:[],
+          dataSetCharOptions:[],
+          attrCharOptions:[],
         }
       },
       created() {
@@ -268,9 +260,9 @@
       methods: {
         fetchOptionals() {
           fetchOptions().then(response =>{
-            this.charOptions = response.charOptions;
-            this.miningTaskTypeOptions = response.miningTaskTypeOptions;
-            this.attributeTypeOptions = response.attributeTypeOptions;
+            this.dataSetCharOptions = response.dataSetCharOptions;
+            this.associatedTaskOptions = response.associatedTaskOptions;
+            this.attrCharOptions = response.attrCharOptions;
             this.areaTypeOptions = response.areaTypeOptions;
           }).catch(error =>{
             console.error(error);
@@ -290,9 +282,9 @@
         handleCheck (index) {
           this.$Modal.info({
             title: 'information',
-            content: `数据集名称：${this.dataSetInfo[index].collectionName}<br>数据特征：${this.dataSetInfo[index].characteristics}
-                    <br>相关任务：${this.dataSetInfo[index].associatedTasks}<br>属性类型：${this.dataSetInfo[index].attributeTypes}<br>
-                    实例数：${this.dataSetInfo[index].attributeTypes}<br>捐赠时间：${this.dataSetInfo[index].dateDonated}
+            content: `数据集名称：${this.dataSetInfo[index].collectionName}<br>数据特征：${this.dataSetInfo[index].dataSetChars}
+                    <br>相关任务：${this.dataSetInfo[index].associatedTasks}<br>属性类型：${this.dataSetInfo[index].attributeChars}<br>
+                    实例数：${this.dataSetInfo[index].attributeChars}<br>捐赠时间：${this.dataSetInfo[index].dateDonated}
                    <br>摘要： ${this.dataSetInfo[index].abstractInfo}`
           })
         },
@@ -314,6 +306,7 @@
                     resolve(response);
                   }).catch(error => {
                     done();
+                    instance.confirmButtonLoading = false;
                     this.$Message.info('删除失败');
                   })
                 });
@@ -321,7 +314,6 @@
               done();
             }
           }).then(() =>{
-            const index = that.dataSetList.indexOf(index);
             that.dataSetList.splice(index, 1);
           }).catch(() =>{
             this.$Message.info('取消删除');
@@ -348,12 +340,12 @@
           this.resetTemp();
           this.temp.collectionId = set.collectionId;
           this.temp.collectionName =set.collectionName;
-          this.temp.instances = Math.ceil(Math.random() * 10000);
+          this.temp.numberOfInstances = Math.ceil(Math.random() * 10000);
 //          this.temp.areaId = set.area.areaId;
           this.temp.dateDonated = set.dateDonated;
-          this.temp.characteristicIds = set.characteristics.map(char => char.charId);
+          this.temp.dataSetChars = set.dataSetCharacteristics.map(char => char.charId);
           this.temp.associatedTaskIds = set.associatedTasks.map(task => task.typeId);
-          this.temp.attributeTypeIds = set.attributeTypes.map(attr => attr.typeId);
+          this.temp.attributeCharIds = set.attributeCharacteristics.map(attr => attr.charId);
           this.abstractInfo = set.abstractInfo;
           this.dataSetModel = true;
         },
@@ -430,7 +422,7 @@
           this.getCollectionList();
         },
         handlePageChange(val){
-          this.listQuery.page = val;
+          this.listQuery.page = val-1;
           this.getCollectionList();
         }
       },
@@ -439,9 +431,9 @@
       dataSetInfo(){
         return this.dataSetList.map(set => {
           let newFormattedSet = Object.assign({}, set);
-          newFormattedSet.characteristics = set.characteristics.map(char => char.englishName).join();
+          newFormattedSet.dataSetChars = set.dataSetCharacteristics.map(char => char.englishName).join();
           newFormattedSet.associatedTasks = set.associatedTasks.map(task => task.englishName).join();
-          newFormattedSet.attributeTypes=set.attributeTypes.map(attr =>attr.englishName).join();
+          newFormattedSet.attributeChars=set.attributeCharacteristics.map(attr =>attr.englishName).join();
           newFormattedSet['instances'] =Math.ceil(Math.random() * 100000);
           return newFormattedSet;
         })

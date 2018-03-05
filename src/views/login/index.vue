@@ -8,8 +8,8 @@
         <fade-transition :fade-out-duration="1000" :fade-out-only="true" :is-active="isLoginModuleActive" @fadeOutEnd="switchLoadingContainer">
           <div class="login-wrap">
             <divide-animation></divide-animation>
-            <slide-up-big-transition  @slideOutEnd="closeLoginModuleContainer">
-              <div class="login-form-container" v-show="isLoginFormDisplay">
+            <single-transition  @OutEnd="closeLoginModuleContainer">
+              <div class="login-form-container" v-if="isLoginFormDisplay">
                 <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
                          class="card-box login-form">
                   <img src="../../assets/logo@2x.png" class="logo-align" height="300" width="300">
@@ -34,7 +34,7 @@
                   <!--</el-form-item>-->
                 </el-form>
               </div>
-            </slide-up-big-transition>
+            </single-transition>
           </div>
         </fade-transition>
       </div>
@@ -52,7 +52,8 @@
   import { isWscnEmail } from '@/utils/validate';
   import DivideAnimation from '@/components/animate_svg/DivideAnimation';
   import Loading from '@/components/animate_svg/Loading';
-  import SlideUpBigTransition from '@/components/transition/SlideUpBigTransition';
+  import AnimateTransition from '@/components/transition/AnimateTransition';
+  import SingleTransition from '@/components/transition/SingleTransition.vue';
   import FadeTransition from '@/components/transition/FadeTransition';
   export default {
     name: 'login',
@@ -97,13 +98,20 @@
         this.$refs.loginForm.validate(valid => {
           if (valid) {
             this.loading = true;
-            this.isLoginFormDisplay = false;
             this.$store.dispatch('Login', this.loginForm).then(() => {
-              setTimeout(function () {
-                vm.$router.push({path: '/'});
-              },4000);
-            }).catch(() => {
+              vm.$store.dispatch('GetToken', this.loginForm.username).then(() => {
+                this.isLoginFormDisplay = false;
+                setTimeout(function () {
+                  vm.$router.push({path: '/'});
+                },4000);
+                vm.$message.success("登录成功.");
+              }).catch(error =>{
+                this.loading = false;
+                this.isLoginFormDisplay = true;
+              });
+            }).catch((error) =>{
               this.loading = false;
+              this.isLoginFormDisplay = true;
             });
           } else {
             console.log('error submit!!');
@@ -127,8 +135,8 @@
     components: {
       DivideAnimation,
       Loading,
-      SlideUpBigTransition,
-      FadeTransition
+      FadeTransition,
+      SingleTransition
     }
   };
 </script>
@@ -159,13 +167,13 @@
     left: 50%;
     top: 50%;
     input:-webkit-autofill {
-       -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
-       -webkit-text-fill-color: #fff !important;
+         -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
+         -webkit-text-fill-color: #fff !important;
     }
     input {
       background: transparent;
       border: 0px;
-       -webkit-appearance: none;
+         -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
       color: #eeeeee;

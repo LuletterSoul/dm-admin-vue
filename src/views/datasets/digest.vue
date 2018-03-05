@@ -1,7 +1,6 @@
 <template>
     <div id="app">
-
-      <div class="dataSetTableTitle">
+      <div class="data-set-table-title">
         数据集信息
       </div>
       <div style="margin-top:20px ;padding: 20px;">
@@ -48,7 +47,7 @@
           loading:true,
           dataSetCollectionList:[],
           listQuery: {
-            page: 1,
+            page: 0,
             size: 10,
             sort: 'collectionName'
           },
@@ -60,12 +59,12 @@
             },
             {
               title: '数据特征',
-              key: 'characteristics',
+              key: 'dataSetChars',
               sortable: true
             },
             {
               title: '属性类型',
-              key: 'attributeTypes',
+              key: 'attributeChars',
               sortable: true
             },
             {
@@ -113,9 +112,9 @@
 //            {
 //              collectionId: '111',
 //              collectionName: 'mino',
-//              characteristics: 'roro',
+//              dataSetChars: 'roro',
 //              associatedTasks: 'hoony',
-//              attributeTypes: 'yoon',
+//              attributeChars: 'yoon',
 //              dateDonated: 'jinu'
 //            }
 //          ],
@@ -124,14 +123,14 @@
       },
       methods: {
         handleCheck(index){
-          this.$router.push({path: '/dataSet/setDetails', query: { collectionId: this.dataSetCollectionList[index].collectionId }});
+          this.$router.push({path: '/collection/set_detail', query: { collectionId: this.dataSetCollectionList[index].collectionId }});
         },
         handleSizeChange(val) {
           this.listQuery.size = val;
           this.getCollectionList();
-          query     },
+        },
         handlePageChange(val){
-          this.listQuery.page = val;
+          this.listQuery.page = val-1;
           this.getCollectionList();
         },
 
@@ -154,10 +153,10 @@
         dataSetInfo(){
           return this.dataSetCollectionList.map(set => {
             let newFormattedSet = Object.assign({}, set);
-            newFormattedSet.characteristics = set.characteristics.map(char => char.englishName).join();
+            newFormattedSet.dataSetChars = set.dataSetCharacteristics.map(char => char.englishName).join();
             newFormattedSet.associatedTasks = set.associatedTasks.map(task => task.englishName).join();
-            newFormattedSet.attributeTypes=set.attributeTypes.map(attr =>attr.englishName).join();
-            newFormattedSet['instances'] =Math.ceil(Math.random() * 100000);
+            newFormattedSet.attributeChars=set.attributeCharacteristics.map(attr =>attr.englishName).join();
+            newFormattedSet['numberOfInstances'] =Math.ceil(Math.random() * 100000);
             return newFormattedSet;
           })
         }
@@ -171,7 +170,7 @@
     margin:0px auto;
     font-size:16px;
   }
-  .dataSetTableTitle{
+  .data-set-table-title{
     margin-top: 20px;
     margin-bottom: 20px;
     width:20%;

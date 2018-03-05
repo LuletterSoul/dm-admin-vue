@@ -3,7 +3,6 @@
     <div class="title">
       分组情况
     </div>
-
     <el-card class="groupCard"
              v-for="group in groups"
              v-bind:key="group.id"
@@ -26,13 +25,9 @@
 </template>
 
 <script type="text/javascript">
-  import Balloon from 'components/balloon';
 
   export default {
     name: 'app',
-    components:{
-      Balloon
-    },
     data () {
       return {
         groups: [

@@ -1,5 +1,5 @@
 <template>
-	<div class="pan-item" :style="avatarStyle">
+	<div class="pan-item" :style="{zIndex:zIndex,height:height,width:width}">
 		<div class="pan-info">
 			<div class="pan-info-roles-container">
 				<slot></slot>
@@ -10,41 +10,27 @@
 </template>
 
 <script>
-  export default {
-    name: 'PanThumb',
-    props: {
-      image: {
-        type: String,
-        required: true
-      },
-      zIndex: {
-        type: Number,
-        default: 100
-      },
-      width: {
-        type: String,
-        default: '150px'
-      },
-      height: {
-        type: String,
-        default: '150px'
-      }
+export default {
+  name: 'PanThumb',
+  props: {
+    image: {
+      type: String,
+      required: true
     },
-    computed: {
-      avatarStyle() {
-        return{
-          zIndex:this.zIndex,
-          height:this.height,
-          width:this.width,
-          left: '50%',
-          marginLeft:this.marginLeftPx
-        }
-      },
-      marginLeftPx() {
-        return -(parseInt(this.width.split("px")[0])/2)+'px';
-      }
+    zIndex: {
+      type: Number,
+      default: 100
+    },
+    width: {
+      type: String,
+      default: '150px'
+    },
+    height: {
+      type: String,
+      default: '150px'
     }
-  };
+  }
+}
 </script>
 
 <style scoped>

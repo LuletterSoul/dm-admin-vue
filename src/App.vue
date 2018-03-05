@@ -1,8 +1,6 @@
 <template>
-  <div id="app" class="app-container">
-    <!--<transition name="fade" mode="out-in">-->
+  <div id="app" class="app-container global-background">
       <router-view></router-view>
-    <!--</transition>-->
   </div>
 </template>
 
@@ -12,5 +10,10 @@
   };
 </script>
 <style lang="scss">
+  .global-background{
+    background-image: url("./assets/5.jpg");
+    background-repeat: repeat;
+    background-size: 100%;
+  }
   @import './styles/index.scss'; // 全局自定义的css样式
 </style>

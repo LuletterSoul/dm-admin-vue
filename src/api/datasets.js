@@ -1,8 +1,11 @@
 import fetch from 'utils/fetch';
+import {asyncRouterMap} from "../router/index";
 
+const COLLECTION_BASE_PATH = "/data_sets";
+const CONTAINER_BASE_PATH = '/containers';
 export function fetchCollectionList(query) {
   return fetch({
-    url:'/dataSets',
+    url:COLLECTION_BASE_PATH,
     method:'get',
     params: query
   })
@@ -10,29 +13,58 @@ export function fetchCollectionList(query) {
 
 export function deleteCollection(dataSetId) {
   return fetch({
-    url:'/dataSets/'+dataSetId,
+    url:COLLECTION_BASE_PATH.concat(dataSetId),
     method:'delete'
   })
 }
 
-export function createCollection(dataSet) {
+export function createCollection(collection) {
   return fetch({
-    url:'/dataSets',
+    url:COLLECTION_BASE_PATH,
     method:'post',
-    data:dataSet
+    data:collection
   })
 }
 
 export function getCollection(collectionId) {
   return fetch({
-    url:'/dataSets/'+collectionId,
+    url:COLLECTION_BASE_PATH.concat('/').concat(collectionId),
     method:'get'
   })
 }
 
+
+export async function addSet(collectionId,file,progress_uuid) {
+  return fetch({
+    url: COLLECTION_BASE_PATH.concat('/').concat(collectionId).concat('/containers'),
+    method: 'post',
+    data: file,
+    params:{'proc_query_key' : progress_uuid}
+  });
+}
+
+export async function getSets(collectionId,query) {
+  return fetch({
+    url: COLLECTION_BASE_PATH.concat("/").concat(collectionId).concat("/containers"),
+    params:query,
+    method:'get'
+  });
+}
+
+export async function downloadSetZip(collectionId,containerIds) {
+  console.log(containerIds);
+  return fetch({
+    url: CONTAINER_BASE_PATH.concat("/").concat("zips"),
+    method: 'post',
+    params:{'collectionId':collectionId},
+    data:containerIds,
+    responseType:'blob'
+  });
+}
+
 export function updateCollection(dataSet) {
   return fetch({
-    url:'/dataSets',
+    url:'/data_sets',
     method:'put',
     data:dataSet
   })
@@ -40,7 +72,7 @@ export function updateCollection(dataSet) {
 
 export function deleteCollectionsBatch(collectionIds) {
   return fetch({
-    url:'/dataSets/deleteWithArray',
+    url:'/data_sets',
     method:'delete',
     data:collectionIds
   })
@@ -92,16 +124,10 @@ export function updateDataSetContainer(container) {
     data:container
   })
 }
-export function deleteDataSetContainer(containerId) {
+
+export function deleteBatchDataSets(containerIds) {
   return fetch({
-    url:'/dataSetContainers',
-    method:'delete',
-    data:containerId
-  })
-}
-export function deleteBatchDataSetContainers(containerIds) {
-  return fetch({
-    url:'/dataSetContainers',
+    url:CONTAINER_BASE_PATH,
     method:'delete',
     data:containerIds
   })
@@ -123,7 +149,7 @@ export function fetchOptionalTaskTypes() {
 
 export function fetchOptionaAttributeTypes() {
   return fetch({
-    url:'/attributeTypes',
+    url:'/attributeChars',
     method:'get'
   })
 }

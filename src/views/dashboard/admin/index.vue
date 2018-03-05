@@ -17,7 +17,7 @@
             <span style="line-height: 20px; font-size: 20px; font-weight: bold;">欢迎</span>
           </div>
           <div>
-            <p style="font-size: 16px;"><router-link to="../dataSet/index"><Icon type="ios-analytics-outline"></Icon>数据集管理</router-link></p><br>
+            <p style="font-size: 16px;"><router-link to="../collection/index"><Icon type="ios-analytics-outline"></Icon>数据集管理</router-link></p><br>
             <p style="font-size: 16px;"><router-link to="../students/list"><Icon type="person"></Icon>学生信息管理</router-link></p><br>
             <p style="font-size: 16px;"><router-link to="../tasks/index"><Icon type="ios-alarm-outline"></Icon>实践任务管理</router-link></p><br>
             <!--<p style="font-size: 16px;"><router-link to="../algorithm/index"><Icon type="ios-list-outline"></Icon>数据挖掘管理</router-link></p>-->
@@ -67,13 +67,19 @@
       </div>
 
       <div class="user">
-        <div slot="header" class="box-card-header">
+        <el-card class="user-profile-content">
+
+          <div>
+          <div class="user-image">
           <pan-thumb class="panThumb" :image="userProfile.avatar">
             Pain and pleasure,like light and darkness,succeed each other.
           </pan-thumb>
-        </div>
-        <div class="user-card-content">
-          <span class="display_name">{{name}}</span>
+          </div>
+
+          <div class="info-user-name">
+          <span class="display_name">{{userProfile.name}}</span>
+          </div>
+
           <div class="info-user-item">
             <icon-svg :icon-class="'browse'" ></icon-svg>
             <countTo class="info-item-num" :startVal='0' :endVal='statisticsData.permissionCount' :duration='3400'></countTo>
@@ -84,7 +90,8 @@
             <countTo class="info-item-num" :startVal='0' :endVal='statisticsData.operationCount' :duration='3600'></countTo>
             <span class="info-item-text">操作数</span>
           </div>
-        </div>
+          </div>
+        </el-card>
       </div>
 
     </div>
@@ -94,12 +101,10 @@
 
 <script>
   import { mapGetters } from 'vuex';
-//  import { SweetModal, SweetModalTab } from 'sweet-modal-vue'
   import lineChart from './lineChart';
   import PanThumb from 'components/PanThumb';
   import countTo from 'vue-count-to';
   import ElRow from "element-ui/packages/row/src/row";
-//  import PanThumb from "../../../components/PanThumb/update.vue";
   import Balloon from 'components/balloon';
   import ColorfulButton from 'components/button';
   import TodoList from 'components/TodoList'
@@ -127,14 +132,15 @@
     },
     methods: {
       logout() {
+        let vm = this;
         this.$store.dispatch('LogOut').then(() => {
           location.reload();  // 为了重新实例化vue-router对象 避免bug
+          vm.$message.success("注销成功.");
         });
       }
     },
     computed: {
       ...mapGetters([
-        'name',
         'avatar',
         'roles',
         'status',
@@ -165,26 +171,30 @@
     float: left;
   }
   .display_name{
-    font-size: 30px;
     display: block;
+    float: left;
+    font-size: 40px;
   }
-
   .box-card-header {
     position: relative;
     height: 160px;
   }
   .panThumb {
     z-index: 100;
-    height: 150px;
-    width: 150px;
+    height: 300px;
     position: absolute;
     left: 0px;
     right: 0px;
-    margin: auto;
+  }
+  .info-user-name{
+    width: 50%;
+    float: left;
   }
   .info-user-item {
+    width:60%;
     margin-top: 12px;
     font-size: 16px;
+    float: left;
   }
   .user-profile-content{
     height: 300px;
@@ -197,8 +207,13 @@
     background-color: transparent;
   }
   .user{
-    width:20%;
+    width:38%;
     height: 300px;
+    float: left;
+  }
+  .user-image{
+    width:40%;
+    height: 100%;
     float: left;
   }
  .todoList-container{
@@ -215,7 +230,7 @@
   }
   .chart{
     height: 300px;
-    width: 80%;
+    width: 60%;
     float: left;
   }
   .info{

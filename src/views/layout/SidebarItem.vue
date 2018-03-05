@@ -2,7 +2,7 @@
     <div>
         <template v-for="item in routes">
             <router-link v-if="!item.hidden&&item.noDropdown&&item.children.length>0" :to="generatePath(item)">
-                <el-menu-item :index="item.path+'/'+item.children[0].path">
+                <el-menu-item @mouseenter="console.log('mouseenter')" :index="item.path+'/'+item.children[0].path">
                     <icon-svg v-if='item.icon' :icon-class="item.icon" /> {{item.children[0].name}}
                 </el-menu-item>
             </router-link>
@@ -46,7 +46,7 @@
     .svg-icon {
         margin-right: 10px;
     }
-    .hideSidebar .menu-indent{
+    .hideTagsView .menu-indent{
         display: block;
         text-indent: 10px;
     }

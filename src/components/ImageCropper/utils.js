@@ -55,4 +55,4 @@ export function data2blob(data, mime) {
     }
     // canvas.toDataURL 返回的默认格式就是 image/png
     return new Blob([ia], {type: mime});
-}
+};
