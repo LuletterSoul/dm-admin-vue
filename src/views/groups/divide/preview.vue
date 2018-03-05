@@ -39,15 +39,6 @@
       task:[]
     },
     created() {
-      let vm = this;
-      if(vm._groups===undefined) {
-        vm.$notify({
-          title: '数据丢失',
-          message: '请先填写分组参数,执行‘预览’操作。',
-          type: 'warning'
-        });
-        vm.$router.push({path:'setting'});
-      }
     },
     data() {
       return {

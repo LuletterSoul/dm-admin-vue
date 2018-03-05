@@ -1,5 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import store from '../store';
+import {Notification} from 'element-ui';
+import NProgress from 'nprogress'
 
 const _import = require('./_import_' + process.env.NODE_ENV);
 // in development env not use Lazy Loading,because Lazy Loading large page will cause webpack hot update too slow.so only in production use Lazy Loading
@@ -129,7 +132,7 @@ export const asyncRouterMap = [
       {
         //注意此种写法,使用相对路由的写法会导致到跨路由跳跃时的404,应该补全前一级路由
         path: '/groups/divide',
-        component: _import('groups/divide/index'),
+        component: _import('groups/divide/divideLayout'),
         redirect: '/groups/divide/resource',
         name: '分组操作',
         icon: 'group',
@@ -145,12 +148,37 @@ export const asyncRouterMap = [
             component: _import('groups/divide/setting'),
             name: '分组配置',
             icon: 'group',
+            beforeEnter: (to, from, next) => {
+              const t = store.getters.previewGroups.dataMiningTask;
+              if (t !== undefined) {
+                Notification({
+                  title: '历史',
+                  message: '你有历史的‘一键分组’操作未完成,使用本页面功能会覆盖之前的记录。',
+                  type: 'info'
+                });
+              }
+              next();
+              NProgress.done();
+            },
           },
           {
             path: 'preview',
             component: _import('groups/divide/preview'),
             name: '分组预览',
             icon: 'group',
+            beforeEnter: (to, from, next) => {
+              if (store.getters.previewGroups.dataMiningTask === undefined) {
+                Notification({
+                  title: '无效预览',
+                  message: '请先填写分组参数,执行‘预览’操作。',
+                  type: 'warning'
+                });
+                next('/groups/divide/setting');
+              }else{
+                next();
+              }
+              NProgress.done();
+            }
           },
           {
             path: 'manual',

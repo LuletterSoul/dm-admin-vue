@@ -1,30 +1,14 @@
 <template>
-  <div>
-    <el-row>
-      <el-col style="margin-top: 20px" :span="22" :offset="2">
-        <Steps :current="_step">
-          <Step title="填写分组参数" :content="$t('p.group.divide.oneKey.process.step1')">
-          </Step>
-          <Step title="预览分组信息" :content="$t('p.group.divide.oneKey.process.step2')">
-          </Step>
-          <Step title="手动调优" :content="$t('p.group.divide.oneKey.process.step3')">
-          </Step>
-          <Step title="确认分组" :content="$t('p.group.divide.oneKey.process.step4')">
-          </Step>
-        </Steps>
-      </el-col>
-    </el-row>
-    <transition name="fade" mode="out-in">
-      <keep-alive :include='cachedViews'>
-        <router-view></router-view>
-      </keep-alive>
-    </transition>
-  </div>
+  <transition name="fade" mode="out-in">
+    <keep-alive :include='cachedViews'>
+      <router-view></router-view>
+    </keep-alive>
+  </transition>
 </template>
 
 <script>
   export default {
-    name: 'Divide',
+    name: 'DivideMain',
     data() {
       return {
         dataMiningGroups: [
@@ -1528,7 +1512,7 @@
       cachedViews() {
         return this.$store.state.tagsView.cachedViews.join();
       },
-      _step(){
+      _step() {
         return this.$store.state.group.divide.step;
       }
     }
