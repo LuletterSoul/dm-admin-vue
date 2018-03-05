@@ -1,101 +1,118 @@
 <template>
-  <el-container>
-    <el-main>
-      <div>
-      <el-row :gutter="20">
-        <el-col :span="6">
-          <Alert show-icon>
-            Tips
-            <Icon type="ios-lightbulb-outline" slot="icon"></Icon>
-            <template slot="desc">
-              <p>你可以用以下条件筛选得到符合分组要求的学生信息</p>
-              <li>特定时间段内无发掘任务的学生</li>
-              <li>特定班级,专业,年级的学生</li>
-              <p>当然,您可以直接勾选心仪的学生创建分组</p>
-            </template>
-          </Alert>
-        </el-col>
-        <el-col :offset="4" :span="14">
-          <el-row>
-            <el-col>
-              <div class="btn-import-container">
-                <el-input @keyup.enter.native="handleFilter" style="width: 200px;" @change='handleFilter' class="btn-item"
+  <div style="margin: 20px">
+    <el-row >
+      <el-col :span="6">
+        <Alert show-icon>
+          Tips
+          <Icon type="ios-lightbulb-outline" slot="icon"></Icon>
+          <template slot="desc">
+            <p>你可以用以下条件筛选得到符合分组要求的学生信息</p>
+            <li>特定时间段内无发掘任务的学生</li>
+            <li>特定班级,专业,年级的学生</li>
+            <p>当然,您可以直接勾选心仪的学生创建分组</p>
+          </template>
+        </Alert>
+      </el-col>
+      <el-col :offset="4" :span="14">
+        <el-row>
+          <el-col>
+            <el-row :gutter="20">
+              <el-col :span="6">
+                <el-input @keyup.enter.native="handleFilter"  @change='handleFilter' class="btn-item"
                           placeholder="学号" v-model="listQuery.studentId">
                 </el-input>
-
-                <el-select clearable style="width: 100px" @change='handleFilter' class="btn-item" v-model="listQuery.grade"
+              </el-col>
+              <el-col :span="6">
+                <el-select clearable  @change='handleFilter' class="btn-item" v-model="listQuery.grade"
                            placeholder="年级">
                   <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
                   </el-option>
                 </el-select>
-
-                <el-select clearable class="btn-item" @change='handleFilter' style="width: 130px"
+              </el-col>
+              <el-col :span="6">
+                <el-select clearable class="btn-item" @change='handleFilter'
                            v-model="listQuery.className"
                            placeholder="班级">
                   <el-option v-for="item in  classNameOptions" :key="item.key" :label="item" :value="item">
                   </el-option>
                 </el-select>
-
-                <el-select @change='handleFilter' style="width: 120px" class="btn-item" v-model="listQuery.sort"
+              </el-col>
+              <el-col :span="6">
+                <el-select @change='handleFilter' class="btn-item" v-model="listQuery.sort"
                            placeholder="排序">
                   <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
                   </el-option>
                 </el-select>
-
+              </el-col>
+              <el-col>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20" style="margin-top: 20px">
+              <el-col :span="8">
+                <Select v-model="isHasTask" :placeholder="'任务状态'">
+                  <Option v-for="item in hasTaskOptions" :value="item.label" :key="item.label">{{ item.label }}</Option>
+                </Select>
+              </el-col>
+              <el-col  :span="8">
+                <DatePicker type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm" style="width: 100%"></DatePicker>
+              </el-col>
+              <el-col :span="8">
+                <DatePicker type="datetime" placeholder="结点时间" format="yyyy-MM-dd HH:mm" style="width: 100%"></DatePicker>
+              </el-col>
+            </el-row>
+            <el-row style="margin-top: 20px" :gutter="20">
+              <el-col :span="3">
                 <el-button class="btn-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">筛选</el-button>
-                <el-button class="btn-item" style="margin-left: 10px;" @click="handleCreate" type="primary"
-                           icon="el-icon-plus">
+              </el-col>
+              <el-col :span="3">
+                <el-button   @click="handleCreate" type="primary"
+                             icon="el-icon-plus">
                   添加
                 </el-button>
-                <el-button class="btn-item" type="primary" icon="el-icon-document" @click="handleDownload">导出</el-button>
-                <el-button class="btn-item" type="primary" icon="el-icon-delete" v-waves @click="handleBatchDelete"
-                           :disabled="!multipleSelection.length">批量删除
+              </el-col>
+              <el-col :span="3">
+                <el-button  type="primary" icon="el-icon-document" @click="handleDownload">导出</el-button>
+              </el-col>
+              <el-col :span="3">
+                <el-button  type="primary" icon="el-icon-delete" v-waves @click="handleBatchDelete"
+                            :disabled="!multipleSelection.length">批量删除
                 </el-button>
-                <el-button class="btn-item" type="warning" icon="el-icon-star-on" v-waves @click="markFavoriteStudent"
+              </el-col>
+              <el-col :span="3">
+                <el-button type="warning" icon="el-icon-star-on" v-waves @click="markFavoriteStudent"
                            v-if="multipleSelection.length">收藏
                 </el-button>
+              </el-col>
+              <el-col :span="3">
                 <el-button class="btn-item" type="warning" icon="el-icon-star-off" :plain="true" v-waves
                            @click="unMarkFavoriteStudent" v-if="multipleSelection.length">取消收藏
                 </el-button>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row style="margin-top: 40px">
-            <el-col :span="6">
-              <Select v-model="isHasTask" :placeholder="'任务状态'">
-                <Option v-for="item in hasTaskOptions" :value="item.label" :key="item.label">{{ item.label }}</Option>
-              </Select>
-            </el-col>
-            <el-col :offset="2" :span="6">
-              <DatePicker type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm" style="width: 100%"></DatePicker>
-            </el-col>
-            <el-col :offset="2" :span="6">
-              <DatePicker type="datetime" placeholder="结点时间" format="yyyy-MM-dd HH:mm" style="width: 100%"></DatePicker>
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
-      <el-row style="margin-top: 10px">
-        <el-col>
-          <Table border size='default'
-                 :loading="listLoading"
-                 :Columns="studentColumns"
-                 :data="groupList"
-                 @on-selection-change="handleSelectionChange"
-                 class="student-list-container"
-                 :no-data-text="$t('table.empty')"
-                 stripe></Table>
-        </el-col>
-      </el-row>
-      <div v-show="!listLoading" class="pagination-container">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                       :current-page.sync="fixPage"
-                       :page-sizes="[10,20,30, 50]" :page-size="listQuery.size"
-                       layout="total, sizes, prev, pager, next, jumper" :total="total">
-        </el-pagination>
-      </div>
-    </div></el-main>
-  </el-container>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+      </el-col>
+    </el-row>
+    <el-row style="margin-top: 10px">
+      <el-col>
+        <Table border size='default'
+               :loading="listLoading"
+               :Columns="studentColumns"
+               :data="groupList"
+               @on-selection-change="handleSelectionChange"
+               class="student-list-container"
+               :no-data-text="$t('table.empty')"
+               stripe></Table>
+      </el-col>
+    </el-row>
+    <div v-show="!listLoading" class="pagination-container">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                     :current-page.sync="fixPage"
+                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.size"
+                     layout="total, sizes, prev, pager, next, jumper" :total="total">
+      </el-pagination>
+    </div>
+  </div>
 </template>
 
 <script>

@@ -3,12 +3,84 @@
     <Row>
       <Col span="2">&nbsp;</Col>
       <Col span="20">
+
       <div class="details-container">
         <div class="dataSetTitle">{{ collectionName }}</div>
-        <!--<div class="updown">-->
-          <!--<Button type="ghost"><a href="">下载数据集</a></Button>-->
-          <!--<Button type="ghost"><a href="">下载数据集描述信息</a></Button>-->
-        <!--</div>-->
+        <div class="details-container">
+          <Card>
+            <div slot="title">
+              <Icon type="arrow-shrink"></Icon>
+              <span class="title-font-style"> 数据集文件 </span>
+              <Button type="ghost" class="btn-download-sets" :disabled="!checkedSetIds.length" @click="handleDownloadSetZip">下载</Button>
+              <Button type="error" class="btn-download-sets" :disabled="!checkedSetIds.length || readOnly" @click="handleDeleteSets">删除</Button>
+            </div>
+            <a href="#" slot="extra" @click.prevent="uploadDialogVisible = true">
+              <Icon type="plus-round"></Icon>
+              新增
+            </a>
+            <el-dialog
+              title="新增数据集"
+              :visible.sync="uploadDialogVisible"
+              width="30%">
+              <el-upload
+                class="upload-container"
+                drag
+                action="Deprecated"
+                ref="uploadDataSets"
+                :on-remove="handleFileRemove"
+                :on-preview="handleFilePreview"
+                :before-remove="beforeFileRemove"
+                :before-upload="handleBeforeUpload"
+                :on-success= "handleUploadSuccess"
+                :file-list="fileList"
+                :auto-upload="false"
+                multiple>
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                <!--<div class="el-upload__tip" slot="tip">只能上传符合模板的.xlsx文件</div>-->
+              </el-upload>
+              <span slot="footer" class="dialog-footer">
+              <el-button @click="uploadDialogVisible = false">取 消</el-button>
+              <el-button type="primary" @click="submitUpload">确 定</el-button>
+            </span>
+            </el-dialog>
+            <a href="#" slot="extra" @click.prevent="refreshDataSet()">
+              <Icon type="ios-loop-strong"></Icon>
+              刷新
+            </a>
+            <CheckboxGroup v-model="checkedSetIds">
+              <animate-transition :link-index="linkIndex"
+                                  :in-style="'transition.bounceLeftIn'"
+                                  :out-style="'transition.bounceRightOut'">
+                <Alert v-for="(item, index) in dataSets"
+                       v-bind:key="item.containerId"
+                       type="warning"
+                       class="file-alert"
+                       :data-index="index">
+                  <Checkbox :label="item.containerId" class="checkbox-container">
+                    {{item.null}}
+                  </Checkbox>
+                  <li>
+                    <a class="file-download-a">{{ item.fileName }}
+                      <a class="file-download-size" >{{ dataSetSizes[index] }}</a>
+                    </a>
+                  </li>
+                </Alert>
+              </animate-transition>
+            </CheckboxGroup>
+
+            <Page :total="totalSets"
+                  :page-size="listQuery.size"
+                  :current.sync="fixPage"
+                  @on-change="handlePageChange"
+                  @on-page-size-change="handleSizeChange"
+                  class="page-style"
+                  size="small"
+                  show-elevator
+                  show-total
+                  show-sizer></Page>
+          </Card>
+        </div>
 
         <Card :bordered="false" class="dataSetCard">
           <p slot="title" style="font-size: 16px">描述摘要:</p>
@@ -28,82 +100,6 @@
               v-bind:title="todo.title">
           <p slot="title" style="font-size:16px;">{{ todo.title }}</p>
           <p >{{ todo.info }}</p>
-        </Card>
-      </div>
-
-      <div class="details-container">
-        <Card>
-          <div slot="title" >
-            <Icon type="arrow-shrink"></Icon>
-            <span class="title-font-style"> 数据集文件 </span>
-            <Button type="ghost" class="btn-download-sets" :disabled="!checkedSetIds.length" @click="handleDownloadSetZip">下载</Button>
-            <Button type="error" class="btn-download-sets" :disabled="!checkedSetIds.length || readOnly" @click="handleDeleteSets">删除</Button>
-          </div>
-          <a href="#" slot="extra" @click.prevent="uploadDialogVisible = true">
-            <Icon type="plus-round"></Icon>
-            新增
-          </a>
-          <el-dialog
-            title="新增数据集"
-            :visible.sync="uploadDialogVisible"
-            width="30%">
-            <el-upload
-              class="upload-container"
-              drag
-              action="Deprecated"
-              ref="uploadDataSets"
-              :on-remove="handleFileRemove"
-              :on-preview="handleFilePreview"
-              :before-remove="beforeFileRemove"
-              :before-upload="handleBeforeUpload"
-              :on-success= "handleUploadSuccess"
-              :file-list="fileList"
-              :auto-upload="false"
-              multiple>
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-              <!--<div class="el-upload__tip" slot="tip">只能上传符合模板的.xlsx文件</div>-->
-            </el-upload>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="uploadDialogVisible = false">取 消</el-button>
-              <el-button type="primary" @click="submitUpload">确 定</el-button>
-            </span>
-          </el-dialog>
-          <a href="#" slot="extra" @click.prevent="refreshDataSet()">
-            <Icon type="ios-loop-strong"></Icon>
-            刷新
-          </a>
-          <CheckboxGroup v-model="checkedSetIds">
-            <animate-transition :link-index="linkIndex"
-                                :in-style="'transition.bounceLeftIn'"
-                                :out-style="'transition.bounceRightOut'">
-              <Alert v-for="(item, index) in dataSets"
-                     v-bind:key="item.containerId"
-                     type="warning"
-                     class="file-alert"
-                     :data-index="index">
-                <Checkbox :label="item.containerId" class="checkbox-container">
-                  {{item.null}}
-                </Checkbox>
-                <li>
-                  <a class="file-download-a">{{ item.fileName }}
-                    <a class="file-download-size" >{{ dataSetSizes[index] }}</a>
-                  </a>
-                </li>
-              </Alert>
-            </animate-transition>
-          </CheckboxGroup>
-
-          <Page :total="totalSets"
-                :page-size="listQuery.size"
-                :current.sync="fixPage"
-                @on-change="handlePageChange"
-                @on-page-size-change="handleSizeChange"
-                class="page-style"
-                size="small"
-                show-elevator
-                show-total
-                show-sizer></Page>
         </Card>
       </div>
 

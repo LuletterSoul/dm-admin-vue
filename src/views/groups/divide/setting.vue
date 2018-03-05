@@ -1,126 +1,125 @@
 <template>
-  <el-container>
-    <el-main>
-      <div>
-        <el-row>
-          <el-col :offset="2" :span="21">
-            <Alert type="success" show-icon>
-              分组参数
-              <template slot="desc">
-                <p>{{ $t('p.group.divide.tips.task.header') }}</p>
-                <li v-for="item in $t('p.group.divide.tips.task.content')">{{ item }}</li>
-              </template>
-            </Alert>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :offset="1" :span="22">
-            <Form :model="formItem" :label-width="80">
-              <FormItem :label="$t('p.group.divide.oneKey.taskForm.task.label')">
-                <AutoComplete
-                  icon="ios-search"
-                  @on-select="handleTaskSelected"
-                  :placeholder="$t('p.group.divide.oneKey.taskForm.task.placeholder')">
-                  <div class="task-auto-complete-item" v-for="item in tasks">
-                    <div class="task-auto-complete-group">
-                      <span>{{ item.title }}</span>
-                      <a href="https://www.google.com/search?q=iView" target="_blank">更多</a>
-                    </div>
-                    <Option v-for="option in item.content" :value="option.taskName" :key="option.taskId">
-                      <span class="demo-auto-complete-title">{{ option.taskName }} </span>
-                      <span class="auto-complete-option">建立时间:{{ option.builtTime }}</span>
-                      <span class="auto-complete-option">任务状态:{{ option.status.description }}</span>
-                    </Option>
-                  </div>
-                  <a href="https://www.google.com/search?q=iView" target="_blank" class="demo-auto-complete-more">查看所有结果</a>
-                </AutoComplete>
-              </FormItem>
-              <FormItem :label="$t('p.group.divide.oneKey.taskForm.timeRange.label')">
-                <el-row>
-                  <el-col span="11">
-                    <DatePicker type="datetime"
-                                @on-change="setBegin"
-                                :value="config.beginDate"
-                                style="width: 100%"
-                                format="yyyy-MM-dd HH:mm:ss"
-                                :placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')">
-                    </DatePicker>
-                  </el-col>
-                  <el-col span="2" style="text-align: center">
-                    -</el-col>
-                  <el-col span="11">
-                    <DatePicker type="datetime"
-                                :value="config.endDate"
-                                format="yyyy-MM-dd HH:mm:ss"
-                                style="width: 100%"
-                                @on-change="setEnd"
-                                :placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')">
-                    </DatePicker>
-                  </el-col>
-                </el-row>
-              </FormItem>
-              <FormItem :label="$t('p.group.divide.oneKey.taskForm.ignore.label')">
-                <i-switch v-model="config.isIgnoreArrangedTask" size="large">
-                  <span slot="open">On</span>
-                  <span slot="close">Off</span>
-                </i-switch>
-              </FormItem>
-              <FormItem :label="$t('p.group.divide.oneKey.taskForm.builder.label')">
-                <Select>
-                  <Option value="beijing">New York</Option>
-                  <Option value="shanghai">London</Option>
-                  <Option value="shenzhen">Sydney</Option>
-                </Select>
-              </FormItem>
-              <FormItem :label="$t('p.group.divide.oneKey.taskForm.students.label')">
-                <Transfer
-                  :data="_assignedStudents"
-                  :target-keys="config.specifiedDividingStudents"
-                  :selected-keys="selectedStudentIds"
-                  :list-style="listStyle"
-                  :not-found-text="$t('p.group.divide.oneKey.taskForm.students.placeholder')"
-                  @on-change="handleChange"
-                  @on-selected-change="handleSelectedChange"
-                  :filter-method="filterStudents"
-                  filterable>
-                  <div :style="{float: 'right', margin: '5px'}">
-                    <Button type="ghost" size="small">重置</Button>
-                  </div>
-                </Transfer>
-              </FormItem>
-              <FormItem :label="$t('p.group.divide.oneKey.taskForm.gradient.label')">
-                <Slider v-model="config.gradient" show-input></Slider>
-              </FormItem>
-              <FormItem :label="$t('p.group.divide.oneKey.taskForm.operationCode.label')">
-                <Input v-model="config.buildingKey"
-                       :placeholder="$t('p.group.divide.oneKey.taskForm.operationCode.placeholder')"></Input>
-              </FormItem>
-            </Form>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :offset="4" :span="16">
-            <Button type="primary" @click="handleSubmitDividingConfig" :loading="previewLoading" style="margin-top: 10px"
-                    long>{{
-              $t('p.group.divide.oneKey.taskForm.submit.preview') }}
-            </Button>
-            <Button type="error" style="margin-top: 10px" long>{{ $t('p.group.divide.oneKey.taskForm.submit.reset') }}
-            </Button>
-            <Button type="ghost" style="margin-top: 10px" long>{{ $t('p.group.divide.oneKey.taskForm.submit.cancel') }}
-            </Button>
-          </el-col>
-        </el-row>
-      </div>
-    </el-main>
-  </el-container>
+  <div style="margin: 20px">
+    <el-row>
+      <el-col :offset="2" :span="21">
+        <Alert type="success" show-icon>
+          分组参数
+          <template slot="desc">
+            <p>{{ $t('p.group.divide.tips.task.header') }}</p>
+            <li v-for="item in $t('p.group.divide.tips.task.content')">{{ item }}</li>
+          </template>
+        </Alert>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :offset="1" :span="22">
+        <Form :model="formItem" :label-width="80">
+          <FormItem :label="$t('p.group.divide.oneKey.taskForm.task.label')">
+            <AutoComplete
+              icon="ios-search"
+              @on-select="handleTaskSelected"
+              :placeholder="$t('p.group.divide.oneKey.taskForm.task.placeholder')">
+              <div class="task-auto-complete-item" v-for="item in tasks">
+                <div class="task-auto-complete-group">
+                  <span>{{ item.title }}</span>
+                  <a href="https://www.google.com/search?q=iView" target="_blank">更多</a>
+                </div>
+                <Option v-for="option in item.content" :value="option.taskName" :key="option.taskId">
+                  <span class="demo-auto-complete-title">{{ option.taskName }} </span>
+                  <span class="auto-complete-option">建立时间:{{ option.builtTime }}</span>
+                  <span class="auto-complete-option">任务状态:{{ option.status.description }}</span>
+                </Option>
+              </div>
+              <a href="https://www.google.com/search?q=iView" target="_blank" class="demo-auto-complete-more">查看所有结果</a>
+            </AutoComplete>
+          </FormItem>
+          <FormItem :label="$t('p.group.divide.oneKey.taskForm.timeRange.label')">
+            <el-row>
+              <el-col :span="11">
+                <DatePicker type="datetime"
+                            @on-change="setBegin"
+                            :value="config.beginDate"
+                            style="width: 100%"
+                            format="yyyy-MM-dd HH:mm:ss"
+                            :placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')">
+                </DatePicker>
+              </el-col>
+              <el-col :span="2" style="text-align: center">
+                -
+              </el-col>
+              <el-col :span="11">
+                <DatePicker type="datetime"
+                            :value="config.endDate"
+                            format="yyyy-MM-dd HH:mm:ss"
+                            style="width: 100%"
+                            @on-change="setEnd"
+                            :placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')">
+                </DatePicker>
+              </el-col>
+            </el-row>
+          </FormItem>
+          <FormItem :label="$t('p.group.divide.oneKey.taskForm.ignore.label')">
+            <i-switch v-model="config.isIgnoreArrangedTask" size="large">
+              <span slot="open">On</span>
+              <span slot="close">Off</span>
+            </i-switch>
+          </FormItem>
+          <FormItem :label="$t('p.group.divide.oneKey.taskForm.builder.label')">
+            <Select>
+              <Option value="beijing">New York</Option>
+              <Option value="shanghai">London</Option>
+              <Option value="shenzhen">Sydney</Option>
+            </Select>
+          </FormItem>
+          <FormItem :label="$t('p.group.divide.oneKey.taskForm.students.label')">
+            <Transfer
+              :data="_assignedStudents"
+              :target-keys="config.specifiedDividingStudents"
+              :selected-keys="selectedStudentIds"
+              :list-style="listStyle"
+              :not-found-text="$t('p.group.divide.oneKey.taskForm.students.placeholder')"
+              @on-change="handleChange"
+              @on-selected-change="handleSelectedChange"
+              :filter-method="filterStudents"
+              filterable>
+              <div :style="{float: 'right', margin: '5px'}">
+                <Button type="ghost" size="small">重置</Button>
+              </div>
+            </Transfer>
+          </FormItem>
+          <FormItem :label="$t('p.group.divide.oneKey.taskForm.gradient.label')">
+            <Slider v-model="config.gradient" show-input></Slider>
+          </FormItem>
+          <FormItem :label="$t('p.group.divide.oneKey.taskForm.operationCode.label')">
+            <Input v-model="config.buildingKey"
+                   :placeholder="$t('p.group.divide.oneKey.taskForm.operationCode.placeholder')">
+            </Input>
+          </FormItem>
+        </Form>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :offset="4" :span="16">
+        <Button type="primary" @click="handleSubmitDividingConfig" :loading="previewLoading" style="margin-top: 10px"
+                long>{{
+          $t('p.group.divide.oneKey.taskForm.submit.preview') }}
+        </Button>
+        <Button type="error" style="margin-top: 10px" long>{{ $t('p.group.divide.oneKey.taskForm.submit.reset') }}
+        </Button>
+        <Button type="ghost" style="margin-top: 10px" long>{{ $t('p.group.divide.oneKey.taskForm.submit.cancel') }}
+        </Button>
+      </el-col>
+    </el-row>
+  </div>
 
 </template>
 <script>
   import {fetchTaskList} from 'api/tasks';
   import {getLeisureStudents, createGroupPreview} from 'api/groups';
+
   const moment = require('moment');
   export default {
-    name: "group-dividing-config-form",
+    name: "setting",
     data() {
       return {
         config: {
@@ -243,6 +242,15 @@
             type: 'success',
             duration: 1500
           });
+          console.log(vm.previewGroups);
+          //保存设置
+          vm.$store.dispatch('SetSetting', vm.config);
+          //保存预览分组
+          vm.$store.dispatch('SetPreviewGroups', vm.previewGroups);
+          vm.$router.push(
+            {
+              path: 'preview',
+            });
         }).catch(error => {
           vm.previewLoading = false;
         })

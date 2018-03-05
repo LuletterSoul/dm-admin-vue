@@ -11,7 +11,7 @@
                   <icon-svg icon-class="svggrouppeople">
                   </icon-svg>
                   <span style="margin-left: 5px">
-                    执行分组
+                    执行任务的分组
                 </span>
                 </div>
               </template>

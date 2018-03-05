@@ -1,24 +1,24 @@
 <template>
-  <div class="group-details-container">
-    <Row>
-      <Col :offset="1" :span="23">
+  <div style="margin: 20px">
+    <el-row>
+      <el-col :offset="1" :span="23">
       <Table border size='default'
              :row-class-name="rowClassName"
              :loading="listLoading"
              :columns="groupColumns"
-             :data="groupList"
+             :data="_groups"
              :highlight-row="true"
              :no-data-text="$t('table.empty')"
              @on-selection-change="handleSelectionChange"
              stripe></Table>
-      </Col>
-    </Row>
-    <Row>
-      <Col :offset="1" :span="23">
-      <task-detail :to-task-id="task.taskId" :to-groups="groupList">
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :offset="1" :span="23">
+      <task-detail :to-task-id="_task.taskId" :to-groups="_groups">
       </task-detail>
-      </Col>
-    </Row>
+      </el-col>
+    </el-row>
     <!--<transition name="fade">-->
       <!--<member-details  v-if="showDetails"></member-details>-->
     <!--</transition>-->
@@ -35,13 +35,18 @@
       GroupView
     },
     props: {
-      groupList: {
-        required: Array,
-        default: []
-      },
-      task:{
-        required:Object,
-        default:''
+      groupList: [],
+      task:[]
+    },
+    created() {
+      let vm = this;
+      if(vm._groups===undefined) {
+        vm.$notify({
+          title: '数据丢失',
+          message: '请先填写分组参数,执行‘预览’操作。',
+          type: 'warning'
+        });
+        vm.$router.push({path:'setting'});
       }
     },
     data() {
@@ -161,7 +166,17 @@
         return 'group-details-container';
       }
     },
-    computed: {}
+    computed: {
+      _groupInfos() {
+        return this.$store.state.group.previewGroups;
+      },
+      _task() {
+        return this.$store.state.group.previewGroups.dataMiningTask;
+      },
+      _groups() {
+        return this.$store.state.group.previewGroups.dataMiningGroups;
+      }
+    }
   };
 </script>
 

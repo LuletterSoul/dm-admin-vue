@@ -151,7 +151,6 @@ export const asyncRouterMap = [
             component: _import('groups/divide/preview'),
             name: '分组预览',
             icon: 'group',
-            hidden:true
           },
           {
             path: 'manual',
