@@ -116,8 +116,7 @@
             return this.$store.state.group.newGroups.length;
           },
           _newGroups() {
-            let groups = this.$store.state.group.newGroup;
-            console.log(this._length);
+            let groups = this.$store.state.group.newGroups;
             if(!this._length){
               groups = this.toNewGroups;
             }

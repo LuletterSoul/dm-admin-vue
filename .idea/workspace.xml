@@ -7,25 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/views/groups/new.vue" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/api/groups.js" afterPath="$PROJECT_DIR$/src/api/groups.js" />
-      <change beforePath="$PROJECT_DIR$/src/locale/zh-CN.js" afterPath="$PROJECT_DIR$/src/locale/zh-CN.js" />
-      <change beforePath="$PROJECT_DIR$/src/router/index.js" afterPath="$PROJECT_DIR$/src/router/index.js" />
-      <change beforePath="$PROJECT_DIR$/src/store/getters.js" afterPath="$PROJECT_DIR$/src/store/getters.js" />
-      <change beforePath="$PROJECT_DIR$/src/store/modules/group.js" afterPath="$PROJECT_DIR$/src/store/modules/group.js" />
-      <change beforePath="$PROJECT_DIR$/src/utils/fetch.js" afterPath="$PROJECT_DIR$/src/utils/fetch.js" />
-      <change beforePath="$PROJECT_DIR$/src/views/datasets/detail.vue" afterPath="$PROJECT_DIR$/src/views/datasets/detail.vue" />
-      <change beforePath="$PROJECT_DIR$/src/views/groups/divide/divideLayout.vue" afterPath="$PROJECT_DIR$/src/views/groups/divide/divideLayout.vue" />
-      <change beforePath="$PROJECT_DIR$/src/views/groups/divide/divideMain.vue" afterPath="$PROJECT_DIR$/src/views/groups/divide/divideMain.vue" />
-      <change beforePath="$PROJECT_DIR$/src/views/groups/divide/manualOptimization.vue" afterPath="$PROJECT_DIR$/src/views/groups/divide/manualOptimization.vue" />
-      <change beforePath="$PROJECT_DIR$/src/views/groups/divide/oneKeyDividing.vue" afterPath="$PROJECT_DIR$/src/views/groups/divide/oneKeyDividing.vue" />
-      <change beforePath="$PROJECT_DIR$/src/views/groups/divide/preview.vue" afterPath="$PROJECT_DIR$/src/views/groups/divide/preview.vue" />
-      <change beforePath="$PROJECT_DIR$/src/views/groups/divide/resource.vue" afterPath="$PROJECT_DIR$/src/views/groups/divide/resource.vue" />
-      <change beforePath="$PROJECT_DIR$/src/views/groups/divide/setting.vue" afterPath="$PROJECT_DIR$/src/views/groups/divide/setting.vue" />
-      <change beforePath="$PROJECT_DIR$/src/views/groups/divide/steps.vue" afterPath="$PROJECT_DIR$/src/views/groups/divide/steps.vue" />
-      <change beforePath="$PROJECT_DIR$/src/views/groups/list.vue" afterPath="$PROJECT_DIR$/src/views/groups/list.vue" />
-      <change beforePath="$PROJECT_DIR$/src/views/students/import.vue" afterPath="$PROJECT_DIR$/src/views/students/import.vue" />
+      <change beforePath="$PROJECT_DIR$/src/views/groups/new.vue" afterPath="$PROJECT_DIR$/src/views/groups/new.vue" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -52,8 +35,8 @@
       <file leaf-file-name="new.vue" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/views/groups/new.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="816">
-              <caret line="125" column="32" lean-forward="true" selection-start-line="125" selection-start-column="32" selection-end-line="125" selection-end-column="32" />
+            <state relative-caret-position="607">
+              <caret line="126" column="24" lean-forward="true" selection-start-line="126" selection-start-column="24" selection-end-line="126" selection-end-column="24" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#el-row#1;n#div#0;n#template#0;n#!!top" expanded="true" />
@@ -697,7 +680,7 @@
       <workItem from="1520152288094" duration="15158000" />
       <workItem from="1520179432867" duration="5894000" />
       <workItem from="1520236049655" duration="10160000" />
-      <workItem from="1520249478556" duration="14258000" />
+      <workItem from="1520249478556" duration="14626000" />
     </task>
     <task id="LOCAL-00001" summary="dm platform based on vue cil.">
       <created>1503206739933</created>
@@ -825,11 +808,18 @@
       <option name="project" value="LOCAL" />
       <updated>1520245666600</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="新增队伍展示,修复computed属性的Observer Array length undefined问题">
+      <created>1520273044432</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1520273044432</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1159826000" />
+    <option name="totallyTimeSpent" value="1160194000" />
   </component>
   <component name="TodoView" selected-index="1">
     <todo-panel id="selected-file">
@@ -845,7 +835,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20892575" sideWeight="0.9207921" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4840484" sideWeight="0.4984202" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.48379448" sideWeight="0.4984202" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.49960473" sideWeight="0.32385466" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27942795" sideWeight="0.4952644" order="1" side_tool="false" content_ui="tabs" />
@@ -854,7 +844,7 @@
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22328548" sideWeight="0.51362985" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37549406" sideWeight="0.45537126" order="18" side_tool="false" content_ui="tabs" x="627" y="990" width="1179" height="542" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.015019763" sideWeight="0.6761453" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.022924902" sideWeight="0.6761453" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.129045" sideWeight="0.07920792" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="SFDX" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
@@ -949,7 +939,8 @@
     <MESSAGE value="增加前端测试环境，测试远程云服务" />
     <MESSAGE value="一键分组页面加入动态切换特效,分组预览布局优化" />
     <MESSAGE value="调整了布局" />
-    <option name="LAST_COMMIT_MESSAGE" value="调整了布局" />
+    <MESSAGE value="新增队伍展示,修复computed属性的Observer Array length undefined问题" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增队伍展示,修复computed属性的Observer Array length undefined问题" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1409,8 +1400,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/views/groups/new.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
-          <caret line="125" column="32" lean-forward="true" selection-start-line="125" selection-start-column="32" selection-end-line="125" selection-end-column="32" />
+        <state relative-caret-position="607">
+          <caret line="126" column="24" lean-forward="true" selection-start-line="126" selection-start-column="24" selection-end-line="126" selection-end-column="24" />
           <folding>
             <element signature="n#style#0;n#div#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#el-row#1;n#div#0;n#template#0;n#!!top" expanded="true" />
