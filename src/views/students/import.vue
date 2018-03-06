@@ -4,7 +4,11 @@
       导入学生
     </div>
     <div class="btn-import-container">
-      <el-button class="btn-item" type="warning" plain icon="el-icon-circle-close-outline" @click="handleCancelImport" :disabled="!studentList.length">撤销
+      <el-button class="btn-item" type="warning"
+                 plain
+                 icon="el-icon-circle-close-outline"
+                 @click="handleCancelImport"
+                 :disabled="!studentList.length">撤销
       </el-button>
       <el-button class="btn-item" type="primary" plain icon="el-icon-upload" @click="uploadDialogVisible =true">导入
       </el-button>
