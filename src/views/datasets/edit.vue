@@ -98,7 +98,8 @@
              </Row>
            </FormItem>
            <FormItem label="描述摘要" >
-             <Input v-model="temp.abstractInfo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
+             <Input v-model="temp.abstractInfo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入...">
+             </Input>
            </FormItem>
          </Form>
       </Modal>

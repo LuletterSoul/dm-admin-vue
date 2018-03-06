@@ -1,5 +1,5 @@
 <template>
-    <section class="app-main">
+    <section class="app-main" style="overflow: hidden">
         <transition name="fade" mode="out-in">
           <keep-alive :include="cachedViews">
             <router-view></router-view>

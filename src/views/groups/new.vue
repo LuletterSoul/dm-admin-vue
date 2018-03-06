@@ -5,15 +5,15 @@
         <el-col  :span="23">
           <Table
             :no-data-text="$t('table.empty')"
-                  size='large'
+                  size='default'
                  :row-class-name="rowClassName"
                  :columns="newGroupsTableColumns"
                  :data="_currentPageGroups">
           </Table>
         </el-col>
       </el-row>
-      <el-row style="margin-top: 20px">
-        <el-col :offset="17" :span="2">
+      <el-row style="margin-top: 20px;float: right">
+        <el-col>
           <el-pagination @size-change="handleSizeChange"
                          @current-change="handleCurrentChange"
                          :current-page.sync="page"
@@ -24,17 +24,32 @@
           </el-pagination>
         </el-col>
       </el-row>
+      <el-row>
+        <transition
+          mode="out-in"
+          name="custom-classes-transition"
+          enter-active-class="animated bounceIn"
+          leave-active-class="animated bounceOutRight">
+          <group-view v-if="_length&&initDetail" :groups="_detailTarget" :key="this._detailTarget[0].groupId">
+          </group-view>
+        </transition>
+      </el-row>
     </div>
 </template>
 
 <script type="text/javascript">
+  import GroupView from '../components/groupView';
+  import {getMembers} from 'api/groups'
     export default {
+        components:{GroupView},
         props:{
           toNewGroups:[]
         },
         name: 'new-groups',
         data() {
             return {
+              initDetail:false,
+              detailTargetIndex:0,
               newGroupsTableColumns: [
                 {
                   title: '序号',
@@ -75,6 +90,54 @@
                   title: '组员',
                   align: 'center',
                 },
+                {
+                  title:'操作',
+                  align:'center',
+                  width:200,
+                  render: (h, params) => {
+                    return h('div', [
+                      h('Button', {
+                        props: {
+                          type: 'primary',
+                          size: 'small'
+                        },
+                        style: {
+                          marginRight: '5px'
+                        },
+                        on: {
+                          click: () => {
+                            this.handleCheck(params.index)
+                          }
+                        }
+                      }, '详情'),
+                      h('Button', {
+                        props: {
+                          type: 'error',
+                          size: 'small'
+                        },
+                        style: {
+                          marginRight: '5px'
+                        },
+                        on: {
+                          click: () => {
+                            this.handleRemoveCollection(params.index)
+                          }
+                        }
+                      }, '删除'),
+                      h('Button', {
+                        props: {
+                          type: 'info',
+                          size: 'small'
+                        },
+                        on: {
+                          click: () => {
+                            this.handleUpdate(params.index)
+                          }
+                        }
+                      }, '修改')
+                    ]);
+                  }
+                }
               ],
               listQuery: {
                 studentId: "",
@@ -110,6 +173,24 @@
           }
           this.page = val - 1;
         },
+        handleCheck(index){
+          this.initDetail = true;
+          this.detailTargetIndex = index;
+          this.getMembers(this._currentPageGroups[index].groupId,index);
+        },
+        handleDelete(groupId){
+
+        },
+        getMembers(groupId,index) {
+          let vm = this;
+          getMembers(groupId).then(res => {
+            vm.$set(vm._currentPageGroups[index],'groupMembers',res);
+          }).catch(error => {
+          })
+        },
+        handleEdit(groupId){
+
+        }
       },
         computed:{
           _length() {
@@ -132,7 +213,15 @@
               end =this. _length;
             }
             return this._newGroups.slice(begin, end);
-          }
+          },
+          _detailTarget() {
+            if(!this._length) {
+              return null;
+            }
+            let wrap = [];
+            wrap.push(this._currentPageGroups[this.detailTargetIndex]);
+            return wrap;
+          },
         }
     }
 </script>

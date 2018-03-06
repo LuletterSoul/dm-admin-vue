@@ -65,7 +65,9 @@
             </balloon>
             组员
           </div>
-          <div class="text" v-for="(item ,index) in group.groupMembers">
+          <div class="text"
+               v-for="(item ,index) in group.groupMembers"
+               :key="item.studentId">
             <balloon :balloon-count="10">
             </balloon>
             <span style="margin-right: 5px">
@@ -82,11 +84,19 @@
 </template>
 
 <script>
+  import {getMembers} from 'api/groups'
   export default {
     props: {
-      group: {},
+      group: {
+        required : Object,
+        default: null
+      }
     },
-    name: "group-view-item"
+    data(){
+      return {
+      };
+
+    },
   };
 </script>
 

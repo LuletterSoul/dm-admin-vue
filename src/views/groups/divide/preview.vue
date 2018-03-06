@@ -20,12 +20,12 @@
         </task-detail>
       </el-col>
     </el-row>
-    <el-row>
+    <el-row style="margin-top: 10px">
       <el-col :offset="21" :span="1">
-        <Button type="success" style="margin-top: 10px" @click="handleSubmitDivideDirectly">完成</Button>
+        <Button type="success"  @click="handleSubmitDivideDirectly">完成</Button>
       </el-col>
       <el-col :span="1">
-        <Button type="primary" style="margin-top: 10px" @click="handleMutual">
+        <Button type="primary"  @click="handleMutual">
           手动调整
         </Button>
       </el-col>
@@ -34,15 +34,13 @@
 </template>
 
 <script>
-  import GroupView from '../../components/groupViewItem';
   import TaskDetail from 'src/views/tasks/detail';
   import {createGroupsByKey} from 'api/groups'
 
   export default {
     name: "preview",
     components: {
-      TaskDetail,
-      GroupView
+      TaskDetail
     },
     props: {
       groupList: [],

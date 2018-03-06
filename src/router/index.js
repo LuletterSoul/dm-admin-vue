@@ -191,7 +191,7 @@ export const asyncRouterMap = [
       {
         path:'new',
         component:_import('groups/new'),
-        name:'新增队伍',
+        name:'新增分组',
         icon:'group'
       }
     ]
