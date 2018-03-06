@@ -145,7 +145,7 @@
                   },
                   on: {
                     click: () => {
-                      this.handleRemoveCollection(params.index)
+                      this.handleDelete(params.row);
                     }
                   }
                 }, '删除'),
@@ -225,8 +225,21 @@
         let el = document.getElementById("group-view");
         el.scrollIntoView();
       },
-      handleDelete(groupId) {
-
+      handleDelete(group) {
+        let vm = this;
+        let wrapGroups = [];
+        wrapGroups.push(group.groupId);
+        this.$confirm('此操作将删除名为 '+group.groupName+ ' 的分组信息, 是否继续?', '确定删除', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          deleteGroups(wrapGroups).then(() => {
+            vm.$message.success('删除成功');
+              vm._newGroups.splice(group, 1);
+          }).catch(error => {
+          })
+        })
       },
       handleBatchDelete() {
         let vm = this;

@@ -135,35 +135,8 @@ export function deleteBatchDataSets(containerIds) {
 
 export function fetchOptions() {
   return fetch({
-    url:'/options',
+    url:'/options/data_set',
     method:'get',
-  })
-}
-
-export function fetchOptionalTaskTypes() {
-  return fetch({
-    url:'/miningTaskTypes',
-    method:'get'
-  })
-}
-
-export function fetchOptionaAttributeTypes() {
-  return fetch({
-    url:'/attributeChars',
-    method:'get'
-  })
-}
-
-export function fetchOptionalCollectionChars() {
-  return fetch({
-    url:'/collectionChars',
-    method:'get'
-  })
-}
-
-export function fetchOptionalArea() {
-  return fetch({
-    url:'/'
   })
 }
 

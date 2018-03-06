@@ -1,106 +1,112 @@
 <template>
   <div class="calendar-list-container test">
-    <div class="btn-import-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" @change='handleFilter' class="btn-item"
-                placeholder="学号" v-model="listQuery.studentId">
-      </el-input>
+    <el-row>
+      <el-col :offset="10" :span="14">
+        <el-row>
+          <el-col>
+            <el-row :gutter="20">
+              <el-col :span="6">
+                  <el-autocomplete
+                    size="medium"
+                    v-model="listQuery.groupName"
+                    :fetch-suggestions="querySearch"
+                    placeholder="请输入队名"
+                  ></el-autocomplete>
+              </el-col>
+              <el-col  :span="6">
+                <el-select size="medium"
+                           clearable
+                           class="btn-item" v-model="listQuery.grade"
+                           placeholder="年级">
+                  <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
+                  </el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="6">
+                <el-select size="medium"
+                           clearable class="btn-item"
+                           v-model="listQuery.className"
+                           placeholder="班级">
+                  <el-option v-for="item in  classNameOptions" :key="item.key" :label="item" :value="item">
+                  </el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="6">
+                <el-select size="medium"
+                           v-model="listQuery.sort"
+                           placeholder="排序">
+                  <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
+                  </el-option>
+                </el-select>
+              </el-col>
+              <el-col>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20" style="margin-top: 20px">
+              <el-col :span="6">
+                <el-select
+                  size="medium"
+                  v-model="listQuery.taskStatus">
+                  <el-option
+                    v-for="item in hasTaskOptions"
+                    :value="item.value"
+                    :key="item.label"
+                    :label="item.label">
+                  </el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="14">
+                <el-date-picker
+                  size="medium"
+                  style="width: 100%"
+                  v-model="value7"
+                  @change="handTimeFilter"
+                  type="daterange"
+                  unlink-panels
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  range-separator="至"
+                  :start-placeholder="$t('p.group.list.filter.beginDate')"
+                  :end-placeholder="$t('p.group.list.filter.endDate')"
+                  :picker-options="pickerOptions">
+                </el-date-picker>
+              </el-col>
+              <el-col :span="1">
+                <Button style="margin-top: 2px" type="primary" shape="circle" icon="ios-search"></Button>
+              </el-col>
+              <el-col :span="1">
+                <el-button size="medium"
+                           class="btn-item" type="danger"
+                           plain
+                           round
+                           icon="el-icon-circle-close-outline"
+                           @click="handleBatchDelete"
+                           :disabled="!_selectionIds.length">批量删除
+                </el-button>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+      </el-col>
+    </el-row>
+    <el-row style="margin-top: 20px">
+      <Table border size='default'
+             :loading="listLoading"
+             :columns="groupColumns"
+             :data="groupList"
+             @on-selection-change="handleSelectionChange"
+             stripe></Table>
+    </el-row>
 
-      <el-select clearable style="width: 100px" @change='handleFilter' class="btn-item" v-model="listQuery.grade"
-                 placeholder="年级">
-        <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
-        </el-option>
-      </el-select>
-
-      <el-select clearable class="btn-item" @change='handleFilter' style="width: 130px" v-model="listQuery.className"
-                 placeholder="班级">
-        <el-option v-for="item in  classNameOptions" :key="item.key" :label="item" :value="item">
-        </el-option>
-      </el-select>
-
-      <el-select @change='handleFilter' style="width: 120px" class="btn-item" v-model="listQuery.sort" placeholder="排序">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
-        </el-option>
-      </el-select>
-
-      <el-button class="btn-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">筛选</el-button>
-      <el-button class="btn-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-plus">
-        添加
-      </el-button>
-      <el-button class="btn-item" type="primary" icon="el-icon-document" @click="handleDownload">导出</el-button>
-      <el-button class="btn-item" type="primary" icon="el-icon-delete" v-waves @click="handleBatchDelete"
-                 :disabled="!multipleSelection.length">批量删除
-      </el-button>
-      <el-button class="btn-item" type="warning" icon="el-icon-star-on" v-waves @click="markFavoriteStudent"
-                 v-if="multipleSelection.length">收藏
-      </el-button>
-      <el-button class="btn-item" type="warning" icon="el-icon-star-off" :plain="true" v-waves
-                 @click="unMarkFavoriteStudent" v-if="multipleSelection.length">取消收藏
-      </el-button>
-    </div>
-    <Table border size='default'
-           :loading="listLoading"
-           :columns="groupColumns"
-           :data="groupList"
-           @on-selection-change="handleSelectionChange"
-           class="group-list-container"
-           stripe></Table>
     <div v-show="!listLoading" class="pagination-container">
       <el-pagination @size-change="handleSizeChange"
                      background
                      size='large'
                      @current-change="handleCurrentChange"
-                     :current-page.sync="fixPage"
                      :page-sizes="[10,20,30, 50]"
                      :page-size="listQuery.size"
                      layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </div>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form class="small-space" :model="temp" label-position="left" label-width="70px"
-               style='width: 400px; margin-left:50px;'>
-        <el-form-item label="学号" label-width="85px">
-          <el-input v-model="temp.studentId">
-          </el-input>
-        </el-form-item>
-
-        <el-form-item label="姓名" label-width="85px">
-          <el-input v-model="temp.studentName">
-          </el-input>
-        </el-form-item>
-
-        <el-form-item label="年级" label-width="85px">
-          <el-select class="btn-item" v-model="temp.grade">
-            <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
-            </el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="专业" label-width="85px">
-          <el-select class="btn-item" v-model="temp.profession">
-            <el-option v-for="item in professionOptions" :key="item" :label="item" :value="item">
-            </el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="班级" label-width="85px">
-          <el-select class="btn-item" v-model="temp.className">
-            <el-option v-for="item in classNameOptions" :key="item" :label="item" :value="item">
-            </el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="参与任务数" label-width="85px">
-          <el-input v-model="temp.finishedTaskCount" :disabled="dialogStatus!=='create'">
-          </el-input>
-        </el-form-item>
-      </el-form>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="create">确 定</el-button>
-        <el-button v-else type="primary" @click="update">确 定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -116,18 +122,60 @@
     updateGroup,
     getMembers,
     updateLeader,
-    configureMembers
+    configureMembers,
+    getGroupNames
   } from 'api/groups';
+
 
   export default {
     name: 'StudentTable',
     data() {
       return {
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
+        value6: '',
+        value7: '',
+        hasTaskOptions: [{
+          label: '有任务',
+          value: 1
+        }, {
+          label: '无任务',
+          value: 0
+        }, {
+          label: '全部',
+          value: 2
+        }],
+        suggestedGroupNames:[],
         groupColumns: [
           {
             type: 'selection',
-            align: 'center',
             width: 60,
+            align: 'center'
           },
           {
             title: '序号',
@@ -148,65 +196,64 @@
           {
             title: '建立时间',
             align: 'center',
-            key: 'buildTime'
+            key: 'builtTime'
           },
           {
             title: '组长',
             align: 'center',
-            key: 'groupLeader.student.studentName'
+            render: function (h, params) {
+              return h('span', {}, params.row.groupLeader.studentName)
+            }
           },
           {
             title: '任务',
             align: 'center',
-            key: 'className',
+            render: function (h, params) {
+              return h('span', {}, params.row.dataMiningTask.taskName)
+            }
           },
           {
-            title:'组员',
-            align:'center',
-//            key:'members',
-            type:'expand',
-//            render: (h, params) => {
-//            }
-          },
-          {
-            title: '管理',
-            key: 'manage',
-            width: 300,
+            title: '组员',
             align: 'center',
+          },
+          {
+            title: '操作',
+            align: 'center',
+            width: 200,
             render: (h, params) => {
               return h('div', [
                 h('Button', {
                   props: {
                     type: 'primary',
-                    size: 'default'
+                    size: 'small'
                   },
                   style: {
                     marginRight: '5px'
                   },
                   on: {
                     click: () => {
-//                      this.handleCheck(params.index)
+                      this.handleCheck(params.index)
                     }
                   }
-                }, '查看'),
+                }, '详情'),
                 h('Button', {
                   props: {
                     type: 'error',
-                    size: 'default'
+                    size: 'small'
                   },
                   style: {
                     marginRight: '5px'
                   },
                   on: {
                     click: () => {
-                      this.handleDelete(params.index)
+                      this.handleDelete(params.row);
                     }
                   }
                 }, '删除'),
                 h('Button', {
                   props: {
                     type: 'info',
-                    size: 'default'
+                    size: 'small'
                   },
                   on: {
                     click: () => {
@@ -225,16 +272,13 @@
           className: '班级',
         },
         listQuery: {
-          studentId: "",
-          studentName: "",
-          className: "",
-          profession:"",
-          grade:"",
+          groupName: "",
           beginDate:'',
           endDate:'',
           page: 0,
           size: 10,
-          sort: "groupId,ASC",
+          taskStatus:2,
+          sort: "builtTime,ASC",
         },
         temp: {
           studentId: '',
@@ -254,6 +298,8 @@
           },
           finishedTaskCount: 0
         },
+        selectionIds: [],
+        selectedGroups:[],
         groupList: [],
         queryTypeOptions: [
           '姓名',
@@ -276,7 +322,9 @@
           chineseValue: '空闲',
           englishValue: 'available',
         }],
-        sortOptions: [{label: '按学号升序', key: 'studentId,ASC'}, {label: '按学号降序', key: 'studentId,DESC'}],
+        sortOptions:
+          [{label: '按建立时间升序', key: 'builtTime,ASC'},
+            {label: '按建立时间降序', key: 'builtTime,DESC'}],
         multipleSelection: [],
         isDisplayFavoriteColumn: false,
         gradeOptions: [
@@ -304,10 +352,6 @@
         ],
         dialogFormVisible: false,
         dialogStatus: '',
-        textMap: {
-          update: '编辑',
-          create: '创建'
-        },
         dialogPvVisible: false,
         pvData: [],
         tableKey: 0
@@ -315,13 +359,33 @@
     },
     created() {
       this.getGroupList();
-    },
-    computed: {
-      fixPage() {
-        return this.listQuery.page + 1;
-      }
+      this.getSuggestedGroupNames();
     },
     methods: {
+      getSuggestedGroupNames() {
+        let vm =this;
+        getGroupNames().then(res =>{
+          vm.suggestedGroupNames = res.map(r =>{
+            return {
+              value:r,
+              name:r
+            }
+          });
+        })
+      },
+      querySearch(queryString, cb) {
+        var suggestedGroupNames = this.suggestedGroupNames;
+        var results = queryString ? suggestedGroupNames.filter(this.createFilter(queryString)) : suggestedGroupNames;
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (suggestedGroupName) => {
+          return (suggestedGroupName.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      handleSelect(item) {
+        console.log(item);
+      },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
@@ -347,17 +411,11 @@
           })
         })
       },
-      handleImport() {
-
-      },
-      handleFilter() {
-        this.getGroupList();
-      },
       handleSizeChange(val) {
         if (this.listQuery.size === val) {
           return
         }
-        this.listQuery.size = val;
+        this.listQuery.size= val;
         this.getGroupList();
       },
       handleCurrentChange(val) {
@@ -367,218 +425,61 @@
         this.listQuery.page = val - 1;
         this.getGroupList();
       },
-      handleBatchDelete() {
-        let confirmMessage = '您将删除所有被选择学生的信息,是否继续?';
-        let studentIds = this.multipleSelection.map(item => item.studentId);
-        let that = this;
-        this.$confirm(confirmMessage, '批量删除学生', {
-          confirmButtonText: '确认',
-          cancelButtonText: '取消',
-          beforeClose: (action, instance, done) => {
-            if (action === 'confirm') {
-              //显示加载按钮
-              instance.confirmButtonLoading = true;
-              return new Promise((resolve, reject) => {
-                //通过API发送批量删除请求
-                deleteStudentBatch(studentIds).then(response => {
-                  instance.confirmButtonLoading = false;
-                  resolve(response);
-                  done();
-                }).catch(error => {
-                  //捕获错误;
-                  instance.confirmButtonLoading = false;
-                  reject(error);
-                  done();
-                })
-              })
-            }
-            //关闭确认框
-            done();
-          }
-        }).then((message) => {
-          //删除被选中的行
-          that.groupList = that.groupList.filter(student =>
-            !that.multipleSelection.some(row => row.studentId === student.studentId));
-//          that.getGroupList();
-          that.$message({
-            message: '批量删除成功',
-            type: 'success',
-            duration: 1500
-          });
-          that.getGroupList();
-        }).catch(() => {
-          this.$message({
-            message: '取消批量删除操作',
-            type: 'info',
-            duration: 1500
-          });
-        })
+      handleSelectionChange(selections) {
+        this.selectedGroups = selections;
       },
-      markFavoriteStudent() {
-        let favoriteStudents = this.multipleSelection.filter(row => !row.favorite.value);
-        let studentIds = favoriteStudents.map(student => student.studentId);
-        let that = this;
-        markStudent(studentIds).then(response => {
-          favoriteStudents.forEach(student => {
-            student.favorite = {key: '已收藏', value: true};
-          });
-          that.$message({
-            type: 'success',
-            message: '收藏成功'
-          })
-        })
+      handTimeFilter(val) {
+        this.listQuery.beginDate = val[0];
+        this.listQuery.endDate = val[1];
       },
-      unMarkFavoriteStudent() {
-        let favoriteStudents = this.multipleSelection.filter(row => row.favorite.value);
-        let studentIds = favoriteStudents.map(student => student.studentId);
-        let that = this;
-        markStudent(studentIds).then(response => {
-          favoriteStudents.forEach(student => {
-            student.favorite = {key: '未收藏', value: false};
-          });
-          that.$message({
-            type: 'success',
-            message: '已取消收藏'
-          })
-        })
+      handleFilter() {
+
       },
-      handleModifyStatus(row, status) {
-        this.$message({
-          message: '操作成功',
-          type: 'success'
-        });
-        row.status = status;
+      handleCheck(index) {
+        this.initDetail = true;
+        this.detailTargetIndex = index;
+        this.getMembers(this._currentPageGroups[index].groupId, index);
+        let el = document.getElementById("group-view");
+        el.scrollIntoView();
       },
-      handleCreate() {
-        this.resetTemp();
-        this.dialogStatus = 'create';
-        this.dialogFormVisible = true;
-      },
-      handleUpdate(row) {
-        this.temp = Object.assign({}, row);
-        this.dialogStatus = 'update';
-        this.dialogFormVisible = true;
-      },
-//      handleDelete(row) {
-//        let confirmMessage = '您将删除学号为\'' + row.studentId + '\' '
-//          + row.studentName + ' 的所有信息,是否继续?';
-//        let that =this;
-//        let feedbackMessage = '';
-//        this.$confirm(confirmMessage,'删除学生',{
-//          confirmButtonText:'确定',
-//          cancelButtonText:'取消',
-//          type:'warning',
-//          beforeClose: (action,instance,done) =>{
-//            if(action==='confirm'){
-//              instance.confirmButtonLoading = true;
-//              return new Promise((resolve, reject) => {
-//                let studentIds = [];
-//                studentIds.push(row.studentId);
-//                deleteStudentBatch(studentIds).then((response) => {
-//                  instance.confirmButtonLoading = false;
-//                  this.$message({
-//                    message: '删除成功',
-//                    type: 'success',
-//                    duration: 1500
-//                  });
-//                  done();
-//                  resolve(response);
-//                }).catch(error => {
-//                  instance.confirmButtonLoading = false;
-//                  done();
-//                  this.$message({
-//                    message: error,
-//                    type: 'error',
-//                    duration: 1500
-//                  });
-//                })
-//              });
-//            }
-//            done();
-//          }
-//        }).then(() =>{
-//          const index = that.groupList.indexOf(row);
-//          that.groupList.splice(index, 1);
-//        }).catch(() =>{
-//          that.$message({
-//            type:'info',
-//            message:'取消删除'
-//          })
-//        });
-//      },
-      handleDelete(index) {
-        let row = this.groupList[index];
-        let confirmMessage = '您将删除学号为\'' + row.studentId + '\' '
-          + row.studentName + ' 的所有信息,是否继续?';
-        let that = this;
-        let feedbackMessage = '';
-        this.$confirm(confirmMessage, '删除学生', {
+      handleDelete(group) {
+        let vm = this;
+        let wrapGroups = [];
+        wrapGroups.push(group.groupId);
+        this.$confirm('此操作将删除名为 ' + group.groupName + ' 的分组信息, 是否继续?', '确定删除', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning',
-          beforeClose: (action, instance, done) => {
-            if (action === 'confirm') {
-              instance.confirmButtonLoading = true;
-              return new Promise((resolve, reject) => {
-                let studentIds = [];
-                studentIds.push(row.studentId);
-                deleteStudentBatch(studentIds).then((response) => {
-                  instance.confirmButtonLoading = false;
-                  this.$message({
-                    message: '删除成功',
-                    type: 'success',
-                    duration: 1500
-                  });
-                  done();
-                  resolve(response);
-                }).catch(error => {
-                  instance.confirmButtonLoading = false;
-                  done();
-                  this.$message({
-                    message: error,
-                    type: 'error',
-                    duration: 1500
-                  });
-                })
-              });
-            }
-            done();
-          }
+          type: 'warning'
         }).then(() => {
-          that.groupList.splice(index, 1);
-        }).catch(() => {
-          that.$message({
-            type: 'info',
-            message: '取消删除'
+          deleteGroups(wrapGroups).then(() => {
+            vm.$message.success('删除成功');
+            vm.groupList.splice(group, 1);
+          }).catch(error => {
           })
+        }).catch(() => {
+          this.$message.info('取消删除');
         });
       },
-      create() {
-        createStudent(this.temp).then(response => {
-          this.$message({
-            message: '添加成功',
-            type: 'success',
-            duration: 1500
-          });
-//          this.groupList.unshift(this.temp);
-          this.dialogFormVisible = false;
-        });
+      handleBatchDelete() {
+        let vm = this;
+        this.$confirm('此操作将删除已完成分组信息, 是否继续?', '确定删除', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          deleteGroups(this._selectionIds).then(() => {
+            vm.$message.success('删除成功');
+            this.getGroupList();
+          }).catch(error => {
+          })
+        })
       },
-      update() {
-        updateStudent(this.temp).then(response => {
-          for (const v of this.groupList) {
-            if (v.studentId === this.temp.studentId) {
-              const index = this.groupList.indexOf(v);
-//              this.groupList.splice(index, 1, this.temp);
-              break;
-            }
-          }
-          this.$message({
-            type: 'success',
-            message: '更新成功'
-          });
-        });
-        this.dialogFormVisible = false;
+      getMembers(groupId, index) {
+        let vm = this;
+        getMembers(groupId).then(res => {
+          vm.$set(vm._currentPageGroups[index], 'groupMembers', res);
+        }).catch(error => {
+        })
       },
       resetTemp() {
         this.temp = {
@@ -600,31 +501,23 @@
           finishedTaskCount: 0
         };
       },
-      handleFetchPv(pv) {
-        fetchPv(pv).then(response => {
-          this.pvData = response.data.pvData;
-          this.dialogPvVisible = true;
-        })
+    },
+    computed: {
+      fixPage() {
+        return this.listQuery.page + 1;
       },
-      handleDownload() {
-        require.ensure([], () => {
-          const {export_json_to_excel} = require('vendor/Export2Excel');
-          const tHeader = ['学号', '姓名', '年级', '专业', '班级', '参与任务数'];
-          const filterVal = ['studentId', 'studentName', 'grade', 'profession', 'className', 'finishedTaskCount'];
-          const data = this.formatJson(filterVal, this.list);
-          export_json_to_excel(tHeader, data, '学生基本信息表');
-        })
+      _selectionIds() {
+        return this.selectedGroups.map(selection => selection.groupId);
       },
-      formatJson(filterVal, jsonData) {
-        return jsonData.map(v => filterVal.map(j => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
-          } else {
-            return v[j]
+      _suggestedGroupNames() {
+        this.suggestedGroupNames.map( s =>{
+          return {
+            value : s,
+            groupName:s
           }
-        }))
-      },
-    }
+        })
+      }
+    },
   }
 </script>
 

@@ -92,6 +92,11 @@ export default {
               label:'忽略',
             },
             students:{
+              className:'班级',
+              studentId: '学号',
+              studentName: '学生姓名',
+              profession: "专业",
+              grade:'年级',
               placeholder:'你的人力资源极度匮乏,赶快加入您即将要抱团的学生吧!',
               label:'指定',
             },
@@ -113,7 +118,16 @@ export default {
           }
         }
       },
-
+      list:{
+        filter:{
+          beginDate:'建立时间的区间起点',
+          endDate:'建立时间区间的终点',
+          builtTime:'建立时间',
+          groupName:'队伍名称',
+          leaderStudentId:'队长学号',
+          taskName:'任务名称'
+        }
+      },
       placeholder: '没有匹配到相关团队。| 想一起玩吗？快来创建团队呀。',
       keyboards: [{
         category: '操作',

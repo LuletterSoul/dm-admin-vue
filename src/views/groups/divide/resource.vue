@@ -135,7 +135,7 @@
     name: "resource",
     data() {
       return {
-        isHasTask: '',
+        isHasTask: 2,
         hasTaskOptions: [{
           label: '有任务',
           value: 1

@@ -87,6 +87,14 @@ export function configureMembers(groupId,studentIds) {
   });
 }
 
+export function getGroupNames() {
+  return fetch({
+    url: GROUP_PATH.concat('/').concat('/group_names'),
+    method: 'get',
+  });
+}
+
+
 
 
 

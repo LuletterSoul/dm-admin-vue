@@ -33,6 +33,21 @@
               <a href="https://www.google.com/search?q=iView" target="_blank" class="demo-auto-complete-more">查看所有结果</a>
             </AutoComplete>
           </FormItem>
+          <FormItem :label="$t('p.group.divide.oneKey.taskForm.ignore.label')">
+            <i-switch v-model="config.isIgnoreArrangedTask"
+                      @on-change="handleAddAll"
+                      size="large">
+              <span slot="open">On</span>
+              <span slot="close">Off</span>
+            </i-switch>
+          </FormItem>
+          <FormItem :label="$t('p.group.divide.oneKey.taskForm.builder.label')">
+            <Select>
+              <Option value="beijing">New York</Option>
+              <Option value="shanghai">London</Option>
+              <Option value="shenzhen">Sydney</Option>
+            </Select>
+          </FormItem>
           <FormItem :label="$t('p.group.divide.oneKey.taskForm.timeRange.label')">
             <el-row>
               <el-col :span="11">
@@ -45,7 +60,7 @@
                 </DatePicker>
               </el-col>
               <el-col :span="2" style="text-align: center">
-                -
+                 -
               </el-col>
               <el-col :span="11">
                 <DatePicker type="datetime"
@@ -58,37 +73,56 @@
               </el-col>
             </el-row>
           </FormItem>
-          <FormItem :label="$t('p.group.divide.oneKey.taskForm.ignore.label')">
-            <i-switch v-model="config.isIgnoreArrangedTask" size="large">
-              <span slot="open">On</span>
-              <span slot="close">Off</span>
-            </i-switch>
-          </FormItem>
-          <FormItem :label="$t('p.group.divide.oneKey.taskForm.builder.label')">
-            <Select>
-              <Option value="beijing">New York</Option>
-              <Option value="shanghai">London</Option>
-              <Option value="shenzhen">Sydney</Option>
-            </Select>
-          </FormItem>
+          <el-row :gutter="30">
+            <el-col :span="4">
+              <FormItem>
+                <Input v-model="studentQuery.studentId"
+                       :placeholder="$t('p.group.divide.oneKey.taskForm.students.studentId')"
+                       clearable>
+                </Input>
+              </FormItem>
+            </el-col>
+            <el-col :span="4">
+              <Select v-model="studentQuery.className"
+                      :placeholder="$t('p.group.divide.oneKey.taskForm.students.className')" clearable>
+                <Option v-for="(item,index) in classNameOptions" :value="item" :key="index">{{ item }}</Option>
+              </Select>
+            </el-col>
+            <el-col :span="4">
+              <Select
+                v-model="studentQuery.grade"
+                :placeholder="$t('p.group.divide.oneKey.taskForm.students.grade')" clearable>
+                <Option v-for="(item,index) in gradeOptions" :value="item" :key="index">{{ item }}</Option>
+              </Select>
+            </el-col>
+            <el-col :span="4">
+              <Select
+                v-model="studentQuery.profession"
+                :placeholder="$t('p.group.divide.oneKey.taskForm.students.profession')" clearable>
+                <Option v-for="(item,index) in professionOptions" :value="item" :key="index">{{ item }}</Option>
+              </Select>
+            </el-col>
+              <Button type="primary" shape="circle" icon="ios-search" @click="handleFilter"></Button>
+          </el-row>
           <FormItem :label="$t('p.group.divide.oneKey.taskForm.students.label')">
             <Transfer
               :data="_assignedStudents"
               :target-keys="config.specifiedDividingStudents"
-              :selected-keys="selectedStudentIds"
               :list-style="listStyle"
               :not-found-text="$t('p.group.divide.oneKey.taskForm.students.placeholder')"
               @on-change="handleChange"
-              @on-selected-change="handleSelectedChange"
               :filter-method="filterStudents"
-              filterable>
+              :titles="['符合条件的学生', '候选学生']">
               <div :style="{float: 'right', margin: '5px'}">
                 <Button type="ghost" size="small">重置</Button>
               </div>
             </Transfer>
           </FormItem>
           <FormItem :label="$t('p.group.divide.oneKey.taskForm.gradient.label')">
-            <Slider v-model="config.gradient" show-input></Slider>
+            <el-slider
+              v-model="config.gradient"
+              show-input>
+            </el-slider>
           </FormItem>
           <FormItem :label="$t('p.group.divide.oneKey.taskForm.operationCode.label')">
             <Input v-model="config.buildingKey"
@@ -116,6 +150,7 @@
 <script>
   import {fetchTaskList} from 'api/tasks';
   import {getLeisureStudents, createGroupPreview} from 'api/groups';
+  import {fetchOptions} from 'api/students';
 
   const moment = require('moment');
   export default {
@@ -149,10 +184,21 @@
           }
         ],
         studentQuery: {
+          studentId: "",
+          studentName: "",
+          className: "",
+          profession: "",
+          grade: "",
+          page: 0,
+          size: 10,
+          sort: "studentId,ASC",
           //默认查询一个月内不执行任何发掘任务的学生列表
           beginDate: moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss'),
           endDate: moment().format('YYYY-MM-DD HH:mm:ss'),
         },
+        classNameOptions:[],
+        professionOptions:[],
+        gradeOptions:[],
         taskQuery: {
           taskName: '',
           plannedBeginDate: '',
@@ -165,8 +211,8 @@
           sort: ''
         },
         assignedStudents: [],
-        selectedStudentIds: [],
         previewGroups: [],
+        selectedKeys:this._selectedKeys,
         value4: '',
         listStyle: {
           width: '46%',
@@ -229,8 +275,58 @@
       this.$store.dispatch('SetStep',1);
       this.getTasks();
       this.getStudents();
+      this.getOptions();
     },
     methods: {
+      resetStudentQuery() {
+        this.studentQuery = {
+          studentId: "",
+          studentName: "",
+          className: "",
+          profession: "",
+          grade: "",
+          page: 0,
+          size: 10,
+          sort: "studentId,ASC",
+          //默认查询一个月内不执行任何发掘任务的学生列表
+          beginDate: moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss'),
+          endDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+        };
+        this.getStudents();
+      },
+      resetDefaultQuery() {
+        this.studentQuery = {
+          studentId: "",
+          studentName: "",
+          className: "",
+          profession: "",
+          grade: "",
+          page: 0,
+          size: 10,
+          sort: "studentId,ASC",
+          //默认查询一个月内不执行任何发掘任务的学生列表
+          beginDate: '',
+          endDate: '',
+        };
+        this.getStudents();
+      },
+      handleAddAll(isAddAll) {
+        if(isAddAll){
+          this.studentQuery.beginDate = '';
+          this.studentQuery.endDate = '';
+          this.config.beginDate = '';
+          this.config.endDate = '';
+        }else{
+          this.studentQuery.beginDate=moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss')
+          this.studentQuery.endDate = moment().format('YYYY-MM-DD HH:mm:ss');
+          this.config.beginDate = this.studentQuery.beginDate;
+          this.config.endDate = this.studentQuery.endDate;
+        }
+        this.getStudents();
+      },
+      handleFilter() {
+        this.getStudents();
+      },
       handleSubmitDividingConfig() {
         let vm = this;
         vm.previewLoading = true;
@@ -243,7 +339,6 @@
             type: 'success',
             duration: 1500
           });
-          console.log(vm.previewGroups);
           //保存设置
           vm.$store.dispatch('SetSetting', vm.config);
           //保存预览分组
@@ -265,9 +360,6 @@
           })
         });
       },
-      handleSelectedChange(sourceSelectedStudents, targetSelectedStudents) {
-
-      },
       handleChange(newTargetStudentIds) {
         this.config.specifiedDividingStudents = newTargetStudentIds;
       },
@@ -284,9 +376,17 @@
       getStudents() {
         let vm = this;
         getLeisureStudents(Object.assign({}, this.studentQuery)).then((res) => {
-          vm.assignedStudents = res.content;
+          vm.assignedStudents = res;
         }).catch(error => {
         });
+      },
+      getOptions() {
+        let vm = this;
+        fetchOptions().then(res =>{
+          vm.classNameOptions = res.classNameOptions;
+          vm.professionOptions = res.professionOptions;
+          vm.gradeOptions = res.gradeOptions;
+        })
       },
       async getTasks() {
         let vm = this;
@@ -325,6 +425,9 @@
           };
         })
       },
+      _selectedKeys() {
+        return this.assignedStudents.map(s => s.studentId);
+      }
     }
   }
 </script>
