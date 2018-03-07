@@ -79,6 +79,7 @@
                   @change="handTimeFilter"
                   type="daterange"
                   unlink-panels
+                  format="yyyy 年 MM 月 dd 日 HH:mm:ss"
                   value-format="yyyy-MM-dd HH:mm:ss"
                   range-separator="至"
                   :start-placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')"

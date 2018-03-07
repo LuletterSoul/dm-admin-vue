@@ -167,7 +167,6 @@ export const asyncRouterMap = [
             name: '分组预览',
             icon: 'group',
             beforeEnter: (to, from, next) => {
-              console.log(store.getters.previewGroups.dataMiningGroups);
               if (store.getters.previewGroups.dataMiningTask === ''
                   &&!store.getters.previewGroups.dataMiningGroups.length) {
                 Notification({

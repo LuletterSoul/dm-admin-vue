@@ -49,7 +49,7 @@
         enter-active-class="animated bounceIn"
         leave-active-class="animated bounceOutRight">
         <group-view
-          v-if="_length&&initDetail" :groups="_detailTarget" :key="this._detailTarget[0].groupId">
+          v-if="_length&&initDetail" :groups="_detailTarget" :key="this._wrappedDetailTarget[0].groupId">
         </group-view>
       </transition>
     </el-row>
@@ -146,7 +146,7 @@
                   },
                   on: {
                     click: () => {
-                      this.handleDelete(params.row);
+                      this.handleDelete(params.row,params.index);
                     }
                   }
                 }, '删除'),
@@ -208,12 +208,14 @@
         if (this.size === val) {
           return
         }
+        this.detailTargetIndex = null;
         this.size = val;
       },
       handleCurrentChange(val) {
         if (this.page === val - 1) {
           return
         }
+        this.detailTargetIndex = null;
         this.page = val - 1;
       },
       handleSelectionChange(selections) {
@@ -226,7 +228,7 @@
         let el = document.getElementById("group-view");
         el.scrollIntoView();
       },
-      handleDelete(group) {
+      handleDelete(group,index) {
         let vm = this;
         let wrapGroups = [];
         wrapGroups.push(group.groupId);
@@ -236,8 +238,8 @@
           type: 'warning'
         }).then(() => {
           deleteGroups(wrapGroups).then(() => {
+            vm._newGroups.splice(index, 1);
             vm.$message.success('删除成功');
-              vm._newGroups.splice(group, 1);
           }).catch(error => {
           })
         })
@@ -299,7 +301,7 @@
         }
         return this._newGroups.slice(begin, end);
       },
-      _detailTarget() {
+      _wrappedDetailTarget() {
         if (!this._length) {
           return null;
         }

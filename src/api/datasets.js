@@ -52,7 +52,6 @@ export async function getSets(collectionId,query) {
 }
 
 export async function downloadSetZip(collectionId,containerIds) {
-  console.log(containerIds);
   return fetch({
     url: CONTAINER_BASE_PATH.concat("/").concat("zips"),
     method: 'post',

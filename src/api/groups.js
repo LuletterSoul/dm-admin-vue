@@ -45,11 +45,11 @@ export function deleteGroups(ids) {
 }
 
 //更新分组信息
-export function updateGroup(group) {
+export function updateGroup(groupDto) {
   return fetch({
     url:GROUP_PATH,
     method:'put',
-    data:group
+    data:groupDto
   })
 }
 

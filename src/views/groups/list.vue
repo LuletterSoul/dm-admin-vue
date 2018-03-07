@@ -1,5 +1,13 @@
 <template>
   <div class="calendar-list-container test">
+    <group-modal :to-group="_updatingTargetGroup"
+                 @on-closed="handleClosed"
+                 @on-confirm="handleUpdateConfirm"
+                 :to-show="showEditModal"
+                 :to-candidates="allStudents"
+                 :to-group-members="_updatingTargetGroup.groupMembers"
+                 :to-task-status="taskStatusOptions">
+    </group-modal>
     <el-row>
       <el-col :offset="10" :span="14">
         <el-row>
@@ -24,7 +32,6 @@
                   v-model="wrappedSuggestedGroupLeader"
                   :fetch-suggestions="groupLeaderSearch"
                   @select="handleLeaderFilter"
-                  @change="handleFilter"
                   select-when-unmatched
                   :placeholder="$t('p.group.list.filter.leader')">
                 </el-autocomplete>
@@ -64,6 +71,7 @@
                   @change="handTimeFilter"
                   type="daterange"
                   unlink-panels
+                  format="yyyy 年 MM 月 dd 日 HH:mm:ss"
                   value-format="yyyy-MM-dd HH:mm:ss"
                   range-separator="至"
                   :start-placeholder="$t('p.group.list.filter.beginDate')"
@@ -72,7 +80,8 @@
                 </el-date-picker>
               </el-col>
               <el-col :span="1">
-                <Button style="margin-top: 2px" type="primary" shape="circle" icon="ios-search" @click="handleFilter"></Button>
+                <Button style="margin-top: 2px" type="primary" shape="circle" icon="ios-search"
+                        @click="handleFilter"></Button>
               </el-col>
               <el-col :span="1">
                 <el-button size="medium"
@@ -111,18 +120,17 @@
         </el-pagination>
       </el-col>
     </el-row>
-
     <el-row id="group-view" style="margin-top: 60px">
       <el-col>
-          <transition
-            mode="out-in"
-            name="custom-classes-transition"
-            enter-active-class="animated bounceIn"
-            leave-active-class="animated bounceOutRight">
-            <group-view
-              v-if="_length&&initDetail" :groups="_detailTarget" :key="this._detailTarget[0].groupId">
-            </group-view>
-          </transition>
+        <transition
+          mode="out-in"
+          name="custom-classes-transition"
+          enter-active-class="animated bounceIn"
+          leave-active-class="animated bounceOutRight">
+          <group-view
+            v-if="_wrappedDetailTarget" :groups="_wrappedDetailTarget" :key="this._wrappedDetailTarget[0].groupId">
+          </group-view>
+        </transition>
       </el-col>
     </el-row>
   </div>
@@ -130,6 +138,7 @@
 
 <script>
   import {parseTime, deleteEmptyProperty} from 'utils';
+  import {fetchStudentList} from 'api/students';
   import {
     getGroupList,
     getLeisureStudents,
@@ -147,14 +156,26 @@
   } from 'api/groups';
 
   import GroupView from '../components/groupView';
-
+  import GroupModal from '../components/groupModal';
 
   export default {
-    name: 'StudentTable',
-    components:{GroupView},
+    name: 'group-list',
+    components: {GroupView, GroupModal},
+
     data() {
       let vm = this;
       return {
+        allStudents: [],
+        groupModel:{
+          groupName:'',
+          groupLeader:{
+            studentId:'',
+            studentName:'',
+            className:'',
+          },
+          taskStatus:'',
+          groupMembers:[],
+        },
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -184,20 +205,11 @@
         },
         value6: '',
         value7: '',
-        taskStatusOptions: [{
-          label: '有任务',
-          value: 1
-        }, {
-          label: '无任务',
-          value: 0
-        }, {
-          label: '全部',
-          value: 2
-        }],
-        initDetail:false,
+        showEditModal: false,
+        taskStatusOptions: [],
         suggestedGroupNames: [],
-        suggestedGroupLeaders:[],
-        wrappedSuggestedGroupLeader:'',
+        suggestedGroupLeaders: [],
+        wrappedSuggestedGroupLeader: '',
         groupColumns: [
           {
             type: 'selection',
@@ -237,13 +249,13 @@
             title: '任务',
             align: 'center',
             render: function (h, params) {
-              return h('span', {},  vm.renderTask(params.row.dataMiningTask))
+              return h('span', {}, vm.renderTask(params.row.dataMiningTask))
             }
           },
           {
             title: '建队时间',
             align: 'center',
-            key:'builtTime'
+            key: 'builtTime'
           },
           {
             title: '组员',
@@ -254,8 +266,8 @@
             align: 'center',
             render: function (h, params) {
               return h('Tag', {
-                props:vm.renderTaskStatusTag(params.row.taskStatus)
-              },  params.row.taskStatus.description)
+                props: vm.renderTaskStatusTag(params.row.taskStatus)
+              }, params.row.taskStatus.description)
             }
           },
           {
@@ -288,7 +300,7 @@
                   },
                   on: {
                     click: () => {
-                      this.handleDelete(params.row);
+                      this.handleDelete(params.row,params.index);
                     }
                   }
                 }, '删除'),
@@ -299,7 +311,7 @@
                   },
                   on: {
                     click: () => {
-                      this.handleUpdate(params.index)
+                      this.handleEdit(params.index)
                     }
                   }
                 }, '修改')
@@ -313,13 +325,13 @@
           groupName: "",
           beginDate: '',
           endDate: '',
-          leaderStudentId:'',
+          leaderStudentId: '',
           page: 0,
           size: 20,
           taskStatus: null,
           sort: "builtTime,ASC",
         },
-        detailTargetIndex:null,
+        detailTargetIndex: null,
         temp: {
           studentId: '',
           studentName: '',
@@ -355,8 +367,19 @@
       this.getSuggestedGroupNames();
       this.getSuggestedGroupLeaders();
       this.getTaskStatusOptions();
+      this.getAllStudents();
     },
     methods: {
+      getAllStudents() {
+        let vm = this;
+        fetchStudentList({fetch: true}).then(res => {
+          vm.allStudents = res.content;
+        }).catch(error => {
+        });
+      },
+      handleClosed(){
+        this.showEditModal = false;
+      },
       getSuggestedGroupNames() {
         let vm = this;
         getGroupNames().then(res => {
@@ -373,7 +396,7 @@
         getGroupLeaders().then(res => {
           vm.suggestedGroupLeaders = res.map(r => {
             return {
-              value: r.studentId + ' - '+r.studentName + ' - ' + r.className + ' - '+r.profession,
+              value: r.studentId + ' - ' + r.studentName + ' - ' + r.className + ' - ' + r.profession,
               info: r
             }
           });
@@ -381,7 +404,7 @@
         });
       },
       getTaskStatusOptions() {
-        let vm =this;
+        let vm = this;
         getTaskStatus().then((res) => {
           vm.taskStatusOptions = res;
         }).catch(error => {
@@ -435,6 +458,7 @@
         if (this.listQuery.size === val) {
           return
         }
+        this.detailTargetIndex = null;
         this.listQuery.size = val;
         this.getGroupList();
       },
@@ -442,6 +466,7 @@
         if (this.listQuery.page === val - 1) {
           return
         }
+        this.detailTargetIndex = null;
         this.listQuery.page = val - 1;
         this.getGroupList();
       },
@@ -455,14 +480,21 @@
       handleFilter() {
         this.getGroupList();
       },
+      handleGroupLeaderFilter() {
+        this.listQuery.leaderStudentId = '';
+      },
+      handleEdit(index) {
+        this.detailTargetIndex = index;
+        this.getMembers(this.groupList[index].groupId, index);
+        this.showEditModal = true;
+      },
       handleCheck(index) {
-        this.initDetail = true;
         this.detailTargetIndex = index;
         this.getMembers(this.groupList[index].groupId, index);
         let el = document.getElementById("group-view");
         el.scrollIntoView();
       },
-      handleDelete(group) {
+      handleDelete(group,index) {
         let vm = this;
         let wrapGroups = [];
         wrapGroups.push(group.groupId);
@@ -473,7 +505,7 @@
         }).then(() => {
           deleteGroups(wrapGroups).then(() => {
             vm.$message.success('删除成功');
-            vm.groupList.splice(group, 1);
+            vm.groupList.splice(index, 1);
           }).catch(error => {
           })
         }).catch(() => {
@@ -494,12 +526,29 @@
           })
         })
       },
+      handleUpdateConfirm(groupDto) {
+        let vm = this;
+        updateGroup(groupDto).then(res => {
+          vm.groupList.splice(vm.detailTargetIndex,1, res);
+          vm.$message({
+            showClose: true,
+            message: '更新分组信息成功',
+            type: 'success'
+          });
+          vm.detailTargetIndex = null;
+        }).catch(error => {
+
+        });
+      },
       getMembers(groupId, index) {
         let vm = this;
-        getMembers(groupId).then(res => {
-          vm.$set(vm.groupList[index], 'groupMembers', res);
-        }).catch(error => {
-        })
+        let current = vm.groupList[index];
+        if(current.groupMembers ===undefined) {
+          getMembers(groupId).then(res => {
+            vm.$set(current, 'groupMembers', res);
+          }).catch(error => {
+          })
+        }
       },
       resetTemp() {
         this.temp = {
@@ -522,10 +571,10 @@
         };
       },
       renderTask(task) {
-        if(task ===undefined) {
+        if (task === undefined) {
           return '无';
         }
-        else{
+        else {
           return task.taskName;
         }
       },
@@ -552,7 +601,7 @@
             break;
         }
         return {
-          type:'dot',
+          type: 'dot',
           color: tagColor
         };
       }
@@ -567,22 +616,18 @@
       _selectionIds() {
         return this.selectedGroups.map(selection => selection.groupId);
       },
-      _detailTarget() {
-        if (!this._length || !this.detailTargetIndex) {
+      _wrappedDetailTarget() {
+        if (!this._length || this.detailTargetIndex === null) {
           return null;
         }
         let wrap = [];
         wrap.push(this.groupList[this.detailTargetIndex]);
         return wrap;
       },
-      _suggestedGroupNames() {
-        this.suggestedGroupNames.map(s => {
-          return {
-            value: s,
-            groupName: s
-          }
-        })
-      }
+      _updatingTargetGroup() {
+        return this._wrappedDetailTarget ? Object.assign({},this._wrappedDetailTarget[0]) : this.groupModel;
+      },
+
     },
   }
 </script>

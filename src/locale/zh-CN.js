@@ -44,10 +44,12 @@ export default {
         description: '这里将展示你所创建和管理的分组。'
       },
       modal: {
-        groupName:'队名',
+        groupName:'组名',
         arrangementId:'分组编号',
-        groupLeader:'队长',
-        taskName:'任务名称'
+        groupLeader:'组长',
+        taskName:'分配/重分配',
+        taskStatus:'任务状态',
+        groupMembers:'组员',
       },
       divide:{
         tips:{
@@ -119,12 +121,20 @@ export default {
         }
       },
       list:{
+        update:{
+          operations:'[\'加入分组\',\'移出分组\']',
+          taskPlaceholder:'选择数据挖掘任务',
+          placeholder:'更新队伍信息',
+          success:'更新成功',
+          cancel:'取消更新',
+          failed:'更新失败'
+        },
         filter:{
           beginDate:'建立时间的区间起点',
           endDate:'建立时间区间的终点',
           builtTime:'建立时间',
           groupName:'队伍名称',
-          leader:'队长学号',
+          leader:'队长信息',
           taskName:'任务名称'
         }
       },
