@@ -58,3 +58,9 @@ export function importFromExcel(file,progress_uuid) {
     params:{'proc_query_key' : progress_uuid}
   })
 }
+export function fetchOptions() {
+  return fetch({
+    url:'/options/student',
+    method:'get',
+  })
+}

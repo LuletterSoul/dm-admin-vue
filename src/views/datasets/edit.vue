@@ -19,7 +19,10 @@
 
       <div style="margin-top:20px;clear:right;padding: 20px;">
         <template>
-          <Table :loading="loading" border :columns="dataSetTable1" :data="dataSetInfo" @on-selection-change="handleSelectionChange" stripe ></Table>
+          <Table :loading="loading" border :columns="dataSetTable1"
+                 :data="dataSetInfo"
+                 @on-selection-change="handleSelectionChange"
+                 stripe ></Table>
             <div style="margin: 10px;overflow: hidden">
               <div style="float: right;">
                 <Page :total="totalElements" :current="1"
@@ -98,7 +101,8 @@
              </Row>
            </FormItem>
            <FormItem label="描述摘要" >
-             <Input v-model="temp.abstractInfo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
+             <Input v-model="temp.abstractInfo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入...">
+             </Input>
            </FormItem>
          </Form>
       </Modal>
@@ -229,7 +233,7 @@
 
           listQuery: {
             page: 0,
-            size: 10,
+            size: 20,
             direction:'DESC',
           },
           temp:{

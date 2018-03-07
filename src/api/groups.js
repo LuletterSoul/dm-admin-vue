@@ -19,11 +19,11 @@ export function createGroupPreview(config) {
   })
 }
 
-//获取预览分组
-export function getGroupPreview(key) {
+//确认创建分组
+export function createGroupsByKey(key) {
   return fetch({
     url:GROUP_PATH.concat('/dividing_groups').concat('/').concat(key),
-    method:'get',
+    method:'post',
   })
 }
 
@@ -45,11 +45,11 @@ export function deleteGroups(ids) {
 }
 
 //更新分组信息
-export function updateGroup(group) {
+export function updateGroup(groupDto) {
   return fetch({
     url:GROUP_PATH,
     method:'put',
-    data:group
+    data:groupDto
   })
 }
 
@@ -86,6 +86,28 @@ export function configureMembers(groupId,studentIds) {
     data: studentIds
   });
 }
+
+export function getGroupNames() {
+  return fetch({
+    url: GROUP_PATH.concat('/').concat('/group_names'),
+    method: 'get',
+  });
+}
+
+export function getGroupLeaders() {
+  return fetch({
+    url: GROUP_PATH.concat('/').concat('/group_leaders'),
+    method: 'get',
+  });
+}
+
+export function getTaskStatus() {
+  return fetch({
+    url: '/options/groups/task/status',
+    method: 'get',
+  });
+}
+
 
 
 

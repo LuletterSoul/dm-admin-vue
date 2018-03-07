@@ -28,6 +28,7 @@ import IconSvg from '@/components/Icon-svg/index.vue'
 import Balloon from '@/components/balloon/index.vue';
 import AnimateTransition from '@/components/transition/AnimateTransition';
 import SingleTransition from '@/components/transition/SingleTransition';
+import EmPlaceholder from '@/components/placeholder'
 import {getToken} from '@/utils/auth'
 import 'iview/dist/styles/iview.css';    // 使用 CSS
 import {SweetModal, SweetModalTab} from 'sweet-modal-vue'
@@ -73,6 +74,7 @@ Vue.component(EmSpot.name, EmSpot);
 Vue.component(Balloon.name, Balloon);
 Vue.component(AnimateTransition.name, AnimateTransition);
 Vue.component(SingleTransition.name, SingleTransition);
+Vue.component(EmPlaceholder.name, EmPlaceholder);
 Vue.use(vueWaves);
 
 Vue.mixin({

@@ -155,7 +155,6 @@
 
 <style>
   .title{
-    width:15%;
     font:bold 36px 微软雅黑;
   }
   .first-div{

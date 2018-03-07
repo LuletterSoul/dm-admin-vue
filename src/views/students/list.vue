@@ -204,20 +204,10 @@
           updateStudent,
           deleteStudentBatch,
           markStudent,
-          unMakrStudent} from 'api/students';
+          unMakrStuden,
+          fetchOptions
+  } from 'api/students';
 
-  const calendarTypeOptions = [
-    { key: 'CN', display_name: '中国' },
-    { key: 'US', display_name: '美国' },
-    { key: 'JP', display_name: '日本' },
-    { key: 'EU', display_name: '欧元区' }
-  ];
-
-  // arr to obj
-  const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
-    acc[cur.key] = cur.display_name;
-    return acc
-  }, {});
 
   export default {
     name: 'StudentTable',
@@ -312,10 +302,6 @@
         ],
         total: null,
         listLoading: false,
-        table:{
-          studentName:'学生姓名',
-          className:'班级',
-        },
         listQuery: {
           studentId: "",
           studentName: "",
@@ -323,7 +309,7 @@
           profession:"",
           grade:"",
           page: 0,
-          size: 10,
+          size: 20,
           sort:"studentId,ASC",
         },
         temp: {
@@ -369,29 +355,9 @@
         sortOptions: [{label: '按学号升序', key: 'studentId,ASC'}, {label: '按学号降序', key: 'studentId,DESC'}],
         multipleSelection:[],
         isDisplayFavoriteColumn:false,
-        gradeOptions:[
-          '2012级',
-          '2013级',
-          '2014级',
-          '2015级',
-          '2016级',
-          '2017级',
-        ],
-        professionOptions:[
-          '软件工程',
-          '计算机科学与技术',
-          '人工智能',
-          '网络工程'
-        ],
-        classNameOptions:[
-          '计科一班',
-          '计科二班',
-          '软工一班',
-          '软工二班',
-          '网工一班',
-          '网工二班',
-          '智能实验班'
-        ],
+        gradeOptions:[],
+        professionOptions:[],
+        classNameOptions:[],
         dialogFormVisible: false,
         dialogStatus: '',
         textMap: {
@@ -404,21 +370,8 @@
       };
     },
     created() {
-//      this.getList();
       this.getStudentList();
-    },
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger'
-        };
-        return statusMap[status]
-      },
-      typeFilter(type) {
-        return calendarTypeKeyValue[type]
-      }
+      this.getOptions();
     },
     computed: {
       fixPage(){
@@ -436,6 +389,14 @@
         }
         this.$refs.studentTable.toggleRowSelection(row);
         this.isDisplayFavoriteColumn = !this.isDisplayFavoriteColumn;
+      },
+      getOptions() {
+        let vm = this;
+        fetchOptions().then(res =>{
+          vm.gradeOptions = res.gradeOptions;
+          vm.classNameOptions = res.classNameOptions;
+          vm.professionOptions = res.gradeOptions;
+        })
       },
       getStudentList() {
         let that = this;

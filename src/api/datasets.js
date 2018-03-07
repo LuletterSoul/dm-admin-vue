@@ -52,7 +52,6 @@ export async function getSets(collectionId,query) {
 }
 
 export async function downloadSetZip(collectionId,containerIds) {
-  console.log(containerIds);
   return fetch({
     url: CONTAINER_BASE_PATH.concat("/").concat("zips"),
     method: 'post',
@@ -135,35 +134,8 @@ export function deleteBatchDataSets(containerIds) {
 
 export function fetchOptions() {
   return fetch({
-    url:'/options',
+    url:'/options/data_set',
     method:'get',
-  })
-}
-
-export function fetchOptionalTaskTypes() {
-  return fetch({
-    url:'/miningTaskTypes',
-    method:'get'
-  })
-}
-
-export function fetchOptionaAttributeTypes() {
-  return fetch({
-    url:'/attributeChars',
-    method:'get'
-  })
-}
-
-export function fetchOptionalCollectionChars() {
-  return fetch({
-    url:'/collectionChars',
-    method:'get'
-  })
-}
-
-export function fetchOptionalArea() {
-  return fetch({
-    url:'/'
   })
 }
 

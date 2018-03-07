@@ -4,22 +4,14 @@
       导入学生
     </div>
     <div class="btn-import-container">
-      <!--<el-upload class="filter-item">-->
-      <!--action="Deprecated"-->
-      <!--ref="importExcel"-->
-      <!--accpept=".xlsx"-->
-      <!--:auto-upload="false"-->
-      <!--:on-preview="handleFilePreview"-->
-      <!--:on-remove="handleFileRemove"-->
-      <!--:before-remove="beforeFileRemove"-->
-      <!--:before-upload="handleBeforeUpload"-->
-      <!--:file-list="fileList">-->
-      <el-button class="btn-item" type="warning" plain icon="el-icon-circle-close-outline" @click="handleCancelImport" :disabled="!studentList.length">撤销
+      <el-button class="btn-item" type="warning"
+                 plain
+                 icon="el-icon-circle-close-outline"
+                 @click="handleCancelImport"
+                 :disabled="!studentList.length">撤销
       </el-button>
       <el-button class="btn-item" type="primary" plain icon="el-icon-upload" @click="uploadDialogVisible =true">导入
       </el-button>
-      <!--<div slot="tip" class="el-upload__tip">只能上传符合.xlsx导入模板的文件</div>-->
-      <!--</el-upload>-->
       <el-dialog
         title="导入"
         :visible.sync="uploadDialogVisible"
@@ -120,7 +112,7 @@
           profession: "",
           grade: "",
           page: 0,
-          size: 10,
+          size: 20,
           sort: "studentId,ASC",
         },
         temp: {
@@ -217,6 +209,20 @@
           return 'demo-table-error-row';
         }
 //        return '';
+      },
+      handleSizeChange(val) {
+        if (this.listQuery.size === val) {
+          return
+        }
+        this.listQuery.size = val;
+        this.getStudentList();
+      },
+      handleCurrentChange(val) {
+        if (this.listQuery.page === val - 1) {
+          return
+        }
+        this.listQuery.page = val - 1;
+        this.getStudentList();
       },
       handleFileRemove(file, fileList) {
         console.log(file, fileList);

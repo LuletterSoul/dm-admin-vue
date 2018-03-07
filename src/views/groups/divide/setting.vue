@@ -27,39 +27,15 @@
                 <Option v-for="option in item.content" :value="option.taskName" :key="option.taskId">
                   <span class="demo-auto-complete-title">{{ option.taskName }} </span>
                   <span class="auto-complete-option">建立时间:{{ option.builtTime }}</span>
-                  <span class="auto-complete-option">任务状态:{{ option.status.description }}</span>
                 </Option>
               </div>
               <a href="https://www.google.com/search?q=iView" target="_blank" class="demo-auto-complete-more">查看所有结果</a>
             </AutoComplete>
           </FormItem>
-          <FormItem :label="$t('p.group.divide.oneKey.taskForm.timeRange.label')">
-            <el-row>
-              <el-col :span="11">
-                <DatePicker type="datetime"
-                            @on-change="setBegin"
-                            :value="config.beginDate"
-                            style="width: 100%"
-                            format="yyyy-MM-dd HH:mm:ss"
-                            :placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')">
-                </DatePicker>
-              </el-col>
-              <el-col :span="2" style="text-align: center">
-                -
-              </el-col>
-              <el-col :span="11">
-                <DatePicker type="datetime"
-                            :value="config.endDate"
-                            format="yyyy-MM-dd HH:mm:ss"
-                            style="width: 100%"
-                            @on-change="setEnd"
-                            :placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')">
-                </DatePicker>
-              </el-col>
-            </el-row>
-          </FormItem>
           <FormItem :label="$t('p.group.divide.oneKey.taskForm.ignore.label')">
-            <i-switch v-model="config.isIgnoreArrangedTask" size="large">
+            <i-switch v-model="config.isIgnoreArrangedTask"
+                      @on-change="handleAddAll"
+                      size="large">
               <span slot="open">On</span>
               <span slot="close">Off</span>
             </i-switch>
@@ -71,24 +47,98 @@
               <Option value="shenzhen">Sydney</Option>
             </Select>
           </FormItem>
+          <FormItem :label="$t('p.group.divide.oneKey.taskForm.timeRange.label')">
+            <el-row>
+              <!--<el-col :span="11">-->
+                <!--<DatePicker type="datetime"-->
+                            <!--@on-change="setBegin"-->
+                            <!--:value="config.beginDate"-->
+                            <!--style="width: 100%"-->
+                            <!--format="yyyy-MM-dd HH:mm:ss"-->
+                            <!--:placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')">-->
+                <!--</DatePicker>-->
+              <!--</el-col>-->
+              <!--<el-col :span="2" style="text-align: center">-->
+                <!-- - -->
+              <!--</el-col>-->
+              <!--<el-col :span="11">-->
+                <!--<DatePicker type="datetime"-->
+                            <!--:value="config.endDate"-->
+                            <!--format="yyyy-MM-dd HH:mm:ss"-->
+                            <!--style="width: 100%"-->
+                            <!--@on-change="setEnd"-->
+                            <!--:placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')">-->
+                <!--</DatePicker>-->
+              <!--</el-col>-->
+              <el-col :span="14">
+                <el-date-picker
+                  clearable
+                  size="small"
+                  style="width: 100%"
+                  v-model="datePickerValue"
+                  @change="handTimeFilter"
+                  type="daterange"
+                  unlink-panels
+                  format="yyyy 年 MM 月 dd 日 HH:mm:ss"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  range-separator="至"
+                  :start-placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')"
+                  :end-placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.endPlaceholder')"
+                  :picker-options="pickerOptions">
+                </el-date-picker>
+              </el-col>
+            </el-row>
+          </FormItem>
+          <el-row :gutter="30">
+            <el-col :span="4">
+              <FormItem>
+                <Input v-model="studentQuery.studentId"
+                       :placeholder="$t('p.group.divide.oneKey.taskForm.students.studentId')"
+                       clearable>
+                </Input>
+              </FormItem>
+            </el-col>
+            <el-col :span="4">
+              <Select v-model="studentQuery.className"
+                      :placeholder="$t('p.group.divide.oneKey.taskForm.students.className')" clearable>
+                <Option v-for="(item,index) in classNameOptions" :value="item" :key="index">{{ item }}</Option>
+              </Select>
+            </el-col>
+            <el-col :span="4">
+              <Select
+                v-model="studentQuery.grade"
+                :placeholder="$t('p.group.divide.oneKey.taskForm.students.grade')" clearable>
+                <Option v-for="(item,index) in gradeOptions" :value="item" :key="index">{{ item }}</Option>
+              </Select>
+            </el-col>
+            <el-col :span="4">
+              <Select
+                v-model="studentQuery.profession"
+                :placeholder="$t('p.group.divide.oneKey.taskForm.students.profession')" clearable>
+                <Option v-for="(item,index) in professionOptions" :value="item" :key="index">{{ item }}</Option>
+              </Select>
+            </el-col>
+            <Button type="primary" shape="circle" icon="ios-search" @click="handleFilter"></Button>
+          </el-row>
           <FormItem :label="$t('p.group.divide.oneKey.taskForm.students.label')">
             <Transfer
               :data="_assignedStudents"
               :target-keys="config.specifiedDividingStudents"
-              :selected-keys="selectedStudentIds"
               :list-style="listStyle"
               :not-found-text="$t('p.group.divide.oneKey.taskForm.students.placeholder')"
               @on-change="handleChange"
-              @on-selected-change="handleSelectedChange"
               :filter-method="filterStudents"
-              filterable>
+              :titles="['符合条件的学生', '候选学生']">
               <div :style="{float: 'right', margin: '5px'}">
                 <Button type="ghost" size="small">重置</Button>
               </div>
             </Transfer>
           </FormItem>
           <FormItem :label="$t('p.group.divide.oneKey.taskForm.gradient.label')">
-            <Slider v-model="config.gradient" show-input></Slider>
+            <el-slider
+              v-model="config.gradient"
+              show-input>
+            </el-slider>
           </FormItem>
           <FormItem :label="$t('p.group.divide.oneKey.taskForm.operationCode.label')">
             <Input v-model="config.buildingKey"
@@ -116,6 +166,7 @@
 <script>
   import {fetchTaskList} from 'api/tasks';
   import {getLeisureStudents, createGroupPreview} from 'api/groups';
+  import {fetchOptions} from 'api/students';
 
   const moment = require('moment');
   export default {
@@ -148,11 +199,50 @@
             content: []
           }
         ],
-        studentQuery: {
-          //默认查询一个月内不执行任何发掘任务的学生列表
-          beginDate: moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss'),
-          endDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
         },
+        datePickerValue:[],
+        studentQuery: {
+          studentId: "",
+          studentName: "",
+          className: "",
+          profession: "",
+          grade: "",
+          page: 0,
+          size: 20,
+          sort: "studentId,ASC",
+          //默认查询一个月内不执行任何发掘任务的学生列表
+          beginDate:'',
+          endDate: '',
+        },
+        classNameOptions: [],
+        professionOptions: [],
+        gradeOptions: [],
         taskQuery: {
           taskName: '',
           plannedBeginDate: '',
@@ -165,8 +255,8 @@
           sort: ''
         },
         assignedStudents: [],
-        selectedStudentIds: [],
         previewGroups: [],
+        selectedKeys: this._selectedKeys,
         value4: '',
         listStyle: {
           width: '46%',
@@ -226,10 +316,66 @@
       };
     },
     created() {
+      this.$store.dispatch('SetStep', 1);
       this.getTasks();
       this.getStudents();
+      this.getOptions();
     },
     methods: {
+      resetStudentQuery() {
+        this.studentQuery = {
+          studentId: "",
+          studentName: "",
+          className: "",
+          profession: "",
+          grade: "",
+          page: 0,
+          size: 20,
+          sort: "studentId,ASC",
+          //默认查询一个月内不执行任何发掘任务的学生列表
+          beginDate: moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss'),
+          endDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+        };
+        this.getStudents();
+      },
+      resetDefaultQuery() {
+        this.studentQuery = {
+          studentId: "",
+          studentName: "",
+          className: "",
+          profession: "",
+          grade: "",
+          page: 0,
+          size: 20,
+          sort: "studentId,ASC",
+          //默认查询一个月内不执行任何发掘任务的学生列表
+          beginDate: '',
+          endDate: '',
+        };
+        this.getStudents();
+      },
+      handleAddAll(isAddAll) {
+        if (isAddAll) {
+          this.studentQuery.beginDate = '';
+          this.studentQuery.endDate = '';
+          this.config.beginDate = '';
+          this.config.endDate = '';
+        } else {
+          this.studentQuery.beginDate = moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss')
+          this.studentQuery.endDate = moment().format('YYYY-MM-DD HH:mm:ss');
+          this.config.beginDate = this.studentQuery.beginDate;
+          this.config.endDate = this.studentQuery.endDate;
+        }
+        this.getStudents();
+      },
+      handleFilter() {
+        this.getStudents();
+      },
+      handTimeFilter(val) {
+        this.studentQuery.beginDate = val[0];
+        this.studentQuery.endDate = val[1];
+        this.getStudents();
+      },
       handleSubmitDividingConfig() {
         let vm = this;
         vm.previewLoading = true;
@@ -242,17 +388,15 @@
             type: 'success',
             duration: 1500
           });
-          console.log(vm.previewGroups);
           //保存设置
           vm.$store.dispatch('SetSetting', vm.config);
           //保存预览分组
-          vm.$store.dispatch('SetPreviewGroups', vm.previewGroups);
-          //更新step,进行下一步
-          vm.$store.dispatch('SetStep',1);
-          vm.$router.push(
-            {
-              path: 'preview',
-            });
+          vm.$store.dispatch('SetPreviewGroups', vm.previewGroups).then(() => {
+            vm.$router.push(
+              {
+                path: 'preview',
+              });
+          });
         }).catch(error => {
           vm.previewLoading = false;
         })
@@ -265,9 +409,6 @@
             }
           })
         });
-      },
-      handleSelectedChange(sourceSelectedStudents, targetSelectedStudents) {
-
       },
       handleChange(newTargetStudentIds) {
         this.config.specifiedDividingStudents = newTargetStudentIds;
@@ -285,22 +426,30 @@
       getStudents() {
         let vm = this;
         getLeisureStudents(Object.assign({}, this.studentQuery)).then((res) => {
-          vm.assignedStudents = res.content;
+          vm.assignedStudents = res;
         }).catch(error => {
         });
+      },
+      getOptions() {
+        let vm = this;
+        fetchOptions().then(res => {
+          vm.classNameOptions = res.classNameOptions;
+          vm.professionOptions = res.professionOptions;
+          vm.gradeOptions = res.gradeOptions;
+        })
       },
       async getTasks() {
         let vm = this;
         this.setTimeXDay(7);
-         fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
+        fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
           vm.tasks[0].content = res.content;
         });
         this.setTimeRangeTask(7, 30);
-         fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
+        fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
           vm.tasks[1].content = res.content;
         });
         this.setTimeRangeTask(30, 90);
-         fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
+        fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
           vm.tasks[2].content = res.content;
         });
       },
@@ -326,6 +475,9 @@
           };
         })
       },
+      _selectedKeys() {
+        return this.assignedStudents.map(s => s.studentId);
+      }
     }
   }
 </script>

@@ -122,7 +122,6 @@
       }
       //否则依赖prop传入的值
       else {
-        debugger;
         this.groups = this.toGroups;
         this.sets = this.toSets;
         this.algorithms = this.toAlgorithms;

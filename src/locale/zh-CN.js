@@ -44,10 +44,12 @@ export default {
         description: '这里将展示你所创建和管理的分组。'
       },
       modal: {
-        groupName:'队名',
+        groupName:'组名',
         arrangementId:'分组编号',
-        groupLeader:'队长',
-        taskName:'任务名称'
+        groupLeader:'组长',
+        taskName:'分配/重分配',
+        taskStatus:'任务状态',
+        groupMembers:'组员',
       },
       divide:{
         tips:{
@@ -57,8 +59,8 @@ export default {
           task:{
             header:'以下为参数说明:',
             content:['任务:给分组统一分配任务',
-              '范围时间:在此时间段内已经被分配任务学生不参与分组',
-              '忽略:忽略已经处于任务状态的学生,所有学生参与分组',
+              '空闲时间:指定在某时间段内没有被分配任务的学生',
+              '全部加入:忽略已经处于任务状态的学生,所有学生参与分组',
               '指定:指定要参与分组的学生',
               '建队人:指定队伍的建立者',
               '代号:用此字符串作为分组算法的信号输入']
@@ -66,6 +68,12 @@ export default {
         },
         oneKey:{
           process:{
+            title0:'浏览',
+            title1:'填参',
+            title2:'预览',
+            title3:'调优',
+            title4:'确认',
+            step0:'浏览可分配资源',
             step1:'填写分组参数:如分组梯度,分组限制,给分组分配的任务',
             step2:'在这里预览分组情况',
             step3:'调整分组配置',
@@ -78,14 +86,19 @@ export default {
               placeholder:'选择一个要应用于该分组的发掘任务',
             },
             timeRange:{
-              label:'时间范围',
+              label:'空闲时间',
               beginPlaceholder:'开始时间',
               endPlaceholder:'结束时间'
             },
             ignore:{
-              label:'忽略',
+              label:'全部加入',
             },
             students:{
+              className:'班级',
+              studentId: '学号',
+              studentName: '学生姓名',
+              profession: "专业",
+              grade:'年级',
               placeholder:'你的人力资源极度匮乏,赶快加入您即将要抱团的学生吧!',
               label:'指定',
             },
@@ -107,7 +120,24 @@ export default {
           }
         }
       },
-
+      list:{
+        update:{
+          operations:'[\'加入分组\',\'移出分组\']',
+          taskPlaceholder:'选择数据挖掘任务',
+          placeholder:'更新队伍信息',
+          success:'更新成功',
+          cancel:'取消更新',
+          failed:'更新失败'
+        },
+        filter:{
+          beginDate:'建立时间的区间起点',
+          endDate:'建立时间区间的终点',
+          builtTime:'建立时间',
+          groupName:'队伍名称',
+          leader:'队长信息',
+          taskName:'任务名称'
+        }
+      },
       placeholder: '没有匹配到相关团队。| 想一起玩吗？快来创建团队呀。',
       keyboards: [{
         category: '操作',

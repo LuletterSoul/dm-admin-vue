@@ -15,6 +15,7 @@ const getters = {
   userProfile: state =>state.user.userProfile,
 
   previewGroups:state => state.group.divide.previewGroups,
-  divideStep: state =>state.group.divide.step
+  divideStep: state =>state.group.divide.step,
+  newGroups: state =>state.group.newGroups
 };
 export default getters
