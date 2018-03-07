@@ -1,7 +1,9 @@
 <template>
   <div>
-    <group-view-item v-for="(group,index) in groups" :key="index" :group="group">
+    <group-view-item v-if="groups.length" v-for="(group,index) in groups" :key="index" :group="group">
     </group-view-item>
+    <em-placeholder v-else>
+    </em-placeholder>
   </div>
 </template>
 <script>

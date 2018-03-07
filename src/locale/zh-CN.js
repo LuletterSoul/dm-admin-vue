@@ -57,8 +57,8 @@ export default {
           task:{
             header:'以下为参数说明:',
             content:['任务:给分组统一分配任务',
-              '范围时间:在此时间段内已经被分配任务学生不参与分组',
-              '忽略:忽略已经处于任务状态的学生,所有学生参与分组',
+              '空闲时间:指定在某时间段内没有被分配任务的学生',
+              '全部加入:忽略已经处于任务状态的学生,所有学生参与分组',
               '指定:指定要参与分组的学生',
               '建队人:指定队伍的建立者',
               '代号:用此字符串作为分组算法的信号输入']
@@ -84,12 +84,12 @@ export default {
               placeholder:'选择一个要应用于该分组的发掘任务',
             },
             timeRange:{
-              label:'时间范围',
+              label:'空闲时间',
               beginPlaceholder:'开始时间',
               endPlaceholder:'结束时间'
             },
             ignore:{
-              label:'忽略',
+              label:'全部加入',
             },
             students:{
               className:'班级',
@@ -124,7 +124,7 @@ export default {
           endDate:'建立时间区间的终点',
           builtTime:'建立时间',
           groupName:'队伍名称',
-          leaderStudentId:'队长学号',
+          leader:'队长学号',
           taskName:'任务名称'
         }
       },

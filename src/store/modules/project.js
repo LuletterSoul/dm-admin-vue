@@ -1,14 +1,6 @@
-const group = {
+const project = {
   state:{
-    divide:{
-      previewGroups:{
-        dataMiningGroups:[],
-        dataMiningTask:''
-      },
-      setting:{},
-      step:0
-  },
-    newGroups:[]
+    keywords
   },
   mutations:{
     SET_PREVIEW_GROUPS:(state,groups) =>{
@@ -50,4 +42,4 @@ const group = {
   }
 };
 
-export default group;
+export default project;

@@ -5,34 +5,33 @@
         <el-row>
           <el-col>
             <el-row :gutter="20">
-              <el-col :span="6">
-                  <el-autocomplete
-                    size="medium"
-                    v-model="listQuery.groupName"
-                    :fetch-suggestions="querySearch"
-                    placeholder="请输入队名"
-                  ></el-autocomplete>
+              <el-col :span="9">
+                <el-autocomplete
+                  size="medium"
+                  style="width: 100%"
+                  v-model="listQuery.groupName"
+                  suffix-icon="el-icon-edit"
+                  :fetch-suggestions="groupNameSearch"
+                  select-when-unmatched
+                  :placeholder="$t('p.group.list.filter.groupName')">
+                </el-autocomplete>
               </el-col>
-              <el-col  :span="6">
+              <el-col :span="9">
+                <el-autocomplete
+                  size="medium"
+                  style="width: 100%"
+                  suffix-icon="el-icon-zoom-in"
+                  v-model="wrappedSuggestedGroupLeader"
+                  :fetch-suggestions="groupLeaderSearch"
+                  @select="handleLeaderFilter"
+                  @change="handleFilter"
+                  select-when-unmatched
+                  :placeholder="$t('p.group.list.filter.leader')">
+                </el-autocomplete>
+              </el-col>
+              <el-col :span="6">
                 <el-select size="medium"
                            clearable
-                           class="btn-item" v-model="listQuery.grade"
-                           placeholder="年级">
-                  <el-option v-for="item in gradeOptions" :key="item" :label="item" :value="item">
-                  </el-option>
-                </el-select>
-              </el-col>
-              <el-col :span="6">
-                <el-select size="medium"
-                           clearable class="btn-item"
-                           v-model="listQuery.className"
-                           placeholder="班级">
-                  <el-option v-for="item in  classNameOptions" :key="item.key" :label="item" :value="item">
-                  </el-option>
-                </el-select>
-              </el-col>
-              <el-col :span="6">
-                <el-select size="medium"
                            v-model="listQuery.sort"
                            placeholder="排序">
                   <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
@@ -46,17 +45,19 @@
               <el-col :span="6">
                 <el-select
                   size="medium"
+                  clearable
                   v-model="listQuery.taskStatus">
                   <el-option
-                    v-for="item in hasTaskOptions"
+                    v-for="item in taskStatusOptions"
                     :value="item.value"
-                    :key="item.label"
-                    :label="item.label">
+                    :key="item.value"
+                    :label="item.description">
                   </el-option>
                 </el-select>
               </el-col>
               <el-col :span="14">
                 <el-date-picker
+                  clearable
                   size="medium"
                   style="width: 100%"
                   v-model="value7"
@@ -71,7 +72,7 @@
                 </el-date-picker>
               </el-col>
               <el-col :span="1">
-                <Button style="margin-top: 2px" type="primary" shape="circle" icon="ios-search"></Button>
+                <Button style="margin-top: 2px" type="primary" shape="circle" icon="ios-search" @click="handleFilter"></Button>
               </el-col>
               <el-col :span="1">
                 <el-button size="medium"
@@ -89,24 +90,41 @@
       </el-col>
     </el-row>
     <el-row style="margin-top: 20px">
-      <Table border size='default'
+      <Table border
              :loading="listLoading"
              :columns="groupColumns"
              :data="groupList"
+             size='large'
              @on-selection-change="handleSelectionChange"
              stripe></Table>
     </el-row>
+    <el-row style="float:right;margin-top: 20px">
+      <el-col>
+        <el-pagination @size-change="handleSizeChange"
+                       background
+                       size='large'
+                       @current-change="handleCurrentChange"
+                       :page-sizes="[10,20,30, 50]"
+                       :page-size="listQuery.size"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="total">
+        </el-pagination>
+      </el-col>
+    </el-row>
 
-    <div v-show="!listLoading" class="pagination-container">
-      <el-pagination @size-change="handleSizeChange"
-                     background
-                     size='large'
-                     @current-change="handleCurrentChange"
-                     :page-sizes="[10,20,30, 50]"
-                     :page-size="listQuery.size"
-                     layout="total, sizes, prev, pager, next, jumper" :total="total">
-      </el-pagination>
-    </div>
+    <el-row id="group-view" style="margin-top: 60px">
+      <el-col>
+          <transition
+            mode="out-in"
+            name="custom-classes-transition"
+            enter-active-class="animated bounceIn"
+            leave-active-class="animated bounceOutRight">
+            <group-view
+              v-if="_length&&initDetail" :groups="_detailTarget" :key="this._detailTarget[0].groupId">
+            </group-view>
+          </transition>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -123,13 +141,19 @@
     getMembers,
     updateLeader,
     configureMembers,
-    getGroupNames
+    getGroupNames,
+    getGroupLeaders,
+    getTaskStatus
   } from 'api/groups';
+
+  import GroupView from '../components/groupView';
 
 
   export default {
     name: 'StudentTable',
+    components:{GroupView},
     data() {
+      let vm = this;
       return {
         pickerOptions: {
           shortcuts: [{
@@ -160,7 +184,7 @@
         },
         value6: '',
         value7: '',
-        hasTaskOptions: [{
+        taskStatusOptions: [{
           label: '有任务',
           value: 1
         }, {
@@ -170,7 +194,10 @@
           label: '全部',
           value: 2
         }],
-        suggestedGroupNames:[],
+        initDetail:false,
+        suggestedGroupNames: [],
+        suggestedGroupLeaders:[],
+        wrappedSuggestedGroupLeader:'',
         groupColumns: [
           {
             type: 'selection',
@@ -191,6 +218,7 @@
           {
             title: '分组编号',
             align: 'center',
+            width: 100,
             key: 'arrangementId'
           },
           {
@@ -209,12 +237,26 @@
             title: '任务',
             align: 'center',
             render: function (h, params) {
-              return h('span', {}, params.row.dataMiningTask.taskName)
+              return h('span', {},  vm.renderTask(params.row.dataMiningTask))
             }
+          },
+          {
+            title: '建队时间',
+            align: 'center',
+            key:'builtTime'
           },
           {
             title: '组员',
             align: 'center',
+          },
+          {
+            title: '任务状态',
+            align: 'center',
+            render: function (h, params) {
+              return h('Tag', {
+                props:vm.renderTaskStatusTag(params.row.taskStatus)
+              },  params.row.taskStatus.description)
+            }
           },
           {
             title: '操作',
@@ -267,19 +309,17 @@
         ],
         total: null,
         listLoading: false,
-        table: {
-          studentName: '学生姓名',
-          className: '班级',
-        },
         listQuery: {
           groupName: "",
-          beginDate:'',
-          endDate:'',
+          beginDate: '',
+          endDate: '',
+          leaderStudentId:'',
           page: 0,
-          size: 10,
-          taskStatus:2,
+          size: 20,
+          taskStatus: null,
           sort: "builtTime,ASC",
         },
+        detailTargetIndex:null,
         temp: {
           studentId: '',
           studentName: '',
@@ -299,92 +339,72 @@
           finishedTaskCount: 0
         },
         selectionIds: [],
-        selectedGroups:[],
+        selectedGroups: [],
         groupList: [],
-        queryTypeOptions: [
-          '姓名',
-          '学号'
-        ],
-        statusOptions: [{
-          statusId: 0,
-          chineseValue: '任务进行中',
-          englishValue: 'executing',
-        }, {
-          statusId: 1,
-          chineseValue: '锁定',
-          englishValue: 'unavailable',
-        }, {
-          statusId: 2,
-          chineseValue: '任务完成',
-          englishValue: 'finished',
-        }, {
-          statusId: 3,
-          chineseValue: '空闲',
-          englishValue: 'available',
-        }],
         sortOptions:
           [{label: '按建立时间升序', key: 'builtTime,ASC'},
             {label: '按建立时间降序', key: 'builtTime,DESC'}],
         multipleSelection: [],
-        isDisplayFavoriteColumn: false,
-        gradeOptions: [
-          '2012级',
-          '2013级',
-          '2014级',
-          '2015级',
-          '2016级',
-          '2017级',
-        ],
-        professionOptions: [
-          '软件工程',
-          '计算机科学与技术',
-          '人工智能',
-          '网络工程'
-        ],
-        classNameOptions: [
-          '计科一班',
-          '计科二班',
-          '软工一班',
-          '软工二班',
-          '网工一班',
-          '网工二班',
-          '智能实验班'
-        ],
-        dialogFormVisible: false,
-        dialogStatus: '',
-        dialogPvVisible: false,
-        pvData: [],
-        tableKey: 0
+        gradeOptions: [],
+        professionOptions: [],
+        classNameOptions: [],
       };
     },
     created() {
       this.getGroupList();
       this.getSuggestedGroupNames();
+      this.getSuggestedGroupLeaders();
+      this.getTaskStatusOptions();
     },
     methods: {
       getSuggestedGroupNames() {
-        let vm =this;
-        getGroupNames().then(res =>{
-          vm.suggestedGroupNames = res.map(r =>{
+        let vm = this;
+        getGroupNames().then(res => {
+          vm.suggestedGroupNames = res.map(r => {
             return {
-              value:r,
-              name:r
+              value: r,
+              name: r
             }
           });
         })
       },
-      querySearch(queryString, cb) {
+      getSuggestedGroupLeaders() {
+        let vm = this;
+        getGroupLeaders().then(res => {
+          vm.suggestedGroupLeaders = res.map(r => {
+            return {
+              value: r.studentId + ' - '+r.studentName + ' - ' + r.className + ' - '+r.profession,
+              info: r
+            }
+          });
+        }).catch(error => {
+        });
+      },
+      getTaskStatusOptions() {
+        let vm =this;
+        getTaskStatus().then((res) => {
+          vm.taskStatusOptions = res;
+        }).catch(error => {
+        });
+      },
+      groupNameSearch(queryString, cb) {
         var suggestedGroupNames = this.suggestedGroupNames;
         var results = queryString ? suggestedGroupNames.filter(this.createFilter(queryString)) : suggestedGroupNames;
         cb(results);
       },
       createFilter(queryString) {
-        return (suggestedGroupName) => {
-          return (suggestedGroupName.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        return (s) => {
+          var reg = new RegExp(queryString.toLowerCase());
+          return s.value.toLowerCase().match(reg);
         };
       },
-      handleSelect(item) {
-        console.log(item);
+      groupLeaderSearch(queryString, cb) {
+        var suggestedGroupLeaders = this.suggestedGroupLeaders;
+        var results = queryString ? suggestedGroupLeaders.filter(this.createFilter(queryString)) : suggestedGroupLeaders;
+        cb(results);
+      },
+      handleLeaderFilter(item) {
+        this.listQuery.leaderStudentId = item.info.studentId;
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -415,7 +435,7 @@
         if (this.listQuery.size === val) {
           return
         }
-        this.listQuery.size= val;
+        this.listQuery.size = val;
         this.getGroupList();
       },
       handleCurrentChange(val) {
@@ -433,12 +453,12 @@
         this.listQuery.endDate = val[1];
       },
       handleFilter() {
-
+        this.getGroupList();
       },
       handleCheck(index) {
         this.initDetail = true;
         this.detailTargetIndex = index;
-        this.getMembers(this._currentPageGroups[index].groupId, index);
+        this.getMembers(this.groupList[index].groupId, index);
         let el = document.getElementById("group-view");
         el.scrollIntoView();
       },
@@ -477,7 +497,7 @@
       getMembers(groupId, index) {
         let vm = this;
         getMembers(groupId).then(res => {
-          vm.$set(vm._currentPageGroups[index], 'groupMembers', res);
+          vm.$set(vm.groupList[index], 'groupMembers', res);
         }).catch(error => {
         })
       },
@@ -501,19 +521,65 @@
           finishedTaskCount: 0
         };
       },
+      renderTask(task) {
+        if(task ===undefined) {
+          return '无';
+        }
+        else{
+          return task.taskName;
+        }
+      },
+      renderTaskStatusTag(taskStatus) {
+        let tagColor = '';
+        switch (taskStatus.value) {
+          case 1:
+            tagColor = 'yellow';
+            break;
+          case 2:
+            tagColor = '#EF6AFF';
+            break;
+          case 3:
+            tagColor = 'green';
+            break;
+          case 4:
+            tagColor = 'blue';
+            break;
+          case 5:
+            tagColor = 'red';
+            break;
+          case 6:
+            tagColor = '#25dc72';
+            break;
+        }
+        return {
+          type:'dot',
+          color: tagColor
+        };
+      }
     },
     computed: {
       fixPage() {
         return this.listQuery.page + 1;
       },
+      _length() {
+        return this.groupList.length;
+      },
       _selectionIds() {
         return this.selectedGroups.map(selection => selection.groupId);
       },
+      _detailTarget() {
+        if (!this._length || !this.detailTargetIndex) {
+          return null;
+        }
+        let wrap = [];
+        wrap.push(this.groupList[this.detailTargetIndex]);
+        return wrap;
+      },
       _suggestedGroupNames() {
-        this.suggestedGroupNames.map( s =>{
+        this.suggestedGroupNames.map(s => {
           return {
-            value : s,
-            groupName:s
+            value: s,
+            groupName: s
           }
         })
       }

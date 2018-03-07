@@ -149,8 +149,8 @@ export const asyncRouterMap = [
             name: '分组配置',
             icon: 'group',
             beforeEnter: (to, from, next) => {
-              const t = store.getters.previewGroups.dataMiningTask;
-              if (t !== undefined) {
+              const t = store.getters.previewGroups.dataMiningGroups;
+              if (t !== undefined &&t.length) {
                 Notification({
                   title: '历史',
                   message: '你有历史的‘一键分组’操作未完成,使用本页面功能会覆盖之前的记录。',
@@ -167,7 +167,9 @@ export const asyncRouterMap = [
             name: '分组预览',
             icon: 'group',
             beforeEnter: (to, from, next) => {
-              if (store.getters.previewGroups.dataMiningTask === undefined) {
+              console.log(store.getters.previewGroups.dataMiningGroups);
+              if (store.getters.previewGroups.dataMiningTask === ''
+                  &&!store.getters.previewGroups.dataMiningGroups.length) {
                 Notification({
                   title: '无效预览',
                   message: '请先填写分组参数,执行‘预览’操作。',

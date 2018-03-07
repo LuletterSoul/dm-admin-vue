@@ -27,7 +27,6 @@
                 <Option v-for="option in item.content" :value="option.taskName" :key="option.taskId">
                   <span class="demo-auto-complete-title">{{ option.taskName }} </span>
                   <span class="auto-complete-option">建立时间:{{ option.builtTime }}</span>
-                  <span class="auto-complete-option">任务状态:{{ option.status.description }}</span>
                 </Option>
               </div>
               <a href="https://www.google.com/search?q=iView" target="_blank" class="demo-auto-complete-more">查看所有结果</a>
@@ -50,26 +49,42 @@
           </FormItem>
           <FormItem :label="$t('p.group.divide.oneKey.taskForm.timeRange.label')">
             <el-row>
-              <el-col :span="11">
-                <DatePicker type="datetime"
-                            @on-change="setBegin"
-                            :value="config.beginDate"
-                            style="width: 100%"
-                            format="yyyy-MM-dd HH:mm:ss"
-                            :placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')">
-                </DatePicker>
-              </el-col>
-              <el-col :span="2" style="text-align: center">
-                 -
-              </el-col>
-              <el-col :span="11">
-                <DatePicker type="datetime"
-                            :value="config.endDate"
-                            format="yyyy-MM-dd HH:mm:ss"
-                            style="width: 100%"
-                            @on-change="setEnd"
-                            :placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')">
-                </DatePicker>
+              <!--<el-col :span="11">-->
+                <!--<DatePicker type="datetime"-->
+                            <!--@on-change="setBegin"-->
+                            <!--:value="config.beginDate"-->
+                            <!--style="width: 100%"-->
+                            <!--format="yyyy-MM-dd HH:mm:ss"-->
+                            <!--:placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')">-->
+                <!--</DatePicker>-->
+              <!--</el-col>-->
+              <!--<el-col :span="2" style="text-align: center">-->
+                <!-- - -->
+              <!--</el-col>-->
+              <!--<el-col :span="11">-->
+                <!--<DatePicker type="datetime"-->
+                            <!--:value="config.endDate"-->
+                            <!--format="yyyy-MM-dd HH:mm:ss"-->
+                            <!--style="width: 100%"-->
+                            <!--@on-change="setEnd"-->
+                            <!--:placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')">-->
+                <!--</DatePicker>-->
+              <!--</el-col>-->
+              <el-col :span="14">
+                <el-date-picker
+                  clearable
+                  size="small"
+                  style="width: 100%"
+                  v-model="datePickerValue"
+                  @change="handTimeFilter"
+                  type="daterange"
+                  unlink-panels
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  range-separator="至"
+                  :start-placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')"
+                  :end-placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.endPlaceholder')"
+                  :picker-options="pickerOptions">
+                </el-date-picker>
               </el-col>
             </el-row>
           </FormItem>
@@ -102,7 +117,7 @@
                 <Option v-for="(item,index) in professionOptions" :value="item" :key="index">{{ item }}</Option>
               </Select>
             </el-col>
-              <Button type="primary" shape="circle" icon="ios-search" @click="handleFilter"></Button>
+            <Button type="primary" shape="circle" icon="ios-search" @click="handleFilter"></Button>
           </el-row>
           <FormItem :label="$t('p.group.divide.oneKey.taskForm.students.label')">
             <Transfer
@@ -183,6 +198,34 @@
             content: []
           }
         ],
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
+        datePickerValue:[],
         studentQuery: {
           studentId: "",
           studentName: "",
@@ -190,15 +233,15 @@
           profession: "",
           grade: "",
           page: 0,
-          size: 10,
+          size: 20,
           sort: "studentId,ASC",
           //默认查询一个月内不执行任何发掘任务的学生列表
-          beginDate: moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss'),
-          endDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+          beginDate:'',
+          endDate: '',
         },
-        classNameOptions:[],
-        professionOptions:[],
-        gradeOptions:[],
+        classNameOptions: [],
+        professionOptions: [],
+        gradeOptions: [],
         taskQuery: {
           taskName: '',
           plannedBeginDate: '',
@@ -212,7 +255,7 @@
         },
         assignedStudents: [],
         previewGroups: [],
-        selectedKeys:this._selectedKeys,
+        selectedKeys: this._selectedKeys,
         value4: '',
         listStyle: {
           width: '46%',
@@ -272,7 +315,7 @@
       };
     },
     created() {
-      this.$store.dispatch('SetStep',1);
+      this.$store.dispatch('SetStep', 1);
       this.getTasks();
       this.getStudents();
       this.getOptions();
@@ -286,7 +329,7 @@
           profession: "",
           grade: "",
           page: 0,
-          size: 10,
+          size: 20,
           sort: "studentId,ASC",
           //默认查询一个月内不执行任何发掘任务的学生列表
           beginDate: moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss'),
@@ -302,7 +345,7 @@
           profession: "",
           grade: "",
           page: 0,
-          size: 10,
+          size: 20,
           sort: "studentId,ASC",
           //默认查询一个月内不执行任何发掘任务的学生列表
           beginDate: '',
@@ -311,13 +354,13 @@
         this.getStudents();
       },
       handleAddAll(isAddAll) {
-        if(isAddAll){
+        if (isAddAll) {
           this.studentQuery.beginDate = '';
           this.studentQuery.endDate = '';
           this.config.beginDate = '';
           this.config.endDate = '';
-        }else{
-          this.studentQuery.beginDate=moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss')
+        } else {
+          this.studentQuery.beginDate = moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss')
           this.studentQuery.endDate = moment().format('YYYY-MM-DD HH:mm:ss');
           this.config.beginDate = this.studentQuery.beginDate;
           this.config.endDate = this.studentQuery.endDate;
@@ -325,6 +368,11 @@
         this.getStudents();
       },
       handleFilter() {
+        this.getStudents();
+      },
+      handTimeFilter(val) {
+        this.studentQuery.beginDate = val[0];
+        this.studentQuery.endDate = val[1];
         this.getStudents();
       },
       handleSubmitDividingConfig() {
@@ -342,11 +390,12 @@
           //保存设置
           vm.$store.dispatch('SetSetting', vm.config);
           //保存预览分组
-          vm.$store.dispatch('SetPreviewGroups', vm.previewGroups);
-          vm.$router.push(
-            {
-              path: 'preview',
-            });
+          vm.$store.dispatch('SetPreviewGroups', vm.previewGroups).then(() => {
+            vm.$router.push(
+              {
+                path: 'preview',
+              });
+          });
         }).catch(error => {
           vm.previewLoading = false;
         })
@@ -382,7 +431,7 @@
       },
       getOptions() {
         let vm = this;
-        fetchOptions().then(res =>{
+        fetchOptions().then(res => {
           vm.classNameOptions = res.classNameOptions;
           vm.professionOptions = res.professionOptions;
           vm.gradeOptions = res.gradeOptions;
@@ -391,15 +440,15 @@
       async getTasks() {
         let vm = this;
         this.setTimeXDay(7);
-         fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
+        fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
           vm.tasks[0].content = res.content;
         });
         this.setTimeRangeTask(7, 30);
-         fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
+        fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
           vm.tasks[1].content = res.content;
         });
         this.setTimeRangeTask(30, 90);
-         fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
+        fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
           vm.tasks[2].content = res.content;
         });
       },

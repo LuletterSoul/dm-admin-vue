@@ -67,6 +67,7 @@
     },
     name: 'new-groups',
     data() {
+      let vm = this;
       return {
         initDetail: false,
         detailTargetIndex: 0,
@@ -108,7 +109,7 @@
             title: '任务',
             align: 'center',
             render: function (h, params) {
-              return h('span', {}, params.row.dataMiningTask.taskName)
+              return h('span', {}, vm.renderTask(params.row.dataMiningTask))
             }
           },
           {
@@ -176,7 +177,7 @@
         },
         newGroups: this._newGroups,
         page: 1,
-        size: 10,
+        size: 20,
       }
     },
     methods: {
@@ -266,6 +267,14 @@
       },
       handleEdit(groupId) {
 
+      },
+      renderTask(task) {
+        if(task ===undefined) {
+          return '未分配';
+        }
+        else{
+          return task.taskName;
+        }
       }
     },
     computed: {

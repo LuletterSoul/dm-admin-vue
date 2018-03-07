@@ -48,7 +48,7 @@
           dataSetCollectionList:[],
           listQuery: {
             page: 0,
-            size: 10,
+            size: 20,
             sort: 'collectionName'
           },
           dataSetTable0: [

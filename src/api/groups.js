@@ -94,6 +94,20 @@ export function getGroupNames() {
   });
 }
 
+export function getGroupLeaders() {
+  return fetch({
+    url: GROUP_PATH.concat('/').concat('/group_leaders'),
+    method: 'get',
+  });
+}
+
+export function getTaskStatus() {
+  return fetch({
+    url: '/options/groups/task/status',
+    method: 'get',
+  });
+}
+
 
 
 

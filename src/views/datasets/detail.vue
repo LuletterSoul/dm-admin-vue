@@ -147,7 +147,7 @@
         checkedSetIds: [],
         listQuery: {
           page: 0,
-          size: 10,
+          size: 20,
           sort: "containerId,ASC",
         },
         linkIndex: true,

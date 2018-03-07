@@ -309,7 +309,7 @@
           profession:"",
           grade:"",
           page: 0,
-          size: 10,
+          size: 20,
           sort:"studentId,ASC",
         },
         temp: {

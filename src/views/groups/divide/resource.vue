@@ -136,7 +136,7 @@
     data() {
       return {
         isHasTask: 2,
-        hasTaskOptions: [{
+        taskStatusOptions: [{
           label: '有任务',
           value: 1
         }, {
@@ -246,7 +246,7 @@
 //          profession:"",
 //          grade:"",
           page: 0,
-          size: 10,
+          size: 20,
           sort: "groupId,ASC",
         },
         temp: {

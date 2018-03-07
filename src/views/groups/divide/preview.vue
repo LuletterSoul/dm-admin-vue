@@ -16,16 +16,18 @@
     </el-row>
     <el-row>
       <el-col>
-        <task-detail :to-task-id="_task.taskId" :to-groups="_groups">
+        <task-detail v-if="_task!==undefined" :to-task-id="_task.taskId" :to-groups="_groups">
+        </task-detail>
+        <task-detail v-else :to-groups="_groups">
         </task-detail>
       </el-col>
     </el-row>
     <el-row style="margin-top: 10px">
       <el-col :offset="21" :span="1">
-        <Button type="success"  @click="handleSubmitDivideDirectly">完成</Button>
+        <Button type="success" @click="handleSubmitDivideDirectly">完成</Button>
       </el-col>
       <el-col :span="1">
-        <Button type="primary"  @click="handleMutual">
+        <Button type="primary" @click="handleMutual">
           手动调整
         </Button>
       </el-col>
@@ -50,6 +52,7 @@
       this.$store.dispatch('SetStep', 2);
     },
     data() {
+      let vm = this;
       return {
         showDetails: false,
         groupColumns: [
@@ -93,7 +96,7 @@
                 style: {
                   color: '#25dc72'
                 }
-              }, params.row.dataMiningTask.taskName)
+              },vm.renderTask(params.row.dataMiningTask))
             }
           },
           {
@@ -159,9 +162,10 @@
         createGroupsByKey(this._key).then(res => {
           vm.$store.dispatch('SetNewGroups', res)
             .then(() => {
-              vm.$store.dispatch('ResetDivideInfo');
-              vm.$router.push({path: '/groups/new'});
-              vm.$message.success("分组成功.");
+              vm.$store.dispatch('ResetDivideInfo').then(() =>{
+                vm.$message.success("分组成功.");
+                vm.$router.push({path: '/groups/new'});
+              });
             }).catch(error => {
           });
         }).catch(error => {
@@ -180,6 +184,14 @@
         //   return 'demo-table-error-row';
         // }
         return 'group-details-container';
+      },
+      renderTask(task) {
+        if(task ===undefined) {
+          return '未分配';
+        }
+        else{
+          return task.taskName;
+        }
       }
     },
     computed: {
