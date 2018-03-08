@@ -38,6 +38,19 @@ export default {
         description: '阅读文档能使你完全掌握 Easy Mock 的使用。 | 更新永无止境，只为让你开心。'
       }
     },
+    task:{
+      list:{
+        filter:{
+          plannedBeginDate:'计划开始时间',
+          plannedEndDate:'计划结束时间',
+          builtTimeBegin:'建立时间的区间起点',
+          builtTimeEnd:'建立时间的区间重点',
+          taskName:'任务名称',
+          plannedDuration:'计划持续天数',
+
+        }
+      }
+    },
     group: {
       header: {
         title: '数据发掘任务分组',

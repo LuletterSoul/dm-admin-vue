@@ -114,5 +114,12 @@ export function fetchConfiguredAlgortithms(taskId) {
   })
 }
 
+export function fetchOptions() {
+  return fetch({
+    url:'/options/tasks/progress_status',
+    method:'get'
+  })
+}
+
 
 

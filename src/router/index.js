@@ -204,8 +204,12 @@ export const asyncRouterMap = [
     name: "任务",
     icon: 'task-management',
     children: [
+
       {
         path: 'index', component: _import('tasks/index'), name: '任务列表', icon: 'survey1'
+      },
+      {
+        path:'list',component:_import('tasks/list'),name:'任务列表2',icon: 'survey2'
       },
       {
         path: 'create', component: _import('tasks/create'), name: '新建任务', icon: 'home'

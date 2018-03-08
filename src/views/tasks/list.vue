@@ -6,11 +6,47 @@
                  :to-show="showEditModal"
                  :to-candidates="allStudents"
                  :to-group-members="_updatingTargetGroup.groupMembers"
-                 :to-task-status="taskStatusOptions">
+                 :to-task-status="statusOptions">
     </group-modal>
     <el-row>
       <el-col :offset="10" :span="14">
-        <el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-date-picker
+              clearable
+              size="medium"
+              style="width: 100%"
+              v-model="value7"
+              @change="handTimeFilter"
+              type="daterange"
+              unlink-panels
+              format="yyyy 年 MM 月 dd 日 HH:mm:ss"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              range-separator="至"
+              :start-placeholder="$t('p.task.list.filter.builtTimeBegin')"
+              :end-placeholder="$t('p.task.list.filter.builtTimeEnd')"
+              :picker-options="pickerOptions">
+            </el-date-picker>
+          </el-col>
+          <el-col :span="12">
+            <el-date-picker
+              clearable
+              size="medium"
+              style="width: 100%"
+              v-model="value7"
+              @change="handTimeFilter"
+              type="daterange"
+              unlink-panels
+              format="yyyy 年 MM 月 dd 日 HH:mm:ss"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              range-separator="至"
+              :start-placeholder="$t('p.task.list.filter.plannedBeginDate')"
+              :end-placeholder="$t('p.task.list.filter.plannedBeginDate')"
+              :picker-options="pickerOptions">
+            </el-date-picker>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top: 20px">
           <el-col>
             <el-row :gutter="20">
               <el-col :span="9">
@@ -21,7 +57,7 @@
                   suffix-icon="el-icon-edit"
                   :fetch-suggestions="groupNameSearch"
                   select-when-unmatched
-                  :placeholder="$t('p.group.list.filter.groupName')">
+                  :placeholder="$t('p.task.list.filter.taskName')">
                 </el-autocomplete>
               </el-col>
               <el-col :span="9">
@@ -49,35 +85,30 @@
               </el-col>
             </el-row>
             <el-row :gutter="20" style="margin-top: 20px">
-              <el-col :span="6">
+              <el-col :span="9">
                 <el-select
                   size="medium"
                   clearable
+                  style="width: 100%"
                   v-model="listQuery.taskStatus">
                   <el-option
-                    v-for="item in taskStatusOptions"
+                    v-for="item in statusOptions"
                     :value="item.value"
                     :key="item.value"
                     :label="item.description">
                   </el-option>
                 </el-select>
               </el-col>
-              <el-col :span="14">
-                <el-date-picker
-                  clearable
+              <el-col :span=9>
+                <el-input-number
+                  v-model="num8"
                   size="medium"
                   style="width: 100%"
-                  v-model="value7"
-                  @change="handTimeFilter"
-                  type="daterange"
-                  unlink-panels
-                  format="yyyy 年 MM 月 dd 日 HH:mm:ss"
-                  value-format="yyyy-MM-dd HH:mm:ss"
-                  range-separator="至"
-                  :start-placeholder="$t('p.group.list.filter.beginDate')"
-                  :end-placeholder="$t('p.group.list.filter.endDate')"
-                  :picker-options="pickerOptions">
-                </el-date-picker>
+                  label="执行分组数的下界"
+                  controls-position="right"
+                  @change="handleChange"
+                  :min="1">
+                </el-input-number>
               </el-col>
               <el-col :span="1">
                 <Button style="margin-top: 2px" type="primary" shape="circle" icon="ios-search"
@@ -139,6 +170,7 @@
 <script>
   import {parseTime, deleteEmptyProperty} from 'utils';
   import {fetchStudentList} from 'api/students';
+  import {fetchOptions} from 'api/tasks';
   import {
     getGroupList,
     getLeisureStudents,
@@ -166,15 +198,15 @@
       let vm = this;
       return {
         allStudents: [],
-        groupModel:{
-          groupName:'',
-          groupLeader:{
-            studentId:'',
-            studentName:'',
-            className:'',
+        groupModel: {
+          groupName: '',
+          groupLeader: {
+            studentId: '',
+            studentName: '',
+            className: '',
           },
-          taskStatus:'',
-          groupMembers:[],
+          progressStatus: '',
+          groupMembers: [],
         },
         pickerOptions: {
           shortcuts: [{
@@ -206,7 +238,7 @@
         value6: '',
         value7: '',
         showEditModal: false,
-        taskStatusOptions: [],
+        statusOptions: [],
         suggestedGroupNames: [],
         suggestedGroupLeaders: [],
         wrappedSuggestedGroupLeader: '',
@@ -262,8 +294,8 @@
             align: 'center',
             render: function (h, params) {
               return h('Tag', {
-                props: vm.renderTaskStatusTag(params.row.taskStatus)
-              }, params.row.taskStatus.description)
+                props: vm.renderTaskStatusTag(params.row.progressStatus)
+              }, params.row.progressStatus.description)
             }
           },
           {
@@ -296,7 +328,7 @@
                   },
                   on: {
                     click: () => {
-                      this.handleDelete(params.row,params.index);
+                      this.handleDelete(params.row, params.index);
                     }
                   }
                 }, '删除'),
@@ -324,7 +356,7 @@
           leaderStudentId: '',
           page: 0,
           size: 20,
-          taskStatus: null,
+          progressStatus: null,
           sort: "builtTime,ASC",
         },
         detailTargetIndex: null,
@@ -362,7 +394,7 @@
       this.getGroupList();
       this.getSuggestedGroupNames();
       this.getSuggestedGroupLeaders();
-      this.getTaskStatusOptions();
+      this.getTaskProgressStatus();
       this.getAllStudents();
     },
     methods: {
@@ -373,7 +405,7 @@
         }).catch(error => {
         });
       },
-      handleClosed(){
+      handleClosed() {
         this.showEditModal = false;
       },
       getSuggestedGroupNames() {
@@ -399,10 +431,10 @@
         }).catch(error => {
         });
       },
-      getTaskStatusOptions() {
+      getTaskProgressStatus() {
         let vm = this;
-        getTaskStatus().then((res) => {
-          vm.taskStatusOptions = res;
+        fetchOptions().then((res) => {
+          vm.statusOptions = res;
         }).catch(error => {
         });
       },
@@ -490,7 +522,7 @@
         let el = document.getElementById("group-view");
         el.scrollIntoView();
       },
-      handleDelete(group,index) {
+      handleDelete(group, index) {
         let vm = this;
         let wrapGroups = [];
         wrapGroups.push(group.groupId);
@@ -525,7 +557,7 @@
       handleUpdateConfirm(groupDto) {
         let vm = this;
         updateGroup(groupDto).then(res => {
-          vm.groupList.splice(vm.detailTargetIndex,1, res);
+          vm.groupList.splice(vm.detailTargetIndex, 1, res);
           vm.$message({
             showClose: true,
             message: '更新分组信息成功',
@@ -539,7 +571,7 @@
       getMembers(groupId, index) {
         let vm = this;
         let current = vm.groupList[index];
-        if(current.groupMembers ===undefined) {
+        if (current.groupMembers === undefined) {
           getMembers(groupId).then(res => {
             vm.$set(current, 'groupMembers', res);
           }).catch(error => {
@@ -574,9 +606,9 @@
           return task.taskName;
         }
       },
-      renderTaskStatusTag(taskStatus) {
+      renderTaskStatusTag(progressStatus) {
         let tagColor = '';
-        switch (taskStatus.value) {
+        switch (progressStatus.value) {
           case 1:
             tagColor = 'yellow';
             break;
@@ -621,7 +653,7 @@
         return wrap;
       },
       _updatingTargetGroup() {
-        return this._wrappedDetailTarget ? Object.assign({},this._wrappedDetailTarget[0]) : this.groupModel;
+        return this._wrappedDetailTarget ? Object.assign({}, this._wrappedDetailTarget[0]) : this.groupModel;
       },
 
     },

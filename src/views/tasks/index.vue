@@ -4,104 +4,187 @@
     <div class="title">
       任务信息管理
     </div>
+    <el-row>
+      <el-col :offset="10" :span="14">
+        <el-row>
+          <el-col>
+            <el-row :gutter="20">
+              <el-col :span="9">
+                <el-autocomplete
+                  size="medium"
+                  style="width: 100%"
+                  v-model="listQuery.taskName"
+                  suffix-icon="el-icon-edit"
+                  :fetch-suggestions="taskNameSearch"
+                  select-when-unmatched
+                  :placeholder="$t('p.group.list.filter.groupName')">
+                </el-autocomplete>
+              </el-col>
+              <el-col :span="9">
+                <el-autocomplete
+                  size="medium"
+                  style="width: 100%"
+                  suffix-icon="el-icon-zoom-in"
+                  v-model="wrappedSuggestedGroupLeader"
+                  :fetch-suggestions="groupLeaderSearch"
+                  @select="handleLeaderFilter"
+                  select-when-unmatched
+                  :placeholder="$t('p.group.list.filter.leader')">
+                </el-autocomplete>
+              </el-col>
+              <el-col :span="6">
+                <el-select size="medium"
+                           clearable
+                           v-model="listQuery.sort"
+                           placeholder="排序">
+                  <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
+                  </el-option>
+                </el-select>
+              </el-col>
+              <el-col>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20" style="margin-top: 20px">
+              <el-col :span="6">
+                <el-select
+                  size="medium"
+                  clearable
+                  v-model="listQuery.taskStatus">
+                  <el-option
+                    v-for="item in taskStatusOptions"
+                    :value="item.value"
+                    :key="item.value"
+                    :label="item.description">
+                  </el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="14">
+                <el-date-picker
+                  clearable
+                  size="medium"
+                  style="width: 100%"
+                  v-model="value7"
+                  @change="handTimeFilter"
+                  type="daterange"
+                  unlink-panels
+                  format="yyyy 年 MM 月 dd 日 HH:mm:ss"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  range-separator="至"
+                  :start-placeholder="$t('p.group.list.filter.beginDate')"
+                  :end-placeholder="$t('p.group.list.filter.endDate')"
+                  :picker-options="pickerOptions">
+                </el-date-picker>
+              </el-col>
+              <el-col :span="1">
+                <Button style="margin-top: 2px" type="primary" shape="circle" icon="ios-search"
+                        @click="handleFilter"></Button>
+              </el-col>
+              <el-col :span="1">
+                <el-button size="medium"
+                           class="btn-item" type="danger"
+                           plain
+                           round
+                           icon="el-icon-circle-close-outline"
+                           @click="handleBatchDelete"
+                           :disabled="!_selectionIds.length">批量删除
+                </el-button>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+      </el-col>
+    </el-row>
 
-    <div class="btn-import-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="btn-item" placeholder="编号" v-model="listQuery.taskId">
-      </el-input>
+    <el-row>
+      <el-col>
+        <el-table :key='tableKey' :data="taskList"
+                  ref="taskTable"
+                  v-loading.body="listLoading"
+                  border fit
+                  highlight-current-row style="width: 100%"
+                  @selection-change="handleSelectionChange"
+                  @row-click="handleRowClicked">
+          <el-table-column v-if="multipleSelection.length" type="selection" width="55"></el-table-column>
 
-      <el-select @change='handleFilter' style="width: 120px" class="btn-item" v-model="listQuery.sort" placeholder="排序">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
-        </el-option>
-      </el-select>
+          <el-table-column align="center" label="任务名" width="100px">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="light" :content="scope.row.taskName" placement="top-start">
+                <span>{{scope.row.taskName}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
 
-
-      <el-button class="btn-item" type="primary" icon="plus" @click="handleAdd">添加</el-button>
-      <el-button class="btn-item" type="primary" v-waves icon="search" @click="handleFilter">筛选</el-button>
-      <!--<el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="plus"><router-link to="create">添加</router-link></el-button>-->
-      <el-button class="btn-item" type="primary" icon="document" @click="handleDownload">导出</el-button>
-      <el-button class="btn-item" type="primary" icon="delete" v-waves @click="handleBatchDelete" :disabled="!multipleSelection.length">批量删除</el-button>
-    </div>
-
-    <el-table :key='tableKey' :data="taskList"
-              ref="taskTable"
-              v-loading.body="listLoading"
-              border fit
-              highlight-current-row style="width: 100%"
-              @selection-change="handleSelectionChange"
-              @row-click="handleRowClicked">
-      <el-table-column v-if="multipleSelection.length" type="selection" width="55"></el-table-column>
-
-      <el-table-column align="center" label="任务名" width="100px">
-        <template slot-scope="scope">
-          <el-tooltip class="item" effect="light" :content="scope.row.taskName" placement="top-start">
-            <span>{{scope.row.taskName}}</span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-
-      <!--<el-table-column align="center" label="数据集编号" width="120px">-->
-        <!--<template slot-scope="scope">-->
+          <!--<el-table-column align="center" label="数据集编号" width="120px">-->
+          <!--<template slot-scope="scope">-->
           <!--<el-tooltip class="item" effect="light" :content="scope.row.collectionId" placement="top-start">-->
-            <!--<span>{{scope.row.collectionId}}</span>-->
+          <!--<span>{{scope.row.collectionId}}</span>-->
           <!--</el-tooltip>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
+          <!--</template>-->
+          <!--</el-table-column>-->
 
-      <el-table-column align="center" label="算法配置" width="250px">
-          <template slot-scope="scope">
-            <el-tag
-              v-for="(tag,index) in scope.row.algorithms"
-              :key="tag.algorithmId"
-              :closable="true"
-              :close-transition="false"
-              :type="index <=4 ? tagTypes[index] : tagTypes[index%5]"
-              @close="handleTagClose(scope.row,tag)"
-            >
-              {{tag.algorithmName}}
-            </el-tag>
-          </template>
-      </el-table-column>
+          <el-table-column align="center" label="算法配置" width="250px">
+            <template slot-scope="scope">
+              <el-tag
+                v-for="(tag,index) in scope.row.algorithms"
+                :key="tag.algorithmId"
+                :closable="true"
+                :close-transition="false"
+                :type="index <=4 ? tagTypes[index] : tagTypes[index%5]"
+                @close="handleTagClose(scope.row,tag)"
+              >
+                {{tag.algorithmName}}
+              </el-tag>
+            </template>
+          </el-table-column>
 
 
-      <el-table-column class-name="status-col" align="center"  label="任务状态" width="150">
-        <template slot-scope="scope">
-          <!--<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>-->
-          <span>
+          <el-table-column class-name="status-col" align="center"  label="任务状态" width="150">
+            <template slot-scope="scope">
+              <!--<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>-->
+              <span>
               未分配
               </span>
-        </template>
-      </el-table-column>
+            </template>
+          </el-table-column>
 
-      <el-table-column align="center" label="开始时间" width="250px">
-        <template slot-scope="scope">
-          <el-tooltip class="item" effect="light" :content="scope.row.startTime" placement="top-start">
-            <span>{{scope.row.startTime}}</span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
+          <el-table-column align="center" label="开始时间" width="250px">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="light" :content="scope.row.startTime" placement="top-start">
+                <span>{{scope.row.startTime}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
 
-      <el-table-column align="center" label="截止时间" width="250px">
-        <template slot-scope="scope">
-          <el-tooltip class="item" effect="light" :content="scope.row.finishTime" placement="top-start">
-            <span>{{scope.row.finishTime}}</span>
-          </el-tooltip>
-        </template>
-      </el-table-column>
+          <el-table-column align="center" label="截止时间" width="250px">
+            <template slot-scope="scope">
+              <el-tooltip class="item" effect="light" :content="scope.row.finishTime" placement="top-start">
+                <span>{{scope.row.finishTime}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
 
-      <el-table-column align="center"  label="操作" min-width="200px">
-        <template slot-scope="scope">
-          <el-button size="small" icon="edit"  type = "success" @click="handleUpdate(scope.row)">更新</el-button>
-          <el-button size="small" icon="delete" type = "danger" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button size="small" icon="plus" type="primary" @click="handleAddStudent">添加分组</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+          <el-table-column align="center"  label="操作" min-width="200px">
+            <template slot-scope="scope">
+              <el-button size="small" icon="edit"  type = "success" @click="handleUpdate(scope.row)">更新</el-button>
+              <el-button size="small" icon="delete" type = "danger" @click="handleDelete(scope.row)">删除</el-button>
+              <el-button size="small" icon="plus" type="primary" @click="handleAddStudent">添加分组</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
 
-    <div v-show="!listLoading" class="pagination-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.size" layout="total, sizes, prev, pager, next, jumper" :total="totalElements">
-      </el-pagination>
-    </div>
+
+    <el-row>
+      <el-col>
+        <div v-show="!listLoading" class="pagination-container">
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
+                         :page-sizes="[10,20,30, 50]" :page-size="listQuery.size" layout="total, sizes, prev, pager, next, jumper" :total="totalElements">
+          </el-pagination>
+        </div>
+      </el-col>
+    </el-row>
+
 
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
@@ -199,7 +282,9 @@
         listQuery: {
           page: 1,
           size: 20,
-          sort: 'taskName'
+          taskName: '',
+          plannedTimeRange:[],
+          sort: 'taskName,DES'
         },
         temp: {
           taskId:'',
@@ -496,6 +581,241 @@
           }
         }))
       },
+      getAllStudents() {
+        let vm = this;
+        fetchStudentList({fetch: true}).then(res => {
+          vm.allStudents = res.content;
+        }).catch(error => {
+        });
+      },
+      handleClosed(){
+        this.showEditModal = false;
+      },
+      getSuggestedGroupNames() {
+        let vm = this;
+        getGroupNames().then(res => {
+          vm.suggestedGroupNames = res.map(r => {
+            return {
+              value: r,
+              name: r
+            }
+          });
+        })
+      },
+      getSuggestedGroupLeaders() {
+        let vm = this;
+        getGroupLeaders().then(res => {
+          vm.suggestedGroupLeaders = res.map(r => {
+            return {
+              value: r.studentId + ' - ' + r.studentName + ' - ' + r.className + ' - ' + r.profession,
+              info: r
+            }
+          });
+        }).catch(error => {
+        });
+      },
+      getTaskStatusOptions() {
+        let vm = this;
+        getTaskStatus().then((res) => {
+          vm.taskStatusOptions = res;
+        }).catch(error => {
+        });
+      },
+      groupNameSearch(queryString, cb) {
+        var suggestedGroupNames = this.suggestedGroupNames;
+        var results = queryString ? suggestedGroupNames.filter(this.createFilter(queryString)) : suggestedGroupNames;
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (s) => {
+          var reg = new RegExp(queryString.toLowerCase());
+          return s.value.toLowerCase().match(reg);
+        };
+      },
+      groupLeaderSearch(queryString, cb) {
+        var suggestedGroupLeaders = this.suggestedGroupLeaders;
+        var results = queryString ? suggestedGroupLeaders.filter(this.createFilter(queryString)) : suggestedGroupLeaders;
+        cb(results);
+      },
+      handleLeaderFilter(item) {
+        this.listQuery.leaderStudentId = item.info.studentId;
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
+      handleRowClicked(row, event, column) {
+        let lable = column.label;
+        if (lable === '操作' || lable === '算法配置') {
+          return;
+        }
+        this.$refs.studentTable.toggleRowSelection(row);
+        this.isDisplayFavoriteColumn = !this.isDisplayFavoriteColumn;
+      },
+      getGroupList() {
+        let that = this;
+        this.listLoading = true;
+        getGroupList(Object.assign({}, this.listQuery)).then(response => {
+          this.groupList = response.content;
+          this.total = response.totalElements;
+          this.listLoading = false;
+        }).catch(error => {
+          that.$message({
+            type: 'error',
+            message: error
+          })
+        })
+      },
+      handleSizeChange(val) {
+        if (this.listQuery.size === val) {
+          return
+        }
+        this.detailTargetIndex = null;
+        this.listQuery.size = val;
+        this.getGroupList();
+      },
+      handleCurrentChange(val) {
+        if (this.listQuery.page === val - 1) {
+          return
+        }
+        this.detailTargetIndex = null;
+        this.listQuery.page = val - 1;
+        this.getGroupList();
+      },
+      handleSelectionChange(selections) {
+        this.selectedGroups = selections;
+      },
+      handTimeFilter(val) {
+        this.listQuery.beginDate = val[0];
+        this.listQuery.endDate = val[1];
+      },
+      handleFilter() {
+        this.getGroupList();
+      },
+      handleGroupLeaderFilter() {
+        this.listQuery.leaderStudentId = '';
+      },
+      handleEdit(index) {
+        this.detailTargetIndex = index;
+        this.getMembers(this.groupList[index].groupId, index);
+        this.showEditModal = true;
+      },
+      handleCheck(index) {
+        this.detailTargetIndex = index;
+        this.getMembers(this.groupList[index].groupId, index);
+        let el = document.getElementById("group-view");
+        el.scrollIntoView();
+      },
+      handleDelete(group,index) {
+        let vm = this;
+        let wrapGroups = [];
+        wrapGroups.push(group.groupId);
+        this.$confirm('此操作将删除名为 ' + group.groupName + ' 的分组信息, 是否继续?', '确定删除', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          deleteGroups(wrapGroups).then(() => {
+            vm.$message.success('删除成功');
+            vm.groupList.splice(index, 1);
+          }).catch(error => {
+          })
+        }).catch(() => {
+          this.$message.info('取消删除');
+        });
+      },
+      handleBatchDelete() {
+        let vm = this;
+        this.$confirm('此操作将删除已完成分组信息, 是否继续?', '确定删除', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          deleteGroups(this._selectionIds).then(() => {
+            vm.$message.success('删除成功');
+            this.getGroupList();
+          }).catch(error => {
+          })
+        })
+      },
+      handleUpdateConfirm(groupDto) {
+        let vm = this;
+        updateGroup(groupDto).then(res => {
+          vm.groupList.splice(vm.detailTargetIndex,1, res);
+          vm.$message({
+            showClose: true,
+            message: '更新分组信息成功',
+            type: 'success'
+          });
+          vm.detailTargetIndex = null;
+        }).catch(error => {
+
+        });
+      },
+      getMembers(groupId, index) {
+        let vm = this;
+        let current = vm.groupList[index];
+        if(current.groupMembers ===undefined) {
+          getMembers(groupId).then(res => {
+            vm.$set(current, 'groupMembers', res);
+          }).catch(error => {
+          })
+        }
+      },
+      resetTemp() {
+        this.temp = {
+          studentId: '',
+          studentName: '',
+          grade: '',
+          className: '',
+          profession: '',
+          status: {
+            statusId: 3,
+            chineseValue: '空闲',
+            englishValue: 'available',
+          },
+          favorite: {
+            favoriteId: 0,
+            chineseValue: '已收藏',
+            englishValue: 'favorite'
+          },
+          finishedTaskCount: 0
+        };
+      },
+      renderTask(task) {
+        if (task === undefined) {
+          return '无';
+        }
+        else {
+          return task.taskName;
+        }
+      },
+      renderTaskStatusTag(taskStatus) {
+        let tagColor = '';
+        switch (taskStatus.value) {
+          case 1:
+            tagColor = 'yellow';
+            break;
+          case 2:
+            tagColor = '#EF6AFF';
+            break;
+          case 3:
+            tagColor = 'green';
+            break;
+          case 4:
+            tagColor = 'blue';
+            break;
+          case 5:
+            tagColor = 'red';
+            break;
+          case 6:
+            tagColor = '#25dc72';
+            break;
+        }
+        return {
+          type: 'dot',
+          color: tagColor
+        };
+      }
     }
   }
 </script>

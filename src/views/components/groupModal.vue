@@ -121,7 +121,7 @@
       return {
         tasks: [],
         show: this.toShow,
-        group: this.toGroup,
+        group: Object.assign({},this.toGroup),
         newMemberIds: this.toGroupMembers.map(m => m.studentId),
         newGroupMembers: this.toGroupMembers,
         listStyle: {
