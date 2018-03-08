@@ -249,7 +249,6 @@
           plannedEndDate: '',
           builtTimeBegin: '',
           builtTimeEnd: '',
-          taskStatus: '1',
           page: 0,
           size: 20,
           sort: ''

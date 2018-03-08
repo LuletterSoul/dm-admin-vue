@@ -26,11 +26,12 @@ export function createTask(task) {
 
 export function deleteTaskBatch(taskIds) {
   return fetch({
-    url:'/tasks/deleteWithIdArray',
+    url:'/tasks',
     method:'delete',
     data:taskIds
   })
 }
+
 //根据id获取发掘任务的信息
 export function getByTaskId(id) {
   return fetch({
@@ -120,6 +121,17 @@ export function fetchOptions() {
     method:'get'
   })
 }
+export function fetchMaxAndMinGroupsNum() {
+  return fetch({
+    url: TASK_PATH.concat('/max_min_group_num'),
+    method: 'get'
+  });
+}
 
-
+export function findAllTaskNames() {
+  return fetch({
+    url: TASK_PATH.concat('/task_names'),
+    method: 'get'
+  });
+}
 

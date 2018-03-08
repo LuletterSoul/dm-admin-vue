@@ -46,7 +46,9 @@ export default {
           builtTimeBegin:'建立时间的区间起点',
           builtTimeEnd:'建立时间的区间重点',
           taskName:'任务名称',
+          progressStatus:'任务状态',
           plannedDuration:'计划持续天数',
+          limit:"关联分组超过"
 
         }
       }
