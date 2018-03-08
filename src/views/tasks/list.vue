@@ -177,24 +177,9 @@
     deleteAllRefCollections,
     fetchConfiguredAlgortithms,
     fetchMaxAndMinGroupsNum,
-    findAllTaskNames
+    findAllTaskNames,
+    deleteBatchTask
   } from 'api/tasks';
-  import {
-    getTaskList,
-    getLeisureStudents,
-    createGroupPreview,
-    getGroupPreview,
-    getGroup,
-    deleteGroups,
-    updateGroup,
-    getMembers,
-    updateLeader,
-    configureMembers,
-    getGroupLeaders,
-    getTaskStatus,
-  } from 'api/tasks';
-
-
   export default {
     name: 'task-list',
     components: {},
@@ -564,7 +549,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          deleteGroups(wrapTasks).then(() => {
+          deleteBatchTask(wrapTasks).then(() => {
             vm.$message.success('删除成功');
             vm.taskList.splice(index, 1);
           }).catch(error => {
@@ -640,7 +625,7 @@
         }
       },
       formatTooltip(val) {
-        return '关联任务数 : ' + val;
+        return '关联分组数 : ' + val;
       },
       renderTaskStatusTag(progressStatus) {
         let tagColor = '';

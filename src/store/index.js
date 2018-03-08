@@ -5,6 +5,8 @@ import user from './modules/user';
 import permission from './modules/permission';
 import tagsView from './modules/tagsView';
 import group from './modules/group';
+import task from './modules/task';
+import student from './modules/student';
 import getters from './getters';
 Vue.use(Vuex);
 
@@ -14,7 +16,9 @@ const store = new Vuex.Store({
     user,
     tagsView,
     permission,
-    group
+    group,
+    task,
+    student
   },
   getters
 });

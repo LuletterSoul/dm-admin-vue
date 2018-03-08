@@ -11,7 +11,14 @@ export function fetchTaskList(query) {
 
 export function deleteTask(taskId) {
   return fetch({
-    url:'/tasks/'+taskId,
+    url:TASK_PATH.concat('/').concat(taskId),
+    method:'delete'
+  })
+}
+
+export function deleteBatchTask(taskId) {
+  return fetch({
+    url:TASK_PATH,
     method:'delete'
   })
 }

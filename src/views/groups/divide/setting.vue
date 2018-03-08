@@ -41,11 +41,11 @@
             </i-switch>
           </FormItem>
           <FormItem :label="$t('p.group.divide.oneKey.taskForm.builder.label')">
-            <Select>
-              <Option value="beijing">New York</Option>
-              <Option value="shanghai">London</Option>
-              <Option value="shenzhen">Sydney</Option>
-            </Select>
+            <el-select v-model="_userProfile.username"
+                       size="small"
+                       style="width: 50%"
+                       disabled placeholder="请选择">
+            </el-select>
           </FormItem>
           <FormItem :label="$t('p.group.divide.oneKey.taskForm.timeRange.label')">
             <el-row>
@@ -180,8 +180,7 @@
           gradient: 12,
           isIgnoreArrangedTask: false,
           specifiedDividingStudents: [],
-          targetStudentIds: [],
-          builderId: '',
+          builderId: this.$store.getters.currentUserId,
           buildingKey: ''
         },
         previewLoading: false,
@@ -382,15 +381,16 @@
           vm.previewGroups = res;
           vm.$emit('on-group-preview', vm.previewGroups);
           vm.previewLoading = false;
-          vm.$message({
-            message: '创建预览分组成功',
-            type: 'success',
-            duration: 1500
-          });
           //保存设置
           vm.$store.dispatch('SetSetting', vm.config);
           //保存预览分组
           vm.$store.dispatch('SetPreviewGroups', vm.previewGroups).then(() => {
+
+            vm.$message({
+              message: '创建预览分组成功',
+              type: 'success',
+              duration: 1500
+            });
             vm.$router.push(
               {
                 path: 'preview',
@@ -473,6 +473,9 @@
             label: s.studentId + ' - ' + s.studentName + ' - ' + s.className
           };
         })
+      },
+      _userProfile() {
+        return this.$store.getters.userProfile;
       },
       _selectedKeys() {
         return this.assignedStudents.map(s => s.studentId);

@@ -115,7 +115,6 @@
       //约定从route中传入查询参数taskId,利用taskId从后台加载数据
       let _taskId = this.$route.query.taskId;
       //如果props提供taskId,则不需要查询参数
-      console.log(_taskId);
       if (_taskId || this.taskId) {
         if (_taskId) {
           this.taskId = _taskId;
@@ -177,7 +176,6 @@
       },
       getGroups() {
         let vm = this;
-        console.log(this.taskId);
         getRefGroups(this.taskId).then(groups => {
           vm.groups = groups;
           vm.groups.forEach(g => {

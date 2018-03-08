@@ -8,7 +8,7 @@
                  plain
                  icon="el-icon-circle-close-outline"
                  @click="handleCancelImport"
-                 :disabled="!studentList.length">撤销
+                 :disabled="!_currentPageStudents.length">撤销
       </el-button>
       <el-button class="btn-item" type="primary" plain icon="el-icon-upload" @click="uploadDialogVisible =true">导入
       </el-button>
@@ -39,11 +39,20 @@
       </el-dialog>
       <el-button class="btn-item" type="success" icon="el-icon-document" @click="handleDownload">下载模板</el-button>
     </div>
-    <Table :loading="listLoading" :no-data-text="'你来到了没有数据的废墟...'" size='default' :row-class-name="rowClassName" :columns="studentTableColumns" :data="studentList" class='import-table-container'></Table>
+    <Table :loading="listLoading"
+           :no-data-text="'你来到了没有数据的废墟...'"
+           size='default'
+           :row-class-name="rowClassName"
+           :columns="studentTableColumns"
+           :data="_currentPageStudents"
+           class='import-table-container'></Table>
     <div v-show="!listLoading" class="pagination-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="fixPage"
-                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.size"
-                     layout="total, sizes, prev, pager, next, jumper" :total="total">
+      <el-pagination @size-change="handleSizeChange"
+                     background
+                     @current-change="handleCurrentChange"
+                     :page-sizes="[10,20,30, 50]"
+                     :page-size="size"
+                     layout="total, sizes, prev, pager, next, jumper" :total="_length">
       </el-pagination>
     </div>
   </div>
@@ -105,16 +114,8 @@
         total: null,
         listLoading: false,
         uploadDialogVisible: false,
-        listQuery: {
-          studentId: "",
-          studentName: "",
-          className: "",
-          profession: "",
-          grade: "",
-          page: 0,
-          size: 20,
-          sort: "studentId,ASC",
-        },
+        page: 1,
+        size: 20,
         temp: {
           studentId: '',
           studentName: '',
@@ -157,39 +158,6 @@
         }],
         sortOptions: [{label: '按学号升序', key: 'studentId,ASC'}, {label: '按学号降序', key: 'studentId,DESC'}],
         multipleSelection: [],
-        isDisplayFavoriteColumn: false,
-        gradeOptions: [
-          '2012级',
-          '2013级',
-          '2014级',
-          '2015级',
-          '2016级',
-          '2017级',
-        ],
-        professionOptions: [
-          '软件工程',
-          '计算机科学与技术',
-          '人工智能',
-          '网络工程'
-        ],
-        classNameOptions: [
-          '计科一班',
-          '计科二班',
-          '软工一班',
-          '软工二班',
-          '网工一班',
-          '网工二班',
-          '智能实验班'
-        ],
-        dialogFormVisible: false,
-        dialogStatus: '',
-        textMap: {
-          update: '编辑',
-          create: '创建'
-        },
-        dialogPvVisible: false,
-        pvData: [],
-        tableKey: 0
       };
     },
     created() {
@@ -197,8 +165,19 @@
 //      this.getStudentList();
     },
     computed: {
-      fixPage() {
-        return this.listQuery.page + 1;
+      _length() {
+        return this.$store.getters.newStudents.length;
+      },
+      _currentPageStudents() {
+        if (!this._length) {
+          return [];
+        }
+        let begin = (this.page - 1) * this.size;
+        let end = this.page * this.size;
+        if (end > this._length) {
+          end = this._length;
+        }
+        return this.$store.getters.newStudents.slice(begin, end);
       }
     },
     methods: {
@@ -208,21 +187,6 @@
         } else {
           return 'demo-table-error-row';
         }
-//        return '';
-      },
-      handleSizeChange(val) {
-        if (this.listQuery.size === val) {
-          return
-        }
-        this.listQuery.size = val;
-        this.getStudentList();
-      },
-      handleCurrentChange(val) {
-        if (this.listQuery.page === val - 1) {
-          return
-        }
-        this.listQuery.page = val - 1;
-        this.getStudentList();
       },
       handleFileRemove(file, fileList) {
         console.log(file, fileList);
@@ -268,20 +232,6 @@
           });
         });
       },
-      getStudentList() {
-        let that = this;
-        this.listLoading = true;
-        fetchStudentList(Object.assign({}, this.listQuery)).then(response => {
-          this.studentList = response.content;
-          this.total = response.totalElements;
-          this.listLoading = false;
-        }).catch(error => {
-          that.$message({
-            type: 'error',
-            message: error
-          })
-        })
-      },
       handleBeforeUpload(file) {
         let vm = this;
         //新建一个Form data 类型的文件
@@ -291,6 +241,7 @@
         //生成一个上传进度查询key
         const uuid_v1 = require('uuid/v1');
         let progress_uuid = uuid_v1();
+        this.listLoading = true;
         importFromExcel(fd, progress_uuid).then((res) => {
           //将导入的成功的数据同步
           vm.studentList = res;
@@ -298,6 +249,8 @@
             type: 'success',
             message: '导入成功!'
           });
+          vm.$store.dispatch('SetNewStudents',res);
+          this.listLoading = false;
           vm.uploadDialogVisible = false;
         }).catch(error => {
           console.log(error);
@@ -308,18 +261,18 @@
         this.$refs.importExcel.submit();
       },
       handleSizeChange(val) {
-        if (this.listQuery.size === val) {
+        if (this.size === val) {
           return
         }
-        this.listQuery.size = val;
-        this.getStudentList();
+        this.size = val;
       },
       handleCurrentChange(val) {
-        if (this.listQuery.page === val - 1) {
+        //当以参数传入数据库时需要矫正
+        //计算当前数组不需要矫正
+        if (this.page === val) {
           return
         }
-        this.listQuery.page = val - 1;
-        this.getStudentList();
+        this.page = val;
       },
       handleModifyStatus(row, status) {
         this.$message({
@@ -385,12 +338,6 @@
           finishedTaskCount: 0
         };
       },
-      handleFetchPv(pv) {
-        fetchPv(pv).then(response => {
-          this.pvData = response.data.pvData;
-          this.dialogPvVisible = true;
-        })
-      },
       handleDownload() {
         downloadStudentExcelModule().then(response => {
           const effectiveFileName = "student_module.xlsx";
@@ -398,16 +345,7 @@
         }).catch((response) => {
           console.error("Could not download the Excel module from the backend.", response);
         });
-      },
-      formatJson(filterVal, jsonData) {
-        return jsonData.map(v => filterVal.map(j => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
-          } else {
-            return v[j]
-          }
-        }))
-      },
+      }
     }
   }
 </script>
