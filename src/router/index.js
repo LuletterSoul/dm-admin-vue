@@ -134,7 +134,7 @@ export const asyncRouterMap = [
         path: '/groups/divide',
         component: _import('groups/divide/divideLayout'),
         redirect: '/groups/divide/resource',
-        name: '分组操作',
+        name: '一键分组',
         icon: 'group',
         children: [
           {

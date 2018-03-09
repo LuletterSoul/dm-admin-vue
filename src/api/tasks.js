@@ -16,10 +16,11 @@ export function deleteTask(taskId) {
   })
 }
 
-export function deleteBatchTask(taskId) {
+export function deleteBatchTask(taskIds) {
   return fetch({
     url:TASK_PATH,
-    method:'delete'
+    method:'delete',
+    data:taskIds,
   })
 }
 
@@ -122,7 +123,7 @@ export function fetchConfiguredAlgortithms(taskId) {
   })
 }
 
-export function fetchOptions() {
+export function fetchTaskStatusOptions() {
   return fetch({
     url:'/options/tasks/progress_status',
     method:'get'

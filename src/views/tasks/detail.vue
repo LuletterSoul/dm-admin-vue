@@ -142,7 +142,7 @@
         sets: this.toSets,
         groups: this.toGroups,
         taskId: this.toTaskId,
-        activeNames: ['1'],
+        activeNames: [],
         title: 'data set title',
         pagination: {
           page: 1,
@@ -185,6 +185,9 @@
             })
           })
         }).catch(error => {
+        }).then(()=>{
+          //展开团队信息
+          vm.activeNames = ['1'];
         });
       }
     },

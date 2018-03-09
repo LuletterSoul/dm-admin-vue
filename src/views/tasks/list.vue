@@ -101,11 +101,15 @@
                 </el-slider>
               </el-col>
               <el-col :span="1">
-                <Button style="margin-top: 2px" type="primary" shape="circle" icon="ios-search"
+                <Button style="margin-top: 2px"
+                        type="primary"
+                        shape="circle"
+                        icon="ios-search"
                         @click="handleFilter"></Button>
               </el-col>
               <el-col :span="1">
                 <el-button size="medium"
+                           style="margin-left: 8px"
                            class="btn-item" type="danger"
                            plain
                            round
@@ -124,7 +128,7 @@
              :loading="listLoading"
              :columns="taskColumns"
              :data="taskList"
-             size='large'
+             size='default'
              @on-selection-change="handleSelectionChange"
              stripe></Table>
     </el-row>
@@ -161,7 +165,7 @@
   import {parseTime, deleteEmptyProperty} from 'utils';
   import {fetchStudentList} from 'api/students';
   import {
-    fetchOptions,
+    fetchTaskStatusOptions,
     fetchTaskList,
     deleteTask,
     createTask,
@@ -276,6 +280,7 @@
           {
             title: '任务状态',
             align: 'center',
+            width:'200px',
             render: function (h, params) {
               return h('Tag', {
                 props: vm.renderTaskStatusTag(params.row.progressStatus)
@@ -447,7 +452,7 @@
       },
       getTaskProgressStatus() {
         let vm = this;
-        fetchOptions().then((res) => {
+        fetchTaskStatusOptions().then((res) => {
           vm.statusOptions = res;
         }).catch(error => {
         });
@@ -544,6 +549,11 @@
         let vm = this;
         let wrapTasks = [];
         wrapTasks.push(task.taskId);
+        this.$notify({
+          title: '警告',
+          message: '删除任务操作会影响分组及其分组成员当前的任务状态！谨慎操作！',
+          type: 'warning'
+        });
         this.$confirm('此操作将删除名为 ' + task.taskName + ' 的任务信息, 是否继续?', '确定删除', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -648,6 +658,10 @@
           case 6:
             tagColor = '#25dc72';
             break;
+          default:
+            tagColor = 'blue';
+            break;
+
         }
         return {
           type: 'dot',

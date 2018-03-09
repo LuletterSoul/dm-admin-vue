@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="app-container global-background">
+  <div id="app" class="app-container">
       <router-view></router-view>
   </div>
 </template>
@@ -11,9 +11,7 @@
 </script>
 <style lang="scss">
   .global-background{
-    background-image: url("./assets/5.jpg");
-    background-repeat: repeat;
-    background-size: 100%;
+
   }
   @import './styles/index.scss'; // 全局自定义的css样式
 </style>
