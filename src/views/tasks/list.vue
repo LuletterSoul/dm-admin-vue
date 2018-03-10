@@ -164,6 +164,7 @@
 <script>
   import {parseTime, deleteEmptyProperty} from 'utils';
   import {fetchStudentList} from 'api/students';
+  import  GroupAvatar from '../components/groupAvatar';
   import {
     fetchTaskStatusOptions,
     fetchTaskList,
@@ -186,7 +187,7 @@
   } from 'api/tasks';
   export default {
     name: 'task-list',
-    components: {},
+    components: {GroupAvatar},
     data() {
       let vm = this;
       return {
@@ -274,8 +275,28 @@
             key: 'plannedFinishTime'
           },
           {
-            title: '组员',
+            title: '关联队伍',
             align: 'center',
+            render:(h,params) =>{
+              let hArray = [];
+              for(let i =0;i<10;i++){
+                hArray.push(h(GroupAvatar, {
+                  props: {
+                    group: {
+                      groupName: '12321312',
+                      groupId: '1213213214',
+                      arrangementId: '123213123'
+                    }
+                  },
+                  on:{
+                    click: () =>{
+                      vm.$router.push({path: 'create'});
+                    }
+                  }
+                }));
+              }
+              return hArray;
+            }
           },
           {
             title: '任务状态',
@@ -292,46 +313,40 @@
             align: 'center',
             width: 200,
             render: (h, params) => {
-              return h('div', [
+              return h('ButtonGroup', [
                 h('Button', {
                   props: {
-                    type: 'primary',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px'
+                    icon:'ios-search',
+                    size:'small'
                   },
                   on: {
                     click: () => {
                       this.handleCheck(params.index)
                     }
                   }
-                }, '详情'),
+                }),
                 h('Button', {
                   props: {
-                    type: 'error',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px'
+                    icon:'android-delete',
+                    size:'small'
                   },
                   on: {
                     click: () => {
                       this.handleDelete(params.row, params.index);
                     }
                   }
-                }, '删除'),
+                }),
                 h('Button', {
                   props: {
-                    type: 'info',
-                    size: 'small'
+                    icon:'edit',
+                    size:'small'
                   },
                   on: {
                     click: () => {
                       this.handleEdit(params.index)
                     }
                   }
-                }, '修改')
+                })
               ]);
             }
           }
@@ -575,7 +590,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          deleteGroups(this._selectionIds).then(() => {
+          deleteBatchTask(this._selectionIds).then(() => {
             vm.$message.success('删除成功');
             this.getTaskList();
           }).catch(error => {

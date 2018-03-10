@@ -115,54 +115,6 @@
           {
             title: '组员',
             align: 'center',
-          },
-          {
-            title: '操作',
-            align: 'center',
-            width: 200,
-            render: (h, params) => {
-              return h('div', [
-                h('Button', {
-                  props: {
-                    type: 'primary',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      this.handleCheck(params.index)
-                    }
-                  }
-                }, '详情'),
-                h('Button', {
-                  props: {
-                    type: 'error',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      this.handleDelete(params.row,params.index);
-                    }
-                  }
-                }, '删除'),
-                h('Button', {
-                  props: {
-                    type: 'info',
-                    size: 'small'
-                  },
-                  on: {
-                    click: () => {
-                      this.handleUpdate(params.index)
-                    }
-                  }
-                }, '修改')
-              ]);
-            }
           }
         ],
         selectionIds: [],

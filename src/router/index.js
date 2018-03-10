@@ -102,7 +102,7 @@ export const asyncRouterMap = [
       {
         path: 'list',
         component: _import('students/list'),
-        name: '学生列表',
+        name: '学生概要',
         icon: 'group'
       },
       {
@@ -120,7 +120,7 @@ export const asyncRouterMap = [
       {
         path: 'list',
         component: _import('groups/list'),
-        name: '分组列表',
+        name: '分组概要',
         icon: 'group'
       },
       {
@@ -205,7 +205,7 @@ export const asyncRouterMap = [
     icon: 'task-management',
     children: [
       {
-        path:'list',component:_import('tasks/list'),name:'任务列表',icon: 'survey1'
+        path:'list',component:_import('tasks/list'),name:'任务概要',icon: 'survey1'
       },
       {
         path: 'create', component: _import('tasks/create'), name: '新建任务', icon: 'home'

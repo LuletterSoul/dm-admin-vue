@@ -9,7 +9,7 @@
                   @after-leave="afterLeave"
                   @before-appear="beforeAppear"
                   @appear="appear">
-        <slot>
+        <slot class="flip-list-move">
         </slot>
       </transition-group>
     </div>

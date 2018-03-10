@@ -11,10 +11,16 @@
             <div slot="title">
               <Icon type="arrow-shrink"></Icon>
               <span class="title-font-style"> 数据集文件 </span>
-              <Button type="ghost" class="btn-download-sets" :disabled="!checkedSetIds.length" @click="handleDownloadSetZip">下载</Button>
-              <Button type="error" class="btn-download-sets" :disabled="!checkedSetIds.length || readOnly" @click="handleDeleteSets">删除</Button>
+              <Button type="ghost" class="btn-download-sets"
+                      :disabled="!checkedSetIds.length"
+                      @click="handleDownloadSetZip">下载</Button>
+              <Button type="error"
+                      class="btn-download-sets"
+                      :disabled="!checkedSetIds.length || readOnly"
+                      @click="handleDeleteSets">删除</Button>
             </div>
-            <a href="#" slot="extra" @click.prevent="uploadDialogVisible = true">
+            <a href="#" slot="extra"
+               @click.prevent="uploadDialogVisible = true">
               <Icon type="plus-round"></Icon>
               新增
             </a>
@@ -71,7 +77,6 @@
 
             <Page :total="totalSets"
                   :page-size="listQuery.size"
-                  :current.sync="fixPage"
                   @on-change="handlePageChange"
                   @on-page-size-change="handleSizeChange"
                   class="page-style"
