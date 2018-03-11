@@ -279,22 +279,27 @@
             align: 'center',
             render:(h,params) =>{
               let hArray = [];
-              for(let i =0;i<10;i++){
+              let groups = params.row.groups;
+              //防止因为分组的异步数据未获取到而导致的undefine问题
+              if(groups ===undefined){
+                return [];
+              }
+              groups.forEach(g => {
                 hArray.push(h(GroupAvatar, {
                   props: {
                     group: {
-                      groupName: '12321312',
-                      groupId: '1213213214',
-                      arrangementId: '123213123'
+                      groupName: g.groupName,
+                      groupId: g.groupId,
+                      arrangementId: g.arrangementId
                     }
                   },
-                  on:{
-                    click: () =>{
+                  on: {
+                    click: () => {
                       vm.$router.push({path: 'create'});
                     }
                   }
                 }));
-              }
+              });
               return hArray;
             }
           },
@@ -502,13 +507,26 @@
         this.$refs.studentTable.toggleRowSelection(row);
         this.isDisplayFavoriteColumn = !this.isDisplayFavoriteColumn;
       },
+      getGroups() {
+        let vm = this;
+        getRefGroups(this._currentTaskIds).then(res => {
+          vm.taskList.forEach(t => {
+            vm.$set(t, 'groups', res[t.taskId]);
+          })
+        }).catch(error => {
+
+        });
+      },
       getTaskList() {
-        let that = this;
+        let vm = this;
         this.listLoading = true;
         fetchTaskList(Object.assign({}, this.listQuery)).then(response => {
           this.taskList = response.content;
           this.total = response.totalElements;
           this.listLoading = false;
+        }).then(() =>{
+          //组装分组数据准备渲染
+          vm.getGroups();
         }).catch(error => {
           that.$message({
             type: 'error',
@@ -687,6 +705,9 @@
     computed: {
       fixPage() {
         return this.listQuery.page + 1;
+      },
+      _currentTaskIds() {
+        return this.taskList.map(t => t.taskId);
       },
       _length() {
         return this.taskList.length;
