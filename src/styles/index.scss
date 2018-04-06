@@ -1,5 +1,9 @@
 @import './element-ui.scss';
 @import './mixin.scss';
+@import './variables.scss';
+@import './transition.scss';
+@import './sidebar.scss';
+@import './btn.scss';
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -60,7 +64,7 @@ a:hover {
 
 .global-background{
   min-height: 710px;
-  background-image: url("./assets/5.jpg");
+  background-image: url("../assets/5.jpg");
   background-repeat: repeat;
 }
 

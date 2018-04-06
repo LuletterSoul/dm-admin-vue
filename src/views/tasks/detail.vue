@@ -176,8 +176,8 @@
       },
       getGroups() {
         let vm = this;
-        getRefGroups(this.taskId).then(groups => {
-          vm.groups = groups;
+        getRefGroups(this.taskId).then(t => {
+          vm.groups = t[vm.taskId];
           vm.groups.forEach(g => {
             getMembers(g.groupId).then(res => {
               vm.$set(g, 'groupMembers', res);
@@ -198,6 +198,7 @@
         if (end > this.totalElements) {
           end = this.totalElements;
         }
+        console.log(this.groups);
         return this.groups.slice(begin, end);
       },
       totalElements() {

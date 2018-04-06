@@ -131,6 +131,16 @@
     configureMembers
   } from 'api/groups';
 
+  import { fetchStudentList,
+    deleteStudent ,
+    createStudent,
+    updateStudent,
+    deleteStudentBatch,
+    markStudent,
+    unMakrStuden,
+    fetchOptions
+  } from 'api/students';
+
   export default {
     name: "resource",
     data() {
@@ -239,6 +249,7 @@
           studentName: '学生姓名',
           className: '班级',
         },
+        studentList:[],
         listQuery: {
 //          studentId: "",
 //          studentName: "",

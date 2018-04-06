@@ -1,9 +1,9 @@
 <template>
-    <el-menu @mouseenter="console.log('mouseenter')"
-             mode="vertical"
-             :default-active="$route.path">
-        <sidebar-item :routes='permission_routers'></sidebar-item>
-    </el-menu>
+  <el-menu mode="vertical" :default-active="$route.path"
+           :collapse="isCollapse"
+           background-color="#304156" text-color="#bfcbd9" active-text-color="#409EFF">
+    <sidebar-item :routes="permission_routers"></sidebar-item>
+  </el-menu>
 </template>
 
 <script>
@@ -13,8 +13,12 @@
       components: { SidebarItem },
       computed: {
         ...mapGetters([
-          'permission_routers'
-        ])
+          'permission_routers',
+          'sidebar'
+        ]),
+        isCollapse() {
+          return !this.sidebar.opened
+        }
       }
     }
 </script>

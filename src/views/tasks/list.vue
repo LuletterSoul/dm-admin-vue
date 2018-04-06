@@ -279,12 +279,12 @@
             align: 'center',
             render:(h,params) =>{
               let hArray = [];
-              let groups = params.row.groups;
+              let groupPeeks = params.row.groupPeeks;
               //防止因为分组的异步数据未获取到而导致的undefine问题
-              if(groups ===undefined){
+              if(groupPeeks ===undefined){
                 return [];
               }
-              groups.forEach(g => {
+              groupPeeks.forEach(g => {
                 hArray.push(h(GroupAvatar, {
                   props: {
                     group: {
@@ -507,11 +507,11 @@
         this.$refs.studentTable.toggleRowSelection(row);
         this.isDisplayFavoriteColumn = !this.isDisplayFavoriteColumn;
       },
-      getGroups() {
+      getGroupPeeks() {
         let vm = this;
         getRefGroups(this._currentTaskIds).then(res => {
           vm.taskList.forEach(t => {
-            vm.$set(t, 'groups', res[t.taskId]);
+            vm.$set(t, 'groupPeeks', res[t.taskId]);
           })
         }).catch(error => {
 
@@ -526,7 +526,7 @@
           this.listLoading = false;
         }).then(() =>{
           //组装分组数据准备渲染
-          vm.getGroups();
+          vm.getGroupPeeks();
         }).catch(error => {
           that.$message({
             type: 'error',

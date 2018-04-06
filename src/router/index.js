@@ -144,6 +144,12 @@ export const asyncRouterMap = [
             icon: 'group',
           },
           {
+            path: 'resource2',
+            component: _import('groups/divide/resource2'),
+            name: '人力资源2',
+            icon: 'group',
+          },
+          {
             path: 'setting',
             component: _import('groups/divide/setting'),
             name: '分组配置',
