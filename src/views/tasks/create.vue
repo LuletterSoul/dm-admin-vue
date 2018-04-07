@@ -1,106 +1,280 @@
 <template>
-  <div class="page">
-
+  <div>
     <div class="title">
       <i class="el-icon-upload2"></i>新建任务
     </div>
+    <el-row :gutter="20" style="margin: 20px;">
+      <el-col :offset="2" :span="22">
+        <el-form ref="newTask"
+                 size="medium"
+                 label-width="80px"
+                 :label-position="'left'"
+                 :model="newTask">
+          <el-row :gutter="20">
+            <el-col :span="22">
+              <el-form-item label="任务名称"
+                            :rules="{
+      required: true, message: '任务应该指定任务名称', trigger: 'blur'}"
+                            prop="taskName"
+              >
+                <el-input
+                  placeholder="输入任务名称"
+                  size="medium"
+                  style="width: 100%"
+                  v-model="newTask.taskName">
+                </el-input>
 
-    <div>
-      <div class="form1">
-        <el-form ref="form" :label-position="labelPosition" :model="temp" >
-        <el-form-item label="任务名称">
-          <el-input style="width: 200px;" v-model="temp.taskName">
-          </el-input>
-        </el-form-item>
+              </el-form-item>
+            </el-col>
+            <el-col :span="22">
+              <el-form-item label="任务描述">
+                <el-input
+                  :rows="4"
+                  style="width:100%;"
+                  type="textarea"
+                  v-model="newTask.taskDescription"
+                  placeholder="输入任务的描述,介绍任务的内容、要求、目标">
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="22">
+              <el-form-item label="任务编号"
+                            :rules="{
+      required: true, message: '必须指定任务编号', trigger: 'blur'}"
+                            prop="arrangementId"
+              >
+                <el-input
+                  placeholder="输入任务编号"
+                  size="medium"
+                  style="width: 100%"
+                  v-model="newTask.arrangementId">
+                </el-input>
 
-          <el-form-item label="任务描述">
-            <el-row>
+              </el-form-item>
+            </el-col>
+            <el-col :span="22">
+              <el-form-item label="算法配置">
+                <el-select style="width: 100%;"
+                           v-model="newTask.algorithmIds"
+                           multiple
+                           placeholder="建议算法">
+                  <el-option
+                    v-for="item in algorithms"
+                    :key="item.algorithmId"
+                    :label="item.algorithmName"
+                    :value="item.algorithmId">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
               <el-col :span="20">
-              <el-input style="width: 200px;" v-model="temp.taskDescription"></el-input>
+                <transition name="fade" mode="out-in">
+                  <el-form-item
+                    v-if="selectMode"
+                    :rules="{
+      required: true, message: '发掘任务至少要关联一个数据集', trigger: 'blur'}"
+                    v-for="(domain, index) in domains"
+                    :key="domain.key"
+                    :label="'数据集合'"
+                    prop="collectionIds">
+                    <el-cascader
+                      style="width: 100%"
+                      clearable
+                      :options="dataSetOptions"
+                      v-model="domain.selections">
+                    </el-cascader>
+                  </el-form-item>
+                  <el-form-item
+                    v-else
+                    :label="'数据集合'"
+                    :rules="{
+      required: true, message: '发掘任务至少要关联一个数据集', trigger: 'blur'}"
+                  >
+                    <Transfer
+                      :data="_candidateCollections"
+                      :target-keys="newTask.collectionIds"
+                      :list-style="listStyle"
+                      :not-found-text="'无数据集数据'"
+                      @on-change="handleCollectionsChange"
+                      :filter-method="filterCollections"
+                      :titles="['库内数据集', '关联此任务的数据集']">
+                    </Transfer>
+                  </el-form-item>
+                </transition>
               </el-col>
-            </el-row>
-          </el-form-item>
-
-        <el-form-item
-          v-for="(domain, index) in domains"
-          :key="domain.key"
-          :label="'选择数据集' + index">
-          <el-cascader
-            :options="dataSetOptions"
-            v-model="domain.selections"
-            @change="">
-          </el-cascader>
-          <el-button @click.prevent="removeDomain(domain)">删除</el-button>
-        </el-form-item>
-          <el-button @click="addDomain" class="add">关联数据集</el-button>
-
-
-        <el-form-item label="算法配置">
-          <el-select style="width: 450px;" v-model="temp.algorithmIds" multiple placeholder="请选择">
-            <el-option
-              v-for="item in algorithms"
-              :key="item.algorithmId"
-              :label="item.algorithmName"
-              :value="item.algorithmId">
-            </el-option>
-          </el-select>
-        </el-form-item>
-
-
-        <el-form-item label="开始时间">
-           <el-date-picker type="date" placeholder="选择日期" v-model="temp.startTime">
-           </el-date-picker>
-        </el-form-item>
-
-        <el-form-item label="截止时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="temp.finishTime">
-          </el-date-picker>
-        </el-form-item>
-
-
-        <el-form-item class="button">
-          <el-button type="primary" @click="create">立即创建</el-button>
-          <el-button>取消</el-button>
-        </el-form-item>
-      </el-form>
-      </div>
-    </div>
+            <el-col :span="1">
+              <el-button
+                type="primary"
+                size="medium"
+                @click="selectMode = !selectMode">
+                {{ this.switchModeTip }}
+              </el-button>
+            </el-col>
+            <el-col :span="22">
+              <el-form-item label="任务状态">
+                <el-select style="width: 100%;"
+                           v-model="newTask.statusValue"
+                           :disabled="true"
+                           placeholder="默认的任务状态">
+                  <el-option
+                    v-for="item in progressStatusOptions"
+                    :key="item.value"
+                    :label="item.description"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="22">
+              <el-form-item
+                label="计划时间"
+                :required="true"
+                prop="plannedTimeRange"
+                :rules="{
+      required: true, message: '任务的计划时间不能为空', trigger: 'blur'
+    }"
+              >
+                <el-date-picker
+                  clearable
+                  size="medium"
+                  style="width:100%"
+                  v-model="newTask.plannedTimeRange"
+                  type="daterange"
+                  unlink-panels
+                  format="yyyy 年 MM 月 dd 日 HH:mm:ss"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  range-separator="至"
+                  :start-placeholder="$t('p.task.list.filter.plannedBeginDate')"
+                  :end-placeholder="$t('p.task.list.filter.plannedEndDate')"
+                  :picker-options="pickerOptions">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col>
+              <el-form-item label="分派任务">
+                <Transfer
+                  :data="_candidateGroups"
+                  :target-keys="newTask.arrangeGroupIds"
+                  :list-style="listStyle"
+                  :not-found-text="'没有找到空闲的分组,您可以尝试建立新的分组'"
+                  @on-change="handleGroupChange"
+                  :filter-method="filterGroups"
+                  :titles="['空闲的队伍', '被分配任务的队伍']">
+                </Transfer>
+              </el-form-item>
+            </el-col>
+            <el-col :span="22">
+              <el-form-item>
+                <Button size="large"
+                        type="success"
+                        long
+                        :loading="creating"
+                        @click="submit">创建
+                </Button>
+              </el-form-item>
+            </el-col>
+            <el-col :span="22">
+              <el-form-item>
+                <Button size="large"
+                        type="error"
+                        long
+                        @click="reset">重置
+                </Button>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script type="text/javascript">
-  import { fetchTaskList,
-    deleteTask ,
+  import {
     createTask,
-    updateTask,
-    deleteTaskBatch} from 'api/tasks';
+    fetchTaskStatusOptions
+  } from 'api/tasks';
 
   import {
     fetchAlgorithms
-  } from  'api/algorithms'
+  } from 'api/algorithms'
 
   import {
     fetchCollectionList,
     fetchOptions
   } from 'api/datasets';
+
+  import {
+    getGroupList
+  } from 'api/groups'
+
   export default {
-    name: 'app',
-    created(){
-      this.getTaskList();
+    name: 'CreateTask',
+    created() {
       this.getCollectionList();
       this.fetchOptionals();
       this.getAlgorithms();
+      this.getCandidateGroups();
     },
-    data () {
+    data() {
       return {
+        creating:false,
+        selectMode:true,
+        groups:[],
+        collectionIds:[],
+        plannedTimeRange: [],
+        pickerOptions: {
+          shortcuts: [{
+            text: '一周内',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              end.setTime(start.getTime() + 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '一个月内',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              end.setTime(start.getTime() + 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '三个月内',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              end.setTime(start.getTime() + 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          },{
+            text: '半年内',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              end.setTime(start.getTime() + 3600 * 1000 * 24 * 180);
+              picker.$emit('pick', [start, end]);
+            }
+          },{
+            text: '一年内',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              end.setTime(start.getTime() + 3600 * 1000 * 24 * 360);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
         labelPosition: 'top',
-        taskList:[],
-        algorithms:[],
-        collectionList:[],
+        taskList: [],
+        algorithms: [],
+        collectionList: [],
         selectedOptions: [],
-        associatedTaskOptions:[],
-        dataSetCharOptions:[],
-        attrCharOptions:[],
+        progressStatusOptions: [],
+        associatedTaskOptions: [],
+        dataSetCharOptions: [],
+        attrCharOptions: [],
         options: [{
           value: '选项1',
           label: '01'
@@ -118,46 +292,83 @@
           label: '05'
         }
         ],
-        temp: {
-          taskName:'',
-          taskDescription:'',
-          startTime: '',
-          finishTime: '',
-//          groupIds:[],
-          collectionIds:[],
-          algorithmIds:[]
+        listStyle: {
+          fontSize: 16+'px',
+          width: '43%',
+          height: '500px'
+        },
+        newTask: {
+          taskName: '',
+          arrangementId:null,
+          taskDescription: '',
+          arrangeGroupIds: [],
+          collectionIds: [],
+          algorithmIds: [],
+          plannedTimeRange: [],
+          statusValue: 7,
+        },
+        defaultStatus: 7,
+        assignedStatus: {
+          value: 8,
+          status: "ASSIGNED",
+          description: "任务被分发"
         },
         domains: [{
-          selections:[],
+          selections: [],
           key: Date.now()
         }],
       };
     },
-    methods:{
-      resetTemp(){
-        this.temp =  {
-          taskName:'',
-          taskDescription:'',
-          startTime: '',
-          finishTime: '',
-          groupIds:[],
-          collectionIds:[],
-          algorithmIds:[]
+    watch: {
+      _collectionIds:function (val) {
+        if(val ===undefined) {
+          this.newTask.collectionIds = [];
+        }
+        this.newTask.collectionIds = val;
+      }
+    },
+    methods: {
+      resetTemp() {
+        this.newTask = {
+          taskName: '',
+          arrangementId:null,
+          taskDescription: '',
+          collectionIds: [],
+          algorithmIds: [],
+          plannedTimeRange: [],
+          statusValue: 7,
+          arrangeGroupIds: []
         }
       },
+      handleGroupChange(targetKeys, direction, moveKeys){
+        this.newTask.arrangeGroupIds = targetKeys;
+      },
+      handleCollectionsChange(targetKeys, direction, moveKeys){
+        this.newTask.collectionIds = targetKeys;
+      },
+      filterGroups() {
+        return true;
+      },
+      filterCollections() {
+        return true;
+      },
       fetchOptionals() {
-        fetchOptions().then(response =>{
-          this.dataSetCharOptions = response.dataSetCharOptions;
-          this.associatedTaskOptions = response.associatedTaskOptions;
-          this.attrCharOptions = response.attrCharOptions;
-        }).catch(error =>{
+        let vm = this;
+        fetchOptions().then(response => {
+          vm.dataSetCharOptions = response.dataSetCharOptions;
+          vm.associatedTaskOptions = response.associatedTaskOptions;
+          vm.attrCharOptions = response.attrCharOptions;
+        }).catch(error => {
           console.error(error);
         });
+        fetchTaskStatusOptions().then(res => {
+          vm.progressStatusOptions = res;
+        })
       },
       getAlgorithms() {
         fetchAlgorithms().then(response => {
           this.algorithms = response;
-        }).catch(error =>{
+        }).catch(error => {
           console.log(error);
         })
       },
@@ -168,49 +379,70 @@
           this.taskList = response.content;
           this.totalElements = response.totalElements;
           this.listLoading = false;
-        }).catch(error =>{
+        }).catch(error => {
           that.$message({
             type: 'error',
-            message:error
+            message: error
           })
         })
       },
       getCollectionList() {
-        let that =this;
+        let that = this;
         this.loading = true;
-        fetchCollectionList(Object.assign({}, this.listQuery)).then(response =>{
+        fetchCollectionList(Object.assign({}, this.listQuery)).then(response => {
           that.collectionList = response.content;
           that.totalElements = response.totalElements;
           that.loading = false;
-        }).catch(error =>{
+        }).catch(error => {
           console.log(error);
         })
       },
-      create() {
-        this.temp.collectionIds = this.computedCollectionIds;
-        createTask(this.temp).then(response => {
+      submit() {
+        this.$refs['newTask'].validate((valid) => {
+          if (valid) {
+            this.handleCreate();
+          } else {
+            return false;
+          }
+        });
+      },
+      reset() {
+
+      },
+      getCandidateGroups() {
+        let vm = this;
+        //获取全部未被分配任务的分组
+        getGroupList({fetch: true,taskStatus:1}).then(res =>{
+          vm.groups = res.content;
+        })
+      },
+      handleCreate() {
+        let vm = this;
+        vm.creating = true;
+        createTask(Object.assign({},this.newTask)).then(response => {
+          vm.createting = false;
           this.$message({
-            message:'创建成功',
-            type:'success',
-            duration:1500
+            message: '创建成功',
+            type: 'success',
+            duration: 1500
           });
           this.resetTemp();
-          this.$router.push({path:'/tasks'});
+          this.$router.push({path: '/tasks'});
         });
       },
       removeDomain(item) {
-        var index = this.domains.indexOf(item)
+        var index = this.domains.indexOf(item);
         if (index !== -1) {
           this.domains.splice(index, 1)
         }
       },
       addDomain() {
         this.domains.push({
-          selections:[],
+          selections: [],
           key: Date.now()
         });
       },
-      handleMapping(multiple,name) {
+      handleMapping(multiple, name) {
         return multiple.map(m => {
           let option =
             this.collectionList.map(set => {
@@ -241,7 +473,23 @@
         })
       }
     },
-    computed:{
+    computed: {
+      _candidateGroups() {
+        return this.groups.map(g => {
+          return {
+            key: g.groupId,
+            label: g.groupName + ' / ' + '建立时间: '+g.builtTime
+          };
+        })
+      },
+      _candidateCollections() {
+        return this.collectionList.map( c=>{
+          return {
+            key: c.collectionId,
+            label: c.collectionName
+          };
+        })
+      },
       dataSetOptions() {
         return [
           {
@@ -252,15 +500,15 @@
           {
             value: 'attributeChars',
             label: '属性类型',
-            children:this.attributeTypesCascade
+            children: this.attributeTypesCascade
           }, {
             value: 'associatedTasks',
             label: '相关任务',
-            children:this.miningTaskTypesCascade
+            children: this.miningTaskTypesCascade
           }
         ]
       },
-      charsCascade(){
+      charsCascade() {
         return this.dataSetCharOptions.map(char => {
           return {
             value: char.englishName,
@@ -269,49 +517,64 @@
         })
       },
       //数据集分类器
-      miningTaskTypesCascade(){
+      miningTaskTypesCascade() {
         return this.handleMapping(this.associatedTaskOptions, 'associatedTasks');
       },
-      attributeTypesCascade(){
-        return this.handleMapping(this.attrCharOptions, 'attributeChars');
+      attributeTypesCascade() {
+        return this.handleMapping(this.attrCharOptions, 'attributeCharacteristics');
       },
-      characteristicsCascade(){
-        return this.handleMapping(this.dataSetCharOptions, 'dataSetChars');
+      characteristicsCascade() {
+        return this.handleMapping(this.dataSetCharOptions, 'dataSetCharacteristics');
       },
-      computedCollectionIds() {
-        return this.domains.map(domain => domain.selections[2]);
+      _collectionIds() {
+        let ids = this.domains.map(domain => domain.selections[2]);
+        let containedNull = false;
+        ids.forEach(i => {
+          if (i === undefined || !i) {
+            containedNull = true;
+          }
+        });
+        return containedNull ? [] : ids;
+
+      },
+      switchModeTip() {
+        return this.selectMode ? '直接勾选' : '分类勾选'
       }
     }
   }
 </script>
 
 <style>
-  .title{
+  .title {
     margin-bottom: 20px;
-    width:20%;
-    font:bold 36px 微软雅黑;
+    font: bold 36px 微软雅黑;
   }
-  div{
-    background-color:transparent;
-    margin:0px auto;
+
+  div {
+    background-color: transparent;
+    margin: 0px auto;
   }
-  .form1{
+
+  .form1 {
     width: 50%;
     height: 100%;
     padding: 30px;
   }
-  .page{
-    padding:20px;
+
+  .page {
+    padding: 20px;
   }
-  .button{
+
+  .button {
     clear: both;
     margin-top: 40px;
     margin-bottom: 20px;
-    width:40%;
+    width: 40%;
   }
-  .add{
-    position:absolute;
-    top:357px;
-    left:862px;
+
+  .add {
+    position: absolute;
+    top: 357px;
+    left: 862px;
   }
 </style>

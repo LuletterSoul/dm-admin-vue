@@ -11,8 +11,16 @@ export function fetchTaskList(query) {
 
 export function deleteTask(taskId) {
   return fetch({
-    url:'/tasks/'+taskId,
+    url:TASK_PATH.concat('/').concat(taskId),
     method:'delete'
+  })
+}
+
+export function deleteBatchTask(taskIds) {
+  return fetch({
+    url:TASK_PATH,
+    method:'delete',
+    data:taskIds,
   })
 }
 
@@ -26,11 +34,12 @@ export function createTask(task) {
 
 export function deleteTaskBatch(taskIds) {
   return fetch({
-    url:'/tasks/deleteWithIdArray',
+    url:'/tasks',
     method:'delete',
     data:taskIds
   })
 }
+
 //根据id获取发掘任务的信息
 export function getByTaskId(id) {
   return fetch({
@@ -114,5 +123,23 @@ export function fetchConfiguredAlgortithms(taskId) {
   })
 }
 
+export function fetchTaskStatusOptions() {
+  return fetch({
+    url:'/options/tasks/progress_status',
+    method:'get'
+  })
+}
+export function fetchMaxAndMinGroupsNum() {
+  return fetch({
+    url: TASK_PATH.concat('/max_min_group_num'),
+    method: 'get'
+  });
+}
 
+export function findAllTaskNames() {
+  return fetch({
+    url: TASK_PATH.concat('/task_names'),
+    method: 'get'
+  });
+}
 

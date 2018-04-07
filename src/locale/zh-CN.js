@@ -38,6 +38,21 @@ export default {
         description: '阅读文档能使你完全掌握 Easy Mock 的使用。 | 更新永无止境，只为让你开心。'
       }
     },
+    task:{
+      list:{
+        filter:{
+          plannedBeginDate:'计划开始时间',
+          plannedEndDate:'计划结束时间',
+          builtTimeBegin:'建立时间的区间起点',
+          builtTimeEnd:'建立时间的区间重点',
+          taskName:'任务名称',
+          progressStatus:'任务状态',
+          plannedDuration:'计划持续天数',
+          limit:"关联分组超过"
+
+        }
+      }
+    },
     group: {
       header: {
         title: '数据发掘任务分组',
@@ -99,7 +114,7 @@ export default {
               studentName: '学生姓名',
               profession: "专业",
               grade:'年级',
-              placeholder:'你的人力资源极度匮乏,赶快加入您即将要抱团的学生吧!',
+              placeholder:'你的人力资源极度匮乏,赶快加入一些要抱团的学生吧!',
               label:'指定',
             },
             builder:{

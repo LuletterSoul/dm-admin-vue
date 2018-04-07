@@ -5,6 +5,8 @@ import App from './App'
 import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
+import '@/styles/index.scss'
+
 import iView from 'iview';
 import VueI18n from 'vue-i18n'
 import enLocale from './locale/en'
@@ -16,7 +18,10 @@ import EmHeader from './components/EmHeader'
 import EmSpot from './components/EmSpots'
 
 import 'element-ui/lib/theme-chalk/index.css'
+
+
 import NProgress from 'nprogress'
+NProgress.configure({ showSpinner: false })// NProgress Configuration
 import 'nprogress/nprogress.css'
 import 'normalize.css/normalize.css'
 import '@/assets/iconfont/iconfont'

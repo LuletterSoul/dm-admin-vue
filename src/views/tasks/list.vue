@@ -1,27 +1,53 @@
 <template>
   <div class="calendar-list-container test">
-    <group-modal :to-group="_updatingTargetGroup"
-                 @on-closed="handleClosed"
-                 @on-confirm="handleUpdateConfirm"
-                 :to-show="showEditModal"
-                 :to-candidates="allStudents"
-                 :to-group-members="_updatingTargetGroup.groupMembers"
-                 :to-task-status="taskStatusOptions">
-    </group-modal>
     <el-row>
       <el-col :offset="10" :span="14">
-        <el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-date-picker
+              clearable
+              size="medium"
+              style="width: 100%"
+              v-model="builtTimeRange"
+              type="daterange"
+              unlink-panels
+              format="yyyy 年 MM 月 dd 日 HH:mm:ss"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              range-separator="至"
+              :start-placeholder="$t('p.task.list.filter.builtTimeBegin')"
+              :end-placeholder="$t('p.task.list.filter.builtTimeEnd')"
+              :picker-options="pickerOptions">
+            </el-date-picker>
+          </el-col>
+          <el-col :span="12">
+            <el-date-picker
+              clearable
+              size="medium"
+              style="width: 100%"
+              v-model="plannedTimeRange"
+              type="daterange"
+              unlink-panels
+              format="yyyy 年 MM 月 dd 日 HH:mm:ss"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              range-separator="至"
+              :start-placeholder="$t('p.task.list.filter.plannedBeginDate')"
+              :end-placeholder="$t('p.task.list.filter.plannedEndDate')"
+              :picker-options="pickerOptions">
+            </el-date-picker>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top: 20px">
           <el-col>
             <el-row :gutter="20">
               <el-col :span="9">
                 <el-autocomplete
                   size="medium"
                   style="width: 100%"
-                  v-model="listQuery.groupName"
+                  v-model="listQuery.taskName"
                   suffix-icon="el-icon-edit"
-                  :fetch-suggestions="groupNameSearch"
+                  :fetch-suggestions="taskNameSearch"
                   select-when-unmatched
-                  :placeholder="$t('p.group.list.filter.groupName')">
+                  :placeholder="$t('p.task.list.filter.taskName')">
                 </el-autocomplete>
               </el-col>
               <el-col :span="9">
@@ -30,11 +56,11 @@
                   style="width: 100%"
                   suffix-icon="el-icon-zoom-in"
                   v-model="wrappedSuggestedGroupLeader"
-                  :fetch-suggestions="groupLeaderSearch"
+                  :fetch-suggestions="taskLeaderSearch"
                   @select="handleLeaderFilter"
-                  select-when-unmatched
-                  :placeholder="$t('p.group.list.filter.leader')">
+                  select-when-unmatched>
                 </el-autocomplete>
+                <!--:placeholder="$t('p.task.list.filter.leader')"-->
               </el-col>
               <el-col :span="6">
                 <el-select size="medium"
@@ -49,42 +75,41 @@
               </el-col>
             </el-row>
             <el-row :gutter="20" style="margin-top: 20px">
-              <el-col :span="6">
+              <el-col :span="9">
                 <el-select
                   size="medium"
                   clearable
+                  :placeholder="$t('p.task.list.filter.progressStatus')"
+                  style="width: 100%"
                   v-model="listQuery.taskStatus">
                   <el-option
-                    v-for="item in taskStatusOptions"
+                    v-for="item in statusOptions"
                     :value="item.value"
                     :key="item.value"
                     :label="item.description">
                   </el-option>
                 </el-select>
               </el-col>
-              <el-col :span="14">
-                <el-date-picker
-                  clearable
-                  size="medium"
-                  style="width: 100%"
-                  v-model="value7"
-                  @change="handTimeFilter"
-                  type="daterange"
-                  unlink-panels
-                  format="yyyy 年 MM 月 dd 日 HH:mm:ss"
-                  value-format="yyyy-MM-dd HH:mm:ss"
-                  range-separator="至"
-                  :start-placeholder="$t('p.group.list.filter.beginDate')"
-                  :end-placeholder="$t('p.group.list.filter.endDate')"
-                  :picker-options="pickerOptions">
-                </el-date-picker>
+              <el-col :span=9>
+                <el-slider
+                  v-model="maxAndMin"
+                  range
+                  show-stops
+                  :format-tooltip="formatTooltip"
+                  :label="'多少队以上'"
+                  :max="max">
+                </el-slider>
               </el-col>
               <el-col :span="1">
-                <Button style="margin-top: 2px" type="primary" shape="circle" icon="ios-search"
+                <Button style="margin-top: 2px"
+                        type="primary"
+                        shape="circle"
+                        icon="ios-search"
                         @click="handleFilter"></Button>
               </el-col>
               <el-col :span="1">
                 <el-button size="medium"
+                           style="margin-left: 8px"
                            class="btn-item" type="danger"
                            plain
                            round
@@ -101,9 +126,9 @@
     <el-row style="margin-top: 20px">
       <Table border
              :loading="listLoading"
-             :columns="groupColumns"
-             :data="groupList"
-             size='large'
+             :columns="taskColumns"
+             :data="taskList"
+             size='default'
              @on-selection-change="handleSelectionChange"
              stripe></Table>
     </el-row>
@@ -120,16 +145,16 @@
         </el-pagination>
       </el-col>
     </el-row>
-    <el-row id="group-view" style="margin-top: 60px">
+    <el-row id="task-view" style="margin-top: 60px">
       <el-col>
         <transition
           mode="out-in"
           name="custom-classes-transition"
           enter-active-class="animated bounceIn"
           leave-active-class="animated bounceOutRight">
-          <group-view
-            v-if="_wrappedDetailTarget" :groups="_wrappedDetailTarget" :key="this._wrappedDetailTarget[0].groupId">
-          </group-view>
+          <!--<task-view-->
+          <!--v-if="_wrappedDetailTarget" :tasks="_wrappedDetailTarget" :key="this._wrappedDetailTarget[0].taskId">-->
+          <!--</task-view>-->
         </transition>
       </el-col>
     </el-row>
@@ -139,42 +164,43 @@
 <script>
   import {parseTime, deleteEmptyProperty} from 'utils';
   import {fetchStudentList} from 'api/students';
+  import  GroupAvatar from '../components/groupAvatar';
   import {
-    getGroupList,
-    getLeisureStudents,
-    createGroupPreview,
-    getGroupPreview,
-    getGroup,
-    deleteGroups,
-    updateGroup,
-    getMembers,
-    updateLeader,
-    configureMembers,
-    getGroupNames,
-    getGroupLeaders,
-    getTaskStatus
-  } from 'api/groups';
-
-  import GroupView from '../components/groupView';
-  import GroupModal from '../components/groupModal';
-
+    fetchTaskStatusOptions,
+    fetchTaskList,
+    deleteTask,
+    createTask,
+    deleteTaskBatch,
+    getByTaskId,
+    updateTask,
+    getRefGroups,
+    getRefCollections,
+    involveGroups,
+    removeGroups,
+    configAlgorithms,
+    arrangeMiningTasks,
+    deleteAllRefCollections,
+    fetchConfiguredAlgortithms,
+    fetchMaxAndMinGroupsNum,
+    findAllTaskNames,
+    deleteBatchTask
+  } from 'api/tasks';
   export default {
-    name: 'group-list',
-    components: {GroupView, GroupModal},
-
+    name: 'task-list',
+    components: {GroupAvatar},
     data() {
       let vm = this;
       return {
         allStudents: [],
-        groupModel:{
-          groupName:'',
-          groupLeader:{
-            studentId:'',
-            studentName:'',
-            className:'',
+        taskModel: {
+          taskName: '',
+          taskLeader: {
+            studentId: '',
+            studentName: '',
+            className: '',
           },
-          taskStatus:'',
-          groupMembers:[],
+          progressStatus: '',
+          taskMembers: [],
         },
         pickerOptions: {
           shortcuts: [{
@@ -206,11 +232,11 @@
         value6: '',
         value7: '',
         showEditModal: false,
-        taskStatusOptions: [],
-        suggestedGroupNames: [],
+        statusOptions: [],
+        suggestedTaskNames: [],
         suggestedGroupLeaders: [],
         wrappedSuggestedGroupLeader: '',
-        groupColumns: [
+        taskColumns: [
           {
             type: 'selection',
             width: 60,
@@ -223,47 +249,68 @@
             align: 'center'
           },
           {
-            title: '队名',
+            title: '任务名称',
             align: 'center',
-            key: 'groupName'
+            key: 'taskName'
           },
           {
-            title: '分组编号',
+            title: '任务编号',
             align: 'center',
             width: 100,
             key: 'arrangementId'
           },
-
           {
-            title: '组长',
-            align: 'center',
-            render: function (h, params) {
-              return h('span', {}, params.row.groupLeader.studentName)
-            }
-          },
-          {
-            title: '任务',
-            align: 'center',
-            render: function (h, params) {
-              return h('span', {}, vm.renderTask(params.row.dataMiningTask))
-            }
-          },
-          {
-            title: '建队时间',
+            title: '建立时间',
             align: 'center',
             key: 'builtTime'
           },
           {
-            title: '组员',
+            title: '计划开始时间',
             align: 'center',
+            key: 'plannedStartTime'
+          },
+          {
+            title: '计划结束时间',
+            align: 'center',
+            key: 'plannedFinishTime'
+          },
+          {
+            title: '关联队伍',
+            align: 'center',
+            render:(h,params) =>{
+              let hArray = [];
+              let groupPeeks = params.row.groupPeeks;
+              //防止因为分组的异步数据未获取到而导致的undefine问题
+              if(groupPeeks ===undefined){
+                return [];
+              }
+              groupPeeks.forEach(g => {
+                hArray.push(h(GroupAvatar, {
+                  props: {
+                    group: {
+                      groupName: g.groupName,
+                      groupId: g.groupId,
+                      arrangementId: g.arrangementId
+                    }
+                  },
+                  on: {
+                    click: () => {
+                      vm.$router.push({path: 'create'});
+                    }
+                  }
+                }));
+              });
+              return hArray;
+            }
           },
           {
             title: '任务状态',
             align: 'center',
+            width:'200px',
             render: function (h, params) {
               return h('Tag', {
-                props: vm.renderTaskStatusTag(params.row.taskStatus)
-              }, params.row.taskStatus.description)
+                props: vm.renderTaskStatusTag(params.row.progressStatus)
+              }, params.row.progressStatus.description)
             }
           },
           {
@@ -290,7 +337,7 @@
                   },
                   on: {
                     click: () => {
-                      this.handleDelete(params.row,params.index);
+                      this.handleDelete(params.row, params.index);
                     }
                   }
                 }),
@@ -307,18 +354,23 @@
                 })
               ]);
             }
-          },
+          }
         ],
         total: null,
         listLoading: false,
+        builtTimeRange: [],
+        plannedTimeRange: [],
         listQuery: {
-          groupName: "",
-          beginDate: '',
-          endDate: '',
-          leaderStudentId: '',
+          taskName: "",
+          builtTimeBegin: '',
+          builtTimeEnd: '',
+          plannedBeginDate: '',
+          plannedEndDate: '',
+          upperBound: '666666666',
+          lowBound: -1,
           page: 0,
           size: 20,
-          taskStatus: null,
+          progressStatus: null,
           sort: "builtTime,ASC",
         },
         detailTargetIndex: null,
@@ -340,9 +392,11 @@
           },
           finishedTaskCount: 0
         },
+        maxAndMin: [-1, 0],
+        max: 10,
         selectionIds: [],
         selectedGroups: [],
-        groupList: [],
+        taskList: [],
         sortOptions:
           [{label: '按建立时间升序', key: 'builtTime,ASC'},
             {label: '按建立时间降序', key: 'builtTime,DESC'}],
@@ -353,13 +407,48 @@
       };
     },
     created() {
-      this.getGroupList();
-      this.getSuggestedGroupNames();
-      this.getSuggestedGroupLeaders();
-      this.getTaskStatusOptions();
+      this.getTaskList();
+      this.getMinAndMax();
+      this.getSuggestedTaskNames();
+      this.getTaskProgressStatus();
       this.getAllStudents();
     },
+    watch: {
+      builtTimeRange: function (val) {
+        if (val) {
+          this.listQuery.builtTimeBegin = val[0];
+          this.listQuery.builtTimeEnd = val[1];
+        }
+        else {
+          this.listQuery.builtTimeBegin = '';
+          this.listQuery.builtTimeEnd = '';
+        }
+      },
+      plannedTimeRange: function (val) {
+        if (val) {
+          this.listQuery.plannedBeginDate = val[0];
+          this.listQuery.plannedEndDate = val[1];
+        }
+        else {
+          this.listQuery.plannedBeginDate = '';
+          this.listQuery.plannedEndDate = '';
+        }
+      },
+      maxAndMin: function (val) {
+        this.listQuery.lowBound = val[0];
+        this.listQuery.upperBound = val[1];
+      }
+    },
     methods: {
+      getMinAndMax() {
+        let vm = this;
+        fetchMaxAndMinGroupsNum().then(res => {
+          vm.max = res[0];
+          vm.maxAndMin = res;
+        }).catch(error => {
+
+        });
+      },
       getAllStudents() {
         let vm = this;
         fetchStudentList({fetch: true}).then(res => {
@@ -367,13 +456,13 @@
         }).catch(error => {
         });
       },
-      handleClosed(){
+      handleClosed() {
         this.showEditModal = false;
       },
-      getSuggestedGroupNames() {
+      getSuggestedTaskNames() {
         let vm = this;
-        getGroupNames().then(res => {
-          vm.suggestedGroupNames = res.map(r => {
+        findAllTaskNames().then(res => {
+          vm.suggestedTaskNames = res.map(r => {
             return {
               value: r,
               name: r
@@ -381,28 +470,16 @@
           });
         })
       },
-      getSuggestedGroupLeaders() {
+      getTaskProgressStatus() {
         let vm = this;
-        getGroupLeaders().then(res => {
-          vm.suggestedGroupLeaders = res.map(r => {
-            return {
-              value: r.studentId + ' - ' + r.studentName + ' - ' + r.className + ' - ' + r.profession,
-              info: r
-            }
-          });
+        fetchTaskStatusOptions().then((res) => {
+          vm.statusOptions = res;
         }).catch(error => {
         });
       },
-      getTaskStatusOptions() {
-        let vm = this;
-        getTaskStatus().then((res) => {
-          vm.taskStatusOptions = res;
-        }).catch(error => {
-        });
-      },
-      groupNameSearch(queryString, cb) {
-        var suggestedGroupNames = this.suggestedGroupNames;
-        var results = queryString ? suggestedGroupNames.filter(this.createFilter(queryString)) : suggestedGroupNames;
+      taskNameSearch(queryString, cb) {
+        var suggestedTaskNames = this.suggestedTaskNames;
+        var results = queryString ? suggestedTaskNames.filter(this.createFilter(queryString)) : suggestedTaskNames;
         cb(results);
       },
       createFilter(queryString) {
@@ -411,7 +488,7 @@
           return s.value.toLowerCase().match(reg);
         };
       },
-      groupLeaderSearch(queryString, cb) {
+      taskLeaderSearch(queryString, cb) {
         var suggestedGroupLeaders = this.suggestedGroupLeaders;
         var results = queryString ? suggestedGroupLeaders.filter(this.createFilter(queryString)) : suggestedGroupLeaders;
         cb(results);
@@ -430,13 +507,26 @@
         this.$refs.studentTable.toggleRowSelection(row);
         this.isDisplayFavoriteColumn = !this.isDisplayFavoriteColumn;
       },
-      getGroupList() {
-        let that = this;
+      getGroupPeeks() {
+        let vm = this;
+        getRefGroups(this._currentTaskIds).then(res => {
+          vm.taskList.forEach(t => {
+            vm.$set(t, 'groupPeeks', res[t.taskId]);
+          })
+        }).catch(error => {
+
+        });
+      },
+      getTaskList() {
+        let vm = this;
         this.listLoading = true;
-        getGroupList(Object.assign({}, this.listQuery)).then(response => {
-          this.groupList = response.content;
+        fetchTaskList(Object.assign({}, this.listQuery)).then(response => {
+          this.taskList = response.content;
           this.total = response.totalElements;
           this.listLoading = false;
+        }).then(() =>{
+          //组装分组数据准备渲染
+          vm.getGroupPeeks();
         }).catch(error => {
           that.$message({
             type: 'error',
@@ -450,7 +540,7 @@
         }
         this.detailTargetIndex = null;
         this.listQuery.size = val;
-        this.getGroupList();
+        this.getTaskList();
       },
       handleCurrentChange(val) {
         if (this.listQuery.page === val - 1) {
@@ -458,7 +548,7 @@
         }
         this.detailTargetIndex = null;
         this.listQuery.page = val - 1;
-        this.getGroupList();
+        this.getTaskList();
       },
       handleSelectionChange(selections) {
         this.selectedGroups = selections;
@@ -468,34 +558,43 @@
         this.listQuery.endDate = val[1];
       },
       handleFilter() {
-        this.getGroupList();
+        this.getTaskList();
       },
       handleGroupLeaderFilter() {
         this.listQuery.leaderStudentId = '';
       },
       handleEdit(index) {
         this.detailTargetIndex = index;
-        this.getMembers(this.groupList[index].groupId, index);
+        this.getMembers(this.taskList[index].taskId, index);
         this.showEditModal = true;
       },
       handleCheck(index) {
-        this.detailTargetIndex = index;
-        this.getMembers(this.groupList[index].groupId, index);
-        let el = document.getElementById("group-view");
-        el.scrollIntoView();
-      },
-      handleDelete(group,index) {
         let vm = this;
-        let wrapGroups = [];
-        wrapGroups.push(group.groupId);
-        this.$confirm('此操作将删除名为 ' + group.groupName + ' 的分组信息, 是否继续?', '确定删除', {
+        this.detailTargetIndex = index;
+        this.$router.push({
+          path: '/tasks/detail',
+          query: {
+            taskId: vm.taskList[index].taskId
+          }
+        });
+      },
+      handleDelete(task, index) {
+        let vm = this;
+        let wrapTasks = [];
+        wrapTasks.push(task.taskId);
+        this.$notify({
+          title: '警告',
+          message: '删除任务操作会影响分组及其分组成员当前的任务状态！谨慎操作！',
+          type: 'warning'
+        });
+        this.$confirm('此操作将删除名为 ' + task.taskName + ' 的任务信息, 是否继续?', '确定删除', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          deleteGroups(wrapGroups).then(() => {
+          deleteBatchTask(wrapTasks).then(() => {
             vm.$message.success('删除成功');
-            vm.groupList.splice(index, 1);
+            vm.taskList.splice(index, 1);
           }).catch(error => {
           })
         }).catch(() => {
@@ -504,25 +603,25 @@
       },
       handleBatchDelete() {
         let vm = this;
-        this.$confirm('此操作将删除已完成分组信息, 是否继续?', '确定删除', {
+        this.$confirm('此操作将删除已完成任务信息, 是否继续?', '确定删除', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          deleteGroups(this._selectionIds).then(() => {
+          deleteBatchTask(this._selectionIds).then(() => {
             vm.$message.success('删除成功');
-            this.getGroupList();
+            this.getTaskList();
           }).catch(error => {
           })
         })
       },
-      handleUpdateConfirm(groupDto) {
+      handleUpdateConfirm(taskDto) {
         let vm = this;
-        updateGroup(groupDto).then(res => {
-          vm.groupList.splice(vm.detailTargetIndex,1, res);
+        updateGroup(taskDto).then(res => {
+          vm.taskList.splice(vm.detailTargetIndex, 1, res);
           vm.$message({
             showClose: true,
-            message: '更新分组信息成功',
+            message: '更新任务信息成功',
             type: 'success'
           });
           vm.detailTargetIndex = null;
@@ -530,12 +629,12 @@
 
         });
       },
-      getMembers(groupId, index) {
+      getMembers(taskId, index) {
         let vm = this;
-        let current = vm.groupList[index];
-        if(current.groupMembers ===undefined) {
-          getMembers(groupId).then(res => {
-            vm.$set(current, 'groupMembers', res);
+        let current = vm.taskList[index];
+        if (current.taskMembers === undefined) {
+          getMembers(taskId).then(res => {
+            vm.$set(current, 'taskMembers', res);
           }).catch(error => {
           })
         }
@@ -568,9 +667,12 @@
           return task.taskName;
         }
       },
-      renderTaskStatusTag(taskStatus) {
+      formatTooltip(val) {
+        return '关联分组数 : ' + val;
+      },
+      renderTaskStatusTag(progressStatus) {
         let tagColor = '';
-        switch (taskStatus.value) {
+        switch (progressStatus.value) {
           case 1:
             tagColor = 'yellow';
             break;
@@ -589,6 +691,10 @@
           case 6:
             tagColor = '#25dc72';
             break;
+          default:
+            tagColor = 'blue';
+            break;
+
         }
         return {
           type: 'dot',
@@ -600,22 +706,25 @@
       fixPage() {
         return this.listQuery.page + 1;
       },
+      _currentTaskIds() {
+        return this.taskList.map(t => t.taskId);
+      },
       _length() {
-        return this.groupList.length;
+        return this.taskList.length;
       },
       _selectionIds() {
-        return this.selectedGroups.map(selection => selection.groupId);
+        return this.selectedGroups.map(selection => selection.taskId);
       },
       _wrappedDetailTarget() {
         if (!this._length || this.detailTargetIndex === null) {
           return null;
         }
         let wrap = [];
-        wrap.push(this.groupList[this.detailTargetIndex]);
+        wrap.push(this.taskList[this.detailTargetIndex]);
         return wrap;
       },
       _updatingTargetGroup() {
-        return this._wrappedDetailTarget ? Object.assign({},this._wrappedDetailTarget[0]) : this.groupModel;
+        return this._wrappedDetailTarget ? Object.assign({}, this._wrappedDetailTarget[0]) : this.taskModel;
       },
 
     },
@@ -623,7 +732,7 @@
 </script>
 
 <style lang="scss">
-  .group-list-container {
+  .task-list-container {
     margin-top: 90px;
   }
 

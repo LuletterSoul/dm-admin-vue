@@ -102,7 +102,7 @@ export const asyncRouterMap = [
       {
         path: 'list',
         component: _import('students/list'),
-        name: '学生列表',
+        name: '学生概要',
         icon: 'group'
       },
       {
@@ -120,34 +120,34 @@ export const asyncRouterMap = [
       {
         path: 'list',
         component: _import('groups/list'),
-        name: '分组列表',
-        icon: 'group'
+        name: '分组概要',
+        icon: 'information'
       },
       {
         path: 'details',
         component: _import('groups/details'),
         name: '队伍详情',
-        icon: 'group',
+        icon: 'more',
       },
       {
         //注意此种写法,使用相对路由的写法会导致到跨路由跳跃时的404,应该补全前一级路由
         path: '/groups/divide',
         component: _import('groups/divide/divideLayout'),
         redirect: '/groups/divide/resource',
-        name: '分组操作',
-        icon: 'group',
+        name: '一键分组',
+        icon: 'addpeople',
         children: [
           {
             path: 'resource',
             component: _import('groups/divide/resource'),
             name: '人力资源',
-            icon: 'group',
+            icon: 'icon41',
           },
           {
             path: 'setting',
             component: _import('groups/divide/setting'),
             name: '分组配置',
-            icon: 'group',
+            icon: 'icon42',
             beforeEnter: (to, from, next) => {
               const t = store.getters.previewGroups.dataMiningGroups;
               if (t !== undefined &&t.length) {
@@ -165,7 +165,7 @@ export const asyncRouterMap = [
             path: 'preview',
             component: _import('groups/divide/preview'),
             name: '分组预览',
-            icon: 'group',
+            icon: 'icon43',
             beforeEnter: (to, from, next) => {
               if (store.getters.previewGroups.dataMiningTask === ''
                   &&!store.getters.previewGroups.dataMiningGroups.length) {
@@ -185,34 +185,34 @@ export const asyncRouterMap = [
             path: 'manual',
             component: _import('groups/divide/manualOptimization'),
             name: '手动调优',
-            icon: 'group',
+            icon: 'icon44',
           }
         ]
       },
       {
         path:'new',
         component:_import('groups/new'),
-        name:'新增分组',
-        icon:'group'
+        name:'新增历史',
+        icon:'history'
       }
     ]
   },
   {
     path: '/tasks',
     component: Layout,
-    redirect: '/tasks/index',
+    redirect: '/tasks/list',
     name: "任务",
     icon: 'task-management',
     children: [
       {
-        path: 'index', component: _import('tasks/index'), name: '任务列表', icon: 'survey1'
+        path:'list',component:_import('tasks/list'),name:'任务概要',icon: 'survey1'
       },
       {
         path: 'create', component: _import('tasks/create'), name: '新建任务', icon: 'home'
-      },
-      {
-        path: 'detail', component: _import('tasks/detail'), name: '任务信息', icon: 'home'
       }
+      // {
+      //   path: 'detail', component: _import('tasks/detail'), name: '任务信息', icon: 'home'
+      // }
     ]
   },
   // {

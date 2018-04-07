@@ -13,7 +13,7 @@ export function fetchCollectionList(query) {
 
 export function deleteCollection(dataSetId) {
   return fetch({
-    url:COLLECTION_BASE_PATH.concat(dataSetId),
+    url:COLLECTION_BASE_PATH.concat('/').concat(dataSetId),
     method:'delete'
   })
 }

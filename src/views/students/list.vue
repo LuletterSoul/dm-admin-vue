@@ -26,113 +26,9 @@
       <el-button class="btn-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-plus">添加</el-button>
       <el-button class="btn-item" type="primary" icon="el-icon-document" @click="handleDownload">导出</el-button>
       <el-button class="btn-item" type="primary" icon="el-icon-delete" v-waves @click="handleBatchDelete" :disabled="!multipleSelection.length">批量删除</el-button>
-      <el-button class="btn-item" type="warning" icon="el-icon-star-on" v-waves @click="markFavoriteStudent" v-if="multipleSelection.length" >收藏</el-button>
-      <el-button class="btn-item" type="warning" icon="el-icon-star-off" :plain="true" v-waves @click="unMarkFavoriteStudent" v-if="multipleSelection.length" >取消收藏</el-button>
+      <!--<el-button class="btn-item" type="warning" icon="el-icon-star-on" v-waves @click="markFavoriteStudent" v-if="multipleSelection.length" >收藏</el-button>-->
+      <!--<el-button class="btn-item" type="warning" icon="el-icon-star-off" :plain="true" v-waves @click="unMarkFavoriteStudent" v-if="multipleSelection.length" >取消收藏</el-button>-->
     </div>
-    <!--<el-table :data="studentList"-->
-              <!--ref="studentTable"-->
-              <!--v-loading="listLoading"-->
-              <!--border fit-->
-              <!--highlight-current-row-->
-              <!--@selection-change="handleSelectionChange"-->
-              <!--style="width: 100%">-->
-
-      <!--<el-table-column-->
-        <!--align="center"-->
-        <!--type="selection"-->
-        <!--width="55">-->
-      <!--</el-table-column>-->
-
-      <!--<el-table-column-->
-        <!--label="序号"-->
-        <!--type="index"-->
-        <!--:index="1"-->
-        <!--align="center"-->
-        <!--width="55"-->
-      <!--&gt;-->
-      <!--</el-table-column>-->
-
-      <!--&lt;!&ndash;<el-table-column align="center" label="序号" width="80">&ndash;&gt;-->
-        <!--&lt;!&ndash;<template slot-scope="scope">&ndash;&gt;-->
-          <!--&lt;!&ndash;<span>{{tableKey}}</span>&ndash;&gt;-->
-        <!--&lt;!&ndash;</template>&ndash;&gt;-->
-      <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
-
-      <!--&lt;!&ndash;<el-table-column v-if="multipleSelection.length" type="selection" width="55"></el-table-column>&ndash;&gt;-->
-      <!--<el-table-column align="center" label="学号" width="180px">-->
-        <!--<template slot-scope="scope">-->
-            <!--<span>{{scope.row.studentId}}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-
-      <!--<el-table-column width="120px" align="center" label="姓名">-->
-        <!--<template slot-scope="scope">-->
-            <!--<span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.studentName }}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-
-      <!--&lt;!&ndash;<el-table-column min-width="300px" label="标题">&ndash;&gt;-->
-      <!--&lt;!&ndash;<template slot-scope="scope">&ndash;&gt;-->
-      <!--&lt;!&ndash;<span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.title}}</span>&ndash;&gt;-->
-      <!--&lt;!&ndash;<el-tag>{{scope.row.type | typeFilter}}</el-tag>&ndash;&gt;-->
-      <!--&lt;!&ndash;</template>&ndash;&gt;-->
-      <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
-      <!--<el-table-column width="110px" align="center" label="年级">-->
-        <!--<template slot-scope="scope">-->
-          <!--<span>{{scope.row.grade}}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-
-      <!--<el-table-column width="150px" align="center" label="专业">-->
-        <!--<template slot-scope="scope">-->
-          <!--<span>{{scope.row.profession}}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-
-      <!--<el-table-column width="110px" align="center" label="班级">-->
-        <!--<template slot-scope="scope">-->
-          <!--<span>{{ scope.row.className }}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-
-
-      <!--<el-table-column align="center" label="参与任务数" width="120px">-->
-        <!--<template slot-scope="scope">-->
-          <!--<span>-->
-            <!--{{ scope.row.finishedTaskCount }}-->
-          <!--</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-
-      <!--&lt;!&ndash;<el-table-column class-name="status-col" align="center"  label="任务状态" width="180">&ndash;&gt;-->
-        <!--&lt;!&ndash;<template slot-scope="scope">&ndash;&gt;-->
-          <!--&lt;!&ndash;&lt;!&ndash;<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>&ndash;&gt;&ndash;&gt;-->
-          <!--&lt;!&ndash;<span>&ndash;&gt;-->
-              <!--&lt;!&ndash;{{ scope.row.status.chineseValue }}&ndash;&gt;-->
-              <!--&lt;!&ndash;</span>&ndash;&gt;-->
-        <!--&lt;!&ndash;</template>&ndash;&gt;-->
-      <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
-
-      <!--&lt;!&ndash;<el-table-column  align="center" class-name="status-col" label="标记" width="100px">&ndash;&gt;-->
-        <!--&lt;!&ndash;<template slot-scope="scope">&ndash;&gt;-->
-          <!--&lt;!&ndash;&lt;!&ndash;<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>&ndash;&gt;&ndash;&gt;-->
-          <!--&lt;!&ndash;<el-tag v-if="scope.row.favorite.value" type="warning">&ndash;&gt;-->
-            <!--&lt;!&ndash;{{ scope.row.favorite.chineseValue }}&ndash;&gt;-->
-          <!--&lt;!&ndash;</el-tag>&ndash;&gt;-->
-          <!--&lt;!&ndash;<el-tag v-else>&ndash;&gt;-->
-            <!--&lt;!&ndash;{{ scope.row.favorite.chineseValue }}&ndash;&gt;-->
-          <!--&lt;!&ndash;</el-tag>&ndash;&gt;-->
-        <!--&lt;!&ndash;</template>&ndash;&gt;-->
-      <!--&lt;!&ndash;</el-table-column>&ndash;&gt;-->
-
-      <!--<el-table-column align="center"  label="操作" min-width="200px">-->
-        <!--<template slot-scope="scope">-->
-          <!--<el-button size="small" icon="edit"  type = "success" @click="handleUpdate(scope.row)">更新</el-button>-->
-          <!--<el-button size="small" icon="delete" type = "danger" @click="handleDelete(scope.row)">删除</el-button>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-    <!--</el-table>-->
-
     <Table border size='default'
            :loading="listLoading"
            :columns="studentColumns"
@@ -141,9 +37,13 @@
            class="student-list-container"
            stripe></Table>
 
-    <div v-show="!listLoading" class="pagination-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="fixPage"
-                     :page-sizes="[10,20,30, 50]" :page-size="listQuery.size" layout="total, sizes, prev, pager, next, jumper" :total="total">
+    <div  class="pagination-container">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                     :page-sizes="[10,20,30, 50]"
+                     :page-size="listQuery.size"
+                     background
+                     layout="total, sizes, prev, pager, next, jumper"
+                     :total="total">
       </el-pagination>
     </div>
 
@@ -252,50 +152,43 @@
           },
           {
             title: '管理',
-            key: 'manage',
-            width: 300,
             align: 'center',
+            width: 200,
             render: (h, params) => {
-              return h('div', [
+              return h('ButtonGroup', [
                 h('Button', {
                   props: {
-                    type: 'primary',
-                    size: 'default'
-                  },
-                  style: {
-                    marginRight: '5px'
+                    icon:'ios-search',
+                    size:'small'
                   },
                   on: {
                     click: () => {
-//                      this.handleCheck(params.index)
+                      this.handleCheck(params.index)
                     }
                   }
-                }, '查看'),
+                }),
                 h('Button', {
                   props: {
-                    type: 'error',
-                    size: 'default'
-                  },
-                  style: {
-                    marginRight: '5px'
+                    icon:'android-delete',
+                    size:'small'
                   },
                   on: {
                     click: () => {
                       this.handleDelete(params.index)
                     }
                   }
-                }, '删除'),
+                }),
                 h('Button', {
                   props: {
-                    type: 'info',
-                    size: 'default'
+                    icon:'edit',
+                    size:'small'
                   },
                   on: {
                     click: () => {
                       this.handleUpdate(params.index)
                     }
                   }
-                }, '修改')
+                })
               ]);
             }
           }

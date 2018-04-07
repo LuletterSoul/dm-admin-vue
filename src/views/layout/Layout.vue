@@ -7,12 +7,10 @@
         <div class="main-container">
             <navbar>
             </navbar>
-
           <div class="tags-view-wrapper">
             <tags-view class="tags-view-container">
             </tags-view>
           </div>
-
           <Back-top :height="200">
             <em-add icon="arrow-up-c">
             </em-add>
@@ -94,7 +92,7 @@
         .main-container {
             min-height: 100%;
             transition: all .28s ease-out;
-            margin-left: 200px;
+            margin-left: 180px;
         }
     }
 </style>
