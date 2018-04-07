@@ -271,49 +271,43 @@
             align: 'center',
             width: 200,
             render: (h, params) => {
-              return h('div', [
+              return h('ButtonGroup', [
                 h('Button', {
                   props: {
-                    type: 'primary',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px'
+                    icon:'ios-search',
+                    size:'small'
                   },
                   on: {
                     click: () => {
                       this.handleCheck(params.index)
                     }
                   }
-                }, '详情'),
+                }),
                 h('Button', {
                   props: {
-                    type: 'error',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px'
+                    icon:'android-delete',
+                    size:'small'
                   },
                   on: {
                     click: () => {
                       this.handleDelete(params.row,params.index);
                     }
                   }
-                }, '删除'),
+                }),
                 h('Button', {
                   props: {
-                    type: 'info',
-                    size: 'small'
+                    icon:'edit',
+                    size:'small'
                   },
                   on: {
                     click: () => {
                       this.handleEdit(params.index)
                     }
                   }
-                }, '修改')
+                })
               ]);
             }
-          }
+          },
         ],
         total: null,
         listLoading: false,

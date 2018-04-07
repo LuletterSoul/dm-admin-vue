@@ -114,7 +114,7 @@ export default {
               studentName: '学生姓名',
               profession: "专业",
               grade:'年级',
-              placeholder:'你的人力资源极度匮乏,赶快加入您即将要抱团的学生吧!',
+              placeholder:'你的人力资源极度匮乏,赶快加入一些要抱团的学生吧!',
               label:'指定',
             },
             builder:{

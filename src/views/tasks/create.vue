@@ -12,7 +12,11 @@
                  :model="newTask">
           <el-row :gutter="20">
             <el-col :span="22">
-              <el-form-item label="任务名称">
+              <el-form-item label="任务名称"
+                            :rules="{
+      required: true, message: '任务应该指定任务名称', trigger: 'blur'}"
+                            prop="taskName"
+              >
                 <el-input
                   placeholder="输入任务名称"
                   size="medium"
@@ -34,7 +38,11 @@
               </el-form-item>
             </el-col>
             <el-col :span="22">
-              <el-form-item label="任务编号">
+              <el-form-item label="任务编号"
+                            :rules="{
+      required: true, message: '必须指定任务编号', trigger: 'blur'}"
+                            prop="arrangementId"
+              >
                 <el-input
                   placeholder="输入任务编号"
                   size="medium"

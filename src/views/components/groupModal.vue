@@ -1,87 +1,119 @@
 <template>
   <div>
-    <el-row>
+    <el-row :gutter="20">
       <el-col>
-        <Modal width="1200"
-               :value="_show"
-               class-name="vertical-center-modal"
-               :title="$t('p.group.list.update.placeholder')"
-               @on-ok="handleConfirm"
-               @on-cancel="handleCancel">
-          <Form :model="group"
-                :label-width="150">
-            <FormItem :label="$t('p.group.modal.groupName')">
-              <Input v-model="group.groupName"
-                     size="large"
-                     style="width: 60%"
-                     placeholder="请输入">
-              </Input>
-            </FormItem>
-            <FormItem :label="$t('p.group.modal.arrangementId')">
-              <Input v-model="group.arrangementId"
-                     size="large"
-                     style="width: 60%"
-                     placeholder="请输入">
-              </Input>
-            </FormItem>
-            <FormItem :label="$t('p.group.modal.groupLeader')">
-              <el-select
-                size="medium"
-                style="width: 90%"
-                v-model="group.groupLeader.studentId"
-                placeholder="请选择">
-                <el-option
-                  v-for="item in _leaderOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                  :disabled="item.disabled">
-                </el-option>
-              </el-select>
-            </FormItem>
+        <el-dialog
+          :show-close="false"
+          :title="$t('p.group.list.update.placeholder')"
+          :visible.sync="_show"
+          width="70%">
+          <el-row>
+            <el-col :offset="1">
+              <el-form ref="group"
+                       size="medium"
+                       label-width="80px"
+                       :label-position="'left'"
+                       :model="group">
+                <el-row>
+                  <el-col :span="22">
+                    <el-form-item
+                      :label="$t('p.group.modal.groupName')"
+                      prop="groupName"
+                      :rules="{required: true, message: '分组名称不能为空', trigger: 'blur'}">
+                      <el-input
+                        placeholder="输入分组名称"
+                        size="medium"
+                        style="width: 100%"
+                        v-model="group.groupName">
+                      </el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="22">
+                    <el-form-item :label="$t('p.group.modal.arrangementId')"
+                                  prop="arrangementId"
+                                  :rules="{required: true, message: '分组编号不能为空', trigger: 'blur'}">
+                      <el-input
+                        placeholder="输入分组编号"
+                        size="medium"
+                        style="width: 100%"
+                        v-model="group.arrangementId">
+                      </el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="22">
+                    <el-form-item :label="$t('p.group.modal.groupLeader')"
+                                  prop="groupLeader.studentId"
+                                  :rules="{required: true, message: '分组必须被分配一个组长', trigger: 'blur'}">
+                      <el-select
+                        size="medium"
+                        style="width: 100%"
+                        v-model="group.groupLeader.studentId"
+                        placeholder="请选择">
+                        <el-option
+                          v-for="item in _leaderOptions"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                          :disabled="item.disabled">
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
 
-            <FormItem :label="$t('p.group.modal.taskName')">
-              <el-autocomplete
-                size="medium"
-                style="width: 90%"
-                suffix-icon="el-icon-zoom-in"
-                v-model="taskDisplay"
-                :fetch-suggestions="taskSearch"
-                @select="handleTaskSelect"
-                select-when-unmatched
-                :placeholder="$t('p.group.list.update.taskPlaceholder')">
-              </el-autocomplete>
-            </FormItem>
-            <FormItem :label="$t('p.group.modal.taskStatus')">
-              <el-col :span="6">
-                <el-select
-                  size="medium"
-                  clearable
-                  v-model="group.taskStatus.value">
-                  <el-option
-                    v-for="item in toTaskStatus"
-                    :value="item.value"
-                    :key="item.value"
-                    :label="item.description">
-                  </el-option>
-                </el-select>
-              </el-col>
-            </FormItem>
-            <FormItem :label="$t('p.group.modal.groupMembers')">
-              <Transfer
-                :data="_candidates"
-                :operations="['移出分组','加入分组']"
-                :target-keys="newMemberIds"
-                :selected-keys="selectedMemberIds"
-                :list-style="listStyle"
-                :not-found-text="$t('p.group.divide.oneKey.taskForm.students.placeholder')"
-                @on-change="handleChange"
-                :filter-method="filterStudents"
-                :titles="['除当前组内的其他学生', '当前组员']">
-              </Transfer>
-            </FormItem>
-          </Form>
-        </Modal>
+                  <el-col :span="22">
+                    <el-form-item :label="'执行任务'">
+                      <el-autocomplete
+                        size="medium"
+                        style="width: 100%"
+                        suffix-icon="el-icon-zoom-in"
+                        v-model="taskDisplay"
+                        :fetch-suggestions="taskSearch"
+                        @select="handleTaskSelect"
+                        select-when-unmatched
+                        :placeholder="$t('p.group.list.update.taskPlaceholder')">
+                      </el-autocomplete>
+                    </el-form-item>
+                  </el-col>
+
+                  <el-col :span="6">
+                    <el-form-item :label="$t('p.group.modal.taskStatus')">
+                      <el-select
+                        size="medium"
+                        clearable
+                        v-model="group.taskStatus.value">
+                        <el-option
+                          v-for="item in toTaskStatus"
+                          :value="item.value"
+                          :key="item.value"
+                          :label="item.description">
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col>
+                    <el-form-item :label="$t('p.group.modal.groupMembers')">
+                      <Transfer
+                        :data="_candidates"
+                        :operations="['移出分组','加入分组']"
+                        :target-keys="newMemberIds"
+                        :selected-keys="selectedMemberIds"
+                        :list-style="listStyle"
+                        :not-found-text="$t('p.group.divide.oneKey.taskForm.students.placeholder')"
+                        @on-change="handleChange"
+                        :filter-method="filterStudents"
+                        :titles="['除当前组内的其他学生', '当前组员']">
+                      </Transfer>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
+            </el-col>
+          </el-row>
+          <span slot="footer" class="dialog-footer">
+         <el-button @click="handleCancel">取 消</el-button>
+         <el-button type="primary" @click="submit">确 定</el-button>
+           </span>
+        </el-dialog>
       </el-col>
     </el-row>
   </div>
@@ -121,7 +153,7 @@
       return {
         tasks: [],
         show: this.toShow,
-        group: Object.assign({},this.toGroup),
+        group: Object.assign({}, this.toGroup),
         newMemberIds: this.toGroupMembers.map(m => m.studentId),
         newGroupMembers: this.toGroupMembers,
         listStyle: {
@@ -131,7 +163,7 @@
         taskDisplay: '',
         taskId: '',
         selectedMemberIds: [],
-        candidates:this.toCandidates
+        candidates: this.toCandidates
       };
     },
     created() {
@@ -140,15 +172,25 @@
     methods: {
       buildGroupDto() {
         return {
-          groupId:this.group.groupId,
-          builtTime:this.group.builtTime,
+          groupId: this.group.groupId,
+          builtTime: this.group.builtTime,
           groupName: this.group.groupName,
           arrangementId: this.group.arrangementId,
           memberIds: this.newMemberIds,
           taskId: this._taskId,
+          builderId: this._userId,
           leaderId: this._leader.studentId,
           taskStatus: this.group.taskStatus.value,
         }
+      },
+      submit() {
+        this.$refs['group'].validate((valid) => {
+          if (valid) {
+            this.handleConfirm();
+          } else {
+            return false;
+          }
+        });
       },
       taskSearch(queryString, cb) {
         var tasks = this.tasks;
@@ -212,13 +254,13 @@
       handleChange(targetKeys, direction, moveKeys) {
         let vm = this;
         vm.newMemberIds = targetKeys;
-        if(direction ==='right'){
+        if (direction === 'right') {
           vm.toCandidates.forEach(c => moveKeys.forEach(m => {
             if (m === c.studentId) {
               vm.newGroupMembers.push(c);
             }
           }));
-        }else{
+        } else {
           let removing = [];
           vm.newGroupMembers.forEach(n => {
             moveKeys.forEach(m => {
@@ -236,7 +278,7 @@
     },
     watch: {
       toGroup: function (val) {
-        this.group = Object.assign({},val);
+        this.group = Object.assign({}, val);
         if (this.toGroup.dataMiningTask !== undefined) {
           this.taskDisplay = this.buildTaskRender(this.toGroup.dataMiningTask);
         } else {
@@ -254,12 +296,23 @@
         return this.toGroupMembers.length;
       },
       _leader() {
+        if (this.group.groupLeader === undefined) {
+          return {studentId: ''};
+        }
         return this.group.groupLeader;
       },
-      _show() {
-        return this.toShow;
+      _show: {
+        get() {
+          return this.toShow;
+        },
+       set(val){
+          this.show = val;
+       }
       },
       _task() {
+        if (this.toGroup.dataMiningTask === undefined) {
+          return {taskId: ''};
+        }
         return this.toGroup.dataMiningTask;
       },
       _leaderOptions() {
@@ -272,11 +325,14 @@
           };
         })
       },
-      _taskId(){
-        if(this.taskId!==''){
+      _taskId() {
+        if (this.taskId !== '') {
           return this.taskId;
         }
-        return this.group.dataMiningTask.taskId;
+        return this._task.taskId;
+      },
+      _userId() {
+        return this.$store.getters.currentUserId;
       },
       _candidates: {
         get() {

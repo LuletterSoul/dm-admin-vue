@@ -10,6 +10,15 @@ export function getGroupList(query) {
   })
 }
 
+//创建一个分组
+export function createGroup(groupDto) {
+  return fetch({
+    url:GROUP_PATH,
+    method:'post',
+    data: groupDto
+  })
+}
+
 //创建预览分组
 export function createGroupPreview(config) {
   return fetch({

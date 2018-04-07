@@ -26,8 +26,8 @@
       <el-button class="btn-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-plus">添加</el-button>
       <el-button class="btn-item" type="primary" icon="el-icon-document" @click="handleDownload">导出</el-button>
       <el-button class="btn-item" type="primary" icon="el-icon-delete" v-waves @click="handleBatchDelete" :disabled="!multipleSelection.length">批量删除</el-button>
-      <el-button class="btn-item" type="warning" icon="el-icon-star-on" v-waves @click="markFavoriteStudent" v-if="multipleSelection.length" >收藏</el-button>
-      <el-button class="btn-item" type="warning" icon="el-icon-star-off" :plain="true" v-waves @click="unMarkFavoriteStudent" v-if="multipleSelection.length" >取消收藏</el-button>
+      <!--<el-button class="btn-item" type="warning" icon="el-icon-star-on" v-waves @click="markFavoriteStudent" v-if="multipleSelection.length" >收藏</el-button>-->
+      <!--<el-button class="btn-item" type="warning" icon="el-icon-star-off" :plain="true" v-waves @click="unMarkFavoriteStudent" v-if="multipleSelection.length" >取消收藏</el-button>-->
     </div>
     <Table border size='default'
            :loading="listLoading"
@@ -152,50 +152,43 @@
           },
           {
             title: '管理',
-            key: 'manage',
-            width: 300,
             align: 'center',
+            width: 200,
             render: (h, params) => {
-              return h('div', [
+              return h('ButtonGroup', [
                 h('Button', {
                   props: {
-                    type: 'primary',
-                    size: 'default'
-                  },
-                  style: {
-                    marginRight: '5px'
+                    icon:'ios-search',
+                    size:'small'
                   },
                   on: {
                     click: () => {
-//                      this.handleCheck(params.index)
+                      this.handleCheck(params.index)
                     }
                   }
-                }, '查看'),
+                }),
                 h('Button', {
                   props: {
-                    type: 'error',
-                    size: 'default'
-                  },
-                  style: {
-                    marginRight: '5px'
+                    icon:'android-delete',
+                    size:'small'
                   },
                   on: {
                     click: () => {
                       this.handleDelete(params.index)
                     }
                   }
-                }, '删除'),
+                }),
                 h('Button', {
                   props: {
-                    type: 'info',
-                    size: 'default'
+                    icon:'edit',
+                    size:'small'
                   },
                   on: {
                     click: () => {
                       this.handleUpdate(params.index)
                     }
                   }
-                }, '修改')
+                })
               ]);
             }
           }
