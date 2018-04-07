@@ -209,10 +209,13 @@ export const asyncRouterMap = [
       },
       {
         path: 'create', component: _import('tasks/create'), name: '新建任务', icon: 'home'
+      },
+      {
+        path: 'tracking', component: _import('tasks/tracking'), name: '任务追踪', icon: 'home'
+      },
+      {
+        path: 'detail', component: _import('tasks/detail'), name: '任务信息', icon: 'home',hidden:true
       }
-      // {
-      //   path: 'detail', component: _import('tasks/detail'), name: '任务信息', icon: 'home'
-      // }
     ]
   },
   // {
