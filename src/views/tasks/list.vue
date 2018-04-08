@@ -110,7 +110,7 @@
               <el-col :span="1">
                 <el-button size="medium"
                            style="margin-left: 8px"
-                           class="btn-item" type="danger"
+                           type="danger"
                            plain
                            round
                            icon="el-icon-circle-close-outline"
@@ -118,19 +118,25 @@
                            :disabled="!_selectionIds.length">批量删除
                 </el-button>
               </el-col>
+              <el-col :offset="2" :span="1" style="margin-top: 5px">
+                <i-switch v-model="showTime"></i-switch>
+              </el-col>
             </el-row>
           </el-col>
         </el-row>
       </el-col>
     </el-row>
     <el-row style="margin-top: 20px">
-      <Table border
-             :loading="listLoading"
-             :columns="taskColumns"
-             :data="taskList"
-             size='default'
-             @on-selection-change="handleSelectionChange"
-             stripe></Table>
+      <el-col>
+        <Table border
+               :loading="listLoading"
+               :columns="_taskColumns"
+               :data="taskList"
+               size='default'
+               @on-selection-change="handleSelectionChange"
+               stripe></Table>
+      </el-col>
+
     </el-row>
     <el-row style="float:right;margin-top: 20px">
       <el-col>
@@ -165,6 +171,7 @@
   import {parseTime, deleteEmptyProperty} from 'utils';
   import {fetchStudentList} from 'api/students';
   import  GroupAvatar from '../components/groupAvatar';
+  import  TaskStage from '../components/taskStage';
   import {
     fetchTaskStatusOptions,
     fetchTaskList,
@@ -187,7 +194,7 @@
   } from 'api/tasks';
   export default {
     name: 'task-list',
-    components: {GroupAvatar},
+    components: {GroupAvatar,TaskStage},
     data() {
       let vm = this;
       return {
@@ -202,6 +209,7 @@
           progressStatus: '',
           taskMembers: [],
         },
+        showTime:false,
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -275,8 +283,26 @@
             key: 'plannedFinishTime'
           },
           {
+            title: '任务阶段',
+            align: 'center',
+            width: 300,
+            render:(h,params) =>{
+              let vm = this;
+              let stages = params.row.stages;
+              if(stages ===undefined || !stages.length) {
+                return [];
+              }
+              return h(TaskStage,{
+                props:{
+                  toStages:stages
+                }
+              });
+            }
+          },
+          {
             title: '关联队伍',
             align: 'center',
+            width: 200,
             render:(h,params) =>{
               let hArray = [];
               let groupPeeks = params.row.groupPeeks;
@@ -306,7 +332,6 @@
           {
             title: '任务状态',
             align: 'center',
-            width:'200px',
             render: function (h, params) {
               return h('Tag', {
                 props: vm.renderTaskStatusTag(params.row.progressStatus)
@@ -449,6 +474,7 @@
 
         });
       },
+
       getAllStudents() {
         let vm = this;
         fetchStudentList({fetch: true}).then(res => {
@@ -726,7 +752,156 @@
       _updatingTargetGroup() {
         return this._wrappedDetailTarget ? Object.assign({}, this._wrappedDetailTarget[0]) : this.taskModel;
       },
+      _taskColumns(){
+        let vm = this;
+        let taskColumns = [];
+        taskColumns.push({
+          type: 'selection',
+          width: 60,
+          align: 'center'
+        });
+        taskColumns.push({
+          title: '序号',
+          type: 'index',
+          width: 70,
+          align: 'center'
+        });
+        taskColumns.push({
+          title: '任务名称',
+          align: 'center',
+          width: 200,
+          key: 'taskName'
+        });
+        taskColumns.push({
+          title: '任务编号',
+          align: 'center',
+          width: 100,
+          key: 'arrangementId'
+        });
+        if(this.showTime){
+          taskColumns.push({
+            title: '建立时间',
+            align: 'center',
+            fixed: 'right',
+            width:150,
+            key: 'builtTime'
+          });
+          taskColumns.push({
+            title: '计划开始时间',
+            align: 'center',
+            fixed: 'right',
+            width:150,
+            key: 'plannedStartTime'
+          });
+          taskColumns.push({
+            title: '计划结束时间',
+            align: 'center',
+            fixed: 'right',
+            width:150,
+            key: 'plannedFinishTime'
+          });
+        }
+        taskColumns.push({
+          title: '任务里程碑',
+          align: 'center',
+          width: 600,
+          render: (h, params) => {
+            let vm = this;
+            let stages = params.row.stages;
+            if (stages === undefined || !stages.length) {
+              return [];
+            }
+            return h(TaskStage, {
+              props: {
+                toStages: stages
+              }
+            });
+          }
+        });
+        taskColumns.push({
+          title: '关联队伍',
+          align: 'center',
+          width: 300,
+          render: (h, params) => {
+            let hArray = [];
+            let groupPeeks = params.row.groupPeeks;
+            //防止因为分组的异步数据未获取到而导致的undefine问题
+            if (groupPeeks === undefined) {
+              return [];
+            }
+            groupPeeks.forEach(g => {
+              hArray.push(h(GroupAvatar, {
+                props: {
+                  group: {
+                    groupName: g.groupName,
+                    groupId: g.groupId,
+                    arrangementId: g.arrangementId
+                  }
+                },
+                on: {
+                  click: () => {
+                    vm.$router.push({path: 'create'});
+                  }
+                }
+              }));
+            });
+            return hArray;
+          }
+        });
+        taskColumns.push({
+          title: '任务状态',
+          align: 'center',
+          width:200,
+          render: function (h, params) {
+            return h('Tag', {
+              props: vm.renderTaskStatusTag(params.row.progressStatus)
+            }, params.row.progressStatus.description)
+          }
+        });
+        taskColumns.push({
+          title: '操作',
+          align: 'center',
 
+          render: (h, params) => {
+            return h('ButtonGroup', [
+              h('Button', {
+                props: {
+                  icon: 'ios-search',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    this.handleCheck(params.index)
+                  }
+                }
+              }),
+              h('Button', {
+                props: {
+                  icon: 'android-delete',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    this.handleDelete(params.row, params.index);
+                  }
+                }
+              }),
+              h('Button', {
+                props: {
+                  icon: 'edit',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    this.handleEdit(params.index)
+                  }
+                }
+              })
+            ]);
+          }
+        });
+        return taskColumns;
+      }
     },
   }
 </script>
@@ -747,6 +922,7 @@
       margin-left: 5px;
     }
   }
+
 
   .test {
     padding: 20px;

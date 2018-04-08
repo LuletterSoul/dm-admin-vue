@@ -1,6 +1,12 @@
 <template>
   <div id="app">
     <div v-if="showHeader" class="taskTitle">任务信息</div>
+    <el-row style="margin-top: 20px">
+      <el-col>
+        <task-data :to-stages="stages">
+        </task-data>
+      </el-col>
+    </el-row>
     <el-row style="margin: 20px">
       <el-col>
         <el-collapse v-model="activeNames" accordion>
@@ -23,7 +29,12 @@
                       name="custom-classes-transition"
                       enter-active-class="animated bounceIn"
                       leave-active-class="animated bounceOutRight">
-                      <group-view :groups="currentPageGroups" :key="pagination.page">
+                      <group-view
+                        :groups="currentPageGroups"
+                        :key="pagination.page"
+                        :taskId="taskId"
+                        :to-stages="stages"
+                      >
                       </group-view>
                     </transition>
                   </div>
@@ -79,8 +90,10 @@
   import GroupViewItem from '../components/groupViewItem';
   import GroupView from '../components/groupView';
   import SetDetail from '../datasets/detail'
+  import TaskData from '../components/taskData'
   import {
     getRefCollections,
+    getRefStages,
     getRefGroups, fetchConfiguredAlgortithms
   } from 'api/tasks';
   import {getMembers} from 'api/groups'
@@ -90,7 +103,8 @@
     components: {
       GroupView,
       GroupViewItem,
-      SetDetail
+      SetDetail,
+      TaskData
     },
     props: {
       toTaskId: '',
@@ -124,6 +138,7 @@
         if (!this.groups.length) {
           this.getGroups();
         }
+        this.getRefStages();
         this.getCollections();
       }
       //否则依赖prop传入的值
@@ -143,11 +158,12 @@
         groups: this.toGroups,
         taskId: this.toTaskId,
         activeNames: [],
+        stages:[],
         title: 'data set title',
         pagination: {
           page: 1,
           size: 2
-        },
+        }
       };
     },
     methods: {
@@ -164,6 +180,13 @@
         let vm = this;
         getRefCollections(this.taskId).then(sets => {
           vm.sets = sets;
+        }).catch(error => {
+        });
+      },
+      getRefStages(){
+        let vm = this;
+        getRefStages(this.taskId).then(stages => {
+          vm.stages = stages;
         }).catch(error => {
         });
       },

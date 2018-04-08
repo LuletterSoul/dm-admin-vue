@@ -58,7 +58,7 @@ export const asyncRouterMap = [
     path: '/collection',
     component: Layout,
     redirect: '/collection/digest',
-    name: '数据集',
+    name: '数据管理模块',
     icon: 'data',
     children: [
       {
@@ -93,7 +93,7 @@ export const asyncRouterMap = [
     path: '/students',
     component: Layout,
     redirect: '/students/index',
-    name: '学生',
+    name: '学生管理模块',
     icon: 'bussinessman',
     children: [
       // {
@@ -114,7 +114,7 @@ export const asyncRouterMap = [
     path: '/groups',
     component: Layout,
     redirect: '/groups/index',
-    name: '分组',
+    name: '分组管理模块',
     icon: 'group',
     children: [
       {
@@ -201,7 +201,7 @@ export const asyncRouterMap = [
     path: '/tasks',
     component: Layout,
     redirect: '/tasks/list',
-    name: "任务",
+    name: "任务管理模块",
     icon: 'task-management',
     children: [
       {

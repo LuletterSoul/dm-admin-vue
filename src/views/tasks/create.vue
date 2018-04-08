@@ -168,6 +168,24 @@
                           <el-button v-if="newTask.stages.length > 1" @click.prevent="removeStage(stage)">删除</el-button>
                         </el-col>
                       </el-row>
+                      <el-row style="margin-top: 20px">
+                          <el-col :span="22">
+                            <el-date-picker
+                              clearable
+                              size="medium"
+                              style="width:100%"
+                              v-model="stage.deadline"
+                              type="daterange"
+                              unlink-panels
+                              format="yyyy 年 MM 月 dd 日 HH:mm:ss"
+                              value-format="yyyy-MM-dd HH:mm:ss"
+                              range-separator="至"
+                              :start-placeholder="$t('p.task.list.filter.plannedBeginDate')"
+                              :end-placeholder="$t('p.task.list.filter.plannedEndDate')"
+                              :picker-options="pickerOptions">
+                            </el-date-picker>
+                        </el-col>
+                      </el-row>
                     </el-form-item>
                   </transition-group>
                 </el-col>
@@ -334,7 +352,8 @@
           stages:[
             {
               orderId:1,
-              comment:''
+              comment:'',
+              deadline:[]
             }
           ]
         },
@@ -385,18 +404,18 @@
         return true;
       },
       addStage(){
+        ++this.currentStageOrder;
         this.newTask.stages.push({
           comment: '',
           orderId: this.currentStageOrder
         });
-        ++this.currentStageOrder;
       },
       removeStage(item) {
+        --this.currentStageOrder;
         let index = this.newTask.stages.indexOf(item);
         if (index !== -1) {
           this.newTask.stages.splice(index, 1)
         }
-        --this.currentStageOrder;
       },
       fetchOptionals() {
         let vm = this;

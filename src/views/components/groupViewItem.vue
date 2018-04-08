@@ -1,5 +1,14 @@
 <template>
   <div>
+    <el-row style="margin: 10px">
+      <el-col>
+        <el-alert
+          title="分组构成"
+          type="warning"
+          center>
+        </el-alert>
+      </el-col>
+    </el-row>
     <el-row :gutter="20">
       <el-col :span="12">
         <el-row>

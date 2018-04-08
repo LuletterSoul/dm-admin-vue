@@ -72,6 +72,14 @@ export function getRefCollections(id) {
   })
 }
 
+//获取该分任务的每个阶段
+export function getRefStages(id) {
+  return fetch({
+    url:TASK_PATH.concat('/').concat(id).concat('/stages'),
+    method:'get'
+  })
+}
+
 //为多个分组批量分配任务
 export function involveGroups(id,groupIds) {
   return fetch({
