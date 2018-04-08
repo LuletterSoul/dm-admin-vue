@@ -7,9 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/views/tasks/tracking.vue" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/router/index.js" afterPath="$PROJECT_DIR$/src/router/index.js" />
+      <change beforePath="$PROJECT_DIR$/src/views/tasks/create.vue" afterPath="$PROJECT_DIR$/src/views/tasks/create.vue" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -97,12 +96,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="create.vue" pinned="false" current-in-tab="false">
+      <file leaf-file-name="create.vue" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/views/tasks/create.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2145">
-              <caret line="45" column="25" lean-forward="true" selection-start-line="45" selection-start-column="25" selection-end-line="45" selection-end-column="25" />
-              <folding />
+            <state relative-caret-position="614">
+              <caret line="164" column="64" lean-forward="true" selection-start-line="164" selection-start-column="64" selection-end-line="164" selection-end-column="64" />
+              <folding>
+                <element signature="n#el-form-item#0;n#transition#0;n#el-col#4;n#el-row#0;n#el-form#0;n#el-col#0;n#el-row#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#el-col#5;n#el-row#0;n#el-form#0;n#el-col#0;n#el-row#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#style#0;n#el-col#1;n#el-row#0;n#el-form-item#0;n#transition-group#0;n#el-col#0;n#el-row#0;n#el-col#8;n#el-row#0;n#el-form#0;n#el-col#0;n#el-row#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#el-col#1;n#el-row#0;n#el-col#8;n#el-row#0;n#el-form#0;n#el-col#0;n#el-row#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#el-col#9;n#el-row#0;n#el-form#0;n#el-col#0;n#el-row#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="e#8221#8294#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -122,11 +128,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tracking.vue" pinned="false" current-in-tab="true">
+      <file leaf-file-name="tracking.vue" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/views/tasks/tracking.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-702">
-              <caret line="70" column="29" lean-forward="true" selection-start-line="70" selection-start-column="29" selection-end-line="70" selection-end-column="29" />
+            <state relative-caret-position="4095">
+              <caret line="105" column="16" lean-forward="true" selection-start-line="105" selection-start-column="16" selection-end-line="105" selection-end-column="16" />
               <folding>
                 <element signature="e#410#521#0" expanded="true" />
                 <element signature="e#3319#4665#0" expanded="false" />
@@ -164,12 +170,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>./assets/5.jpg</find>
-      <find>logo@2x.png</find>
-      <find>transition-</find>
-      <find>transition-group</find>
-      <find>taskStatusOptions</find>
-      <find>buildGroup</find>
       <find>toShow</find>
       <find>showEditModal</find>
       <find>_task</find>
@@ -194,9 +194,14 @@
       <find>taskList</find>
       <find>multipleSelection</find>
       <find>handleSelectionChange</find>
+      <find>removeDomain</find>
+      <find>removeStage</find>
+      <find>addStage</find>
+      <find>gutter</find>
+      <find>currentS</find>
+      <find>stage</find>
     </findStrings>
     <replaceStrings>
-      <replace>group-list-container</replace>
       <replace>config.test</replace>
       <replace>Col</replace>
       <replace>el-row</replace>
@@ -226,6 +231,7 @@
       <replace>getGroupPeeks</replace>
       <replace>buildGroup</replace>
       <replace>handleCreateConfirm</replace>
+      <replace>removeStage</replace>
     </replaceStrings>
     <dirStrings>
       <dir>F:\GitHup\dm-admin-vue\mock</dir>
@@ -297,7 +303,6 @@
         <option value="$PROJECT_DIR$/src/styles/sidebar.scss" />
         <option value="$PROJECT_DIR$/src/views/layout/Layout.vue" />
         <option value="$PROJECT_DIR$/src/views/groups/divide/newGroup.vue" />
-        <option value="$PROJECT_DIR$/src/views/tasks/create.vue" />
         <option value="$PROJECT_DIR$/src/api/groups.js" />
         <option value="$PROJECT_DIR$/src/views/groups/divide/resource2.vue" />
         <option value="$PROJECT_DIR$/src/views/components/groupModal.vue" />
@@ -308,6 +313,7 @@
         <option value="$PROJECT_DIR$/src/views/students/list.vue" />
         <option value="$PROJECT_DIR$/src/views/tasks/tracking.vue" />
         <option value="$PROJECT_DIR$/src/router/index.js" />
+        <option value="$PROJECT_DIR$/src/views/tasks/create.vue" />
       </list>
     </option>
   </component>
@@ -332,9 +338,9 @@
   <component name="PackageJsonUpdateNotifier">
     <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="158" />
-    <option name="y" value="128" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="326" />
+    <option name="y" value="66" />
     <option name="width" value="2299" />
     <option name="height" value="1462" />
   </component>
@@ -810,11 +816,18 @@
       <option name="project" value="LOCAL" />
       <updated>1523009274318</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="任务追踪模块">
+      <created>1523122174575</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1523122174575</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1362803000" />
+    <option name="totallyTimeSpent" value="1365937000" />
   </component>
   <component name="TodoView" selected-index="1">
     <todo-panel id="selected-file">
@@ -826,10 +839,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="2578" height="1420" extended-state="6" />
+    <frame x="326" y="66" width="2299" height="1462" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13902053" sideWeight="0.9207921" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15623613" sideWeight="0.9207921" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.48379448" sideWeight="0.4984202" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="19" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35889328" sideWeight="0.33175355" order="13" side_tool="true" content_ui="tabs" />
@@ -840,7 +853,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.0039525693" sideWeight="0.45537126" order="24" side_tool="false" content_ui="tabs" x="627" y="990" width="1179" height="542" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.129045" sideWeight="0.07920792" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.008149959" sideWeight="0.66824645" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.00788022" sideWeight="0.66824645" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="SFDX" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="20" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -953,7 +966,8 @@
     <MESSAGE value="队伍动态提醒" />
     <MESSAGE value="获取预览的分组信息" />
     <MESSAGE value="更改了导航颜色" />
-    <option name="LAST_COMMIT_MESSAGE" value="更改了导航颜色" />
+    <MESSAGE value="任务追踪模块" />
+    <option name="LAST_COMMIT_MESSAGE" value="任务追踪模块" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1364,14 +1378,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/views/tasks/create.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2145">
-          <caret line="45" column="25" lean-forward="true" selection-start-line="45" selection-start-column="25" selection-end-line="45" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/views/groups/divide/preview.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2262">
@@ -1417,11 +1423,26 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/views/tasks/tracking.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-702">
-          <caret line="70" column="29" lean-forward="true" selection-start-line="70" selection-start-column="29" selection-end-line="70" selection-end-column="29" />
+        <state relative-caret-position="4095">
+          <caret line="105" column="16" lean-forward="true" selection-start-line="105" selection-start-column="16" selection-end-line="105" selection-end-column="16" />
           <folding>
             <element signature="e#410#521#0" expanded="true" />
             <element signature="e#3319#4665#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/tasks/create.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="614">
+          <caret line="164" column="64" lean-forward="true" selection-start-line="164" selection-start-column="64" selection-end-line="164" selection-end-column="64" />
+          <folding>
+            <element signature="n#el-form-item#0;n#transition#0;n#el-col#4;n#el-row#0;n#el-form#0;n#el-col#0;n#el-row#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-col#5;n#el-row#0;n#el-form#0;n#el-col#0;n#el-row#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#style#0;n#el-col#1;n#el-row#0;n#el-form-item#0;n#transition-group#0;n#el-col#0;n#el-row#0;n#el-col#8;n#el-row#0;n#el-form#0;n#el-col#0;n#el-row#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#el-col#1;n#el-row#0;n#el-col#8;n#el-row#0;n#el-form#0;n#el-col#0;n#el-row#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#el-col#9;n#el-row#0;n#el-form#0;n#el-col#0;n#el-row#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="e#8221#8294#0" expanded="true" />
           </folding>
         </state>
       </provider>

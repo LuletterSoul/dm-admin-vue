@@ -14,9 +14,8 @@
             <el-col :span="22">
               <el-form-item label="任务名称"
                             :rules="{
-      required: true, message: '任务应该指定任务名称', trigger: 'blur'}"
-                            prop="taskName"
-              >
+                required: true, message: '任务应该指定任务名称', trigger: 'blur'}"
+                            prop="taskName">
                 <el-input
                   placeholder="输入任务名称"
                   size="medium"
@@ -150,6 +149,33 @@
                 </el-date-picker>
               </el-form-item>
             </el-col>
+            <el-col :span="22">
+              <el-row>
+                <el-col :span="22">
+                  <transition-group name="fade" mode="out-in">
+                    <el-form-item
+                      v-for="(stage, index) in newTask.stages"
+                      :label="'阶段 ' + (index+1)"
+                      :key="stage.orderId"
+                      :prop="'stages.' + index + '.comment'"
+                      :rules="{
+                 required: true, message: '任务阶段的描述不能为空', trigger: 'blur'}">
+                      <el-row>
+                        <el-col :span="22">
+                          <el-input  placeholder="对这个任务阶段要达成的目标、需要提交的结果做简单描述" v-model="stage.comment"></el-input>
+                        </el-col>
+                        <el-col :span="1" style="margin-left: 20px">
+                          <el-button v-if="newTask.stages.length > 1" @click.prevent="removeStage(stage)">删除</el-button>
+                        </el-col>
+                      </el-row>
+                    </el-form-item>
+                  </transition-group>
+                </el-col>
+                <el-col :offset="1" :span="1" style="margin-top: 3px">
+                  <Button type="primary" shape="circle" icon="plus-round" @click.prevent="addStage"></Button>
+                </el-col>
+              </el-row>
+            </el-col>
             <el-col>
               <el-form-item label="分派任务">
                 <Transfer
@@ -188,7 +214,6 @@
     </el-row>
   </div>
 </template>
-
 <script type="text/javascript">
   import {
     createTask,
@@ -306,7 +331,14 @@
           algorithmIds: [],
           plannedTimeRange: [],
           statusValue: 7,
+          stages:[
+            {
+              orderId:1,
+              comment:''
+            }
+          ]
         },
+        currentStageOrder:1,
         defaultStatus: 7,
         assignedStatus: {
           value: 8,
@@ -351,6 +383,20 @@
       },
       filterCollections() {
         return true;
+      },
+      addStage(){
+        this.newTask.stages.push({
+          comment: '',
+          orderId: this.currentStageOrder
+        });
+        ++this.currentStageOrder;
+      },
+      removeStage(item) {
+        let index = this.newTask.stages.indexOf(item);
+        if (index !== -1) {
+          this.newTask.stages.splice(index, 1)
+        }
+        --this.currentStageOrder;
       },
       fetchOptionals() {
         let vm = this;
@@ -428,18 +474,6 @@
           });
           this.resetTemp();
           this.$router.push({path: '/tasks'});
-        });
-      },
-      removeDomain(item) {
-        var index = this.domains.indexOf(item);
-        if (index !== -1) {
-          this.domains.splice(index, 1)
-        }
-      },
-      addDomain() {
-        this.domains.push({
-          selections: [],
-          key: Date.now()
         });
       },
       handleMapping(multiple, name) {
