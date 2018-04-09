@@ -118,7 +118,7 @@
                            :disabled="!_selectionIds.length">批量删除
                 </el-button>
               </el-col>
-              <el-col :offset="2" :span="1" style="margin-top: 5px">
+              <el-col  :span="1" style="margin-top: 5px">
                 <i-switch v-model="showTime"></i-switch>
               </el-col>
             </el-row>
@@ -769,7 +769,6 @@
         taskColumns.push({
           title: '任务名称',
           align: 'center',
-          width: 200,
           key: 'taskName'
         });
         taskColumns.push({
@@ -804,7 +803,7 @@
         taskColumns.push({
           title: '任务里程碑',
           align: 'center',
-          width: 600,
+          width: 300,
           render: (h, params) => {
             let vm = this;
             let stages = params.row.stages;
@@ -821,7 +820,7 @@
         taskColumns.push({
           title: '关联队伍',
           align: 'center',
-          width: 300,
+          width: 200,
           render: (h, params) => {
             let hArray = [];
             let groupPeeks = params.row.groupPeeks;
@@ -861,7 +860,7 @@
         taskColumns.push({
           title: '操作',
           align: 'center',
-
+          width:200,
           render: (h, params) => {
             return h('ButtonGroup', [
               h('Button', {

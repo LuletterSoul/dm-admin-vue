@@ -1,14 +1,14 @@
 <template>
     <div>
       <el-row :gutter="32" style="margin:10px">
-        <el-col :span="11">
-          <div class="chart-wrapper">
+        <el-col :span="11" style="margin-top: 60px">
+          <div>
             <pie-chart :option="_percentOption">
             </pie-chart>
           </div>
         </el-col>
         <el-col :span="12">
-          <div class="chart-wrapper>">
+          <div>
             <bar-chart :height="'350px'" :option="_trackingOption">
             </bar-chart>
           </div>
@@ -147,5 +147,6 @@
   .chart-wrapper {
     background: #fff;
     padding: 20px 20px 0;
+    height: 420px;
   }
 </style>

@@ -221,7 +221,6 @@
         if (end > this.totalElements) {
           end = this.totalElements;
         }
-        console.log(this.groups);
         return this.groups.slice(begin, end);
       },
       totalElements() {
