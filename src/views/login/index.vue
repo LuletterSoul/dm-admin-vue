@@ -13,7 +13,8 @@
                 <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
                          class="card-box login-form">
                   <img src="../../assets/logo@2x.png" class="logo-align" height="300" width="300">
-                  <h3 class="title">数据挖掘教学平台</h3>
+                  <h3 class="title">数据挖掘</h3>
+                  <h3 class="title">实践教学平台</h3>
                   <el-form-item prop="email">
                 <span class="svg-container">
                 <icon-svg icon-class="accountfilling"></icon-svg>

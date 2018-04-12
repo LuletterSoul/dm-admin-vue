@@ -1,6 +1,8 @@
 import fetch from 'utils/fetch';
 
 const TASK_PATH = '/tasks';
+
+//查询出任务列表
 export function fetchTaskList(query) {
   return fetch({
     url:'/tasks',
