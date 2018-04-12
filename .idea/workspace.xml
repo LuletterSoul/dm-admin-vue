@@ -7,13 +7,9 @@
     <bookmark url="file://$PROJECT_DIR$/src/views/tasks/list.vue" line="121" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="">
+    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="修复查询参数含有null的消息摘要生成错误">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/config/test.env.js" afterPath="$PROJECT_DIR$/config/test.env.js" />
-      <change beforePath="$PROJECT_DIR$/src/api/tasks.js" afterPath="$PROJECT_DIR$/src/api/tasks.js" />
-      <change beforePath="$PROJECT_DIR$/src/utils/compute.js" afterPath="$PROJECT_DIR$/src/utils/compute.js" />
-      <change beforePath="$PROJECT_DIR$/src/views/login/index.vue" afterPath="$PROJECT_DIR$/src/views/login/index.vue" />
-      <change beforePath="$PROJECT_DIR$/src/views/tasks/list.vue" afterPath="$PROJECT_DIR$/src/views/tasks/list.vue" />
+      <change beforePath="$PROJECT_DIR$/src/views/groups/list.vue" afterPath="$PROJECT_DIR$/src/views/groups/list.vue" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -95,21 +91,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="divideLayout.vue" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/views/groups/divide/divideLayout.vue">
+      <file leaf-file-name="list.vue" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/views/tasks/list.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="6" column="11" lean-forward="false" selection-start-line="6" selection-start-column="11" selection-end-line="6" selection-end-column="11" />
+            <state relative-caret-position="373">
+              <caret line="387" column="17" lean-forward="false" selection-start-line="387" selection-start-column="8" selection-end-line="387" selection-end-column="17" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="list.vue" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/views/tasks/list.vue">
+        <entry file="file://$PROJECT_DIR$/src/views/groups/list.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="607">
-              <caret line="393" column="32" lean-forward="true" selection-start-line="393" selection-start-column="32" selection-end-line="393" selection-end-column="32" />
+            <state relative-caret-position="697">
+              <caret line="322" column="10" lean-forward="true" selection-start-line="322" selection-start-column="10" selection-end-line="322" selection-end-column="10" />
               <folding />
             </state>
           </provider>
@@ -289,7 +285,6 @@
         <option value="$PROJECT_DIR$/src/views/groups/divide/divideMain.vue" />
         <option value="$PROJECT_DIR$/src/locale/zh-CN.js" />
         <option value="$PROJECT_DIR$/src/views/groups/divide/resource.vue" />
-        <option value="$PROJECT_DIR$/src/views/groups/list.vue" />
         <option value="$PROJECT_DIR$/src/views/students/list.vue" />
         <option value="$PROJECT_DIR$/src/views/tasks/task-stage.vue" />
         <option value="$PROJECT_DIR$/src/views/components/taskStage.vue" />
@@ -311,6 +306,7 @@
         <option value="$PROJECT_DIR$/config/test.env.js" />
         <option value="$PROJECT_DIR$/src/utils/compute.js" />
         <option value="$PROJECT_DIR$/src/views/tasks/list.vue" />
+        <option value="$PROJECT_DIR$/src/views/groups/list.vue" />
       </list>
     </option>
   </component>
@@ -424,7 +420,7 @@
               <item name="dm-admin-vue" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="tasks" type="462c0819:PsiDirectoryNode" />
+              <item name="groups" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -933,11 +929,18 @@
       <option name="project" value="LOCAL" />
       <updated>1523162207074</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="修复查询参数含有null的消息摘要生成错误">
+      <created>1523559808919</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1523559808920</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1401804000" />
+    <option name="totallyTimeSpent" value="1401954000" />
   </component>
   <component name="TodoView" selected-index="1">
     <todo-panel id="selected-file">
@@ -1078,7 +1081,8 @@
     <MESSAGE value="更改了导航颜色" />
     <MESSAGE value="任务追踪模块" />
     <MESSAGE value="设置任务阶段" />
-    <option name="LAST_COMMIT_MESSAGE" value="设置任务阶段" />
+    <MESSAGE value="修复查询参数含有null的消息摘要生成错误" />
+    <option name="LAST_COMMIT_MESSAGE" value="修复查询参数含有null的消息摘要生成错误" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1094,7 +1098,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/components/components/PanelGroup.vue" />
     <entry file="file://$PROJECT_DIR$/src/utils/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-446">
@@ -1227,14 +1230,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/views/groups/list.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="621">
-          <caret line="279" column="23" lean-forward="true" selection-start-line="279" selection-start-column="23" selection-end-line="279" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/api/article_table.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="493">
@@ -1254,6 +1249,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="9" column="4" lean-forward="false" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1466,8 +1462,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/views/tasks/list.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="607">
-          <caret line="393" column="32" lean-forward="true" selection-start-line="393" selection-start-column="32" selection-end-line="393" selection-end-column="32" />
+        <state relative-caret-position="373">
+          <caret line="387" column="17" lean-forward="false" selection-start-line="387" selection-start-column="8" selection-end-line="387" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/groups/divide/divideLayout.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="6" column="11" lean-forward="false" selection-start-line="6" selection-start-column="11" selection-end-line="6" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/groups/list.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="697">
+          <caret line="322" column="10" lean-forward="true" selection-start-line="322" selection-start-column="10" selection-end-line="322" selection-end-column="10" />
           <folding />
         </state>
       </provider>

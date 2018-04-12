@@ -318,7 +318,7 @@
           leaderStudentId: '',
           page: 0,
           size: 20,
-          taskStatus: null,
+          taskStatus: '',
           sort: "builtTime,ASC",
         },
         detailTargetIndex: null,
