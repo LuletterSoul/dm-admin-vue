@@ -171,6 +171,16 @@ const user = {
       });
     },
 
+    Update({commit},newProfile) {
+      return new Promise((resolve, reject) => {
+          commit('SET_AVATAR',newProfile.avatar);
+          commit('SET_ROLES',newProfile.roles);
+          commit('SET_USER_PROFILE', newProfile);
+          commit('SET_USERNAME', newProfile.username);
+          resolve(newProfile);
+      });
+    },
+
 
     GetUserRoles({commit},username){
        return new Promise((resolve,reject) =>{

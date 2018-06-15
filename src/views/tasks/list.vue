@@ -1,7 +1,7 @@
 <template>
   <div class="calendar-list-container test">
     <el-row>
-      <el-col :offset="10" :span="14">
+      <el-col :offset="9" :span="14">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-date-picker
@@ -118,7 +118,7 @@
                            :disabled="!_selectionIds.length">批量删除
                 </el-button>
               </el-col>
-              <el-col  :span="1" style="margin-top: 5px">
+              <el-col  :offset="3" :span="1" style="margin-top: 5px">
                 <i-switch v-model="showTime"></i-switch>
               </el-col>
             </el-row>

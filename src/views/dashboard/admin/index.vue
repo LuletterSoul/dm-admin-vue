@@ -14,12 +14,13 @@
           <balloon :balloon-count="10">
           </balloon>
           <div slot="header">
-            <span style="line-height: 20px; font-size: 20px; font-weight: bold;">欢迎</span>
+            <span style="line-height: 20px; font-size: 20px; font-weight: bold;">快速访问</span>
           </div>
           <div>
-            <p style="font-size: 16px;"><router-link to="../collection/index"><Icon type="ios-analytics-outline"></Icon>数据集管理</router-link></p><br>
+            <p style="font-size: 16px;"><router-link to="../collection/management"><Icon type="ios-analytics-outline"></Icon>数据集管理</router-link></p><br>
             <p style="font-size: 16px;"><router-link to="../students/list"><Icon type="person"></Icon>学生信息管理</router-link></p><br>
-            <p style="font-size: 16px;"><router-link to="../tasks/index"><Icon type="ios-alarm-outline"></Icon>实践任务管理</router-link></p><br>
+            <p style="font-size: 16px;"><router-link to="../groups/list"><Icon type="person-stalker"></Icon>任务分组管理</router-link></p><br>
+            <p style="font-size: 16px;"><router-link to="../tasks/list"><Icon type="ios-alarm-outline"></Icon>实践任务管理</router-link></p><br>
             <!--<p style="font-size: 16px;"><router-link to="../algorithm/index"><Icon type="ios-list-outline"></Icon>数据挖掘管理</router-link></p>-->
           </div>
         </el-card>
@@ -47,28 +48,22 @@
               <span style="line-height: 36px; font-size: 20px; font-weight: bold">用户信息</span>
             </div>
             <div style="font-size: 16px;">
-              <p >用户名: {{  userProfile.name }}</p>
+              <p >用户名: {{  userProfile.username }}</p>
               <p style="margin-top: 10px">个性签名: {{  userProfile.introduction }}</p>
-              <p style="margin-top: 10px">上一次登录时间:  2017-09-29 13:03:55</p>
+              <p style="margin-top: 10px">上一次登录时间:  {{  userProfile.lastLoginTime }}</p>
               <p style="margin-top: 10px">管理状态: 可用</p>
             </div>
-            <!--<div v-for="o in 4" :key="o" class="text item">-->
-            <!--{{'列表内容 ' + o }}-->
-            <!--</div>-->
           </el-card>
         </div>
       </div>
 
-
     <div class="second-div">
-
       <div class="chart">
         <line-chart></line-chart>
       </div>
 
       <div class="user">
         <el-card class="user-profile-content">
-
           <div>
           <div class="user-image">
           <pan-thumb class="panThumb" :image="userProfile.avatar">
@@ -77,18 +72,18 @@
           </div>
 
           <div class="info-user-name">
-          <span class="display_name">{{userProfile.name}}</span>
+          <span class="display_name">昵称：{{userProfile.name}}</span>
           </div>
 
           <div class="info-user-item">
             <icon-svg :icon-class="'browse'" ></icon-svg>
-            <countTo class="info-item-num" :startVal='0' :endVal='statisticsData.permissionCount' :duration='3400'></countTo>
-            <span class="info-item-text">权限数</span>
+            <span class="info-item-text">权限数:</span>
+            <countTo class="info-item-num" :startVal='0' :endVal='userProfile.permissions.length' :duration='3400'></countTo>
           </div>
           <div class="info-user-item">
             <icon-svg :icon-class="'operation'"></icon-svg>
-            <countTo class="info-item-num" :startVal='0' :endVal='statisticsData.operationCount' :duration='3600'></countTo>
-            <span class="info-item-text">操作数</span>
+            <span class="info-item-text">角色数:</span>
+            <countTo class="info-item-num" :startVal='0' :endVal='userProfile.roles.length' :duration='3600'></countTo>
           </div>
           </div>
         </el-card>
@@ -172,7 +167,7 @@
   .display_name{
     display: block;
     float: left;
-    font-size: 40px;
+    font-size: 30px;
   }
   .box-card-header {
     position: relative;

@@ -50,7 +50,7 @@
           },
           yAxis: {},
           series: [{
-            name: 'Teacher Traffic',
+            name: '教师访问量',
             itemStyle: {
               normal: {
                 areaStyle: {}
@@ -63,7 +63,7 @@
             animationEasing: 'cubicInOut'
           },
             {
-              name: 'Student Traffic',
+              name: '学生访问量',
               smooth: true,
               type: 'line',
               itemStyle: {

@@ -9,7 +9,7 @@
                  :to-task-status="taskStatusOptions">
     </group-modal>
     <el-row>
-      <el-col :offset="10" :span="14">
+      <el-col :offset="9" :span="14">
         <el-row>
           <el-col>
             <el-row :gutter="20">
@@ -83,7 +83,7 @@
                 <Button style="margin-top: 2px" type="primary" shape="circle" icon="ios-search"
                         @click="handleFilter"></Button>
               </el-col>
-              <el-col :span="1">
+              <el-col :span="1" style="margin-left: 10px">
                 <el-button size="medium"
                            class="btn-item" type="danger"
                            plain

@@ -201,7 +201,7 @@
       position: absolute;
       width: 400px;
       margin-left: -200px;
-      margin-top: 60px;
+      margin-top: 20px;
       padding: 35px 35px 15px 35px;
       border-radius: 15px;
       border: 1px solid rgba(0, 0, 0, .12);

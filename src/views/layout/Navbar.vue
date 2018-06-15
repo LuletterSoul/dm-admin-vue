@@ -21,10 +21,10 @@
           <el-dropdown-menu class="user-dropdown" slot="dropdown">
             <router-link class='inlineBlock' to="/">
               <el-dropdown-item>
-                Home
+                主页
               </el-dropdown-item>
             </router-link>
-            <el-dropdown-item divided><span @click="$refs.modal.open()" style="display:block;">LogOut</span></el-dropdown-item>
+            <el-dropdown-item divided><span @click="$refs.modal.open()" style="display:block;">登出</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>

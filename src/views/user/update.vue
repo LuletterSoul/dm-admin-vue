@@ -17,8 +17,9 @@
                 <el-col :span="11">
                   <el-date-picker type="date"
                                   style="width: 100%;"
-                                  v-model="newUserProfile.birthday"
-                                  >
+                                  value-format="yyyy-MM-dd"
+                                  format="yyyy 年 MM 月 dd 日"
+                                  v-model="newUserProfile.birthday">
                   </el-date-picker>
                 </el-col>
               </el-form-item>
@@ -53,20 +54,29 @@
           </div>
         </el-col>
         <el-col :span="4" :offset="1">
-          <div class="user-avatar-container">
-            <div class="pan-thumb-container">
-              <pan-thumb :image="newUserProfile.avatar"></pan-thumb>
-              <el-button type="primary" icon="upload" style="position: relative;bottom: 15px;left: 50%;margin-left: -135px;top: 60px;" @click="imageCropperShow=true">修改头像
-              </el-button>
-            </div>
-            <image-cropper :width="300" :height="300"
-                           @close="close()"
-                           @crop-success="setUserNewAvatar"
-                           @crop-upload-success="cropSuccess"
-                           :key="imageCropperKey"
-                           v-show="imageCropperShow">
-            </image-cropper>
-          </div>
+          <el-row style="margin-top: 40px">
+            <el-row>
+              <el-col>
+                <pan-thumb :image="newUserProfile.avatar"></pan-thumb>
+              </el-col>
+            </el-row>
+            <el-row style="margin-top: 40px">
+              <el-col :offset="3">
+                <el-button type="primary" icon="upload"
+                           @click="imageCropperShow=true">修改头像
+                </el-button>
+              </el-col>
+            </el-row>
+            <el-col>
+              <image-cropper :width="300" :height="300"
+                             @close="close()"
+                             @crop-success="setUserNewAvatar"
+                             @crop-upload-success="cropSuccess"
+                             :key="imageCropperKey"
+                             v-show="imageCropperShow">
+              </image-cropper>
+            </el-col>
+          </el-row>
         </el-col>
       </el-row>
     </div>
@@ -145,11 +155,8 @@
                 instance.confirmButtonLoading = true;
                 return new Promise((resolve,reject) =>{
                   update(that.newUserProfile).then(response => {
-                    this.$store.dispatch('GetInfo', response.username).then(() => {
+                    this.$store.dispatch('Update', response).then(() => {
                     }).catch(error => console.log(error));
-                      setTimeout(function () {
-                        vm.$router.push({path: '/'});
-                      },4000);
                     setTimeout(() => {
                       instance.confirmButtonLoading = false;
                     }, 1000);

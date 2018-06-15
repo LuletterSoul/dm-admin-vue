@@ -3,7 +3,7 @@ import fetch from '@/utils/fetch';
 
 export function update(newProfile) {
   return fetch({
-    url: '/user',
+    url: '/users',
     method: 'put',
     data: newProfile
   });
@@ -11,7 +11,7 @@ export function update(newProfile) {
 
 export function getUserInfo(username) {
   return fetch({
-    url:'/user/'+username,
+    url:'/users/'+username,
     method:'get'
   })
 }
