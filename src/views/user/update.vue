@@ -17,7 +17,7 @@
                 <el-col :span="11">
                   <el-date-picker type="date"
                                   style="width: 100%;"
-                                  value-format="yyyy-MM-dd"
+                                  value-format="yyyy-MM-dd HH:mm:ss"
                                   format="yyyy 年 MM 月 dd 日"
                                   v-model="newUserProfile.birthday">
                   </el-date-picker>
@@ -41,7 +41,7 @@
               </el-form-item>
               <el-form-item label="权限角色">
                 <el-checkbox-group>
-                  <el-checkbox v-model="roles1" v-for="role in roles" :label="role" :key="role">{{ role }}</el-checkbox>
+                  <el-checkbox v-model="newUserProfile.roles" v-for="role in roles" :label="role" :key="role">{{ role }}</el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
               <el-form-item>
@@ -95,7 +95,6 @@
     name: 'updateUser',
     data() {
       return {
-        imageCropperShow: false,
         imageCropperShow: false,
         imageCropperKey: 0,
         singlePlace: '450981',
