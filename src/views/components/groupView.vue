@@ -1,11 +1,11 @@
 <template>
   <div>
-    <el-row>
-      <el-col :offset="3" :span="18">
-        <group-new-actions>
-        </group-new-actions>
-      </el-col>
-    </el-row>
+    <!--<el-row>-->
+      <!--<el-col :offset="3" :span="18">-->
+        <!--<group-new-actions>-->
+        <!--</group-new-actions>-->
+      <!--</el-col>-->
+    <!--</el-row>-->
     <el-row>
       <el-col>
         <task-tacking :to-stages="toStages">

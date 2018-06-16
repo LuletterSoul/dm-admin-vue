@@ -4,6 +4,7 @@
         <el-col>
           <el-tooltip class="item" effect="dark" :content="_rest" placement="top">
             <el-progress :stroke-width="18"
+                         text-inside
                          :percentage="_percent"
                          :color="_color">
             </el-progress>
@@ -40,7 +41,11 @@
           _rest(){
             let now = moment();
             let end = moment(this.endTime);
-            return '剩余 '+end.diff(now,'days') + '   天';
+            let rest = end.diff(now, 'days');
+            if(rest<=0){
+              rest = 0;
+            }
+            return '剩余 '+ rest + '   天';
           },
           _percent(){
             let now = moment();
@@ -48,7 +53,12 @@
             let end = moment(this.endTime);
             let total = end.diff(begin);
             let progress = now.diff(begin);
-            return Math.ceil(progress / total * 100);
+            if(progress > total){
+              return 100;
+            }
+            else{
+              return Math.ceil(progress / total * 100);
+            }
           },
           _color(){
             let now = moment();
@@ -57,8 +67,12 @@
             let total = end.diff(begin);
             let progress = now.diff(begin);
             let p = Math.ceil(progress / total * 100);
+            if(p >=100){
+              p = 100;
+            }
             if(p <= 20){
               return '#67c23a';
+
             }
             else if(p <=50){
               return '#409eff';

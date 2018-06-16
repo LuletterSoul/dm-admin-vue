@@ -102,9 +102,10 @@
             this.$store.dispatch('Login', this.loginForm).then(() => {
               vm.$store.dispatch('GetToken', this.loginForm.username).then(() => {
                 this.isLoginFormDisplay = false;
-                setTimeout(function () {
-                  vm.$router.push({path: '/'});
-                },4000);
+                // setTimeout(function () {
+                //
+                // },500);
+                vm.$router.push({path: '/'});
                 vm.$message.success("登录成功.");
               }).catch(error =>{
                 this.loading = false;
