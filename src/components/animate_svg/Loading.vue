@@ -124,8 +124,8 @@
   };
 </script>
 <style>
-  @import "/static/loading/loading.css";
-  .loading-wrap{
+  @import "../../assets/loading/loading.css";
+  .loading-w1rap{
     position: fixed;
     width: 100%;
     height: 100%;
