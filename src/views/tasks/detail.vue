@@ -126,6 +126,12 @@
       }
     },
     created() {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       //约定从route中传入查询参数taskId,利用taskId从后台加载数据
       let _taskId = this.$route.query.taskId;
       //如果props提供taskId,则不需要查询参数
@@ -147,6 +153,7 @@
         this.sets = this.toSets;
         this.algorithms = this.toAlgorithms;
       }
+      loading.close();
     },
     data() {
       return {

@@ -22,9 +22,12 @@ const tokenService = axios.create({
 
 // request拦截器
 tokenService.interceptors.request.use(config => {
-  wrapApplyToken(config,store);
+  wrapAccessCredentials(config,store);
+  wrapApplyToken(config, store);
   return config;
 }, error => {
+  console.log(error);
+  Message.error("服务器无响应.");
   Promise.reject(error);
 });
 
@@ -69,6 +72,10 @@ tokenService.interceptors.response.use(
         Message.error(errorRes.tip);
       }
       return Promise.reject(errorRes);
+    }
+    else{
+      let message = "未知的服务错误.";
+      Message.error(message);
     }
   }
 );

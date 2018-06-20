@@ -42,7 +42,9 @@ export function wrapAccessCredentials(config, username) {
       if(username!==undefined) {
         config.headers[USERNAME_HEADER] = username;
       }
+      //刷新可能导致用户名丢失
       else{
+        //使用老的Token,作为凭证
         config.headers[ACCESS_BY_PRE_TOKEN] = getCookiesToken();
       }
       config.headers[ACCESS_TOKEN_HEADER] = getCookiesToken();
