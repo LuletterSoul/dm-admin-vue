@@ -627,7 +627,6 @@
     margin-top: 90px;
   }
 
-  ,
   .btn-import-container {
     padding-right: 20px;
     float: right;
