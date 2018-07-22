@@ -13,28 +13,68 @@
     </el-row>
     <el-row>
       <el-col :offset="1" :span="22">
-        <Form :model="formItem" :label-width="80">
-          <FormItem :label="$t('p.group.divide.oneKey.taskForm.task.label')">
-            <AutoComplete
-              icon="ios-search"
-              @on-select="handleTaskSelected"
-              :placeholder="$t('p.group.divide.oneKey.taskForm.task.placeholder')">
-              <div class="task-auto-complete-item" v-for="item in tasks">
-                <div class="task-auto-complete-group">
-                  <span>{{ item.title }}</span>
-                  <a href="https://www.google.com/search?q=iView" target="_blank">更多</a>
-                </div>
-                <Option v-for="option in item.content" :value="option.taskName" :key="option.taskId">
-                  <span class="demo-auto-complete-title">{{ option.taskName }} </span>
-                  <span class="auto-complete-option">建立时间:{{ option.builtTime }}</span>
-                </Option>
-              </div>
-              <a href="https://www.google.com/search?q=iView" target="_blank" class="demo-auto-complete-more">查看所有结果</a>
-            </AutoComplete>
-          </FormItem>
-          <FormItem :label="$t('p.group.divide.oneKey.taskForm.ignore.label')">
+        <Form ref="configForm" :model="config" :label-width="80" :rules="ruleValidate">
+          <el-row>
+            <el-col>
+              <FormItem :label="$t('p.group.divide.oneKey.taskForm.strategy')" prop="strategyId">
+                <Select v-model="config.strategyId">
+                <Option v-for="strategy in strategies"
+                :value="strategy.value"
+                :key="strategy.value">{{ strategy.label }}</Option>
+                </Select>
+              </FormItem>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="22">
+              <transition name="fade" mode="out-in">
+                <FormItem v-if="selectMode" prop="specifiedTasks" :label="$t('p.group.divide.oneKey.taskForm.task.label')">
+                  <label>
+                    <Select
+                      v-if="selectMode"
+                      multiple
+                      icon="ios-search"
+                      v-model="config.specifiedTasks"
+                      @on-select="handleTaskSelected"
+                      :placeholder="$t('p.group.divide.oneKey.taskForm.task.placeholder')">
+                      <OptionGroup v-for="option in tasks" :label="option.title" :key="option.title">
+                        <Option v-for="item in option.content" :value="item.taskId" :key="item.taskId">
+                          <span class="demo-auto-complete-title">{{ item.taskName }} </span>
+                          <span class="auto-complete-option">建立时间:{{ item.builtTime }}</span>
+                        </Option>
+                      </OptionGroup>
+                    </Select>
+                  </label>
+                </FormItem>
+                <FormItem v-else  prop="specifiedTasks" :label="$t('p.group.divide.oneKey.taskForm.task.label')">
+                  <Transfer
+                    :data="_tasks"
+                    :target-keys="config.specifiedTasks"
+                    :list-style="listStyle"
+                    :not-found-text="$t('p.group.divide.oneKey.taskForm.task.label')"
+                    @on-change="handleTaskChange"
+                    :filter-method="filterStudents"
+                    :titles="['全部任务', '待分配任务']">
+                    <div :style="{float: 'right', margin: '5px'}">
+                      <Button type="ghost" size="small">重置</Button>
+                    </div>
+                  </Transfer>
+                </FormItem>
+              </transition>
+            </el-col>
+            <el-col style="margin-left: 30px" :span="1">
+              <el-button
+                type="primary"
+                size="small"
+                :loading="taskFetching"
+                @click="selectMode = !selectMode">
+                {{ this._switchModeTip }}
+              </el-button>
+            </el-col>
+          </el-row>
+          <FormItem prop="isIgnoreArrangedTask" :label="$t('p.group.divide.oneKey.taskForm.ignore.label')">
             <i-switch v-model="config.isIgnoreArrangedTask"
-                      @on-change="handleAddAll"
+                      @on-change="handleAddAll(config.isIgnoreArrangedTask)"
                       size="large">
               <span slot="open">On</span>
               <span slot="close">Off</span>
@@ -49,27 +89,6 @@
           </FormItem>
           <FormItem :label="$t('p.group.divide.oneKey.taskForm.timeRange.label')">
             <el-row>
-              <!--<el-col :span="11">-->
-                <!--<DatePicker type="datetime"-->
-                            <!--@on-change="setBegin"-->
-                            <!--:value="config.beginDate"-->
-                            <!--style="width: 100%"-->
-                            <!--format="yyyy-MM-dd HH:mm:ss"-->
-                            <!--:placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')">-->
-                <!--</DatePicker>-->
-              <!--</el-col>-->
-              <!--<el-col :span="2" style="text-align: center">-->
-                <!-- - -->
-              <!--</el-col>-->
-              <!--<el-col :span="11">-->
-                <!--<DatePicker type="datetime"-->
-                            <!--:value="config.endDate"-->
-                            <!--format="yyyy-MM-dd HH:mm:ss"-->
-                            <!--style="width: 100%"-->
-                            <!--@on-change="setEnd"-->
-                            <!--:placeholder="$t('p.group.divide.oneKey.taskForm.timeRange.beginPlaceholder')">-->
-                <!--</DatePicker>-->
-              <!--</el-col>-->
               <el-col :span="14">
                 <el-date-picker
                   clearable
@@ -89,54 +108,69 @@
               </el-col>
             </el-row>
           </FormItem>
-          <el-row :gutter="30">
-            <el-col :span="4">
-              <FormItem>
-                <Input v-model="studentQuery.studentId"
-                       :placeholder="$t('p.group.divide.oneKey.taskForm.students.studentId')"
-                       clearable>
-                </Input>
-              </FormItem>
-            </el-col>
-            <el-col :span="4">
-              <Select v-model="studentQuery.className"
-                      :placeholder="$t('p.group.divide.oneKey.taskForm.students.className')" clearable>
-                <Option v-for="(item,index) in classNameOptions" :value="item" :key="index">{{ item }}</Option>
-              </Select>
-            </el-col>
-            <el-col :span="4">
-              <Select
-                v-model="studentQuery.grade"
-                :placeholder="$t('p.group.divide.oneKey.taskForm.students.grade')" clearable>
-                <Option v-for="(item,index) in gradeOptions" :value="item" :key="index">{{ item }}</Option>
-              </Select>
-            </el-col>
-            <el-col :span="4">
-              <Select
-                v-model="studentQuery.profession"
-                :placeholder="$t('p.group.divide.oneKey.taskForm.students.profession')" clearable>
-                <Option v-for="(item,index) in professionOptions" :value="item" :key="index">{{ item }}</Option>
-              </Select>
-            </el-col>
-            <Button type="primary" shape="circle" icon="ios-search" @click="handleFilter"></Button>
-          </el-row>
-          <FormItem :label="$t('p.group.divide.oneKey.taskForm.students.label')">
-            <Transfer
-              :data="_assignedStudents"
-              :target-keys="config.specifiedDividingStudents"
-              :list-style="listStyle"
-              :not-found-text="$t('p.group.divide.oneKey.taskForm.students.placeholder')"
-              @on-change="handleChange"
-              :filter-method="filterStudents"
-              :titles="['符合条件的学生', '候选学生']">
-              <div :style="{float: 'right', margin: '5px'}">
-                <Button type="ghost" size="small">重置</Button>
-              </div>
-            </Transfer>
-          </FormItem>
+            <el-row  v-if="!config.isIgnoreArrangedTask" :gutter="30">
+              <el-col :span="4">
+                <transition name="fade" mode="out-in">
+                  <FormItem>
+                    <Input v-model="studentQuery.studentId"
+                           :placeholder="$t('p.group.divide.oneKey.taskForm.students.studentId')"
+                           clearable>
+                    </Input>
+                  </FormItem>
+                </transition>
+              </el-col>
+              <el-col :span="4">
+                <transition name="fade" mode="out-in">
+                  <Select  v-model="studentQuery.className"
+                          :placeholder="$t('p.group.divide.oneKey.taskForm.students.className')" clearable>
+                    <Option v-for="(item,index) in classNameOptions" :value="item" :key="index">{{ item }}</Option>
+                  </Select>
+                </transition>
+              </el-col>
+              <el-col :span="4">
+                <transition name="fade" mode="out-in">
+                    <Select
+                      v-model="studentQuery.grade"
+                      :placeholder="$t('p.group.divide.oneKey.taskForm.students.grade')" clearable>
+                      <Option v-for="(item,index) in gradeOptions" :value="item" :key="index">{{ item }}</Option>
+                    </Select>
+                </transition>
+              </el-col>
+              <el-col :span="4">
+                <Select
+                  v-model="studentQuery.profession"
+                  :placeholder="$t('p.group.divide.oneKey.taskForm.students.profession')" clearable>
+                  <Option v-for="(item,index) in professionOptions" :value="item" :key="index">{{ item }}</Option>
+                </Select>
+              </el-col>
+              <Button type="primary" shape="circle" icon="ios-search" @click="handleFilter"></Button>
+            </el-row>
+
+          <transition name="fade" mode="out-in">
+            <FormItem  v-if="!config.isIgnoreArrangedTask"
+                       prop="specifiedDividingStudents"
+                       :label="$t('p.group.divide.oneKey.taskForm.students.label')">
+              <Transfer
+                :data="_assignedStudents"
+                :target-keys="config.specifiedDividingStudents"
+                :list-style="listStyle"
+                :not-found-text="$t('p.group.divide.oneKey.taskForm.students.placeholder')"
+                @on-change="handleStuChange"
+                :filter-method="filterStudents"
+                :titles="['符合条件的学生', '候选学生']">
+                <div :style="{float: 'right', margin: '5px'}">
+                  <Button type="ghost" size="small">重置</Button>
+                </div>
+              </Transfer>
+            </FormItem>
+          </transition>
+
           <FormItem :label="$t('p.group.divide.oneKey.taskForm.gradient.label')">
             <el-slider
-              v-model="config.gradient"
+              range
+              :max="100"
+              :min="1"
+              v-model="maxAndMin"
               show-input>
             </el-slider>
           </FormItem>
@@ -150,18 +184,17 @@
     </el-row>
     <el-row>
       <el-col :offset="4" :span="16">
-        <Button type="primary" @click="handleSubmitDividingConfig" :loading="previewLoading" style="margin-top: 10px"
+        <Button type="primary" @click="handleSubmitDividingConfig('configForm')" :loading="previewLoading" style="margin-top: 10px"
                 long>{{
           $t('p.group.divide.oneKey.taskForm.submit.preview') }}
         </Button>
-        <Button type="error" style="margin-top: 10px" long>{{ $t('p.group.divide.oneKey.taskForm.submit.reset') }}
+        <Button type="error" @click="handleReset('configForm')" style="margin-top: 10px" long>{{ $t('p.group.divide.oneKey.taskForm.submit.reset') }}
         </Button>
         <Button type="ghost" style="margin-top: 10px" long>{{ $t('p.group.divide.oneKey.taskForm.submit.cancel') }}
         </Button>
       </el-col>
     </el-row>
   </div>
-
 </template>
 <script>
   import {fetchTaskList} from 'api/tasks';
@@ -172,16 +205,55 @@
   export default {
     name: "setting",
     data() {
+      const validateTasks = (rule, value, callback) => {
+        if (!value.length) {
+          callback(new Error('必须指定需要被分配的任务'));
+        } else {
+          callback();
+        }
+      };
+      const validateStus = (rule, value, callback) => {
+        if (!value.length) {
+          callback(new Error('必须指定需要分组的学生'));
+        } else {
+          callback();
+        }
+      };
       return {
+        selectMode: true,
+        taskFetching: false,
+        strategies:[
+          {
+            value:1,
+            label:'简单分组策略',
+          },{
+            value:2,
+            label:'随机分组策略',
+          },{
+            value:3,
+            label:'严格分组策略'
+          }
+        ],
         config: {
-          taskId: '',
+          strategyId:1,
+          specifiedTasks: [],
           beginDate: moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss'),
           endDate: moment().format('YYYY-MM-DD HH:mm:ss'),
           gradient: 12,
+          lowerBound: 1,
+          upperBound: 12,
           isIgnoreArrangedTask: false,
           specifiedDividingStudents: [],
           builderId: this.$store.getters.currentUserId,
           buildingKey: ''
+        },
+        ruleValidate: {
+          specifiedTasks: [
+            { required:true,validator: validateTasks, trigger: 'blur' },
+          ],
+          specifiedDividingStudents: [
+            { required: true, validator:validateStus, trigger: 'blur' }
+          ]
         },
         previewLoading: false,
         tasks: [
@@ -198,6 +270,7 @@
             content: []
           }
         ],
+        allTasks: undefined,
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -225,7 +298,7 @@
             }
           }]
         },
-        datePickerValue:[],
+        datePickerValue: [],
         studentQuery: {
           studentId: "",
           studentName: "",
@@ -236,7 +309,7 @@
           size: 20,
           sort: "studentId,ASC",
           //默认查询一个月内不执行任何发掘任务的学生列表
-          beginDate:'',
+          beginDate: '',
           endDate: '',
         },
         classNameOptions: [],
@@ -250,8 +323,10 @@
           builtTimeEnd: '',
           page: 0,
           size: 20,
-          sort: ''
+          sort: '',
+          fetch: false,
         },
+        maxAndMin: [1, 12],
         assignedStudents: [],
         previewGroups: [],
         selectedKeys: this._selectedKeys,
@@ -311,46 +386,18 @@
           slider: [20, 50],
           textarea: ''
         }
-      };
+      }
     },
     created() {
       this.$store.dispatch('SetStep', 1);
       this.getTasks();
+      this.getAllTasks();
       this.getStudents();
       this.getOptions();
     },
     methods: {
-      resetStudentQuery() {
-        this.studentQuery = {
-          studentId: "",
-          studentName: "",
-          className: "",
-          profession: "",
-          grade: "",
-          page: 0,
-          size: 20,
-          sort: "studentId,ASC",
-          //默认查询一个月内不执行任何发掘任务的学生列表
-          beginDate: moment().subtract(30, 'days').format('YYYY-MM-DD HH:mm:ss'),
-          endDate: moment().format('YYYY-MM-DD HH:mm:ss'),
-        };
-        this.getStudents();
-      },
-      resetDefaultQuery() {
-        this.studentQuery = {
-          studentId: "",
-          studentName: "",
-          className: "",
-          profession: "",
-          grade: "",
-          page: 0,
-          size: 20,
-          sort: "studentId,ASC",
-          //默认查询一个月内不执行任何发掘任务的学生列表
-          beginDate: '',
-          endDate: '',
-        };
-        this.getStudents();
+      handleReset(name){
+          this.$refs[name].resetFields();
       },
       handleAddAll(isAddAll) {
         if (isAddAll) {
@@ -374,31 +421,39 @@
         this.studentQuery.endDate = val[1];
         this.getStudents();
       },
-      handleSubmitDividingConfig() {
+      handleSubmitDividingConfig(name) {
         let vm = this;
-        vm.previewLoading = true;
-        createGroupPreview(Object.assign({}, vm.config)).then(res => {
-          vm.previewGroups = res;
-          vm.$emit('on-group-preview', vm.previewGroups);
-          vm.previewLoading = false;
-          //保存设置
-          vm.$store.dispatch('SetSetting', vm.config);
-          //保存预览分组
-          vm.$store.dispatch('SetPreviewGroups', vm.previewGroups).then(() => {
-
-            vm.$message({
-              message: '创建预览分组成功',
-              type: 'success',
-              duration: 1500
-            });
-            vm.$router.push(
-              {
-                path: 'preview',
+        this.$refs[name].validate((valid) => {
+          if (!valid) {
+            this.$message.error('请求参数不合法！');
+          }
+          else{
+            vm.previewLoading = true;
+            vm.config.lowerBound = this.maxAndMin[0];
+            vm.config.upperBound = this.maxAndMin[1];
+            createGroupPreview(Object.assign({}, vm.config)).then(res => {
+              vm.previewGroups = res;
+              vm.$emit('on-group-preview', vm.previewGroups);
+              vm.previewLoading = false;
+              //保存设置
+              vm.$store.dispatch('SetSetting', vm.config);
+              //保存预览分组
+              vm.$store.dispatch('SetPreviewGroups', vm.previewGroups).then(() => {
+                vm.$message({
+                  message: '创建预览分组成功',
+                  type: 'success',
+                  duration: 1500
+                });
+                vm.$router.push(
+                  {
+                    path: 'preview',
+                  });
               });
-          });
-        }).catch(error => {
-          vm.previewLoading = false;
-        })
+            }).catch(error => {
+              vm.previewLoading = false;
+            })
+          }
+        });
       },
       handleTaskSelected(taskName) {
         this.tasks.forEach(t => {
@@ -409,18 +464,11 @@
           })
         });
       },
-      handleChange(newTargetStudentIds) {
+      handleStuChange(newTargetStudentIds) {
         this.config.specifiedDividingStudents = newTargetStudentIds;
       },
-      setBegin(begin) {
-        this.config.beginDate = begin;
-        this.studentQuery.beginDate = begin;
-        this.getStudents();
-      },
-      setEnd(end) {
-        this.config.endDate = end;
-        this.studentQuery.endDate = end;
-        this.getStudents();
+      handleTaskChange(newTargetTaskIds) {
+        this.config.specifiedTasks = newTargetTaskIds;
       },
       getStudents() {
         let vm = this;
@@ -436,6 +484,19 @@
           vm.professionOptions = res.professionOptions;
           vm.gradeOptions = res.gradeOptions;
         })
+      },
+      getAllTasks(){
+        this.taskQuery.builtTimeBegin = '';
+        this.taskQuery.builtTimeEnd = '';
+        this.taskQuery.fetch = true;
+        let vm = this;
+        this.taskFetching = true;
+        fetchTaskList(Object.assign({}, this.taskQuery)).then(res => {
+          vm.allTasks = res.content;
+          vm.taskFetching = false;
+        }).catch(error =>{
+          console.log(error);
+        });
       },
       async getTasks() {
         let vm = this;
@@ -466,6 +527,17 @@
       },
     },
     computed: {
+      _switchModeTip(){
+        return this.selectMode ? "显示全部" : "显示部分";
+      },
+      _tasks(){
+        return this.allTasks.map(t =>{
+          return {
+            key: t.taskId,
+            label: t.taskName + '  ' + '建立时间:' + t.builtTime
+          }
+        })
+      },
       _assignedStudents() {
         return this.assignedStudents.map(s => {
           return {

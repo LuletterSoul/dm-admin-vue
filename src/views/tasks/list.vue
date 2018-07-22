@@ -335,7 +335,7 @@
             render: function (h, params) {
               return h('Tag', {
                 props: vm.renderTaskStatusTag(params.row.progressStatus)
-              }, params.row.progressStatus.description)
+              }, findStatusde(params.row.progressStatus));
             }
           },
           {
@@ -685,6 +685,12 @@
           finishedTaskCount: 0
         };
       },
+      findStatus(value){
+        for(let i = 0;i< this.statusOptions.length;i++){
+          if (this.statusOptions[i].value === value)
+            return this.statusOptions[i].description;
+          }
+        },
       renderTask(task) {
         if (task === undefined) {
           return '无';
@@ -698,7 +704,7 @@
       },
       renderTaskStatusTag(progressStatus) {
         let tagColor = '';
-        switch (progressStatus.value) {
+        switch (progressStatus) {
           case 1:
             tagColor = 'yellow';
             break;
@@ -720,7 +726,6 @@
           default:
             tagColor = 'blue';
             break;
-
         }
         return {
           type: 'dot',
@@ -854,7 +859,7 @@
           render: function (h, params) {
             return h('Tag', {
               props: vm.renderTaskStatusTag(params.row.progressStatus)
-            }, params.row.progressStatus.description)
+            }, vm.findStatus(params.row.progressStatus));
           }
         });
         taskColumns.push({

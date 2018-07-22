@@ -76,8 +76,8 @@ service.interceptors.response.use(
       }
       else if (code === 50004 || code === 50010
               || code === 50005 ||code ===30001
-              || code ===30002||code===40005||code===40003) {
-        Message.error(errorRes.tip);
+              || code ===30002||code===40005||code===40003||40007) {
+              Message.error(errorRes.reason);
       }
       else if(code === 50011){
         location.reload();

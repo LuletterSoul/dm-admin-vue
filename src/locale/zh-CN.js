@@ -49,7 +49,6 @@ export default {
           progressStatus:'任务状态',
           plannedDuration:'计划持续天数',
           limit:"关联分组超过"
-
         }
       }
     },
@@ -120,8 +119,9 @@ export default {
             builder:{
               label:'建队人'
             },
+            strategy:'分组策略',
             gradient:{
-              label:'梯度'
+              label:'每组人数'
             },
             operationCode:{
               label:'分组代号',

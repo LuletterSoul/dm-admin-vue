@@ -22,7 +22,6 @@
                   style="width: 100%"
                   v-model="newTask.taskName">
                 </el-input>
-
               </el-form-item>
             </el-col>
             <el-col :span="22">

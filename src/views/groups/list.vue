@@ -263,7 +263,7 @@
             render: function (h, params) {
               return h('Tag', {
                 props: vm.renderTaskStatusTag(params.row.taskStatus)
-              }, params.row.taskStatus.description)
+              }, vm.findStatus(params.row.taskStatus));
             }
           },
           {
@@ -366,6 +366,12 @@
           vm.allStudents = res.content;
         }).catch(error => {
         });
+      },
+      findStatus(value){
+        for(let i = 0;i< this.taskStatusOptions.length;i++){
+          if (this.taskStatusOptions[i].value === value)
+            return this.taskStatusOptions[i].description;
+        }
       },
       handleClosed(){
         this.showEditModal = false;
@@ -570,7 +576,7 @@
       },
       renderTaskStatusTag(taskStatus) {
         let tagColor = '';
-        switch (taskStatus.value) {
+        switch (taskStatus) {
           case 1:
             tagColor = 'yellow';
             break;

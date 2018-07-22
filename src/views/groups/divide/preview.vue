@@ -100,8 +100,9 @@
             }
           },
           {
-            title: '组员',
+            title: '组员数',
             align: 'center',
+            key: 'memberSize'
           },
 //           {
 //             title: '管理',

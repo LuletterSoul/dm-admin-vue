@@ -791,7 +791,7 @@
       },
       renderTaskStatusTag(taskStatus) {
         let tagColor = '';
-        switch (taskStatus.value) {
+        switch (taskStatus) {
           case 1:
             tagColor = 'yellow';
             break;
