@@ -1,7 +1,7 @@
 <template>
     <div style="padding-bottom:10px;padding-top:15px;display: inline-block;margin-left: 5px" @click="handleClick">
       <Tooltip :content="_groupInfo" placement="top">
-        <Badge :count="10">
+        <Badge>
           <div style="cursor: pointer">
             <Avatar style="background-color: #87d068" icon="person" shape="square">
               <router-link to="/foo">Go to Foo</router-link>

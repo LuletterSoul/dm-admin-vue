@@ -418,7 +418,7 @@
             type: 'success'
           });
         }).catch(error => {
-
+            
         });
       },
       handleSelectionChange(val) {

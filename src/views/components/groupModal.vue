@@ -80,7 +80,7 @@
                       <el-select
                         size="medium"
                         clearable
-                        v-model="group.taskStatus.value">
+                        v-model="group.taskStatus">
                         <el-option
                           v-for="item in toTaskStatus"
                           :value="item.value"
@@ -180,7 +180,7 @@
           taskId: this._taskId,
           builderId: this._userId,
           leaderId: this._leader.studentId,
-          taskStatus: this.group.taskStatus.value,
+          taskStatus: this.group.taskStatus,
         }
       },
       submit() {

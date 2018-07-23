@@ -86,8 +86,13 @@ service.interceptors.response.use(
       else if (code === 50000) {
         Message.warning(errorRes.tip);
       }
-      return Promise.reject(errorRes);
     }
+    else{
+        if (errorRes.status === 500) {
+        Message.error('服务器错误');
+      }
+    }
+    return Promise.reject(errorRes);
   }
 );
 export default service;

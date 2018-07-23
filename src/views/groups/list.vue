@@ -128,7 +128,11 @@
           enter-active-class="animated bounceIn"
           leave-active-class="animated bounceOutRight">
           <group-view
-            v-if="_wrappedDetailTarget" :groups="_wrappedDetailTarget" :key="this._wrappedDetailTarget[0].groupId">
+            v-if="_wrappedDetailTarget"
+            :to-stages="stages"
+            :task-id="_wrappedDetailTarget[0].taskId"
+            :groups="_wrappedDetailTarget"
+            :key="this._wrappedDetailTarget[0].groupId">
           </group-view>
         </transition>
       </el-col>
@@ -154,6 +158,12 @@
     getGroupLeaders,
     getTaskStatus
   } from 'api/groups';
+
+  import {
+    getRefCollections,
+    getRefStages,
+    getRefGroups, fetchConfiguredAlgortithms
+  } from 'api/tasks';
 
   import GroupView from '../components/groupView';
   import GroupModal from '../components/groupModal';
@@ -210,6 +220,7 @@
         suggestedGroupNames: [],
         suggestedGroupLeaders: [],
         wrappedSuggestedGroupLeader: '',
+        stages: [],
         groupColumns: [
           {
             type: 'selection',
@@ -245,7 +256,7 @@
             title: '任务',
             align: 'center',
             render: function (h, params) {
-              return h('span', {}, vm.renderTask(params.row.dataMiningTask))
+              return h('span', {}, vm.renderTask(params.row.dataMiningTask.taskName))
             }
           },
           {
@@ -254,8 +265,9 @@
             key: 'builtTime'
           },
           {
-            title: '组员',
+            title: '组员数',
             align: 'center',
+            key:'memberSize'
           },
           {
             title: '任务状态',
@@ -481,11 +493,13 @@
       },
       handleEdit(index) {
         this.detailTargetIndex = index;
+        //this.getRefStages(this.groupList[index].dataMiningTask.taskId);
         this.getMembers(this.groupList[index].groupId, index);
         this.showEditModal = true;
       },
       handleCheck(index) {
         this.detailTargetIndex = index;
+        this.getRefStages(this.groupList[index].dataMiningTask.taskId);
         this.getMembers(this.groupList[index].groupId, index);
         let el = document.getElementById("group-view");
         el.scrollIntoView();
@@ -546,6 +560,13 @@
           })
         }
       },
+      getRefStages(taskId){
+        let vm = this;
+        getRefStages(taskId).then(stages => {
+          vm.stages = stages;
+        }).catch(error => {
+        });
+      },
       resetTemp() {
         this.temp = {
           studentId: '',
@@ -566,12 +587,12 @@
           finishedTaskCount: 0
         };
       },
-      renderTask(task) {
-        if (task === undefined) {
+      renderTask(taskName) {
+        if (taskName === undefined || taskName === '') {
           return '无';
         }
         else {
-          return task.taskName;
+          return taskName;
         }
       },
       renderTaskStatusTag(taskStatus) {

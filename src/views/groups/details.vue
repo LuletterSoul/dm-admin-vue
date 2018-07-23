@@ -5,7 +5,7 @@
     </div>
     <el-card class="groupCard"
              v-for="group in groups"
-             v-bind:key="group.id"
+             v-bind:key="group.groupId"
              v-bind:title="group.groupName">
 
       <div slot="header" style="font-weight: bold;font-size: 20px;text-align:center;">
