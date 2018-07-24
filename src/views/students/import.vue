@@ -3,6 +3,16 @@
     <div class="title">
       导入学生
     </div>
+    <upload-dialog :title="'学生导入'"
+                   :format="'.xlsx'"
+                   :message="'导入成功'"
+                   :upload-req="importFuc"
+                   :text="'只能上传符合模板的.xlsx文件'"
+                   @onUploaded="handleImported"
+                   @onFailed="uploadDialogVisible =false"
+                   @onClosed="handleCanceled"
+                   :to-visible="uploadDialogVisible"
+    ></upload-dialog>
     <div class="btn-import-container">
       <el-button class="btn-item" type="warning"
                  plain
@@ -12,31 +22,31 @@
       </el-button>
       <el-button class="btn-item" type="primary" plain icon="el-icon-upload" @click="uploadDialogVisible =true">导入
       </el-button>
-      <el-dialog
-        title="导入"
-        :visible.sync="uploadDialogVisible"
-        width="30%">
-        <el-upload
-          class="upload-container"
-          drag
-          action="Deprecated"
-          ref="importExcel"
-          :accpept="'.xlsx'"
-          :auto-upload="false"
-          :on-remove="handleFileRemove"
-          :before-remove="beforeFileRemove"
-          :before-upload="handleBeforeUpload"
-          :file-list="fileList"
-          multiple>
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          <div class="el-upload__tip" slot="tip">只能上传符合模板的.xlsx文件</div>
-        </el-upload>
-        <span slot="footer" class="dialog-footer">
-      <el-button @click="uploadDialogVisible = false">取 消</el-button>
-         <el-button type="primary" @click="submitImport">确 定</el-button>
-        </span>
-      </el-dialog>
+      <!--<el-dialog-->
+        <!--title="导入"-->
+        <!--:visible.sync="uploadDialogVisible"-->
+        <!--width="30%">-->
+        <!--<el-upload-->
+          <!--class="upload-container"-->
+          <!--drag-->
+          <!--action="Deprecated"-->
+          <!--ref="importExcel"-->
+          <!--:accept="'.xlsx'"-->
+          <!--:auto-upload="false"-->
+          <!--:on-remove="handleFileRemove"-->
+          <!--:before-remove="beforeFileRemove"-->
+          <!--:before-upload="handleBeforeUpload"-->
+          <!--:file-list="fileList"-->
+          <!--multiple>-->
+          <!--<i class="el-icon-upload"></i>-->
+          <!--<div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
+          <!--<div class="el-upload__tip" slot="tip">只能上传符合模板的.xlsx文件</div>-->
+        <!--</el-upload>-->
+        <!--<span slot="footer" class="dialog-footer">-->
+      <!--<el-button @click="uploadDialogVisible = false">取 消</el-button>-->
+         <!--<el-button type="primary" @click="submitImport">确 定</el-button>-->
+        <!--</span>-->
+      <!--</el-dialog>-->
       <el-button class="btn-item" type="success" icon="el-icon-document" @click="handleDownload">下载模板</el-button>
     </div>
     <Table :loading="listLoading"
@@ -188,15 +198,22 @@
           return 'demo-table-error-row';
         }
       },
-      handleFileRemove(file, fileList) {
-        console.log(file, fileList);
+      handleImported(res){
+        this.$store.dispatch('SetNewStudents',res);
+        this.uploadDialogVisible = false;
       },
-      handleFilePreview(file) {
-        console.log(file);
+      handleCanceled(){
+        this.uploadDialogVisible = false;
       },
-      beforeFileRemove(file, fileList) {
-        return this.$confirm(`确定移除 ${ file.name }？`);
-      },
+      // handleFileRemove(file, fileList) {
+      //   console.log(file, fileList);
+      // },
+      // handleFilePreview(file) {
+      //   console.log(file);
+      // },
+      // beforeFileRemove(file, fileList) {
+      //   return this.$confirm(`确定移除 ${ file.name }？`);
+      // },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
@@ -232,31 +249,42 @@
           });
         });
       },
-      handleBeforeUpload(file) {
-        let vm = this;
-        //新建一个Form data 类型的文件
-        let fd = new FormData();
-        fd.append('file', file);
-        //发起上传请求
-        //生成一个上传进度查询key
-        const uuid_v1 = require('uuid/v1');
-        let progress_uuid = uuid_v1();
-        this.listLoading = true;
-        importFromExcel(fd, progress_uuid).then((res) => {
-          //将导入的成功的数据同步
-          vm.studentList = res;
-          vm.$message({
-            type: 'success',
-            message: '导入成功!'
+      importFuc(fd){
+        //let vm = this;
+        return new Promise((resolve, reject) => {
+            importFromExcel(fd).then(res => {
+            resolve(res);
+          }).catch(error => {
+            reject(error);
           });
-          vm.$store.dispatch('SetNewStudents',res);
-          this.listLoading = false;
-          vm.uploadDialogVisible = false;
-        }).catch(error => {
-          console.log(error);
-          vm.uploadDialogVisible = false;
         });
       },
+      // handleBeforeUpload(file) {
+      //   let vm = this;
+      //   //新建一个Form data 类型的文件
+      //   let fd = new FormData();
+      //   fd.append('file', file);
+      //   //发起上传请求
+      //   //生成一个上传进度查询key
+      //   // const uuid_v1 = require('uuid/v1');
+      //   // let progress_uuid = uuid_v1();
+      //   this.listLoading = true;
+      //   importFromExcel(fd).then((res) => {
+      //     //将导入的成功的数据同步
+      //     vm.studentList = res;
+      //     vm.$message({
+      //       type: 'success',
+      //       message: '导入成功!'
+      //     });
+      //     vm.$store.dispatch('SetNewStudents',res);
+      //     this.listLoading = false;
+      //     vm.uploadDialogVisible = false;
+      //   }).catch(error => {
+      //     //console.log(error);
+      //     vm.listLoading = false;
+      //     vm.uploadDialogVisible = false;
+      //   });
+      // },
       submitImport() {
         this.$refs.importExcel.submit();
       },

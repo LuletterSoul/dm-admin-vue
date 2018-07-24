@@ -32,6 +32,7 @@ import VelocityUI from 'velocity-animate/velocity.ui'
 import IconSvg from '@/components/Icon-svg/index.vue'
 import Balloon from '@/components/balloon/index.vue';
 import AnimateTransition from '@/components/transition/AnimateTransition';
+import UploadDialog from '@/views/components/UploadDialog'
 import SingleTransition from '@/components/transition/SingleTransition';
 import EmPlaceholder from '@/components/placeholder'
 import {getToken} from '@/utils/auth'
@@ -80,6 +81,7 @@ Vue.component(Balloon.name, Balloon);
 Vue.component(AnimateTransition.name, AnimateTransition);
 Vue.component(SingleTransition.name, SingleTransition);
 Vue.component(EmPlaceholder.name, EmPlaceholder);
+Vue.component(UploadDialog.name, UploadDialog);
 Vue.use(vueWaves);
 
 Vue.mixin({

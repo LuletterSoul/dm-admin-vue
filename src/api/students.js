@@ -50,12 +50,11 @@ export function unMakrStudent(studentIds) {
   })
 }
 
-export function importFromExcel(file,progress_uuid) {
+export function importFromExcel(file) {
   return fetch({
     url:STUDENT_BASE_PATH.concat('/excel_students'),
     method:'post',
-    data:file,
-    params:{'proc_query_key' : progress_uuid}
+    data:file
   })
 }
 export function fetchOptions() {

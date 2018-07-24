@@ -533,7 +533,7 @@
         this.$refs.studentTable.toggleRowSelection(row);
         this.isDisplayFavoriteColumn = !this.isDisplayFavoriteColumn;
       },
-      getGroupPeeks() {
+        getGroupPeeks() {
         let vm = this;
         getRefGroups(this._currentTaskIds).then(res => {
           vm.taskList.forEach(t => {

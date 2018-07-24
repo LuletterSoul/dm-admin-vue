@@ -241,7 +241,7 @@
           {
             title: '分组编号',
             align: 'center',
-            width: 100,
+            width: 150,
             key: 'arrangementId'
           },
 
