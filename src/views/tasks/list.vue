@@ -321,7 +321,7 @@
                   },
                   on: {
                     click: () => {
-                      vm.$router.push({path: 'create'});
+                      //vm.$router.push({path: 'create'});
                     }
                   }
                 }));

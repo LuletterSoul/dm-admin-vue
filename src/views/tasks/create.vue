@@ -51,6 +51,21 @@
               </el-form-item>
             </el-col>
             <el-col :span="22">
+              <el-form-item label="挖掘语言">
+                <el-select style="width: 100%;"
+                           v-model="newTask.grammarIds"
+                           multiple
+                           placeholder="要求使用的语言">
+                  <el-option
+                    v-for="item in grammars"
+                    :key="item.grammarId"
+                    :label="item.grammarName"
+                    :value="item.grammarId">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="22">
               <el-form-item label="算法配置">
                 <el-select style="width: 100%;"
                            v-model="newTask.algorithmIds"
@@ -242,6 +257,10 @@
   } from 'api/algorithms'
 
   import {
+    fetchGrammars
+  } from 'api/grammars'
+
+  import {
     fetchCollectionList,
     fetchOptions
   } from 'api/datasets';
@@ -256,6 +275,7 @@
       this.getCollectionList();
       this.fetchOptionals();
       this.getAlgorithms();
+      this.getGrammars();
       this.getCandidateGroups();
     },
     data() {
@@ -311,6 +331,7 @@
         labelPosition: 'top',
         taskList: [],
         algorithms: [],
+        grammars:[],
         collectionList: [],
         selectedOptions: [],
         progressStatusOptions: [],
@@ -346,6 +367,7 @@
           arrangeGroupIds: [],
           collectionIds: [],
           algorithmIds: [],
+          grammarIds:[],
           plannedTimeRange: [],
           statusValue: 7,
           stages:[
@@ -433,6 +455,13 @@
         fetchAlgorithms().then(response => {
           this.algorithms = response;
         }).catch(error => {
+          console.log(error);
+        })
+      },
+      getGrammars(){
+        fetchGrammars().then(res => {
+          this.grammars = res;
+        }).catch(error =>{
           console.log(error);
         })
       },
