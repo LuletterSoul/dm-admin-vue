@@ -231,7 +231,7 @@
           arrangementId:'',
           builtTime:'',
           groupLeader:{studentId:''},
-          taskStatus:{}
+          taskStatus:7
         },
         studentColumns: [
           {
@@ -418,7 +418,7 @@
             type: 'success'
           });
         }).catch(error => {
-            
+
         });
       },
       handleSelectionChange(val) {

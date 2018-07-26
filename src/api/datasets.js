@@ -51,13 +51,20 @@ export async function getSets(collectionId,query) {
   });
 }
 
-export async function downloadSetZip(collectionId,containerIds) {
+export async function downloadSetZip(collectionId,containerIds,callback) {
   return fetch({
     url: CONTAINER_BASE_PATH.concat("/").concat("zips"),
     method: 'post',
     params:{'collectionId':collectionId},
     data:containerIds,
-    responseType:'blob'
+    responseType:'blob',
+    onDownloadProgress: function (progressEvent) {
+      if(progressEvent.lengthComputable){
+        //属性lengthComputable主要表明总共需要完成的工作量和已经完成的工作是否可以被测量
+        //如果lengthComputable为false，就获取不到progressEvent.total和progressEvent.loaded
+        callback(progressEvent);
+      }
+    },
   });
 }
 

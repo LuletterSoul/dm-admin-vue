@@ -1,5 +1,12 @@
 <template>
   <div style="margin: 10px">
+    <result :results="stageResults"
+                :state-options="stateOptions"
+                :visible="resultVisible"
+                :loading="false"
+                @onClosed="resultVisible = false"
+                >
+        </result>
     <el-row style="margin: 10px">
       <el-col>
         <el-alert
@@ -25,6 +32,7 @@
 
 <script>
   import TaskRestTime from '../components/taskRestTime'
+  import Result from './result'
   import {
     fetchTaskList,
     deleteTask,
@@ -35,7 +43,7 @@
 
   export default {
     name: "task-tracking",
-    components: {TaskRestTime},
+    components: {TaskRestTime,Result},
     props: {
       toStages: {
         required: [],
@@ -49,6 +57,63 @@
       return {
         listLoading: false,
         stages: this.toStages,
+        resultVisible: false,
+        stateOptions:[
+          {
+            value:1,
+            description:'未提交'
+          },
+          {
+            value:2,
+            description:'新提交'
+          },
+          {
+            value:3,
+            description:'已下载'
+          }
+        ],
+        stageResults:[
+          {
+            studentId:'915106840327',
+            studentName:'刘祥德',
+            status:1,
+          },
+          {
+            studentId:'915106840327',
+            studentName:'刘祥德',
+            status:2,
+          },
+          {
+            studentId:'915106840327',
+            studentName:'刘祥德',
+            status:3,
+          },
+          {
+            studentId:'915106840327',
+            studentName:'刘祥德',
+            status:2,
+          },
+          {
+            studentId:'915106840327',
+            studentName:'刘祥德',
+            status:1,
+          },
+          {
+            studentId:'915106840327',
+            studentName:'刘祥德',
+            status:2,
+          },
+          {
+            studentId:'915106840327',
+            studentName:'刘祥德',
+            status:1,
+          },
+          {
+            studentId:'915106840327',
+            studentName:'刘祥德',
+            status:3,
+          }
+        ],
         stageColumns: [
           {
             title: '里程碑',
@@ -98,7 +163,7 @@
                 props: vm._submitted,
                 on: {
                   click: () => {
-
+                    vm.resultVisible = true;
                   }
                 }
               })])

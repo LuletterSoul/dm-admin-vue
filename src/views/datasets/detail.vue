@@ -3,21 +3,25 @@
     <Row>
       <Col span="2">&nbsp;</Col>
       <Col span="20">
-
       <div class="details-container">
         <div class="title">{{ collectionName }}</div>
         <div class="details-container">
-          <Card>
+          <Card >
             <div slot="title">
-              <Icon type="arrow-shrink"></Icon>
-              <span class="title-font-style"> 数据集文件 </span>
-              <Button type="ghost" class="btn-download-sets"
-                      :disabled="!checkedSetIds.length"
-                      @click="handleDownloadSetZip">下载</Button>
-              <Button type="error"
-                      class="btn-download-sets"
-                      :disabled="!checkedSetIds.length || readOnly"
-                      @click="handleDeleteSets">删除</Button>
+              <el-row>
+                <el-col :span="24">
+                  <Icon type="arrow-shrink"></Icon>
+                  <span class="title-font-style"> 数据集文件 </span>
+                  <Button type="ghost" class="btn-download-sets"
+                          :disabled="!checkedSetIds.length"
+                          :loading="loading"
+                          @click="handleDownloadSetZip">{{  loading ? "正在压缩" : "下载" }}</Button>
+                  <Button type="error"
+                          class="btn-download-sets"
+                          :disabled="!checkedSetIds.length || readOnly"
+                          @click="handleDeleteSets">删除</Button>
+                </el-col>
+              </el-row>
             </div>
             <a href="#" slot="extra"
                @click.prevent="uploadDialogVisible = true">
@@ -86,7 +90,13 @@
                   show-sizer></Page>
           </Card>
         </div>
-
+        <el-row>
+          <el-col style="margin-left: 40px;margin-bottom: 20px;float: left">
+            <transition name="fade" mode="out-in">
+              <Progress v-if="displayProgress" :percent="_percent"></Progress>
+            </transition>
+          </el-col>
+        </el-row>
         <Card :bordered="false" class="dataSetCard">
           <p slot="title" style="font-size: 16px">描述摘要:</p>
           <p >{{ abstractInfo }}</p>
@@ -222,7 +232,11 @@
           numberOfInstances: 0
         },
         dataSets: [],
-        fileList: []
+        fileList: [],
+        loaded:0,
+        total: 1,
+        loading: false,
+        displayProgress:false
       };
     },
     methods: {
@@ -255,6 +269,14 @@
           duration: 1500
         });
       },
+      handleDownloadEvent(event){
+        this.displayProgress = true;
+        this.loaded = event.loaded;
+        this.total = event.total;
+        if(event.loaded === event.total){
+          this.displayProgress = false;
+        }
+      },
       handleFileChange(file, fileList) {
         this.fileList = fileList;
       },
@@ -274,10 +296,14 @@
         this.$refs.uploadDataSets.submit();
       },
       handleDownloadSetZip() {
-        downloadSetZip(this.collectionId, this.checkedSetIds).then((res) => {
+        let vm = this;
+        this.loading = true;
+        downloadSetZip(this.collectionId, this.checkedSetIds,this.handleDownloadEvent).then((res) => {
           const effectiveFileName = res.headers['x-suggested-filename'];
+          vm.loading = false;
           FileSaver.saveAs(res.data, effectiveFileName);
         }).catch((res) => {
+          vm.loading = false;
           console.error("Could not download the zip files from the backend.", res);
         });
       },
@@ -358,6 +384,9 @@
       }
     },
     computed: {
+      _percent(){
+        return Math.trunc(this.loaded / this.total * 100);
+      },
       collectionName() {
         return this.collection.collectionName;
       },

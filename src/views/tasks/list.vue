@@ -136,7 +136,6 @@
                @on-selection-change="handleSelectionChange"
                stripe></Table>
       </el-col>
-
     </el-row>
     <el-row style="float:right;margin-top: 20px">
       <el-col>
@@ -395,7 +394,7 @@
           lowBound: -1,
           page: 0,
           size: 20,
-          progressStatus: '',
+          taskStatus: '',
           sort: "builtTime,ASC",
         },
         detailTargetIndex: null,
