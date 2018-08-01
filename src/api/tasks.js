@@ -153,3 +153,11 @@ export function findAllTaskNames() {
   });
 }
 
+export function findResultRecords(taskId,query) {
+  return fetch({
+    url: TASK_PATH.concat('/').concat(taskId).concat('/result_records'),
+    method: 'get',
+    params: query
+  });
+}
+
