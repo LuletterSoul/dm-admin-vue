@@ -22,7 +22,7 @@
                 prefix-icon="el-icon-search"
                 size="small"
                 v-model="selection"
-                @chang="handleFilter"
+                @change="handleFilter"
                 placeholder="请选择">
                 <el-option
                   v-for="item in stateOptions"
@@ -45,7 +45,7 @@
                              background
                              small
                              @current-change="handleCurrentChange"
-                             :page-sizes="[8,16,32, 50]"
+                             :page-sizes="[8,16,32,64]"
                              :page-size="listQuery.size"
                              layout="total, sizes, prev, pager, next, jumper"
                              :total="total">
@@ -58,12 +58,28 @@
 </template>
 
 <script>
+  import {
+    getResults,
+    createResult,
+    uploadResult,
+    downloadResult,
+    findResultRecords
+  } from 'api/results';
+  import FileSaver from 'file-saver'
+  import {
+    createStage,
+    getResultsByStageId,
+  } from 'api/stages';
     export default {
         name: "result",
         props:{
           visible:{
             type:Boolean,
             default:false
+          },
+          total:{
+            required:true,
+            default: 0
           },
           stateOptions:{
             type:Array,
@@ -85,28 +101,28 @@
           return {
             innerVisible:this.visible,
             listQuery:{
-              size: 10
+              size: 8,
+              page:1,
             },
-            selection:1,
-            total:100,
+            selection:'',
             columns: [
               {
                 title: '学号',
                 align: 'center',
-                key:'studentId'
+                key:'submitterId'
               },
               {
                 title: '姓名',
                 align: 'center',
-                key:'studentName'
+                key:'submitterName'
               },
               {
                 title: '状态',
                 align: 'center',
                 render: function (h, params) {
                   return h('Tag', {
-                    props: vm.renderTaskStatusTag(params.row.status)
-                  }, vm.findStatus(params.row.status));
+                    props: vm.renderTaskStatusTag(params.row.state)
+                  }, vm.findStatus(params.row.state));
                 }
               },
               {
@@ -114,10 +130,11 @@
                 align:'center',
                 render:function (h, params) {
                   return h('Button', {
-                    props: vm.switcher(params.row.status),
+                    props: vm.switcher(params.row.state),
                     on: {
                       click: () => {
-
+                        //默认下载最新的记录
+                        vm.handleDownload(params.row.records[0].recordId);
                       }
                     }
                   })
@@ -129,6 +146,9 @@
         watch: {
           visible: function (val) {
             this.innerVisible = val;
+            this.listQuery.size = 8;
+            this.listQuery.page = 1;
+            this.selection = '';
           }
         },
         created() {
@@ -160,17 +180,32 @@
             }
           },
           handleFilter(val){
-            this.$emit('change', val);
+            this.listQuery.size = 8;
+            this.listQuery.page = 1;
+            this.$emit('state-filter-changed', val);
           },
-          handleSizeChange(){
-
+          handleSizeChange(val){
+            this.$emit('size-changed', val);
           },
-          handleCurrentChange(){
-
+          handleCurrentChange(val){
+            this.$emit('page-changed', val - 1);
           },
           handleBeforeClose(done) {
             this.$emit('onClosed');
             done();
+          },
+          handleDownloadProgress(event){
+            console.log(event);
+          },
+          handleDownload(recordId){
+            let recordIds = [];
+            recordIds.push(recordId);
+            downloadResult(recordIds,this.handleDownloadProgress).then((res) => {
+              const effectiveFileName = res.headers['x-suggested-filename'];
+              FileSaver.saveAs(res.data, effectiveFileName);
+            }).catch(error => {
+              console.log(error);
+            });
           },
           findStatus(value){
             for(let i = 0;i< this.stateOptions.length;i++){

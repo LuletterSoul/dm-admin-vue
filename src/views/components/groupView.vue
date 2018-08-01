@@ -8,7 +8,7 @@
     <!--</el-row>-->
     <el-row>
       <el-col>
-        <task-tacking :to-stages="toStages">
+        <task-tacking :to-stages="toStages" :to-task-id="taskId">
         </task-tacking>
       </el-col>
     </el-row>

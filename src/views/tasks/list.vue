@@ -113,6 +113,7 @@
                            type="danger"
                            plain
                            round
+                           :loading="loading"
                            icon="el-icon-circle-close-outline"
                            @click="handleBatchDelete"
                            :disabled="!_selectionIds.length">批量删除
@@ -428,6 +429,7 @@
         gradeOptions: [],
         professionOptions: [],
         classNameOptions: [],
+        loading: false
       };
     },
     created() {
@@ -553,7 +555,7 @@
           //组装分组数据准备渲染
           vm.getGroupPeeks();
         }).catch(error => {
-          that.$message({
+          vm.$message({
             type: 'error',
             message: error
           })
@@ -633,10 +635,13 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          vm.loading = true;
           deleteBatchTask(this._selectionIds).then(() => {
             vm.$message.success('删除成功');
             this.getTaskList();
+            vm.loading = false;
           }).catch(error => {
+            vm.loading = false;
           })
         })
       },

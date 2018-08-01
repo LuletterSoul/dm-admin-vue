@@ -274,6 +274,7 @@
     methods: {
       handleSelectionChange(val) {
         this.multipleSelection = val;
+        console.log(val);
       },
       handleRowClicked(row,event,column) {
         let lable = column.label;
