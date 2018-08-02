@@ -513,9 +513,16 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          const loading = vm.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
           deleteGroups(wrapGroups).then(() => {
             vm.$message.success('删除成功');
             vm.groupList.splice(index, 1);
+            loading.close();
           }).catch(error => {
           })
         }).catch(() => {
@@ -529,8 +536,15 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          const loading = vm.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
           deleteGroups(this._selectionIds).then(() => {
             vm.$message.success('删除成功');
+            loading.close();
             this.getGroupList();
           }).catch(error => {
           })

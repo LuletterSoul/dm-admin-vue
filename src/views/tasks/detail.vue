@@ -185,12 +185,6 @@
       handleCurrentChange(val) {
         this.pagination.page = val;
       },
-      getTaskStatistics(){
-        let vm = this;
-        findStatistics(this.taskId).then(sta =>{
-          vm.taskStatistics = sta;
-        }).catch(err=>{})
-      },
       getCollections() {
         let vm = this;
         getRefCollections(this.taskId).then(sets => {

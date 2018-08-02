@@ -619,8 +619,15 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          const loading = vm.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
           deleteBatchTask(wrapTasks).then(() => {
             vm.$message.success('删除成功');
+            loading.close();
             vm.taskList.splice(index, 1);
           }).catch(error => {
           })
@@ -636,12 +643,20 @@
           type: 'warning'
         }).then(() => {
           vm.loading = true;
+          const loading = vm.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
           deleteBatchTask(this._selectionIds).then(() => {
             vm.$message.success('删除成功');
             this.getTaskList();
             vm.loading = false;
+            loading.close();
           }).catch(error => {
             vm.loading = false;
+            loading.close();
           })
         })
       },

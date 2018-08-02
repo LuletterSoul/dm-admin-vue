@@ -12,12 +12,12 @@
           :center="true"
           width="80%">
           <el-row>
-            <el-col :offset="18" :span="1">
-              <el-tooltip class="item" effect="dark" content="下载本阶段的挖掘结果" placement="top-end">
-                <el-button size="small" type="primary" icon="el-icon-download" circle></el-button>
-              </el-tooltip>
-            </el-col>
-            <el-col  :span="3">
+            <!--<el-col :offset="18" :span="1">-->
+              <!--<el-tooltip class="item" effect="dark" content="下载本阶段的挖掘结果" placement="top-end">-->
+                <!--<el-button size="small" type="primary" icon="el-icon-download" circle></el-button>-->
+              <!--</el-tooltip>-->
+            <!--</el-col>-->
+            <el-col :offset="19" :span="3">
               <el-select
                 prefix-icon="el-icon-search"
                 size="small"
