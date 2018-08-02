@@ -64,6 +64,24 @@
               type: String,
               default: '300px'
             },
+            stateOptions:[
+              {
+                value:'',
+                description: '全部'
+              },
+              {
+                value:1,
+                description:'未提交'
+              },
+              {
+                value:2,
+                description:'新提交'
+              },
+              {
+                value:3,
+                description:'已下载'
+              }
+            ],
             series : [{
               name: '已提交',
               type: 'bar',
@@ -110,51 +128,34 @@
       },
       computed:{
         _series(){
-            let vm = this;
-          if (vm.sta.stateToGroup === undefined) {
-            return [{name: '已提交',
-              type: 'bar',
-              stack: 'vistors',
-              barWidth: '60%',
-              data: [],
-              animationDuration: 1000},
-              {
-                name: '未提交',
-                type: 'bar',
+          let vm = this;
+          let series = [];
+          let it = vm.sta.stateToGroup;
+          if (it === undefined) {
+            this.stateOptions.forEach(so => {
+              series.push({
+                name: so.description,
                 stack: 'vistors',
                 barWidth: '60%',
                 data: [],
+                type:'bar',
                 animationDuration: 1000
-              }, {
-                name: '已下载',
-                type: 'bar',
-                stack: 'vistors',
-                barWidth: '60%',
-                data: [],
-                animationDuration: 1000
-              }];
+              })
+            });
           }
-            return [{name: '已提交',
-              type: 'bar',
-              stack: 'vistors',
-              barWidth: '60%',
-              data: vm.sta.stateToGroup[1],
-              animationDuration: 1000},
-              {
-              name: '未提交',
-              type: 'bar',
-              stack: 'vistors',
-              barWidth: '60%',
-              data: vm.sta.stateToGroup[2],
-              animationDuration: 1000
-            }, {
-              name: '已下载',
-              type: 'bar',
-              stack: 'vistors',
-              barWidth: '60%',
-              data: vm.sta.stateToGroup[3],
-              animationDuration: 1000
-            }];
+          else{
+            this.stateOptions.forEach(so => {
+              series.push({
+                name: so.description,
+                stack: 'vistors',
+                barWidth: '60%',
+                data: it[so.value],
+                type:'bar',
+                animationDuration: 1000
+              })
+            });
+          }
+          return series;
           },
           _stageX(){
            return this.toStages.map(s =>{
