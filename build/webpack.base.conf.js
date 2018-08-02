@@ -56,7 +56,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test'),resolve('/node_modules/_element-ui@2.2.0@element-ui/packages')]
+        include: [resolve('src'), resolve('test'),resolve('/node_modules/_element-ui@2.4.1@element-ui/packages')]
       },
       // {
       //   test: /\.css$/,
