@@ -2,8 +2,8 @@
   <div id="app">
     <div v-if="showHeader" class="taskTitle">任务信息</div>
     <el-row style="margin-top: 20px">
-      <el-col>
-        <task-data :to-stages="stages">
+      <el-col :span="24">
+        <task-data :task-id="taskId" :to-stages="stages">
         </task-data>
       </el-col>
     </el-row>
@@ -94,7 +94,8 @@
   import {
     getRefCollections,
     getRefStages,
-    getRefGroups, fetchConfiguredAlgortithms
+    getRefGroups, fetchConfiguredAlgortithms,
+    findStatistics
   } from 'api/tasks';
   import {getMembers} from 'api/groups'
 
@@ -170,7 +171,8 @@
         pagination: {
           page: 1,
           size: 2
-        }
+        },
+        taskStatistics: {}
       };
     },
     methods: {
@@ -182,6 +184,12 @@
       },
       handleCurrentChange(val) {
         this.pagination.page = val;
+      },
+      getTaskStatistics(){
+        let vm = this;
+        findStatistics(this.taskId).then(sta =>{
+          vm.taskStatistics = sta;
+        }).catch(err=>{})
       },
       getCollections() {
         let vm = this;

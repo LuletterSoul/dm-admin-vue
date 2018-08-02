@@ -53,7 +53,8 @@
     createTask,
     updateTask,
     deleteTaskBatch,
-    findResultRecords
+    findResultRecords,
+    findStatistics
   } from 'api/tasks';
 
   import {

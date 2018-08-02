@@ -23,9 +23,7 @@ export default {
     },
     option:{
       type:Object,
-      default:()=>{
-        return {};
-      }
+      required:true,
     }
   },
   watch: {

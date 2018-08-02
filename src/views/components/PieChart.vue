@@ -44,7 +44,7 @@ export default {
       if (this.chart) {
         this.chart.resize()
       }
-    }, 100)
+    }, 100);
     window.addEventListener('resize', this.__resizeHanlder)
   },
   beforeDestroy() {

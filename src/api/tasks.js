@@ -161,3 +161,10 @@ export function findResultRecords(taskId,query) {
   });
 }
 
+export function findStatistics(taskId) {
+  return fetch({
+    url: TASK_PATH.concat('/').concat(taskId).concat('/statistics'),
+    method: 'get',
+  });
+}
+
