@@ -244,6 +244,7 @@
         suggestedTaskNames: [],
         suggestedGroupLeaders: [],
         wrappedSuggestedGroupLeader: '',
+        colors:["primary","success",'warning','error','blue','green','red','yellow','pink','magenta','volcano','orange','gold'],
         taskColumns: [
           {
             type: 'selection',
@@ -784,12 +785,12 @@
           width: 60,
           align: 'center'
         });
-        taskColumns.push({
-          title: '序号',
-          type: 'index',
-          width: 70,
-          align: 'center'
-        });
+        // taskColumns.push({
+        //   title: '序号',
+        //   type: 'index',
+        //   width: 70,
+        //   align: 'center'
+        // });
         taskColumns.push({
           title: '任务名称',
           align: 'center',
@@ -824,6 +825,28 @@
             key: 'plannedFinishTime'
           });
         }
+        taskColumns.push({
+          title: '建议算法',
+          align: 'center',
+          render: (h, params) => {
+            let grammars = params.row.grammars;
+            if (grammars === undefined ||!grammars.length) {
+              return [];
+            }
+            let hArray = [];
+            let i = 0;
+            grammars.forEach(g => {
+              hArray.push(h('Tag', {
+                props: {
+                  type:"border",
+                  name:g.grammarName,
+                  color: vm.colors[i++]
+                }
+              },g.grammarName));
+            });
+            return hArray;
+          }
+        });
         taskColumns.push({
           title: '任务里程碑',
           align: 'center',
