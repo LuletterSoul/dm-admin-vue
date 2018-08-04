@@ -68,11 +68,12 @@
     name: 'register-form',
     data() {
       var validateUsername = (rule, value, callback) => {
-        if (value === '') {
+        let trim = value.trim();
+        if (trim === '') {
           callback(new Error("用户名不能为空"));
         }
         else{
-          createStuUsername(value).then((res) =>{
+          createStuUsername(trim).then((res) =>{
             if(res){
               callback();
             }
@@ -163,11 +164,14 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.loading = true;
-            createStuAccount(this.ruleForm).then(res =>{
+            //对账号密码进行修剪,去空格
+            this.ruleForm.password = this.ruleForm.password.trim();
+            this.ruleForm.username = this.ruleForm.username.trim();
+            createStuAccount(this.ruleForm).then(res => {
               this.loading = false;
-              this.$message.success("注册成功。"+res.studentName+'，欢迎你');
+              this.$message.success("注册成功。" + res.studentName + '，欢迎你');
               this.$router.push({path: '/login'});
-            }).catch(error=>{
+            }).catch(error => {
               this.loading = false;
             })
           } else {

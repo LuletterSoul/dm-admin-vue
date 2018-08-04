@@ -17,7 +17,7 @@ const user = {
     avatar: '',
     introduction: '',
     roles: [],
-    lastLoginTime :'2017-09-29 13:03:55',
+    lastLoginTime :'',
     regionCode:'',
     gender:'',
     userProfile: {}
