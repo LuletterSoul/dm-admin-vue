@@ -218,7 +218,7 @@
     position: fixed;
     width: 100%;
     height: 100%;
-    background: #f56c6c;
+    background: #ffbdbd;
     /*text-align: center;*/
   }
   .title-font-style{
