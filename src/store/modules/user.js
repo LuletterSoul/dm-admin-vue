@@ -2,7 +2,6 @@ import { login,getUserInfo,getUserRoles } from '@/api/login';
 import { getToken,getPublicSalt,deleteToken } from '@/api/token';
 import { getCookiesToken, setCookiesToken, removeCookiesToken} from '@/utils/auth';
 import { computeEncryptPassword } from "@/utils/compute"
-
 const user = {
   state: {
     username:'',
