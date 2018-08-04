@@ -975,7 +975,7 @@
   .title {
     margin-bottom: 20px;
     width: 22%;
-    font: bold 36px 微软雅黑;
+    font: bold 32px 微软雅黑;
   }
 
   div {

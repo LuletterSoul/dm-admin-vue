@@ -1,15 +1,10 @@
 <template>
   <div id="loginContainer">
     <template>
-      <login-form>
-      </login-form>
-    </template>
-    <template>
-      <div id="loadingContainer">
-        <loading :folding-active="true" :loading-background="true" :show-loading="isLoadingModuleActive"
-                  :background-color="'#1abc9c'">
-        </loading>
-      </div>
+      <divide-animation>
+      </divide-animation>
+      <register-form>
+      </register-form>
     </template>
   </div>
 </template>
@@ -20,9 +15,16 @@
   import AnimateTransition from '@/components/transition/AnimateTransition';
   import SingleTransition from '@/components/transition/SingleTransition.vue';
   import FadeTransition from '@/components/transition/FadeTransition';
-  import LoginForm from '../login/loginForm';
+  import RegisterForm from '../register/registerForm';
   export default {
-    name: 'login',
+    name: 'register',
+    components: {
+      RegisterForm,
+      DivideAnimation,
+      Loading,
+      FadeTransition,
+      SingleTransition,
+    },
     data() {
       const validateEmail = (rule, value, callback) => {
         if (false) {
@@ -51,11 +53,6 @@
             {required: true, trigger: 'blur', validator: validatePass}
           ]
         },
-        loading: false,
-        isDivideAnimated: true,
-        isLoginFormDisplay: true,
-        isLoginModuleActive: true,
-        isLoadingModuleActive:false,
       };
     },
     methods: {
@@ -98,13 +95,6 @@
       redirect: function () {
         this.$router.push({path: '/'});
       }
-    },
-    components: {
-      DivideAnimation,
-      Loading,
-      FadeTransition,
-      SingleTransition,
-      LoginForm
     }
   };
 </script>
@@ -117,11 +107,11 @@
     color: #fff;
     margin-bottom: 5px;
   }
-  .login-wrap{
+  .register-wrap{
     position: fixed;
     width: 100%;
     height: 100%;
-    background: #324157;
+    background: #f56c6c;
     /*text-align: center;*/
   }
   .dynamic-hidden {
