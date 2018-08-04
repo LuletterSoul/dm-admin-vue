@@ -94,7 +94,7 @@ Vue.mixin({
     this.pageAnimated = true
   }
 });
-const whiteList = ['/login'];
+const whiteList = ['/login','/register'];
 router.beforeEach((to, from, next) => {
   NProgress.start();
   // removeCookiesToken();

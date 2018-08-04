@@ -36,5 +36,4 @@ export function createStuUsername(username) {
     method:'get',
     params:{username:username}
   })
-
 }
