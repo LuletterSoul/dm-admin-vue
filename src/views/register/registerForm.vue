@@ -151,7 +151,7 @@
             {required:true,validator:validateUsername, trigger: 'blur'},
           ],
           studentId:[{required:true,message:'学号不能为空',trigger: 'blur'}],
-          profession:[{required:true,message:'专业',trigger: 'blur'}],
+          profession:[{required:true,message:'专业不能为空',trigger: 'blur'}],
           studentName:[{required:true,message:'姓名不为空',trigger: 'blur'}],
           className:[{required: true,message:'班级不能为空',trigger: 'blur'}],
           grade:[{required: true,message:'年级不能为空',trigger: 'blur'}]
