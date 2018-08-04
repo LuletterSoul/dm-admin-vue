@@ -226,6 +226,7 @@
       },
       handleSizeChange(val){
         this.query.size = val;
+        this.fetchResults();
       },
       handlePageChange(val){
         this.query.page = val;
@@ -234,7 +235,6 @@
       handleStateChange(val){
         this.query.state = val;
         this.query.page = 0;
-        this.query.size = 8;
         this.fetchResults();
       },
       handleDownloadProgress(event){
