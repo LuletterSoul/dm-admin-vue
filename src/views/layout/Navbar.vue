@@ -2,8 +2,8 @@
     <el-menu class="navbar" mode="horizontal">
       <sweet-modal ref="modal" icon="warning" title="登出">
         确认退出系统吗?
-        <el-button type="info" slot="button" @click="logout">确认</el-button>
-        <el-button :plain="true" type="success" slot="button" @click="$refs.modal.close()">取消</el-button>
+        <el-button :loading="loading" type="primary" slot="button" @click="logout">确认</el-button>
+        <el-button :plain="true" type="ghost" slot="button" @click="$refs.modal.close()">取消</el-button>
       </sweet-modal>
         <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
         <levelbar></levelbar>
@@ -13,7 +13,7 @@
           <screenfull class="screenfull right-menu-item"></screenfull>
         </el-tooltip>
 
-        <el-dropdown class="avatar-container right-menu-item" trigger="click">
+        <el-dropdown @command="handleCommand" class="avatar-container right-menu-item">
           <div class="avatar-wrapper">
             <img class="user-avatar" :src="userProfile.avatar">
             <i class="el-icon-caret-bottom"></i>
@@ -24,7 +24,12 @@
                 主页
               </el-dropdown-item>
             </router-link>
-            <el-dropdown-item divided><span @click="$refs.modal.open()" style="display:block;">登出</span></el-dropdown-item>
+            <router-link to="/user/update">
+              <el-dropdown-item>
+                个人资料
+              </el-dropdown-item>
+            </router-link>
+            <el-dropdown-item command="logout">注销</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -47,6 +52,11 @@
         SweetModal,
         SweetModalTab
       },
+      data(){
+        return{
+          loading:false
+        }
+      },
       computed: {
         ...mapGetters([
           'sidebar',
@@ -54,12 +64,19 @@
         ])
       },
       methods: {
+        handleCommand(c) {
+          if (c === "logout") {
+            this.$refs.modal.open();
+          }
+        },
         toggleSideBar() {
           this.$store.dispatch('ToggleSideBar')
         },
         logout() {
           let vm = this;
+          this.loading = true;
           this.$store.dispatch('LogOut').then(() => {
+            this.loading = false;
             location.reload();  // 为了重新实例化vue-router对象 避免bug
             vm.$message.success("注销成功.");
           });

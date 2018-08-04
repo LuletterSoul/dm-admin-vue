@@ -4,6 +4,9 @@
         <el-col :span="16">
           <div class="demo-block demo-box">
             <el-form ref="form" label-width="80px">
+              <el-form-item label="用户名">
+                <el-input :disabled="true" v-model="newUserProfile.username"></el-input>
+              </el-form-item>
               <el-form-item label="昵称">
                 <el-input v-model="newUserProfile.name"></el-input>
               </el-form-item>
@@ -61,10 +64,8 @@
               </el-col>
             </el-row>
             <el-row style="margin-top: 40px">
-              <el-col :offset="3">
-                <el-button type="primary" icon="upload"
-                           @click="imageCropperShow=true">修改头像
-                </el-button>
+              <el-col :offset="3" :span="1">
+                <el-button type="primary" icon="upload" @click="imageCropperShow=true">修改头像</el-button>
               </el-col>
             </el-row>
             <el-col>
