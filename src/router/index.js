@@ -19,8 +19,6 @@ const Dashboard = _import('dashboard/index');
 /* error page */
 const Err404 = _import('404');
 
-/* demo page */
-const Form = _import('page/form');
 Vue.use(Router);
 
 /**
@@ -32,6 +30,7 @@ Vue.use(Router);
  **/
 export const constantRouterMap = [
   {path: '/login', component: _import('login/index'), hidden: true},
+  {path:'/register',component: _import('register/index'),hidden:true},
   {path: '/404', component: Err404, hidden: true},
   {
     path: '/',
