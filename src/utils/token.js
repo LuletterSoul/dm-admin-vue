@@ -57,7 +57,7 @@ tokenService.interceptors.response.use(
           Message("取消登出.");
         })
       }
-      else if (code === 50004 || code === 50010 || code === 50005) {
+      else if (code === 50004 || code === 50010 || code === 50005 || code===50012 || code===50013 || code===50014) {
         Message.error(errorRes.tip);
       }
       else if(code === 50011){
