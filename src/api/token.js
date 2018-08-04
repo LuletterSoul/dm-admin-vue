@@ -21,3 +21,20 @@ export function deleteToken() {
     method: 'delete'
   });
 }
+
+export function createStuAccount(student) {
+  return token({
+    url:'/stu_accounts',
+    method:'post',
+    data:student
+  })
+}
+
+export function createStuUsername(username) {
+  return token({
+    url:'/stu_accounts',
+    method:'get',
+    params:{username:username}
+  })
+
+}
