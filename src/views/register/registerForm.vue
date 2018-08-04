@@ -4,7 +4,7 @@
       <divide-animation></divide-animation>
       <single-transition  @OutEnd="closeRegisterForm">
         <div class="register-form-container">
-          <el-form :show-message="false" :status-icon="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="register-form">
+          <el-form  :status-icon="true" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="register-form">
             <div class="title">注       册</div>
             <el-form-item label="用户名" prop="username">
               <el-input  prefix-icon="el-icon-edit-outline" placeholder="输入账户的用户名" v-model="ruleForm.username"></el-input>
@@ -69,7 +69,7 @@
     data() {
       var validateUsername = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error(""));
+          callback(new Error("用户名不能为空"));
         }
         else{
           createStuUsername(value).then((res) =>{
@@ -77,11 +77,11 @@
               callback();
             }
             else{
-              this.$message('用户名已注册');
+              //this.$message('用户名已注册');
               callback(new Error('用户名已注册'));
             }
           }).catch(err=>{
-            callback();
+            callback(new Error("未知错误"));
           })
         }
       };
@@ -150,11 +150,11 @@
           username: [
             {required:true,validator:validateUsername, trigger: 'blur'},
           ],
-          studentId:[{required:true}],
-          profession:[{required:true}],
-          studentName:[{required:true}],
-          className:[{required: true}],
-          grade:[{required: true}]
+          studentId:[{required:true,message:'学号不能为空',trigger: 'blur'}],
+          profession:[{required:true,message:'专业',trigger: 'blur'}],
+          studentName:[{required:true,message:'姓名不为空',trigger: 'blur'}],
+          className:[{required: true,message:'班级不能为空',trigger: 'blur'}],
+          grade:[{required: true,message:'年级不能为空',trigger: 'blur'}]
         }
       };
     },
