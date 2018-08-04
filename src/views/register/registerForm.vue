@@ -21,7 +21,7 @@
             <el-form-item label="姓名" prop="studentName">
               <el-input placeholder="输入你的姓名" v-model="ruleForm.studentName"></el-input>
             </el-form-item>
-            <el-form-item label="班级" prop="class">
+            <el-form-item label="班级" prop="className">
               <el-select v-model="ruleForm.className" placeholder="请选择班级">
                 <el-option v-for="(className,index) in classNameOptions"
                            :label="className" :value="className"
@@ -35,6 +35,15 @@
                            :label="profession"
                            :value="profession" :key="index">
                 </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="年级" prop="grade">
+              <el-select v-model="ruleForm.grade" placeholder="请选择年级">
+                <el-option v-for="(grade,index) in gradeOptions"
+                           :label="grade"
+                           :value="grade"
+                           :key="index"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-button :loading="loading" type="primary" size="medium" style="margin-left:58px;width: 300px" @click="submitForm('ruleForm')">确认注册</el-button>
@@ -105,7 +114,8 @@
           checkedPassword:'',
           studentName: '',
           className: '',
-          profession: ''
+          profession: '',
+          grade:''
         },
         classNameOptions:[
           '软工一班',
@@ -116,6 +126,13 @@
           '智能二班',
           '网工一班',
           '网工二班'
+        ],
+        gradeOptions:[
+          '2018级',
+          '2017级',
+          '2016级',
+          '2015级',
+          '2013级'
         ],
         professionOptions:[
           '计算机科学与技术',
@@ -136,7 +153,8 @@
           studentId:[{required:true}],
           profession:[{required:true}],
           studentName:[{required:true}],
-          className:[{required: true}]
+          className:[{required: true}],
+          grade:[{required: true}]
         }
       };
     },
