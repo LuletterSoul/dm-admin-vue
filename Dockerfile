@@ -8,6 +8,7 @@ COPY . /build/vue
 #先安装依赖,再进行打包
 RUN  npm install \
     && npm run build
+
 #建一个基于tomcat的界面服务器
 #只包括静态资源的镜像
 #see 对阶段构建 https://docs.docker.com/develop/develop-images/multistage-build/
