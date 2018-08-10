@@ -20,6 +20,6 @@ const getters = {
   divideStep: state =>state.group.divide.step,
   newGroups: state =>state.group.newGroups,
 
-  newStudents:state=>state.student.newStudents,
+  studentProfile:state=>state.student.studentProfile,
 };
 export default getters

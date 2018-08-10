@@ -48,20 +48,20 @@
         name="custom-classes-transition"
         enter-active-class="animated bounceIn"
         leave-active-class="animated bounceOutRight">
-        <group-view
+        <teacher-group-view
           v-if="_length&&initDetail" :groups="_detailTarget" :key="this._wrappedDetailTarget[0].groupId">
-        </group-view>
+        </teacher-group-view>
       </transition>
     </el-row>
   </div>
 </template>
 
 <script type="text/javascript">
-  import GroupView from '../components/groupView';
+  import TeacherGroupView from '../components/teacherGroupView';
   import {getMembers, deleteGroups} from 'api/groups'
 
   export default {
-    components: {GroupView},
+    components: {TeacherGroupView},
     props: {
       toNewGroups: []
     },

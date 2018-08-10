@@ -10,6 +10,13 @@ export function fetchStudentList(query) {
   })
 }
 
+export function getStudentInfo(id) {
+  return fetch({
+    url:STUDENT_BASE_PATH.concat('/').concat(id),
+    method:'get'
+  })
+}
+
 export function createStudent(student) {
   return fetch({
     url:STUDENT_BASE_PATH,

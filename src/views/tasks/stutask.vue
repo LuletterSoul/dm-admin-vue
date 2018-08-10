@@ -2,8 +2,8 @@
   <div id="app">
     <div v-if="showHeader" class="taskTitle">任务信息</div>
     <el-row style="margin-top: 20px">
-      <el-col :span="24">
-        <task-data :task-id="taskId" :to-stages="stages">
+      <el-col>
+        <task-data :to-stages="stages">
         </task-data>
       </el-col>
     </el-row>
@@ -29,29 +29,17 @@
                       name="custom-classes-transition"
                       enter-active-class="animated bounceIn"
                       leave-active-class="animated bounceOutRight">
-                      <teacher-group-view
+                      <student-group-view
                         :groups="currentPageGroups"
                         :key="pagination.page"
                         :taskId="taskId"
                         :to-stages="stages"
                       >
-                      </teacher-group-view>
+                      </student-group-view>
                     </transition>
                   </div>
                 </div>
               </el-col>
-            </el-row>
-            <el-row>
-              <el-pagination style="float: right;margin-right: 20px"
-                             @size-change="handleSizeChange"
-                             @current-change="handleCurrentChange"
-                             :current-page.sync="pagination.page"
-                             :page-sizes="[2,4,6]"
-                             :page-size="pagination.size"
-                             layout="total, sizes, prev, pager, next, jumper"
-                             background
-                             :total="totalElements">
-              </el-pagination>
             </el-row>
           </el-collapse-item>
           <el-collapse-item name="2">
@@ -88,21 +76,20 @@
 
 <script type="text/javascript">
   import GroupViewItem from '../components/groupViewItem';
-  import TeacherGroupView from '../components/teacherGroupView';
+  import StudentGroupView from '../components/studentGroupView';
   import SetDetail from '../datasets/detail'
   import TaskData from '../components/taskData'
   import {
     getRefCollections,
     getRefStages,
-    getRefGroups, fetchConfiguredAlgortithms,
-    findStatistics
+    getRefGroups, fetchConfiguredAlgortithms
   } from 'api/tasks';
   import {getMembers} from 'api/groups'
 
   export default {
     name: 'app',
     components: {
-      TeacherGroupView,
+      StudentGroupView,
       GroupViewItem,
       SetDetail,
       TaskData
@@ -171,8 +158,7 @@
         pagination: {
           page: 1,
           size: 2
-        },
-        taskStatistics: {}
+        }
       };
     },
     methods: {

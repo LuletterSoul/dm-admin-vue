@@ -127,13 +127,13 @@
           name="custom-classes-transition"
           enter-active-class="animated bounceIn"
           leave-active-class="animated bounceOutRight">
-          <group-view
+          <teacher-group-view
             v-if="_wrappedDetailTarget"
             :to-stages="stages"
             :task-id="_wrappedDetailTarget[0].taskId"
             :groups="_wrappedDetailTarget"
             :key="this._wrappedDetailTarget[0].groupId">
-          </group-view>
+          </teacher-group-view>
         </transition>
       </el-col>
     </el-row>
@@ -165,12 +165,15 @@
     getRefGroups, fetchConfiguredAlgortithms
   } from 'api/tasks';
 
-  import GroupView from '../components/groupView';
+  import TeacherGroupView from '../components/teacherGroupView';
   import GroupModal from '../components/groupModal';
+//  import TeacherGroupView from "../components/teacherGroupView.vue";
 
   export default {
     name: 'group-list',
-    components: {GroupView, GroupModal},
+    components: {
+      TeacherGroupView,
+      GroupModal},
 
     data() {
       let vm = this;

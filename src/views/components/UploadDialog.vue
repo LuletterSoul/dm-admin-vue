@@ -45,7 +45,7 @@
           },
           text:{
             type:String,
-            default:'在这里输入提示信息'
+            default:''
           },
           title:{
             type:String,

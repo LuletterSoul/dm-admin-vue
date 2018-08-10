@@ -8,8 +8,8 @@
     <!--</el-row>-->
     <el-row>
       <el-col>
-        <task-tacking :to-stages="toStages" :to-task-id="taskId">
-        </task-tacking>
+        <teacher-task-tacking :to-stages="toStages" :to-task-id="taskId">
+        </teacher-task-tacking>
       </el-col>
     </el-row>
     <el-row style="margin-top: 50px">
@@ -26,9 +26,9 @@
 <script>
   import GroupViewItem from './groupViewItem'
   import GroupNewActions from './groupNewActions'
-  import TaskTacking from './taskTracking'
+  import TeacherTaskTacking from './teacherTaskTracking'
   export default {
-    components: {GroupViewItem,GroupNewActions,TaskTacking},
+    components: {GroupViewItem,GroupNewActions,TeacherTaskTacking},
     props: {
       groups: {
         required: Array,
@@ -43,7 +43,7 @@
         default:''
       },
     },
-    name: "group-view"
+    name: "teacher-group-view"
   }
 </script>
 <style scoped>

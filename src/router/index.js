@@ -62,16 +62,16 @@ export const asyncRouterMap = [
     icon: 'data',
     children: [
       {
-        path: 'digest', component: _import('datasets/digest'), name: '集合摘要', icon: 'survey'
+        path: 'digest', component: _import('datasets/digest'), name: '集合摘要', icon: 'survey',meta:{role:['admin','teacher','student']}
       },
       {
-        path: 'new', component: _import('datasets/upload'), name: '新增集合', icon: 'folder'
+        path: 'new', component: _import('datasets/upload'), name: '新增集合', icon: 'folder',meta:{role:['admin','teacher']}
       },
       {
-        path: 'management', component: _import('datasets/edit'), name: '集合管理', icon: 'color-filling'
+        path: 'management', component: _import('datasets/edit'), name: '集合管理', icon: 'color-filling',meta:{role:['admin','teacher']}
       },
       {
-        path: 'set_detail', component: _import('datasets/detail'), name: '数据集详情', icon: 'survey1', hidden: true
+        path: 'set_detail', component: _import('datasets/detail'), name: '数据集详情', icon: 'survey1', hidden: true,meta:{role:['admin','teacher']}
       }
     ]
   },
@@ -87,7 +87,8 @@ export const asyncRouterMap = [
       {
         path: 'update', component: _import('user/update'), name: '资料更新'
       }
-    ]
+    ],
+    meta:{role:['admin','teacher','student']}
   },
   {
     path: '/students',
@@ -108,7 +109,8 @@ export const asyncRouterMap = [
       {
         path: 'import', component: _import('students/import'), name: 'Excel导入', icon: 'exl'
       }
-    ]
+    ],
+    meta:{role:['admin','teacher']}
   },
   {
     path: '/groups',
@@ -195,7 +197,8 @@ export const asyncRouterMap = [
         name:'新增历史',
         icon:'history'
       }
-    ]
+    ],
+    meta:{role:['admin','teacher']}
   },
   {
     path: '/tasks',
@@ -205,16 +208,22 @@ export const asyncRouterMap = [
     icon: 'task-management',
     children: [
       {
-        path:'list',component:_import('tasks/list'),name:'任务概要',icon: 'survey1'
+        path:'list',component:_import('tasks/list'),name:'任务概要',icon: 'survey1',meta:{role:['admin','teacher']}
       },
       {
-        path: 'create', component: _import('tasks/create'), name: '新建任务', icon: 'home'
+        path: 'create', component: _import('tasks/create'), name: '新建任务', icon: 'home',meta:{role:['admin','teacher']}
       },
       {
-        path: 'tracking', component: _import('tasks/tracking'), name: '任务追踪', icon: 'home',hidden: true
+        path: 'tracking', component: _import('tasks/tracking'), name: '任务追踪', icon: 'home',hidden: true,meta:{role:['admin','teacher']}
       },
       {
-        path: 'detail', component: _import('tasks/detail'), name: '任务信息', icon: 'home',hidden:true
+        path: 'detail', component: _import('tasks/detail'), name: '任务信息', icon: 'home',hidden:true,meta:{role:['admin','teacher']}
+      },
+      {
+        path: 'stulist', component: _import('tasks/stulist'), name: '任务概要', icon: 'home',meta:{role:['student']}
+      },
+      {
+        path: 'stutask', component: _import('tasks/stutask'), name: '任务信息', icon: 'home',hidden:true,meta:{role:['student']}
       }
     ]
   },

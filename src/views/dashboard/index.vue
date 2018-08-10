@@ -8,14 +8,15 @@
 <script>
     import { mapGetters } from 'vuex';
     import AdminDashboard from './admin/index'
+    import StudentDashboard from './student/index'
     import DefaultDashboard from './default/index'
 
     export default {
       name: 'dashboard',
-      components: {AdminDashboard, DefaultDashboard},
+      components: {AdminDashboard, StudentDashboard, DefaultDashboard},
       data() {
         return {
-          currentRole: 'AdminDashboard'
+          currentRole: 'StudentDashboard'
         };
       },
       computed: {
@@ -25,10 +26,10 @@
         ])
       },
       created() {
-        if (this.roles.indexOf('admin') >= 0) {
+        if (this.roles.indexOf('student') >= 0) {
           return;
         }
-        this.currentRole = 'DefaultDashboard';
+        this.currentRole = 'AdminDashboard';
       }
     };
 </script>

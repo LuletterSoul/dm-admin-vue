@@ -72,7 +72,7 @@
   import FileSaver from 'file-saver'
 
   export default {
-    name: "task-tracking",
+    name: "teacher-task-tracking",
     components: {TaskRestTime,Result},
     props: {
       toStages: {
