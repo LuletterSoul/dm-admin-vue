@@ -105,12 +105,27 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.roles.length === 0) {
         store.dispatch('GetInfo').then((res) => {
-          store.dispatch('GenerateRoutes', {roles: res.roles}).then(() => {
-            router.addRoutes(store.getters.addRouters);
-            next({...to});
-          })
+          console.log(res.roles);
+          if (res.roles.indexOf('student') >= 0){
+            store.dispatch('GetStuInfo', res.userId).then(()=>{
+              store.dispatch('GenerateRoutes', {roles: res.roles}).then(() => {
+                router.addRoutes(store.getters.addRouters);
+                next({...to});
+              }).catch(err =>{
+                console.log(err);
+              })
+            })
+          }
+          else{
+            store.dispatch('GenerateRoutes', {roles: res.roles}).then(() => {
+              router.addRoutes(store.getters.addRouters);
+              next({...to});
+            }).catch(err =>{
+              console.log(err);
+            })
+          }
         }).catch(err => {
-          // console.log(err);
+          console.log(err);
         })
       }
       else {
