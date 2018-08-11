@@ -1,91 +1,22 @@
 <template>
   <div id="loginContainer">
     <template>
-      <login-form>
+      <login-form @login-success="isLoadingModuleActive = false"
+                  @login-loading="isLoadingModuleActive = true">
       </login-form>
-    </template>
-    <template>
-      <div id="loadingContainer">
-        <loading :folding-active="true" :loading-background="true" :show-loading="isLoadingModuleActive"
-                  :background-color="'#1abc9c'">
-        </loading>
-      </div>
     </template>
   </div>
 </template>
 <script>
-  import { isWscnEmail } from '@/utils/validate';
-  import DivideAnimation from '@/components/animate_svg/DivideAnimation';
-  import Loading from '@/components/animate_svg/Loading';
-  import AnimateTransition from '@/components/transition/AnimateTransition';
-  import SingleTransition from '@/components/transition/SingleTransition.vue';
-  import FadeTransition from '@/components/transition/FadeTransition';
-  import LoginForm from '../login/loginForm';
+  import LoginForm from './loginForm'
   export default {
     name: 'login',
     data() {
-      const validateEmail = (rule, value, callback) => {
-        if (false) {
-          callback(new Error('请输入正确的合法邮箱'));
-        } else {
-          callback();
-        }
-      };
-      const validatePass = (rule, value, callback) => {
-        if (value.length < 6) {
-          callback(new Error('密码不能小于6位'));
-        } else {
-          callback();
-        }
-      };
-      return {
-        loginForm: {
-          username: 'qq313700046',
-          password: 'liuxiangde'
-        },
-        loginRules: {
-          username: [
-            {required: true, trigger: 'blur', validator: validateEmail}
-          ],
-          password: [
-            {required: true, trigger: 'blur', validator: validatePass}
-          ]
-        },
-        loading: false,
-        isDivideAnimated: true,
-        isLoginFormDisplay: true,
-        isLoginModuleActive: true,
-        isLoadingModuleActive:false,
-      };
+      return{
+
+      }
     },
     methods: {
-      handleLogin() {
-        var vm = this;
-        this.$refs.loginForm.validate(valid => {
-          if (valid) {
-            this.loading = true;
-            this.$store.dispatch('Login', this.loginForm).then(() => {
-              vm.$store.dispatch('GetToken', this.loginForm.username).then(() => {
-                this.isLoginFormDisplay = false;
-                // setTimeout(function () {
-                //
-                // },500);
-                vm.$router.push({path: '/'});
-                vm.$message.success("登录成功.");
-              }).catch(error =>{
-                this.loading = false;
-                this.isLoginFormDisplay = true;
-              });
-            }).catch((error) =>{
-              this.loading = false;
-              this.isLoginFormDisplay = true;
-            });
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
       enableAnimation: function () {
 
       },
@@ -100,10 +31,6 @@
       }
     },
     components: {
-      DivideAnimation,
-      Loading,
-      FadeTransition,
-      SingleTransition,
       LoginForm
     }
   };
