@@ -3,7 +3,7 @@
     <div v-if="showHeader" class="taskTitle">任务信息</div>
     <el-row style="margin-top: 20px">
       <el-col>
-        <task-data :to-stages="stages">
+        <task-data :task-id="taskId" :to-stages="stages">
         </task-data>
       </el-col>
     </el-row>
