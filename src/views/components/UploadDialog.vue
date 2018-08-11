@@ -10,7 +10,7 @@
         drag
         action="null"
         ref="uploadDialog"
-        accept=".xlsx"
+        :accept="format"
         :multiple="multiple"
         :auto-upload="false"
         :on-remove="handleFileRemove"
@@ -33,6 +33,10 @@
     export default {
         name: "upload-dialog",
         props:{
+          fileName:{
+            type:String,
+            default:'file'
+          },
           format:{
             type:String,
             default:'image/*'
@@ -97,11 +101,11 @@
             let vm = this;
             //新建一个Form data 类型的文件
             let fd = new FormData();
-            fd.append('file', file);
+            let fileName = this.fileName;
+            fd.append(fileName, file);
             this.isUploading = true;
             this.uploadReq(fd).then((res) => {
               //将导入的成功的数据同步
-              vm.studentList = res;
               vm.$emit('onUploaded', res);
               vm.$message({
                 type: 'success',

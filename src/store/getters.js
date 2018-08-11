@@ -21,5 +21,6 @@ const getters = {
   newGroups: state =>state.group.newGroups,
 
   studentProfile:state=>state.student.studentProfile,
+  newStudents:state=>state.student.newStudents
 };
 export default getters

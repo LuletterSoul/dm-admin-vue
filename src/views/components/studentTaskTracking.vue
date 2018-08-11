@@ -23,8 +23,9 @@
     </el-row>
     <upload-dialog :title="'上传结果'"
                    :message="'上传成功'"
-                   :upload-req="importFuc"
-                   @onUploaded="handleImported"
+                   :format="''"
+                   :upload-req="uploadRes"
+                   :file-name="'resultFile'"
                    @onFailed="uploadDialogVisible =false"
                    @onClosed="handleCanceled"
                    :to-visible="uploadDialogVisible"
@@ -43,6 +44,10 @@
     updateTask,
     deleteTaskBatch
   } from 'api/tasks';
+  import{
+    getResults,
+    uploadResult
+  } from 'api/results';
 
   export default {
     name: "student-task-tracking",
@@ -53,7 +58,11 @@
         default: () => {
           return [];
         }
-      }
+      },
+      taskId:{
+        required:'',
+        default:''
+      },
     },
     data() {
       let vm = this;
@@ -123,16 +132,26 @@
                 props: vm._submitted,
                 on: {
                   click: () => {
-                    this.handleUpload();
+                    this.handleUpload(params.row.stageId);
                   }
                 }
               })])
             }
           }
         ],
-        taskList: [],
+        resultList: [],
         multipleSelection: [],
-        uploadDialogVisible: false
+        uploadDialogVisible: false,
+        resQuery:{
+          taskId:this.taskId,
+          stageId:'',
+          state:'',
+          all:'',
+          submitterIds:[]
+        },
+        list:{
+        },
+        resultId:''
       };
     },
     computed: {
@@ -146,7 +165,20 @@
           shape: 'circle',
           icon: 'ios-cloud-upload-outline',
         }
-      }
+      },
+      _userProfile(){
+        return this.$store.getters.userProfile;
+      },
+//      _submitterIds(){
+//        if(this._studentProfile !==undefined){
+//          let studentIds = [];
+//          studentIds.push(this._studentProfile.studentId);
+//          return studentIds;
+//        }
+//        else{
+//          return [];
+//        }
+//      }
     },
     created() {
       this.getTaskList();
@@ -155,10 +187,24 @@
       getTaskList() {
         let that = this;
         this.listLoading = true;
-        fetchTaskList(Object.assign({}, this.listQuery)).then(response => {
+        fetchTaskList(Object.assign({}, this.list)).then(response => {
           this.taskList = response.content;
           this.totalElements = response.totalElements;
           this.listLoading = false;
+        }).catch(error => {
+          that.$message({
+            type: 'error',
+            message: error
+          })
+        })
+      },
+      getResultList() {
+        let that = this;
+        this.listLoading = true;
+        let query = Object.assign({}, this.resQuery);
+        query.submitterIds = this._userProfile.userId;
+        getResults(Object.assign({}, query)).then(response => {
+          this.resultList = response.content;
         }).catch(error => {
           that.$message({
             type: 'error',
@@ -177,20 +223,22 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      handleImported(res){
-        this.$store.dispatch('SetNewStudents',res);
-        this.uploadDialogVisible = false;
-      },
       handleCanceled(){
         this.uploadDialogVisible = false;
       },
-      handleUpload(){
+      handleUpload(stageId){
+        this.resQuery.stageId = stageId;
+        this.getResultList();
         this.uploadDialogVisible = true;
       },
-      importFuc(fd){
-        //let vm = this;
+      uploadRes(fd){
+        let vm = this;
+        if(!this.resultList.length){
+          return;
+        }
+        vm.resultId= this.resultList[0].resultId;
         return new Promise((resolve, reject) => {
-          importFromExcel(fd).then(res => {
+          uploadResult(resultId,fd).then(res => {
             resolve(res);
           }).catch(error => {
             reject(error);

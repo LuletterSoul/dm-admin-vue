@@ -7,12 +7,17 @@ const student = {
       grade: '',
       profession: '',
       studentId: '',
-      studentName: ''
-    }
+      studentName: '',
+    },
+    newStudents:[]
   },
   mutations:{
     SET_STUDENT(state,studentProfile) {
       state.studentProfile = studentProfile;
+    },
+    SET_NEW_STUDENTS:(state,students) =>{
+      state.newStudents = students;
+      console.log(state.newStudents);
     }
   },
   actions:{
@@ -26,6 +31,9 @@ const student = {
         });
       });
     },
+    SetNewStudents:({commit},students) =>{
+      commit('SET_NEW_STUDENTS', students);
+    }
   }
 };
 export default student;
