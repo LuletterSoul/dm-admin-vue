@@ -37,17 +37,7 @@
 <script>
   import TaskRestTime from '../components/taskRestTime'
   import UploadDialog from '../components/UploadDialog'
-  import {
-    fetchTaskList,
-    deleteTask,
-    createTask,
-    updateTask,
-    deleteTaskBatch
-  } from 'api/tasks';
-  import{
-    getResults,
-    uploadResult
-  } from 'api/results';
+  import * as api from '../../api/index'
 
   export default {
     name: "student-task-tracking",
@@ -169,16 +159,6 @@
       _userProfile(){
         return this.$store.getters.userProfile;
       },
-//      _submitterIds(){
-//        if(this._studentProfile !==undefined){
-//          let studentIds = [];
-//          studentIds.push(this._studentProfile.studentId);
-//          return studentIds;
-//        }
-//        else{
-//          return [];
-//        }
-//      }
     },
     created() {
       this.getTaskList();
@@ -187,7 +167,7 @@
       getTaskList() {
         let that = this;
         this.listLoading = true;
-        fetchTaskList(Object.assign({}, this.list)).then(response => {
+        api.task.fetchTaskList(Object.assign({}, this.list)).then(response => {
           this.taskList = response.content;
           this.totalElements = response.totalElements;
           this.listLoading = false;
@@ -200,10 +180,9 @@
       },
       getResultList() {
         let that = this;
-        this.listLoading = true;
         let query = Object.assign({}, this.resQuery);
         query.submitterIds = this._userProfile.userId;
-        getResults(Object.assign({}, query)).then(response => {
+        api.result.getResults(Object.assign({}, query)).then(response => {
           this.resultList = response.content;
         }).catch(error => {
           that.$message({
@@ -236,9 +215,10 @@
         if(!this.resultList.length){
           return;
         }
-        vm.resultId= this.resultList[0].resultId;
+        let resultId= this.resultList[0].resultId;
         return new Promise((resolve, reject) => {
-          uploadResult(resultId,fd).then(res => {
+          api.result.uploadResult(resultId,fd).then(res => {
+            this.uploadDialogVisible = false;
             resolve(res);
           }).catch(error => {
             reject(error);
