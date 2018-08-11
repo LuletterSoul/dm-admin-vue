@@ -64,13 +64,14 @@
   import AnimateTransition from '@/components/transition/AnimateTransition';
   import SingleTransition from '@/components/transition/SingleTransition.vue';
   import FadeTransition from '@/components/transition/FadeTransition';
+  import * as validator from '../../utils/validate';
   export default {
     name: 'register-form',
     data() {
-      var validateUsername = (rule, value, callback) => {
+      const validateUsername = (rule, value, callback) => {
         let trim = value.trim();
-        if (trim === '') {
-          callback(new Error("用户名不能为空"));
+        if (!validator.validateUsername(trim)) {
+          callback(new Error("用户名4-16位字母、数字、下划线、减号组成"));
         }
         else{
           createStuUsername(trim).then((res) =>{
@@ -78,7 +79,6 @@
               callback();
             }
             else{
-              //this.$message('用户名已注册');
               callback(new Error('用户名已注册'));
             }
           }).catch(err=>{
@@ -86,9 +86,9 @@
           })
         }
       };
-      var validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'));
+      const validatePass = (rule, value, callback) => {
+        if (!validator.validatePass(value)) {
+          callback(new Error('密码必须由6-20个字母、数字、下划线组成'));
         } else {
           if (this.ruleForm.checkedPassword !== '') {
             this.$refs.ruleForm.validateField('checkedPassword');
@@ -96,11 +96,25 @@
           callback();
         }
       };
-      var validatePass2 = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请再次输入密码'));
+      const validatePass2 = (rule, value, callback) => {
+        if (!validator.validatePass(value)) {
+          callback(new Error('密码必须由6-20个字母、数字、下划线组成'));
         } else if (value !== this.ruleForm.password) {
           callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
+      const validateStuId = (rule, value, callback) => {
+        if (!validator.validateStuId(value)) {
+          callback(new Error('学号必须由字母、数字组成'));
+        } else {
+          callback();
+        }
+      };
+      const validateChName = (rule, value, callback) => {
+        if (!validator.validateZh(value)) {
+          callback(new Error('姓名只含中文'));
         } else {
           callback();
         }
@@ -151,9 +165,9 @@
           username: [
             {required:true,validator:validateUsername, trigger: 'blur'},
           ],
-          studentId:[{required:true,message:'学号不能为空',trigger: 'blur'}],
+          studentId:[{required:true,validator:validateStuId,trigger: 'blur'}],
           profession:[{required:true,message:'专业不能为空',trigger: 'blur'}],
-          studentName:[{required:true,message:'姓名不为空',trigger: 'blur'}],
+          studentName:[{required:true,validator:validateChName,trigger: 'blur'}],
           className:[{required: true,message:'班级不能为空',trigger: 'blur'}],
           grade:[{required: true,message:'年级不能为空',trigger: 'blur'}]
         }
@@ -175,7 +189,6 @@
               this.loading = false;
             })
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
