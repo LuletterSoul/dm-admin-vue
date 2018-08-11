@@ -33,10 +33,10 @@
           <div slot="header">
             <span style="line-height: 20px; font-size: 20px; font-weight: bold;">我的任务</span>
           </div>
-          <div>
+          <div v-if="taskList.length">
             <el-row>
               <el-col :offset="1" :span="23">
-                <Table border
+                <Table
                        :loading="listLoading"
                        :columns="taskColumns"
                        :data="taskList"
@@ -46,6 +46,7 @@
             </el-row>
             <!--<p style="font-size: 16px;">任务一：</p><br>-->
           </div>
+          <div v-else>{{'暂无任务'}}</div>
         </el-card>
       </div>
 
@@ -157,11 +158,11 @@
             title: '任务名称',
             align: 'center',
             key: 'taskName',
+            width: 300,
           },
           {
             title: '查看',
             align: 'center',
-            width: 200,
             render: (h, params) => {
               return h('ButtonGroup', [
                 h('Button', {
