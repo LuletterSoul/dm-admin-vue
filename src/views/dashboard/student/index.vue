@@ -35,13 +35,12 @@
           </div>
           <div>
             <el-row>
-              <el-col :offset="1" :span="22">
+              <el-col :offset="1" :span="23">
                 <Table border
                        :loading="listLoading"
                        :columns="taskColumns"
                        :data="taskList"
                        size='default'
-                       @on-selection-change="handleSelectionChange"
                        stripe></Table>
               </el-col>
             </el-row>

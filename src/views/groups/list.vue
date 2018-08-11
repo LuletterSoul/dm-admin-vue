@@ -459,10 +459,7 @@
           this.total = response.totalElements;
           this.listLoading = false;
         }).catch(error => {
-          that.$message({
-            type: 'error',
-            message: error
-          })
+
         })
       },
       handleSizeChange(val) {

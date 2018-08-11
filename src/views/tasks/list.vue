@@ -826,7 +826,7 @@
           });
         }
         taskColumns.push({
-          title: '建议算法',
+          title: '语言要求',
           align: 'center',
           render: (h, params) => {
             let grammars = params.row.grammars;
