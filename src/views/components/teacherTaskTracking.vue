@@ -119,7 +119,7 @@
           },
           {
             value:2,
-            description:'新提交'
+            description:'已提交'
           },
           {
             value:3,
