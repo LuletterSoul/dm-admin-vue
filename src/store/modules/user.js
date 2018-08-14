@@ -102,6 +102,8 @@ const user = {
 
     Login({ commit }, userInfo) {
       const username = userInfo.username.trim();
+      //清空缓存
+      removeCookiesToken();
       return new Promise((resolve, reject) => {
         commit('SET_USERNAME', username);
         getPublicSalt(username).then(salt => {
