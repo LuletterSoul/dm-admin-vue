@@ -235,23 +235,24 @@ export const asyncRouterMap = [
     icon: 'task-management',
     children: [
       {
-        path:'index',component:_import('datamining/index'),name:'导入数据',icon: 'survey1',meta:{role:['admin','teacher']}
+        path:'index',component:_import('datamining/index'),name:'导入数据',icon: 'survey1',meta:{role:['admin','teacher','student']}
       },
       {
         path:'/dm/understand',component:_import('datamining/understand/index'),name:'数据理解',icon: 'survey1',
         redirect: '/dm/understand/reg',
         children: [
           {
-            path:'density',component:_import('datamining/understand/density'),name:'密度分析',icon: 'survey1',meta:{role:['admin','teacher']}
+            path:'density',component:_import('datamining/understand/density'),name:'密度分析',icon: 'survey1',meta:{role:['admin','teacher','student']}
           },
           {
-            path:'reg',component:_import('datamining/understand/regression'),name:'回归分析',icon: 'survey1',meta:{role:['admin','teacher']}
+            path:'reg',component:_import('datamining/understand/regression'),name:'回归分析',icon: 'survey1', meta:{role:['admin','teacher','student']}
           },
         ],
-        meta:{role:['admin','teacher']
+        meta:{role:['admin','teacher','student']
         }
       },
-    ]
+    ],
+    meta:{role:['admin','teacher','student']}
   },
   // {
   //   path: '/table',
