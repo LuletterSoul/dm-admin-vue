@@ -1,7 +1,7 @@
 <template>
     <div>
       <transition name="fade" mode="out-in">
-        <keep-alive :include='cachedViews'>
+        <keep-alive :include='_cachedViews'>
           <router-view></router-view>
         </keep-alive>
       </transition>
@@ -13,9 +13,12 @@
       name: "index",
       data() {
         return {
-          cachedViews() {
-            return this.$store.state.tagsView.cachedViews.join();
-          }
+
+        }
+      },
+      computed: {
+        _cachedViews() {
+          return this.$store.getters.cachedViews;
         }
       }
     }

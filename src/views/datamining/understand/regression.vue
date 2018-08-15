@@ -113,8 +113,7 @@
       });
       next(vm => {})
     },
-    mounted: function () {
-      let vm = this;
+    activated(){
       this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
         Loading.service({
           lock: true,
@@ -123,6 +122,8 @@
           background: 'rgba(0, 0, 0, 0.7)'
         }).close();
       });
+    },
+    mounted: function () {
     },
     props: {
       setName: {
