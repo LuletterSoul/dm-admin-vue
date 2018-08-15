@@ -5,6 +5,14 @@
         <div class="section">
           <el-row>
             <el-col>
+              <scatter :height="'1100px'" :option="_corrOption">
+              </scatter>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="section">
+          <el-row>
+            <el-col>
               <scatter :height="'960px'" :option="_generatedOption">
               </scatter>
             </el-col>
@@ -27,7 +35,8 @@
   import Scatter from '@/components/Charts/scatter'
   import 'echarts-gl'
   import scatter3dData from '../../../../mock/life-expectancy-table'
-  import { Loading } from 'element-ui';
+  import {Loading} from 'element-ui';
+
   var CATEGORY_DIM_COUNT = 6;
   var GAP = 1;
   var BASE_LEFT = 5;
@@ -167,17 +176,20 @@
           [188, 143, 197, 1.66, 99, 51, "中度", "上海"],
           [174, 131, 174, 1.55, 108, 50, "中度", "上海"],
           [187, 143, 201, 1.39, 89, 53, "中度", "上海"]
-        ]
-      };
+        ],
+        corrX: ['class','age','pedi','mass','test','skin','pres','plas','preg'],
+        corrY: ['class','age','pedi','mass','test','skin','pres','plas','preg']
+    }
     },
-    beforeRouteEnter (to, from, next) {
+    beforeRouteEnter(to, from, next) {
       Loading.service({
         lock: true,
         text: '正在生成视图,请稍后...',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       });
-      next(vm => {})
+      next(vm => {
+      })
     },
     mounted: function () {
       let vm = this;
@@ -190,10 +202,10 @@
         }).close();
       });
     },
-    beforeCreate(){
+    beforeCreate() {
 
     },
-    created(){
+    created() {
 
     },
     methods: {
@@ -208,7 +220,70 @@
       }
     },
     computed: {
-      _scatter3dOption(){
+      _corrOption(){
+        return {
+          tooltip: {
+            position: 'top'
+          },
+          animation: false,
+          grid: {
+            height: '70%',
+            y: '10%'
+          },
+          xAxis: {
+            type: 'category',
+            data: this.corrX,
+            splitArea: {
+              show: true
+            }
+          },
+          yAxis: {
+            type: 'category',
+            data: this.corrY,
+            splitArea: {
+              show: true
+            }
+          },
+          visualMap: {
+            min: 0,
+            max: 1,
+            calculable: true,
+            orient: 'horizontal',
+            left: 'center',
+            bottom: '15%'
+          },
+          series: [{
+            name: 'Punch Card',
+            type: 'heatmap',
+            data: this._randomCorrData,
+            label: {
+              normal: {
+                show: true
+              }
+            },
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }]
+        }
+      },
+      _randomCorrData(){
+        let data = [];
+          for(let i = 0;i<this.corrX.length;i++){
+            for(let j = 0;j<this.corrY.length;j++){
+              let r = Math.random().toFixed(1);
+              if(i === j) {
+                r = 1.0;
+              }
+              data.push([i, j, r || '-'] );
+            }
+          }
+        return data;
+      },
+      _scatter3dOption() {
         return {
           tooltip: {},
           grid3D: {
@@ -304,7 +379,7 @@
           ]
         };
       },
-      _generatedOption(){
+      _generatedOption() {
         let option = Object.assign({}, this._scatterMatrixOption);
         let index = 0;
         for (let i = 0; i < CATEGORY_DIM_COUNT; i++) {
@@ -375,7 +450,7 @@
         }
         return option;
       },
-      _scatterMatrixOption(){
+      _scatterMatrixOption() {
         return {
           animation: false,
           brush: {
