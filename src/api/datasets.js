@@ -146,3 +146,10 @@ export function fetchOptions() {
   })
 }
 
+export function fetchScatterJson() {
+  return fetch({
+    baseURL:'https://ecomfe.github.io/echarts-examples',
+    url:'/public/data/asset/data/life-expectancy-table.json',
+    method:'get'
+  })
+}
