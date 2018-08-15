@@ -247,6 +247,9 @@ export const asyncRouterMap = [
           {
             path:'reg',component:_import('datamining/understand/regression'),name:'回归分析',icon: 'survey1', meta:{role:['admin','teacher','student']}
           },
+          {
+            path:'corr',component:_import('datamining/understand/corr'),name:'关联分析',icon: 'survey1', meta:{role:['admin','teacher','student']}
+          },
         ],
         meta:{role:['admin','teacher','student']
         }
