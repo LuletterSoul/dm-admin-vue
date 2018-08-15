@@ -235,20 +235,23 @@ export const asyncRouterMap = [
     icon: 'machinery',
     children: [
       {
-        path:'index',component:_import('datamining/index'),name:'导入数据',icon: 'exl',meta:{role:['admin','teacher','student']}
+        path:'index',redirect:'import',component:_import('datamining/index'),name:'挖掘首页',icon: 'exl',hidden:true,meta:{role:['admin','teacher','student']}
+      },
+      {
+        path:'import',component:_import('datamining/import'),name:'导入数据',icon: 'exl',meta:{role:['admin','teacher','student']}
       },
       {
         path:'/dm/understand',component:_import('datamining/understand/index'),name:'数据理解',icon: 'lights',
         redirect: '/dm/understand/reg',
         children: [
           {
-            path:'density',component:_import('datamining/understand/density'),name:'密度分析',icon: 'libra',meta:{role:['admin','teacher','student']}
+            path:'density',component:_import('datamining/understand/density'),name:'密度分析',icon: 'libra',meta:{role:['admin','teacher','student'],cache:'density'}
           },
           {
-            path:'reg',component:_import('datamining/understand/regression'),name:'回归分析',icon: 'data', meta:{role:['admin','teacher','student']}
+            path:'regression',component:_import('datamining/understand/regression'),name:'回归分析',icon: 'data', meta:{role:['admin','teacher','student'],cache:'regression'}
           },
           {
-            path:'corr',component:_import('datamining/understand/corr'),name:'关联分析',icon: 'process', meta:{role:['admin','teacher','student']}
+            path:'corr',component:_import('datamining/understand/corr'),name:'关联分析',icon: 'process', meta:{role:['admin','teacher','student'],cache:'corr'}
           },
         ],
         meta:{role:['admin','teacher','student']
