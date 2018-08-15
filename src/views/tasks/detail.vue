@@ -88,6 +88,7 @@
 
 <script type="text/javascript">
   import GroupViewItem from '../components/groupViewItem';
+  import { Loading } from 'element-ui';
   import TeacherGroupView from '../components/teacherGroupView';
   import SetDetail from '../datasets/detail'
   import TaskData from '../components/taskData'
@@ -126,13 +127,26 @@
         }
       }
     },
-    created() {
-      const loading = this.$loading({
+    beforeRouteEnter (to, from, next) {
+      Loading.service({
         lock: true,
-        text: 'Loading',
+        text: '正在加载任务数据',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       });
+      next(vm => {})
+    },
+    mounted(){
+      this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+        Loading.service({
+          lock: true,
+          text: '正在加载任务数据',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        }).close();
+      });
+    },
+    created() {
       //约定从route中传入查询参数taskId,利用taskId从后台加载数据
       let _taskId = this.$route.query.taskId;
       //如果props提供taskId,则不需要查询参数
@@ -154,7 +168,6 @@
         this.sets = this.toSets;
         this.algorithms = this.toAlgorithms;
       }
-      loading.close();
     },
     data() {
       return {
