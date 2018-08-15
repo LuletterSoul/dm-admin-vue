@@ -12,7 +12,7 @@ const tagsView = {
         title: view.meta.title || 'no-name'
       })
       if (!view.meta.noCache) {
-        state.cachedViews.push(view.name)
+        state.cachedViews.push(view.meta.cache)
       }
     },
     DEL_VISITED_VIEWS: (state, view) => {
@@ -23,7 +23,7 @@ const tagsView = {
         }
       }
       for (const i of state.cachedViews) {
-        if (i === view.name) {
+        if (i === view.meta.cache) {
           const index = state.cachedViews.indexOf(i)
           state.cachedViews.splice(index, 1)
           break
@@ -38,7 +38,7 @@ const tagsView = {
         }
       }
       for (const i of state.cachedViews) {
-        if (i === view.name) {
+        if (i === view.meta.cache) {
           const index = state.cachedViews.indexOf(i)
           state.cachedViews = state.cachedViews.slice(index, i + 1)
           break
