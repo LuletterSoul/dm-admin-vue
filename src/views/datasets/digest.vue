@@ -75,7 +75,7 @@
           },
           {
             title: '实例数',
-            key: 'instances',
+            key: 'numberOfInstances',
             sortable: true
           },
           {

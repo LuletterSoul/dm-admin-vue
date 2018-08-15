@@ -317,6 +317,7 @@
       },
       methods:{
         async handleUploadSubmit(){
+          this.formatDonatedDate();
           let collection = await createCollection(this.collectionModel);
           //更新已创建容器的Id
           this.collectionId = collection.collectionId;
