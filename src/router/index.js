@@ -59,7 +59,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/collection/digest',
     name: '数据管理模块',
-    icon: 'data',
+    icon: 'folder',
     children: [
       {
         path: 'digest', component: _import('datasets/digest'), name: '集合摘要', icon: 'survey',meta:{role:['admin','teacher','student']}
@@ -226,6 +226,36 @@ export const asyncRouterMap = [
         path: 'stutask', component: _import('tasks/stutask'), name: '任务信息', icon: 'home',hidden:true,meta:{role:['student']}
       }
     ]
+  },
+  {
+    path: '/dm',
+    component: Layout,
+    redirect: '/dm/index',
+    name: "数据挖掘模块",
+    icon: 'machinery',
+    children: [
+      {
+        path:'index',component:_import('datamining/index'),name:'导入数据',icon: 'exl',meta:{role:['admin','teacher','student']}
+      },
+      {
+        path:'/dm/understand',component:_import('datamining/understand/index'),name:'数据理解',icon: 'lights',
+        redirect: '/dm/understand/reg',
+        children: [
+          {
+            path:'density',component:_import('datamining/understand/density'),name:'密度分析',icon: 'libra',meta:{role:['admin','teacher','student']}
+          },
+          {
+            path:'reg',component:_import('datamining/understand/regression'),name:'回归分析',icon: 'data', meta:{role:['admin','teacher','student']}
+          },
+          {
+            path:'corr',component:_import('datamining/understand/corr'),name:'关联分析',icon: 'process', meta:{role:['admin','teacher','student']}
+          },
+        ],
+        meta:{role:['admin','teacher','student']
+        }
+      },
+    ],
+    meta:{role:['admin','teacher','student']}
   },
   // {
   //   path: '/table',

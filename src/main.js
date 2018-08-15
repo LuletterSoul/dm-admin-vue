@@ -35,6 +35,7 @@ import AnimateTransition from '@/components/transition/AnimateTransition';
 import UploadDialog from '@/views/components/UploadDialog'
 import SingleTransition from '@/components/transition/SingleTransition';
 import EmPlaceholder from '@/components/placeholder'
+import VueFullPage from 'vue-fullpage.js'
 import {getToken} from '@/utils/auth'
 import 'iview/dist/styles/iview.css';    // 使用 CSS
 import {SweetModal, SweetModalTab} from 'sweet-modal-vue'
@@ -83,6 +84,7 @@ Vue.component(SingleTransition.name, SingleTransition);
 Vue.component(EmPlaceholder.name, EmPlaceholder);
 Vue.component(UploadDialog.name, UploadDialog);
 Vue.use(vueWaves);
+Vue.use(VueFullPage);
 
 Vue.mixin({
   data() {
