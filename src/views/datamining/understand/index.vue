@@ -1,7 +1,7 @@
 <template>
     <div>
       <transition name="fade" mode="out-in">
-        <keep-alive :include='_cachedViews'>
+        <keep-alive>
           <router-view></router-view>
         </keep-alive>
       </transition>
