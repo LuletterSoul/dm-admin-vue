@@ -38,7 +38,6 @@
 
 <script>
     import { mapGetters } from 'vuex';
-    import ColorfulButton from '@/components/button'
     import Levelbar from './Levelbar';
     import Hamburger from '@/components/Hamburger';
     import Screenfull from '@/components/Screenfull';
@@ -54,7 +53,9 @@
       },
       data(){
         return{
-          loading:false
+          loading:false,
+          websock: null,
+          stompClient: null
         }
       },
       computed: {
@@ -62,6 +63,8 @@
           'sidebar',
           'userProfile'
         ])
+      },
+      created(){
       },
       methods: {
         handleCommand(c) {

@@ -6,7 +6,7 @@ import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
 import '@/styles/index.scss'
-
+import * as Socket from './utils/socket'
 import iView from 'iview';
 import VueI18n from 'vue-i18n'
 import enLocale from './locale/en'
@@ -106,6 +106,8 @@ router.beforeEach((to, from, next) => {
       if (store.getters.roles.length === 0) {
         store.dispatch('GetInfo').then((res) => {
           console.log(res.roles);
+          //初始化长连接
+          Socket.initWebSocket(res.userId);
           if (res.roles.indexOf('student') >= 0){
             store.dispatch('GetStuInfo', res.userId).then(()=>{
               store.dispatch('GenerateRoutes', {roles: res.roles}).then(() => {
