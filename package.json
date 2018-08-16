@@ -15,6 +15,7 @@
     "mockdev": "npm run mock & npm run dev"
   },
   "dependencies": {
+    "@stomp/stompjs": "^4.0.7",
     "animate.css": "^3.5.2",
     "axios": "0.16.2",
     "china-area-data": "^3.0.0",
@@ -30,6 +31,7 @@
     "numeral": "2.0.6",
     "region-picker": "0.0.17",
     "screenfull": "3.3.2",
+    "sockjs-client": "^1.1.5",
     "sortable": "^2.0.0",
     "sortablejs": "^1.7.0",
     "sweet-modal-vue": "^2.0.0",

@@ -8,6 +8,7 @@ import group from './modules/group';
 import task from './modules/task';
 import student from './modules/student';
 import getters from './getters';
+import socket from './modules/socket'
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
@@ -18,6 +19,7 @@ const store = new Vuex.Store({
     permission,
     group,
     task,
+    socket,
     student
   },
   getters
