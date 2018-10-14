@@ -11,7 +11,7 @@ export function createStage(stage) {
 
 export function getResultsByStageId(stageId,query) {
   return fetch({
-    url:STAGE_BASE_PATH.concat("/").concat(stageId),
+    url:STAGE_BASE_PATH.concat("/").concat(stageId).concat("/results"),
     method:'get',
     params:query
   })

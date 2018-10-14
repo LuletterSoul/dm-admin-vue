@@ -79,6 +79,7 @@
   import StudentGroupView from '../components/studentGroupView';
   import SetDetail from '../datasets/detail'
   import TaskData from '../components/taskData'
+  import * as api from '../../api/index'
   import {
     getRefCollections,
     getRefStages,
@@ -182,6 +183,9 @@
         let vm = this;
         getRefStages(this.taskId).then(stages => {
           vm.stages = stages;
+          vm.stages.forEach(s =>{
+
+          })
         }).catch(error => {
         });
       },
@@ -191,6 +195,21 @@
           vm.algorithms = configAlgorithms;
         }).catch(error => {
         });
+      },
+      getSubmittedFileName(stageId){
+        let query = Object.assign({},this.resQuery);
+        let vm = this;
+        query.submitterIds =this._userProfile.userId ;
+        query.all = false;
+        query.stageId = stageId;
+        api.task.findResultRecords(this.taskId,query).then((res) =>{
+          if(res.content.length >0){
+            let filename = res.content[0].fileName;
+            if(filename !==undefined){
+              fileNames.push(filename);
+            }
+          }
+        })
       },
       getGroups() {
         let vm = this;

@@ -163,7 +163,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="create">确 定</el-button>
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="create" :loading="loading">确 定</el-button>
         <el-button v-else type="primary" @click="update">确 定</el-button>
       </div>
     </el-dialog>
@@ -173,6 +173,7 @@
 <script>
   import { fetchList, fetchPv } from 'api/article_table';
   import GroupModal from '../../components/groupModal';
+  import {Loading} from 'element-ui'
   import { parseTime,deleteEmptyProperty } from 'utils';
   import { fetchStudentList,
            deleteStudent ,
@@ -196,6 +197,7 @@
     data() {
       return {
         datePickerValue:[],
+        loading:false,
         showEditModal:false,
         taskStatusOptions:[],
         pickerOptions: {
@@ -411,14 +413,21 @@
       },
       handleCreateConfirm(groupDto) {
         let vm = this;
+        Loading.service({
+          lock: false,
+          text: '正在创建分组,请稍后...',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
         createGroup(groupDto).then(res => {
           vm.$message({
             showClose: true,
             message: '创建分组成功',
             type: 'success'
           });
+          Loading.service({}).close();
         }).catch(error => {
-
+          Loading.service({}).close();
         });
       },
       handleSelectionChange(val) {

@@ -61,7 +61,7 @@ service.interceptors.response.use(
         Message.error(errorRes.reason);
       }
       else if (code === 50002 || code === 50006) {
-        MessageBox.confirm(errorRes.tip+"你可以留在当前页面或登出.", '确定登出', {
+        MessageBox.confirm("会话已过期,"+"你可以留在当前页面或登出.", '确定登出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
           type: 'warning'

@@ -54,11 +54,19 @@
         default:''
       },
     },
+    watch:{
+      toStages(){
+        for(let i = 0; i< this.toStages.length;i++){
+          this.getSubmittedFileName(this.toStages[i]);
+        }
+      }
+    },
     data() {
       let vm = this;
       return {
         listLoading: false,
         stages: this.toStages,
+        fileNames:[],
         stageColumns: [
           {
             title: '里程碑',
@@ -109,8 +117,15 @@
             }
           },
           {
-            title: '状态',
+            title: '已提交文件',
             align: 'center',
+            render:(h,params) =>{
+              return h('div', {
+                props:{
+                  type:'ios-folder-outline'
+                }
+              },params.row.submittedFileName)
+            }
           },
           {
             title: '上传结果',
@@ -146,8 +161,7 @@
     },
     computed: {
       _stages() {
-        this.toStages.map(s => {
-        })
+
       },
       _submitted() {
         return {
@@ -160,8 +174,8 @@
         return this.$store.getters.userProfile;
       },
     },
-    created() {
-      this.getTaskList();
+    created(){
+      this.stages = this.toStages;
     },
     methods: {
       getTaskList() {
@@ -189,6 +203,21 @@
             type: 'error',
             message: error
           })
+        })
+      },
+      getSubmittedFileName(s){
+        let query = Object.assign({},this.resQuery);
+        let vm = this;
+        query.submitterIds =this._userProfile.userId ;
+        query.all = false;
+        query.stageId = s.stageId;
+        api.task.findResultRecords(this.taskId,query).then((res) =>{
+          if(res.content.length >0){
+            let filename = res.content[0].fileName;
+            if(filename !==undefined){
+              vm.$set(s,"submittedFileName",filename);
+            }
+          }
         })
       },
       handleCheck(index) {
@@ -219,6 +248,7 @@
         return new Promise((resolve, reject) => {
           api.result.uploadResult(resultId,fd).then(res => {
             this.uploadDialogVisible = false;
+            //this.getFileNames();
             resolve(res);
           }).catch(error => {
             reject(error);
