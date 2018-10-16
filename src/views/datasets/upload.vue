@@ -293,7 +293,7 @@
             numberOfWebHits: this.collectionModel.numberOfWebHits,
             numberOfInstances:this.collectionModel.numberOfInstances,
             relevantPapers: this.collectionModel.relevantPapers,
-            dataSetChars: this.collectionModel.dataSetCharIds.map(id => {
+            dataSetCharacteristics: this.collectionModel.dataSetCharIds.map(id => {
               for (let i = 0; i < this.dataSetCharOptions.length; ++i) {
                 if (id === this.dataSetCharOptions[i].charId)
                   return this.dataSetCharOptions[i];
@@ -305,7 +305,7 @@
                   return this.associatedTaskOptions[i];
               }
             }),
-            attributeChars: this.collectionModel.attributeCharIds.map(id => {
+            attributeCharacteristics: this.collectionModel.attributeCharIds.map(id => {
               for (let i = 0; i < this.attrCharOptions.length; ++i) {
                 if (id === this.attrCharOptions[i].charId)
                   return this.attrCharOptions[i];

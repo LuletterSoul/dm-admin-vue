@@ -173,11 +173,11 @@
         columns1: [
           {
             title: '特征',
-            key: 'dataSetChars'
+            key: 'dataSetCharacteristics'
           },
           {
             title: '属性类型',
-            key: 'attributeChars'
+            key: 'attributeCharacteristics'
           },
           {
             title: '相关任务',
@@ -409,8 +409,8 @@
       data1() {
         return [
           {
-            dataSetChars: this.collection.dataSetChars.map(char => char.englishName).join(),
-            attributeChars: this.collection.attributeChars.map(attr => attr.englishName).join(),
+            dataSetCharacteristics: this.collection.dataSetCharacteristics.map(char => char.englishName).join(),
+            attributeCharacteristics: this.collection.attributeCharacteristics.map(attr => attr.englishName).join(),
             associatedTasks: this.collection.associatedTasks.map(task => task.englishName).join()
           }
         ]
