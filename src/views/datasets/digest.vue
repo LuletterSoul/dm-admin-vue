@@ -79,6 +79,11 @@
             sortable: true
           },
           {
+            title: '访问量',
+            key: 'numberOfWebHits',
+            sortable: true
+          },
+          {
             title: '捐赠时间',
             key: 'dateDonated',
             sortable: true

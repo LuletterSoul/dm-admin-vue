@@ -10,107 +10,118 @@
           <Step title="提交"></Step>
         </Steps>
       </div>
-      <div class="upload">
-
-      </div>
       <transition name="fade" >
         <template v-if="currentStep===0">
-          <div class="form">
-            <Form :model="collectionModel" label-position="top" class="font" :rules="ruleInline">
-              <FormItem label="数据集名称" prop="collectionName">
-                <Row>
-                  <Col span="10">
-                  <Input v-model="collectionModel.collectionName" placeholder="请输入"></Input>
-                  </Col>
-                </Row>
-              </FormItem>
-              <FormItem label="描述摘要" >
-                <Input v-model="collectionModel.abstractInfo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
-              </FormItem>
-              <FormItem label="数据特征" prop="dataSetChars">
-                <CheckboxGroup v-model="collectionModel.dataSetCharIds" >
-                  <transition-group name="list">
-                    <Checkbox style="font-size: 16px;" v-for="item in dataSetCharOptions" :key="item.charId" :label="item.charId">
-                      {{ item.englishName }}-{{ item.chineseName }}
-                    </Checkbox>
-                  </transition-group>
-                </CheckboxGroup>
-              </FormItem>
+          <el-row>
+            <el-col :offset="2" :span="22">
+              <Form :model="collectionModel" label-position="top" class="font" :rules="ruleInline">
+                <FormItem label="数据集名称" prop="collectionName">
+                  <Row>
+                    <Col span="10">
+                      <Input v-model="collectionModel.collectionName" placeholder="请输入"></Input>
+                    </Col>
+                  </Row>
+                </FormItem>
+                <FormItem label="描述摘要" >
+                  <el-row>
+                    <el-col :span="20">
+                      <Input v-model="collectionModel.abstractInfo" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
+                    </el-col>
+                  </el-row>
+                </FormItem>
+                <FormItem label="数据特征" prop="dataSetChars">
+                  <CheckboxGroup v-model="collectionModel.dataSetCharIds" >
+                    <transition-group name="list">
+                      <Checkbox style="font-size: 16px;" v-for="item in dataSetCharOptions" :key="item.charId" :label="item.charId">
+                        {{ item.englishName }}-{{ item.chineseName }}
+                      </Checkbox>
+                    </transition-group>
+                  </CheckboxGroup>
+                </FormItem>
 
-              <FormItem label="属性类型" prop="attributeCharIds">
-                <CheckboxGroup v-model="collectionModel.attributeCharIds">
-                  <transition-group name="list">
-                    <Checkbox style="font-size: 16px;" v-for="item in attrCharOptions" :key="item.charId" :label="item.charId">
-                      {{ item.englishName }}-{{ item.chineseName }}
-                    </Checkbox>
-                  </transition-group>
-                  <!--<Checkbox style="font-size: 16px;" label="Categorical"></Checkbox>-->
-                  <!--<Checkbox style="font-size: 16px;" label="Integer"></Checkbox>-->
-                  <!--<Checkbox style="font-size: 16px;" label="Real"></Checkbox>-->
-                </CheckboxGroup>
-              </FormItem>
-              <FormItem label="相关任务" prop="associatedTaskIds">
-                <CheckboxGroup v-model="collectionModel.associatedTaskIds">
-                  <transition-group name="list">
-                    <Checkbox style="font-size: 16px;" v-for="item in associatedTaskOptions" :key="item.typeId" :label="item.typeId">
-                      {{ item.englishName }}-{{ item.chineseName }}
-                    </Checkbox>
-                  </transition-group>
-                  <!--<Checkbox style="font-size: 16px;" label="Classification"></Checkbox>-->
-                  <!--<Checkbox style="font-size: 16px;" label="Regression"></Checkbox>-->
-                  <!--<Checkbox style="font-size: 16px;" label="Clustering"></Checkbox>-->
-                  <!--<Checkbox style="font-size: 16px;" label="Other"></Checkbox>-->
-                </CheckboxGroup>
-              </FormItem>
-              <FormItem label="实例数">
-                <Row>
-                  <Col span="10">
-                  <Input v-model="collectionModel.numberOfInstances" placeholder="请输入"></Input>
-                  </Col>
-                </Row>
-              </FormItem>
-              <FormItem label="允许缺省?">
-                <RadioGroup v-model="collectionModel.isMissingValues">
-                  <Radio style="font-size: 16px;" label="true">
-                    <Icon type="checkmark"></Icon>
-                    <span>Yes</span>
-                  </Radio>
-                  <Radio style="font-size: 16px;" label="false">
-                    <Icon type="close-round"></Icon>
-                    <span>No</span>
-                  </Radio>
-                </RadioGroup>
-              </FormItem>
-              <FormItem label="来自地区" prop="areaId">
-                <RadioGroup v-model="collectionModel.areaId">
-                  <transition-group name="list">
-                    <Radio v-for="item in areaTypeOptions" :label="item.areaId" :key="item.areaId" style="font-size: 16px;">
-                      {{ item.chineseName }}
+                <FormItem label="属性类型" prop="attributeCharIds">
+                  <CheckboxGroup v-model="collectionModel.attributeCharIds">
+                    <transition-group name="list">
+                      <Checkbox style="font-size: 16px;" v-for="item in attrCharOptions" :key="item.charId" :label="item.charId">
+                        {{ item.englishName }}-{{ item.chineseName }}
+                      </Checkbox>
+                    </transition-group>
+                    <!--<Checkbox style="font-size: 16px;" label="Categorical"></Checkbox>-->
+                    <!--<Checkbox style="font-size: 16px;" label="Integer"></Checkbox>-->
+                    <!--<Checkbox style="font-size: 16px;" label="Real"></Checkbox>-->
+                  </CheckboxGroup>
+                </FormItem>
+                <FormItem label="相关任务" prop="associatedTaskIds">
+                  <CheckboxGroup v-model="collectionModel.associatedTaskIds">
+                    <transition-group name="list">
+                      <Checkbox style="font-size: 16px;" v-for="item in associatedTaskOptions" :key="item.typeId" :label="item.typeId">
+                        {{ item.englishName }}-{{ item.chineseName }}
+                      </Checkbox>
+                    </transition-group>
+                    <!--<Checkbox style="font-size: 16px;" label="Classification"></Checkboxf>-->
+                    <!--<Checkbox style="font-size: 16px;" label="Regression"></Checkbox>-->
+                    <!--<Checkbox style="font-size: 16px;" label="Clustering"></Checkbox>-->
+                    <!--<Checkbox style="font-size: 16px;" label="Other"></Checkbox>-->
+                  </CheckboxGroup>
+                </FormItem>
+                <FormItem label="实例数">
+                  <Row>
+                    <Col span="10">
+                      <Input v-model="collectionModel.numberOfInstances" placeholder="请输入"></Input>
+                    </Col>
+                  </Row>
+                </FormItem>
+                <FormItem label="允许缺省?">
+                  <RadioGroup v-model="collectionModel.isMissingValues">
+                    <Radio style="font-size: 16px;" label="true">
+                      <Icon type="checkmark"></Icon>
+                      <span>Yes</span>
                     </Radio>
-                  </transition-group>
-                </RadioGroup>
-              </FormItem>
-              <FormItem label="捐赠时间">
-                <Row>
-                  <Col span="10">
-                  <DatePicker type="date" placeholder="选择日期" v-model="rowDonatedDate" value="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" ></DatePicker>
-                  </Col>
-                </Row>
-              </FormItem>
-              <FormItem label="访问量">
-                <Input v-model="collectionModel.numberOfWebHits" placeholder="请输入"></Input>
-              </FormItem>
-              <FormItem label="相关论文" >
-                <Input v-model="collectionModel.relevantPapers" type="textarea" :autosize="{minRows: 2,maxRows: 50}" placeholder="请输入..."></Input>
-              </FormItem>
-            </Form>
-          </div>
+                    <Radio style="font-size: 16px;" label="false">
+                      <Icon type="close-round"></Icon>
+                      <span>No</span>
+                    </Radio>
+                  </RadioGroup>
+                </FormItem>
+                <FormItem label="来自地区" prop="areaId">
+                  <RadioGroup v-model="collectionModel.areaId">
+                    <transition-group name="list">
+                      <Radio v-for="item in areaTypeOptions" :label="item.areaId" :key="item.areaId" style="font-size: 16px;">
+                        {{ item.chineseName }}
+                      </Radio>
+                    </transition-group>
+                  </RadioGroup>
+                </FormItem>
+                <FormItem label="捐赠时间">
+                  <Row>
+                    <Col span="10">
+                      <DatePicker type="date" placeholder="选择日期" v-model="rowDonatedDate" value="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" ></DatePicker>
+                    </Col>
+                  </Row>
+                </FormItem>
+                <FormItem label="访问量">
+                  <el-row>
+                    <el-col :span="10">
+                      <Input v-model="collectionModel.numberOfWebHits" placeholder="请输入"></Input>
+                    </el-col>
+                  </el-row>
+                </FormItem>
+                <FormItem label="相关论文" >
+                  <el-row>
+                    <el-col :span="20">
+                      <Input v-model="collectionModel.relevantPapers" type="textarea" :autosize="{minRows: 2,maxRows: 50}" placeholder="请输入..."></Input>
+                    </el-col>
+                  </el-row>
+                </FormItem>
+              </Form>
+            </el-col>
+          </el-row>
         </template>
       </transition>
       <transition name="fade">
         <template v-if="currentStep===1">
-          <template>
-            <div class="form">
+          <el-row>
+            <el-col :offset="2" :span="22">
               <Form ref="formDynamic" :model="formDynamic" :label-width="80" label-position="top">
                 <FormItem
                   v-for="(item, index) in formDynamic.items"
@@ -122,42 +133,42 @@
                     <FormItem label="文件名" >
                       <Row>
                         <Col span="12">
-                        <Input type="text" style="font-size: 14px;" v-model="item.value"
-                               :placeholder="files[index] === undefined ? '请输入' :files[index].name" >
-                        </Input>
+                          <Input type="text" style="font-size: 14px;" v-model="item.value"
+                                 :placeholder="files[index] === undefined ? '请输入' :files[index].name" >
+                          </Input>
                         </Col>
                         <Col span="2" offset="1">
-                        <Button type="ghost" style="font-size: 14px" @click="handleFileRemove(index,files[index])">删除</Button>
+                          <Button type="ghost" style="font-size: 14px" @click="handleFileRemove(index,files[index])">删除</Button>
                         </Col>
                         <Col span="4">
-                        <Upload
-                          ref="setUpload"
-                          :before-upload="handleUpload"
-                          :show-upload-list="false"
-                          action="">
-                          <Button type="ghost" style="font-size: 14px"  icon="ios-cloud-upload-outline">选择要上传的数据集</Button>
-                        </Upload>
+                          <Upload
+                            ref="setUpload"
+                            :before-upload="handleUpload"
+                            :show-upload-list="false"
+                            action="">
+                            <Button type="ghost" style="font-size: 14px"  icon="ios-cloud-upload-outline">选择要上传的数据集</Button>
+                          </Upload>
                         </Col>
                       </Row>
                       <Row>
                         <Col span="24">
-                        <div style="margin-left: 20px" v-if="files[index] !== null&&files[index]!==undefined">
-                          <Icon type="clipboard"></Icon>
-                          <span>
+                          <div style="margin-left: 20px" v-if="files[index] !== null&&files[index]!==undefined">
+                            <Icon type="clipboard"></Icon>
+                            <span>
                             {{ files[index].name }}
                           </span>
-                          <!--<Button type="text"-->
-                          <!--@click="upload"-->
-                          <!--:loading="loadingStatus">-->
-                          <!--{{ loadingStatus ? '上传中' : '点击上传' }}</Button>-->
-                        </div>
+                            <!--<Button type="text"-->
+                            <!--@click="upload"-->
+                            <!--:loading="loadingStatus">-->
+                            <!--{{ loadingStatus ? '上传中' : '点击上传' }}</Button>-->
+                          </div>
                         </Col>
                       </Row>
                     </FormItem >
                     <FormItem   label="备注" style="margin-top: 10px">
                       <Row>
                         <Col span="12">
-                        <Input style="font-size: 16px" type="text" v-model="item.fileDescription" placeholder="请输入..."/>
+                          <Input style="font-size: 16px" type="text" v-model="item.fileDescription" placeholder="请输入..."/>
                         </Col>
                       </Row>
                     </FormItem>
@@ -166,18 +177,22 @@
                 <FormItem  style="margin-top: 10px">
                   <Row>
                     <Col span="12">
-                    <Button type="dashed" long @click="handleAdd" icon="plus-round">新增</Button>
+                      <Button type="dashed" long @click="handleAdd" icon="plus-round">新增</Button>
                     </Col>
                   </Row>
                 </FormItem>
               </Form>
-            </div>
-          </template>
+            </el-col>
+          </el-row>
         </template>
       </transition>
       <transition name ="fade">
-        <data-set v-if="currentStep===2" :to-collection="dataSetInfo">
-        </data-set>
+        <el-row>
+          <el-col :span="23">
+            <data-set v-if="currentStep===2" :to-collection="dataSetInfo">
+            </data-set>
+          </el-col>
+        </el-row>
       </transition>
       <template>
         <Form>

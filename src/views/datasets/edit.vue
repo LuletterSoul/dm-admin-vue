@@ -45,8 +45,8 @@
            <FormItem label="Name">
              <Input v-model="temp.collectionName" placeholder="请输入"></Input>
            </FormItem>
-           <FormItem label="数据特征" prop="dataSetChars">
-             <CheckboxGroup v-model="temp.dataSetChars" >
+           <FormItem label="数据特征" prop="dataSetCharacteristics">
+             <CheckboxGroup v-model="temp.dataSetCharacteristics" >
                <transition-group name="list">
                  <Checkbox v-for="item in dataSetCharOptions" :key="item.charId" :label="item.charId">
                    {{ item.englishName }}-{{ item.chineseName }}
@@ -55,7 +55,7 @@
              </CheckboxGroup>
            </FormItem>
            <!--<FormItem label="Data Types">-->
-             <!--<CheckboxGroup v-model="temp.dataSetChars">-->
+             <!--<CheckboxGroup v-model="temp.dataSetCharacteristics">-->
                <!--<Checkbox label="Multivariate"></Checkbox>-->
                <!--<Checkbox label="Univariate"></Checkbox>-->
                <!--<Checkbox label="Sequential"></Checkbox>-->
@@ -146,7 +146,7 @@
             },
             {
               title: '数据特征',
-              key: 'dataSetChars',
+              key: 'dataSetCharacteristics',
               sortable: true
             },
             {
@@ -156,12 +156,17 @@
             },
             {
               title: '属性类型',
-              key: 'attributeChars',
+              key: 'attributeCharacteristics',
               sortable: true
             },
             {
               title: '实例数',
               key: 'numberOfInstances',
+              sortable: true
+            },
+            {
+              title: '访问量',
+              key: 'numberOfWebHits',
               sortable: true
             },
             {
@@ -286,9 +291,9 @@
         handleCheck (index) {
           this.$Modal.info({
             title: 'information',
-            content: `数据集名称：${this.dataSetInfo[index].collectionName}<br>数据特征：${this.dataSetInfo[index].dataSetChars}
-                    <br>相关任务：${this.dataSetInfo[index].associatedTasks}<br>属性类型：${this.dataSetInfo[index].attributeChars}<br>
-                    实例数：${this.dataSetInfo[index].attributeChars}<br>捐赠时间：${this.dataSetInfo[index].dateDonated}
+            content: `数据集名称：${this.dataSetInfo[index].collectionName}<br>数据特征：${this.dataSetInfo[index].dataSetCharacteristics}
+                    <br>相关任务：${this.dataSetInfo[index].associatedTasks}<br>属性类型：${this.dataSetInfo[index].attributeCharacteristics}<br>
+                    实例数：${this.dataSetInfo[index].attributeCharacteristics}<br>捐赠时间：${this.dataSetInfo[index].dateDonated}
                    <br>摘要： ${this.dataSetInfo[index].abstractInfo}`
           })
         },
@@ -347,7 +352,7 @@
           this.temp.numberOfInstances = Math.ceil(Math.random() * 10000);
 //          this.temp.areaId = set.area.areaId;
           this.temp.dateDonated = set.dateDonated;
-          this.temp.dataSetChars = set.dataSetCharacteristics.map(char => char.charId);
+          this.temp.dataSetCharacteristics = set.dataSetCharacteristics.map(char => char.charId);
           this.temp.associatedTaskIds = set.associatedTasks.map(task => task.typeId);
           this.temp.attributeCharIds = set.attributeCharacteristics.map(attr => attr.charId);
           this.abstractInfo = set.abstractInfo;
@@ -435,9 +440,9 @@
       dataSetInfo(){
         return this.dataSetList.map(set => {
           let newFormattedSet = Object.assign({}, set);
-          newFormattedSet.dataSetChars = set.dataSetCharacteristics.map(char => char.englishName).join();
+          newFormattedSet.dataSetCharacteristics = set.dataSetCharacteristics.map(char => char.englishName).join();
           newFormattedSet.associatedTasks = set.associatedTasks.map(task => task.englishName).join();
-          newFormattedSet.attributeChars=set.attributeCharacteristics.map(attr =>attr.englishName).join();
+          newFormattedSet.attributeCharacteristics=set.attributeCharacteristics.map(attr =>attr.englishName).join();
           newFormattedSet['instances'] =Math.ceil(Math.random() * 100000);
           return newFormattedSet;
         })

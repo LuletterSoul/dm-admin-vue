@@ -444,6 +444,7 @@
     margin-top: 20px;
     margin-bottom: 20px;
     font:bold 36px 微软雅黑;
+    text-align: center;
   }
   .updown{
     margin-top: 20px;
