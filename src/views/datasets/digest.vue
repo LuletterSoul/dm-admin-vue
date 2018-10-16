@@ -160,7 +160,7 @@
           newFormattedSet.dataSetChars = set.dataSetCharacteristics.map(char => char.englishName).join();
           newFormattedSet.associatedTasks = set.associatedTasks.map(task => task.englishName).join();
           newFormattedSet.attributeChars = set.attributeCharacteristics.map(attr => attr.englishName).join();
-          newFormattedSet['numberOfInstances'] = Math.ceil(Math.random() * 100000);
+          //newFormattedSet['numberOfInstances'] = Math.ceil(Math.random() * 100000);
           return newFormattedSet;
         })
       }

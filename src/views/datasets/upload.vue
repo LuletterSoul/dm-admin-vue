@@ -98,7 +98,7 @@
                 </Row>
               </FormItem>
               <FormItem label="访问量">
-                <Input v-model="collectionModel.hits" placeholder="请输入"></Input>
+                <Input v-model="collectionModel.numberOfWebHits" placeholder="请输入"></Input>
               </FormItem>
               <FormItem label="相关论文" >
                 <Input v-model="collectionModel.relevantPapers" type="textarea" :autosize="{minRows: 2,maxRows: 50}" placeholder="请输入..."></Input>
@@ -176,7 +176,7 @@
         </template>
       </transition>
       <transition name ="fade">
-        <data-set v-if="currentStep===2" :data-set="dataSetInfo">
+        <data-set v-if="currentStep===2" :to-collection="dataSetInfo">
         </data-set>
       </transition>
       <template>
@@ -263,7 +263,7 @@
               isMissingValues: 'Yes',
               areaId: 0,
               dateDonated:"",
-              hits: 0,
+              numberOfWebHits: 0,
               relevantPapers: 'Liang, X., S. Li, S. Zhang, H. Huang, and S. X. Chen (2016), PM2.5 data reliability, consistency, and air quality assessment in five Chinese cities, J. Geophys. Res. Atmos., 121, 10220â€“10236, [Web Link].\n' +
               '\n',
               dataSetCharIds: [0],
@@ -287,11 +287,11 @@
           return {
             collectionName: this.collectionModel.collectionName,
             abstractInfo: this.collectionModel.abstractInfo,
-            instances: this.collectionModel.numberOfInstances,
-            enableMissing: this.collectionModel.isMissingValues,
+            isMissingValues: this.collectionModel.isMissingValues,
             areaId: this.collectionModel.areaId,
             dateDonated: this.rowDonatedDate,
-            hits: this.collectionModel.hits,
+            numberOfWebHits: this.collectionModel.numberOfWebHits,
+            numberOfInstances:this.collectionModel.numberOfInstances,
             relevantPapers: this.collectionModel.relevantPapers,
             dataSetChars: this.collectionModel.dataSetCharIds.map(id => {
               for (let i = 0; i < this.dataSetCharOptions.length; ++i) {

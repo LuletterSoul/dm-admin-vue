@@ -144,15 +144,18 @@
     created() {
       this.collectionId = this.$route.query.collectionId;
       //路由直接进入
-      if (this.collectionId) {
+      if (this.collectionId !== undefined) {
         this.getCollectionById(this.collectionId);
         this.getDataSets(this.collectionId);
       }
       //依赖prop传入的collection
-      else if(this.toCollection.collectionId){
+      else if(this.toCollection.collectionId !== undefined){
         this.collection = this.toCollection;
         this.collectionId = this.toCollection.collectionId;
         this.getDataSets(this.collectionId);
+      }
+      else{
+        this.collection = this.toCollection;
       }
     },
     data() {
@@ -184,7 +187,7 @@
         columns2: [
           {
             title: '实例数',
-            key: 'numberOfAttributes'
+            key: 'numberOfInstances'
           },
           {
             title: '允许缺省?',
@@ -201,8 +204,8 @@
             key: 'dateDonated'
           },
           {
-            title: 'Number of Web Hits',
-            key: 'hits'
+            title: '点击量',
+            key: 'numberOfWebHits'
           }
         ],
         todos: [
@@ -406,16 +409,16 @@
       data1() {
         return [
           {
-            dataSetChars: this.collection.dataSetCharacteristics.map(char => char.englishName).join(),
-            attributeChars: this.collection.attributeCharacteristics.map(attr => attr.englishName).join(),
+            dataSetChars: this.collection.dataSetChars.map(char => char.englishName).join(),
+            attributeChars: this.collection.attributeChars.map(attr => attr.englishName).join(),
             associatedTasks: this.collection.associatedTasks.map(task => task.englishName).join()
           }
         ]
       },
       data2() {
         return [{
-          instances: this.collection.numberOfInstances,
-          enableMissing: this.collection.isMissingValues
+          numberOfInstances: this.collection.numberOfInstances,
+          isMissingValues: this.collection.isMissingValues
         }]
       },
       data3() {
@@ -423,7 +426,7 @@
           {
             area: this.collection.area.englishName,
             dateDonated: this.collection.dateDonated,
-            hits: 6558
+            numberOfWebHits: this.collection.numberOfWebHits
           }
         ]
       },
