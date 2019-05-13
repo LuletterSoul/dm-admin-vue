@@ -40,7 +40,49 @@ import {getToken} from '@/utils/auth'
 import 'iview/dist/styles/iview.css';    // 使用 CSS
 import {SweetModal, SweetModalTab} from 'sweet-modal-vue'
 import {getCookiesToken, setCookiesToken, removeCookiesToken} from '@/utils/auth';
+import VuePreview from 'vue-preview'
+import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
 
+Vue.use(VuePreview);
+// Vue.use(preview, {
+//   mainClass: 'pswp--minimal--dark',
+//   barsSize: {top: 0, bottom: 0},
+//   captionEl: false,
+//   fullscreenEl: false,
+//   shareEl: false,
+//   bgOpacity: 0.85,
+//   tapToClose: true,
+//   tapToToggleControls: false
+// });
+
+Vue.use(VuePreview, {
+  mainClass: 'pswp--minimal--dark',
+  barsSize: {top: 0, bottom: 0},
+  captionEl: false,
+  fullscreenEl: false,
+  shareEl: false,
+  bgOpacity: 0.85,
+  tapToClose: true,
+  tapToToggleControls: false
+});
+Vue.use(Viewer);
+Viewer.setDefaults({
+  Options: { "inline": true, "button": true, "navbar": true, "title": true, "toolbar": true, "tooltip": true, "movable": true, "zoomable": true, "rotatable": true, "scalable": true, "transition": true, "fullscreen": true, "keyboard": true, "url": "data-source" }
+});
+// defalut install
+// Vue.use(VuePreview);
+// with parameters install
+// Vue.use(preview, {
+//   mainClass: 'pswp--minimal--dark',
+//   barsSize: {top: 0, bottom: 0},
+//   captionEl: false,
+//   fullscreenEl: false,
+//   shareEl: false,
+//   bgOpacity: 0.85,
+//   tapToClose: true,
+//   tapToToggleControls: false
+// });
 
 window.Velocity = window.velocity = Velocity;
 
@@ -100,48 +142,49 @@ const whiteList = ['/login','/register'];
 router.beforeEach((to, from, next) => {
   NProgress.start();
   // removeCookiesToken();
-  if (getCookiesToken()) {
-    if (to.path === '/login') {
-      next({path: '/'});
-      NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
-    } else {
-      if (store.getters.roles.length === 0) {
-        store.dispatch('GetInfo').then((res) => {
-          console.log(res.roles);
-          if (res.roles.indexOf('student') >= 0){
-            store.dispatch('GetStuInfo', res.userId).then(()=>{
-              store.dispatch('GenerateRoutes', {roles: res.roles}).then(() => {
-                router.addRoutes(store.getters.addRouters);
-                next({...to});
-              }).catch(err =>{
-                console.log(err);
-              })
-            })
-          }
-          else{
-            store.dispatch('GenerateRoutes', {roles: res.roles}).then(() => {
-              router.addRoutes(store.getters.addRouters);
-              next({...to});
-            }).catch(err =>{
-              console.log(err);
-            })
-          }
-        }).catch(err => {
-          console.log(err);
-        })
-      }
-      else {
-        next();
-      }
-    }
-  } else {
-    if (whiteList.indexOf(to.path) !== -1) {
-      next()
-    } else {
-      next('/login');
-      NProgress.done();
-    }
-  }
+  next();
+  // if (getCookiesToken()) {
+  //   if (to.path === '/login') {
+  //     next({path: '/'});
+  //     NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
+  //   } else {
+  //     if (store.getters.roles.length === 0) {
+  //       store.dispatch('GetInfo').then((res) => {
+  //         console.log(res.roles);
+  //         if (res.roles.indexOf('student') >= 0){
+  //           store.dispatch('GetStuInfo', res.userId).then(()=>{
+  //             store.dispatch('GenerateRoutes', {roles: res.roles}).then(() => {
+  //               router.addRoutes(store.getters.addRouters);
+  //               next({...to});
+  //             }).catch(err =>{
+  //               console.log(err);
+  //             })
+  //           })
+  //         }
+  //         else{
+  //           store.dispatch('GenerateRoutes', {roles: res.roles}).then(() => {
+  //             router.addRoutes(store.getters.addRouters);
+  //             next({...to});
+  //           }).catch(err =>{
+  //             console.log(err);
+  //           })
+  //         }
+  //       }).catch(err => {
+  //         console.log(err);
+  //       })
+  //     }
+  //     else {
+  //       next();
+  //     }
+  //   }
+  // } else {
+  //   if (whiteList.indexOf(to.path) !== -1) {
+  //     next()
+  //   } else {
+  //     next('/login');
+  //     NProgress.done();
+  //   }
+  // }
 });
 router.afterEach(() => {
   NProgress.done();

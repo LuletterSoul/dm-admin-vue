@@ -138,7 +138,7 @@
           </el-table-column>
 
 
-          <el-table-column class-name="status-col" align="center"  label="任务状态" width="150">
+          <el-table-column class-name="status-col" align="center" label="任务状态" width="150">
             <template slot-scope="scope">
               <!--<el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>-->
               <span>
@@ -163,10 +163,10 @@
             </template>
           </el-table-column>
 
-          <el-table-column align="center"  label="操作" min-width="200px">
+          <el-table-column align="center" label="操作" min-width="200px">
             <template slot-scope="scope">
-              <el-button size="small" icon="edit"  type = "success" @click="handleUpdate(scope.row)">更新</el-button>
-              <el-button size="small" icon="delete" type = "danger" @click="handleDelete(scope.row)">删除</el-button>
+              <el-button size="small" icon="edit" type="success" @click="handleUpdate(scope.row)">更新</el-button>
+              <el-button size="small" icon="delete" type="danger" @click="handleDelete(scope.row)">删除</el-button>
               <el-button size="small" icon="plus" type="primary" @click="handleAddStudent">添加分组</el-button>
             </template>
           </el-table-column>
@@ -178,17 +178,19 @@
     <el-row>
       <el-col>
         <div v-show="!listLoading" class="pagination-container">
-          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-                         :page-sizes="[10,20,30, 50]" :page-size="listQuery.size" layout="total, sizes, prev, pager, next, jumper" :total="totalElements">
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                         :current-page.sync="listQuery.page"
+                         :page-sizes="[10,20,30, 50]" :page-size="listQuery.size"
+                         layout="total, sizes, prev, pager, next, jumper" :total="totalElements">
           </el-pagination>
         </div>
       </el-col>
     </el-row>
 
 
-
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
+      <el-form class="small-space" :model="temp" label-position="left" label-width="70px"
+               style='width: 400px; margin-left:50px;'>
 
         <el-form-item label="任务名称" label-width="85px">
           <el-input v-model="temp.taskName">
@@ -196,8 +198,8 @@
         </el-form-item>
 
         <!--<el-form-item label="数据集编号" label-width="85px">-->
-          <!--<el-input v-model="temp.collectionId">-->
-          <!--</el-input>-->
+        <!--<el-input v-model="temp.collectionId">-->
+        <!--</el-input>-->
         <!--</el-form-item>-->
 
         <el-form-item label="算法配置">
@@ -245,29 +247,31 @@
         </el-transfer>
       </el-form>
 
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible2 = false">取 消</el-button>
-          <el-button type="primary" @click="addStudent">确 定</el-button>
-        </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible2 = false">取 消</el-button>
+        <el-button type="primary" @click="addStudent">确 定</el-button>
+      </div>
     </el-dialog>
 
   </div>
 </template>
 
 <script>
-//  import { parseTime } from 'utils';
-  import { fetchTaskList,
-    deleteTask ,
+  //  import { parseTime } from 'utils';
+  import {
+    fetchTaskList,
+    deleteTask,
     createTask,
     updateTask,
-    deleteTaskBatch} from 'api/tasks';
+    deleteTaskBatch
+  } from 'api/tasks';
 
   export default {
     name: 'TaskTable',
     data() {
       const generateData2 = _ => {
         const data = [];
-        const students = ['姜昇润','宋旻浩','李昇勋','金秦禹'];
+        const students = ['姜昇润', '宋旻浩', '李昇勋', '金秦禹'];
         students.forEach((student, index) => {
           data.push({
             label: student,
@@ -283,33 +287,33 @@
           page: 1,
           size: 20,
           taskName: '',
-          plannedTimeRange:[],
+          plannedTimeRange: [],
           sort: 'taskName,DES'
         },
         temp: {
-          taskId:'',
-          taskName:'',
-          taskDescription:'',
+          taskId: '',
+          taskName: '',
+          taskDescription: '',
           startTime: '',
           finishTime: '',
 //          groupIds:[],
-          collectionIds:[],
-          algorithmIds:[],
-          groupIds:[]
+          collectionIds: [],
+          algorithmIds: [],
+          groupIds: []
         },
         taskList: [],
-        queryTypeOptions:[
+        queryTypeOptions: [
           '数据集编号',
           '算法编号',
           '学生组号'
         ],
         sortOptions: [{label: '按编号升序', key: '+id'}, {label: '按编号降序', key: '-id'}],
-        multipleSelection:[],
-        isDisplayFavoriteColumn:false,
-        tagTypes:[
-          'gray','primary','success','warning','danger'
+        multipleSelection: [],
+        isDisplayFavoriteColumn: false,
+        tagTypes: [
+          'gray', 'primary', 'success', 'warning', 'danger'
         ],
-        dataSetOptions:[
+        dataSetOptions: [
           '01',
           '02',
           '03',
@@ -321,13 +325,13 @@
           '09',
           '10'
         ],
-        algorithmOptions:[
+        algorithmOptions: [
           '01',
           '02',
           '03',
           '04'
         ],
-        groupOptions:[
+        groupOptions: [
           '01',
           '02',
           '03',
@@ -346,7 +350,7 @@
         pvData: [],
         tableKey: 0,
         dialogFormVisible2: false,
-        addStudentTitle:'添加学生',
+        addStudentTitle: '添加学生',
         data2: generateData2(),
         value2: [],
         filterMethod(query, item) {
@@ -359,18 +363,18 @@
     },
     methods: {
       handleAdd() {
-        this.$router.push({path:'/tasks/create'});
+        this.$router.push({path: '/tasks/create'});
       },
-      handleTagClose(row,tag) {
+      handleTagClose(row, tag) {
         let algorithms = row.algorithms;
         algorithms.splice(algorithms.indexOf(tag), 1);
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      handleRowClicked(row,event,column) {
+      handleRowClicked(row, event, column) {
         let lable = column.label;
-        if(lable==='操作'||lable==='算法配置'){
+        if (lable === '操作' || lable === '算法配置') {
           return;
         }
         this.$refs.taskTable.toggleRowSelection(row);
@@ -383,10 +387,10 @@
           this.taskList = response.content;
           this.totalElements = response.totalElements;
           this.listLoading = false;
-        }).catch(error =>{
+        }).catch(error => {
           that.$message({
             type: 'error',
-            message:error
+            message: error
           })
         })
       },
@@ -405,22 +409,22 @@
         let confirmMessage = '您将删除所选任务,是否继续?';
         let feedbackMessage = '';
         let taskIds = this.multipleSelection.map(item => item.taskId);
-        let that =this;
-        this.$confirm(confirmMessage,'批量删除任务',{
-          confirmButtonText:'确认',
-          cancelButtonText:'取消',
-          beforeClose: (action,instance,done) =>{
-            if(action ==='confirm'){
+        let that = this;
+        this.$confirm(confirmMessage, '批量删除任务', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
               //显示加载按钮
               instance.confirmButtonLoading = true;
-              return new Promise((resolve,reject) =>{
+              return new Promise((resolve, reject) => {
                 //通过API发送批量删除请求
-                deleteTaskBatch(taskIds).then(response =>{
-                  instance.confirmButtonLoading=false;
+                deleteTaskBatch(taskIds).then(response => {
+                  instance.confirmButtonLoading = false;
                   that.feedbackMessage = response.message;
                   resolve(response);
                   done();
-                }).catch(error =>{
+                }).catch(error => {
                   //捕获错误;
                   reject(error);
                   done();
@@ -430,7 +434,7 @@
             //关闭确认框
             done();
           }
-        }).then((message) =>{
+        }).then((message) => {
           //删除被选中的行
 //          that.taskList = that.taskList.filter(task =>
 //          !that.multipleSelection.some(row => row.taskId === task.taskId));
@@ -440,7 +444,7 @@
             type: 'success',
             duration: 1500
           });
-        }).catch(() =>{
+        }).catch(() => {
           this.$message({
             message: '取消批量删除操作',
             type: 'info',
@@ -462,13 +466,13 @@
       },
       handleDelete(row) {
         let confirmMessage = '您将任务名为\'' + row.taskName + '\' 的所有信息,是否继续?';
-        let that =this;
-        this.$confirm(confirmMessage,'删除学生',{
-          confirmButtonText:'确定',
-          cancelButtonText:'取消',
-          type:'warning',
-          beforeClose: (action,instance,done) =>{
-            if(action==='confirm'){
+        let that = this;
+        this.$confirm(confirmMessage, '删除学生', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
               instance.confirmButtonLoading = true;
               return new Promise((resolve, reject) => {
                 deleteTask(row.taskId).then((response) => {
@@ -492,13 +496,13 @@
             }
             done();
           }
-        }).then(() =>{
+        }).then(() => {
           const index = that.taskList.indexOf(row);
           that.taskList.splice(index, 1);
-        }).catch(() =>{
+        }).catch(() => {
           that.$message({
-            type:'info',
-            message:'取消删除'
+            type: 'info',
+            message: '取消删除'
           })
         });
       },
@@ -506,16 +510,16 @@
         createTask(this.temp).then(response => {
           let message = response.message;
           this.$message({
-            message:message,
-            type:'success',
-            duration:1500
+            message: message,
+            type: 'success',
+            duration: 1500
           });
           this.taskList.unshift(this.temp);
           this.dialogFormVisible = false;
         });
       },
       update() {
-        updateTask(this.temp).then(response =>{
+        updateTask(this.temp).then(response => {
           let message = response.message;
           for (const v of this.taskList) {
             if (v.taskId === this.temp.taskId) {
@@ -526,18 +530,18 @@
           }
           this.$message({
             type: 'success',
-            message:message
+            message: message
           });
         });
         this.dialogFormVisible = false;
       },
-      addStudent(){
+      addStudent() {
         createTask(this.value2).then(response => {
           let message = response.message;
           this.$message({
-            message:message,
-            type:'success',
-            duration:1500
+            message: message,
+            type: 'success',
+            duration: 1500
           });
           this.taskList.unshift(this.value2);
           this.dialogFormVisible2 = false;
@@ -548,13 +552,13 @@
           taskId: '',
           dataSetId: '',
           algorithmId: '',
-          groupId:'',
-          startTime:'',
-          finishTime:'',
-          status:{},
+          groupId: '',
+          startTime: '',
+          finishTime: '',
+          status: {},
         };
       },
-      handleAddStudent(){
+      handleAddStudent() {
         this.dialogFormVisible2 = true;
       },
       handleFetchPv(pv) {
@@ -565,9 +569,9 @@
       },
       handleDownload() {
         require.ensure([], () => {
-          const { export_json_to_excel } = require('vendor/Export2Excel');
-          const tHeader = ['任务编号', '数据集编号', '算法编号', '学生组号', '开始时间','截止时间'];
-          const filterVal = ['taskId',  'collectionId', 'algorithmId', 'groupId', 'startTime', 'finishTime'];
+          const {export_json_to_excel} = require('vendor/Export2Excel');
+          const tHeader = ['任务编号', '数据集编号', '算法编号', '学生组号', '开始时间', '截止时间'];
+          const filterVal = ['taskId', 'collectionId', 'algorithmId', 'groupId', 'startTime', 'finishTime'];
           const data = this.formatJson(filterVal, this.list);
           export_json_to_excel(tHeader, data, '任务基本信息表');
         })
@@ -588,7 +592,7 @@
         }).catch(error => {
         });
       },
-      handleClosed(){
+      handleClosed() {
         this.showEditModal = false;
       },
       getSuggestedGroupNames() {
@@ -705,7 +709,7 @@
         let el = document.getElementById("group-view");
         el.scrollIntoView();
       },
-      handleDelete(group,index) {
+      handleDelete(group, index) {
         let vm = this;
         let wrapGroups = [];
         wrapGroups.push(group.groupId);
@@ -740,7 +744,7 @@
       handleUpdateConfirm(groupDto) {
         let vm = this;
         updateGroup(groupDto).then(res => {
-          vm.groupList.splice(vm.detailTargetIndex,1, res);
+          vm.groupList.splice(vm.detailTargetIndex, 1, res);
           vm.$message({
             showClose: true,
             message: '更新分组信息成功',
@@ -754,7 +758,7 @@
       getMembers(groupId, index) {
         let vm = this;
         let current = vm.groupList[index];
-        if(current.groupMembers ===undefined) {
+        if (current.groupMembers === undefined) {
           getMembers(groupId).then(res => {
             vm.$set(current, 'groupMembers', res);
           }).catch(error => {
@@ -784,8 +788,7 @@
       renderTask(task) {
         if (task === undefined) {
           return '无';
-        }
-        else {
+        } else {
           return task.taskName;
         }
       },
@@ -823,6 +826,7 @@
 <style lang="scss">
   .btn-import-container {
     padding-bottom: 10px;
+
     .btn-item {
       display: inline-block;
       vertical-align: middle;
@@ -830,12 +834,14 @@
       margin-left: 5px;
     }
   }
-  .test{
+
+  .test {
     padding: 20px;
   }
-  .title{
+
+  .title {
     margin-bottom: 20px;
-    width:22%;
-    font:bold 36px 微软雅黑;
+    width: 22%;
+    font: bold 36px 微软雅黑;
   }
 </style>

@@ -13,6 +13,8 @@
         :accept="format"
         :multiple="multiple"
         :auto-upload="false"
+        :on-change="handleChange"
+        :on-preview = "handleFilePreview"
         :on-remove="handleFileRemove"
         :before-remove="beforeFileRemove"
         :before-upload="handleBeforeUpload"
@@ -43,9 +45,7 @@
           },
           uploadReq:{
             type:Function,
-            default: () => {
-
-            }
+            default: null
           },
           text:{
             type:String,
@@ -86,19 +86,27 @@
             this.visible = false;
           },
           handleFileRemove(file, fileList) {
-            console.log(file, fileList);
+            // console.log(file, fileList);
           },
           handleFilePreview(file) {
-            console.log(file);
+            // this.fileList.push(file);
           },
           beforeFileRemove(file, fileList) {
             return this.$confirm(`确定移除 ${ file.name }？`);
           },
           submit(){
+            this.$emit('onSubmit');
             this.$refs.uploadDialog.submit();
+          },
+          handleChange(file, fileList) {
+            this.$emit('onChange', fileList);
           },
           handleBeforeUpload(file) {
             let vm = this;
+            if (this.uploadReq == null) {
+              vm.visible = false;
+              return;
+            }
             //新建一个Form data 类型的文件
             let fd = new FormData();
             let fileName = this.fileName;
