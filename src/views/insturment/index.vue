@@ -169,6 +169,7 @@
       <upload-dialog :title="'仪表读数'"
                      :message="'上传成功'"
                      :format="'image/jpg,image/jpg,image/jpeg'"
+                     :multiple="true"
                      :text="'上传一张需要读数的图片'"
                      @onUploaded="handleUpload"
                      @onChange="handleSrcImageList"
