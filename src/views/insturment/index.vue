@@ -50,44 +50,37 @@
                   <Row style="margin-top: 20px" :gutter="12">
                     <Col span="12">
                       <Row type="flex" justify="center">
-                        <Card style="height: 600pt">
-                          <Row>
-                            <img width="100%" :src="_currentSrcUrl">
-                          </Row>
-                          <Row style="margin-top: 20px" type="flex" justify="center">
-                            <Page :total="_meterList.length" :page-size="1" :current="srcIndex" simple
-                                  @on-change="onChangeSrcImg"></Page>
-                          </Row>
+                        <Card style="min-height: 600pt">
                           <Row style="margin-top: 20px">
                             <Form :label-width="60" inline>
                               <Col span="4">
                                 <FormItem label="真值">
-                                  <Input v-model="_realValue" readonly></Input>
+                                  <Input v-model="_res.realValue" readonly></Input>
                                 </FormItem>
                               </Col>
                               <Col span="4">
                                 <FormItem label="识别值">
-                                  <Input v-model="_readingValue" readonly>
+                                  <Input v-model="_res.readingValue" readonly>
                                   </Input>
                                 </FormItem>
                               </Col>
                               <Col span="4">
                                 <FormItem label="绝对误差">
-                                  <Input v-model="_absoluteError" readonly>
+                                  <Input v-model="_res.absoluteError" readonly>
                                     <span slot="append">%</span>
                                   </Input>
                                 </FormItem>
                               </Col>
                               <Col span="4">
                                 <FormItem label="相对误差">
-                                  <Input v-model="_relativeError" readonly>
+                                  <Input v-model="_res.relativeError" readonly>
                                     <span slot="append">%</span>
                                   </Input>
                                 </FormItem>
                               </Col>
                               <Col span="4">
                                 <FormItem label="耗时">
-                                  <Input v-model="_timeConsumption" readonly>
+                                  <Input v-model="_res.timeConsumption" readonly>
                                     <span slot="append">s</span>
                                   </Input>
                                 </FormItem>
@@ -100,12 +93,21 @@
                               </Col>
                             </Form>
                           </Row>
+                          <Row style="margin-top: 20px" type="flex" justify="center">
+                            <Page :total="_meterList.length" :page-size="1" :current="srcIndex" simple
+                                  @on-change="onChangeSrcImg"></Page>
+                          </Row>
+                          <Row style="margin-top: 20px">
+                            <transition name="fade">
+                              <img width="100%" :src="_currentSrcUrl">
+                            </transition>
+                          </Row>
                         </Card>
                       </Row>
                     </Col>
                     <Col span="12">
-                      <Card style="height: 600pt">
-                        <vue-preview style="width: 100%;height: 300px" :slides="_slide" @close="handleClose">
+                      <Card style="min-height: 600pt">
+                        <vue-preview style="width: 100%;height: 300px" :slides="_res.proc" @close="handleClose">
                         </vue-preview>
                       </Card>
                     </Col>
@@ -501,70 +503,19 @@
         }
         return '';
       },
-      _realValue() {
-        if (!this._meterList.length) {
-          return null;
+      _res() {
+        let res = this.res[this._meterList[this.srcIndex - 1]];
+        if (res === undefined) {
+          return {
+            realValue: null,
+            readingValue: null,
+            absoluteError: null,
+            relativeError: null,
+            timeConsumption: null,
+            proc: []
+          }
         }
-        if (this.res === undefined || this.res === null) {
-          return null;
-        }
-        let realValue = this.res[this._meterList[this.srcIndex - 1]].realValue;
-        if (realValue === undefined) {
-          return null;
-        }
-        return realValue;
-      },
-      _readingValue() {
-        if (!this._meterList.length) {
-          return null;
-        }
-        if (this.res === undefined || this.res === null) {
-          return null;
-        }
-        let readingValue = this.res[this._meterList[this.srcIndex - 1]].readingValue;
-        if (readingValue === undefined) {
-          return null;
-        }
-        return readingValue;
-      },
-      _absoluteError() {
-        if (!this._meterList.length) {
-          return null;
-        }
-        if (this.res === undefined || this.res === null) {
-          return null;
-        }
-        let absoulte = this.res[this._meterList[this.srcIndex - 1]].absoluteError;
-        if (absoulte === undefined) {
-          return null;
-        }
-        return absoulte;
-      },
-      _relativeError() {
-        if (!this._meterList.length) {
-          return null;
-        }
-        if (this.res === undefined || this.res === null) {
-          return null;
-        }
-        let relative = this.res[this._meterList[this.srcIndex - 1]].relativeError;
-        if (relative === undefined) {
-          return null;
-        }
-        return relative;
-      },
-      _timeConsumption() {
-        if (!this._meterList.length) {
-          return null;
-        }
-        if (this.res === undefined || this.res === null) {
-          return null;
-        }
-        let time = this.res[this._meterList[this.srcIndex - 1]].timeConsumption;
-        if (time === undefined) {
-          return null;
-        }
-        return time;
+        return res;
       },
       _readingText() {
         if (this.isReading) {
@@ -573,19 +524,6 @@
           return '开始识别';
         }
       },
-      _slide() {
-        if (!this._meterList.length) {
-          return null;
-        }
-        if (this.res === undefined || this.res === null) {
-          return null;
-        }
-        let proc = this.res[this._meterList[this.srcIndex - 1]].proc;
-        if (proc === undefined) {
-          return null;
-        }
-        return proc;
-      }
     },
     methods: {
       handleEnterRealValue() {
@@ -618,7 +556,7 @@
         // this.templateFileList = fileList;
       },
       handleSrcImageList(fileList) {
-        this.srcImagesFileList= fileList;
+        this.srcImagesFileList = fileList;
         // this.constructSlides(fileList, this.srcImages);
         // console.log(this.srcImages);
       },
