@@ -36,7 +36,7 @@
                   </Tooltip>
                 </Col>
                 <Col span="1">
-                  <Tooltip content="仪表读数" placement="top">
+                  <Tooltip content="加载仪表图像集" placement="top">
                     <Button type="success" shape="circle" icon="folder" @click="uploadSrcImg=true"></Button>
                   </Tooltip>
                 </Col>
@@ -49,8 +49,12 @@
                 <Content v-if="activeRegName==='reg'" :style="{padding: '20px'}">
                   <Row style="margin-top: 20px" :gutter="12">
                     <Col span="12">
-                      <Row type="flex" justify="center">
-                        <Card style="min-height: 600pt">
+                      <Card style="min-height: 600pt">
+                        <em-placeholder :width="'400px'" :height="600" font-size="45px" :show="srcImages.length ===0">
+                          <Icon :type="srcImages.length ? 'happy-outline' : 'outlet'"></Icon>
+                          <p>仪表图像未加载</p>
+                        </em-placeholder>
+                        <div v-if="srcImages.length">
                           <Row style="margin-top: 20px">
                             <Form :label-width="60" inline>
                               <Col span="4">
@@ -87,7 +91,8 @@
                               </Col>
                               <Col span="2">
                                 <FormItem>
-                                  <Button type="primary" @click="handleReading" :loading="isReading">{{ _readingText }}
+                                  <Button type="primary" @click="handleReading" :loading="isReading">{{ _readingText
+                                    }}
                                   </Button>
                                 </FormItem>
                               </Col>
@@ -99,14 +104,18 @@
                           </Row>
                           <Row style="margin-top: 20px">
                             <transition name="fade">
-                              <img width="100%" :src="_currentSrcUrl">
+                              <img v-if="meterShow" width="100%" :src="_currentSrcUrl">
                             </transition>
                           </Row>
-                        </Card>
-                      </Row>
+                        </div>
+                      </Card>
                     </Col>
                     <Col span="12">
                       <Card style="min-height: 600pt">
+                        <em-placeholder :width="'400px'" :height="600" font-size="45px" :show="_res ===undefined">
+                          <Icon :type="_res !== undefined? 'happy-outline' : 'outlet'"></Icon>
+                          <p>未进行识别</p>
+                        </em-placeholder>
                         <vue-preview style="width: 100%;height: 300px" :slides="_res.proc" @close="handleClose">
                         </vue-preview>
                       </Card>
@@ -159,7 +168,6 @@
       <upload-dialog :title="'加载仪表配置'"
                      :format="'.png'"
                      :message="'上传成功'"
-                     :upload-req="importFuc"
                      :text="'上传仪表规格和算法配置'"
                      @onUploaded="onTemplateUploaded"
                      @onFailed="uploadConfig=false"
@@ -168,7 +176,7 @@
                      :to-visible="uploadConfig"
       ></upload-dialog>
 
-      <upload-dialog :title="'仪表读数'"
+      <upload-dialog :title="'上传仪表图像集'"
                      :message="'上传成功'"
                      :format="'image/jpg,image/jpg,image/jpeg'"
                      :multiple="true"
@@ -190,12 +198,14 @@
 </template>
 <script>
   import Stat from '../insturment/stat';
+  import EmPlaceholder from '../../components/placeholder';
 
   export default {
     name: 'Instrument',
-    components: {Stat},
+    components: {Stat, EmPlaceholder},
     data() {
       return {
+        meterShow: false,
         value1: 0,
         uploadTemplate: false,
         uploadConfig: false,
@@ -207,7 +217,7 @@
         realValue: null,
         readingValue: null,
         selectedFilename: '1-1.jpg',
-        srcIndex: 1,
+        srcIndex: 0,
         srcParentDir: 'images',
         srcImages: [],
         srcImagesFileList: [],
@@ -557,6 +567,10 @@
       },
       handleSrcImageList(fileList) {
         this.srcImagesFileList = fileList;
+        // update index if user uploads meter image
+        if (this.srcImagesFileList.length) {
+          this.srcIndex = 1;
+        }
         // this.constructSlides(fileList, this.srcImages);
         // console.log(this.srcImages);
       },
@@ -572,7 +586,7 @@
               console.log(fd.name);
               slides.push({
                 url: ev.target.result,
-                alt: '',
+                alt: fd.name.toLowerCase(),
                 title: fd.name.toLowerCase(),
                 w: this.width,
                 h: this.height
@@ -583,6 +597,8 @@
         // console.log('Slides', slides);
       },
       handleSrcImageSubmit() {
+        // trigger animation for first loading
+        this.meterShow = true;
         this.uploadSrcImg = false;
         this.constructSlides(this.srcImagesFileList, this.srcImages);
       },
@@ -590,7 +606,13 @@
         console.log('close event')
       },
       onChangeSrcImg(index) {
+        let that = this;
         this.srcIndex = index;
+        // slides animation
+        this.meterShow = false;
+        setTimeout(() => {
+          that.meterShow = true;
+        }, 500);
       },
       handleReading() {
         let that = this;

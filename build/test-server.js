@@ -12,6 +12,7 @@ var webpack = require('webpack');
 var proxyMiddleware = require('http-proxy-middleware');
 var webpackConfig = require('./webpack.test.conf');
 
+var openInEditor = require('launch-editor-middleware');
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.test.port;
 // automatically open browser, if not set will be false
@@ -29,12 +30,13 @@ var devMiddleware = require('webpack-dev-middleware')(compiler, {
 });
 
 var hotMiddleware = require('webpack-hot-middleware')(compiler, {
-  log: () => {}
+  log: () => {
+  }
 });
 // force page reload when html-webpack-plugin template changes
 compiler.plugin('compilation', function (compilation) {
   compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
-    hotMiddleware.publish({ action: 'reload' });
+    hotMiddleware.publish({action: 'reload'});
     cb()
   })
 });
@@ -43,7 +45,7 @@ compiler.plugin('compilation', function (compilation) {
 Object.keys(proxyTable).forEach(function (context) {
   var options = proxyTable[context];
   if (typeof options === 'string') {
-    options = { target: options }
+    options = {target: options}
   }
   app.use(proxyMiddleware(options.filter || context, options))
 });
@@ -53,6 +55,9 @@ app.use(require('connect-history-api-fallback')());
 
 // serve webpack bundle output
 app.use(devMiddleware);
+
+app.use('/__open-in-editor', openInEditor('/Users/luvletteru/Library/Application Support/JetBrains/Toolbox/apps/WebStorm/ch-0/191.7141.49/WebStorm.app/Contents/MacOS/webstorm'));
+
 
 // enable hot-reload and state-preserving
 // compilation error display
