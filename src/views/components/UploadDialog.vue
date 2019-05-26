@@ -14,7 +14,7 @@
         :multiple="multiple"
         :auto-upload="false"
         :on-change="handleChange"
-        :on-preview = "handleFilePreview"
+        :on-preview="handleFilePreview"
         :on-remove="handleFileRemove"
         :before-remove="beforeFileRemove"
         :before-upload="handleBeforeUpload"
@@ -32,108 +32,125 @@
 </template>
 
 <script>
-    export default {
-        name: "upload-dialog",
-        props:{
-          fileName:{
-            type:String,
-            default:'file'
-          },
-          format:{
-            type:String,
-            default:'image/*'
-          },
-          uploadReq:{
-            type:Function,
-            default: null
-          },
-          text:{
-            type:String,
-            default:''
-          },
-          title:{
-            type:String,
-            default:'标题'
-          },
-          message:{
-            type:String,
-            default:'上传成功'
-          },
-          toVisible: {
-            type:Boolean,
-            default: false
-          },
-          multiple:{
-            type:Boolean,
-            default:false
-          }
-        },
-        data(){
-          return{
-            isUploading: false,
-            visible:this.toVisible,
-            fileList: []
-          }
-        },
-        methods:{
-          handleCancel(){
-            this.$emit('onClosed');
-            this.visible = false;
-          },
-          handleBeforeClose(done){
-            done();
-            this.$emit('onClosed');
-            this.visible = false;
-          },
-          handleFileRemove(file, fileList) {
-            // console.log(file, fileList);
-          },
-          handleFilePreview(file) {
-            // this.fileList.push(file);
-          },
-          beforeFileRemove(file, fileList) {
-            return this.$confirm(`确定移除 ${ file.name }？`);
-          },
-          submit(){
-            this.$emit('onSubmit');
-            this.$refs.uploadDialog.submit();
-          },
-          handleChange(file, fileList) {
-            this.$emit('onChange', fileList);
-          },
-          handleBeforeUpload(file) {
-            let vm = this;
-            if (this.uploadReq == null) {
-              vm.visible = false;
-              return;
-            }
-            //新建一个Form data 类型的文件
-            let fd = new FormData();
-            let fileName = this.fileName;
-            fd.append(fileName, file);
-            this.isUploading = true;
-            this.uploadReq(fd).then((res) => {
-              //将导入的成功的数据同步
-              vm.$emit('onUploaded', res);
-              vm.$message({
-                type: 'success',
-                message: vm.message
-              });
-              vm.isUploading = false;
-              vm.visible = false;
-            }).catch(error => {
-              vm.$emit('onFailed');
-              vm.isUploading = false;
-              vm.visible = false;
-            });
-          },
-        },
-        watch: {
-        toVisible: function (val) {
-          this.visible = val;
+  export default {
+    name: "upload-dialog",
+    props: {
+      fileName: {
+        type: String,
+        default: 'file'
+      },
+      format: {
+        type: String,
+        default: 'image/*'
+      },
+      uploadReq: {
+        type: Function,
+        default: null
+      },
+      text: {
+        type: String,
+        default: ''
+      },
+      title: {
+        type: String,
+        default: '标题'
+      },
+      message: {
+        type: String,
+        default: '上传成功'
+      },
+      toVisible: {
+        type: Boolean,
+        default: false
+      },
+      multiple: {
+        type: Boolean,
+        default: false
+      }
+    },
+    data() {
+      return {
+        isUploading: false,
+        visible: this.toVisible,
+        fileList: [],
+        counter: 0,
+        fileLength: 0,
+      }
+    },
+    methods: {
+      handleCancel() {
+        this.$emit('onClosed');
+        this.visible = false;
+      },
+      handleBeforeClose(done) {
+        done();
+        this.$emit('onClosed');
+        this.visible = false;
+      },
+      handleFileRemove(file, fileList) {
+        // console.log(file, fileList);
+      },
+      handleFilePreview(file) {
+        // this.fileList.push(file);
+      },
+      beforeFileRemove(file, fileList) {
+        return this.$confirm(`确定移除 ${file.name}？`);
+      },
+      submit() {
+        this.$emit('onSubmit');
+        this.fileLength = this.fileList.length;
+        this.$refs.uploadDialog.submit();
+      },
+      handleChange(file, fileList) {
+        this.$emit('onChange', fileList);
+        // this.fileList = fileList;
+      },
+      // handleSuccess()
+      handleBeforeUpload(file) {
+        let vm = this;
+        if (this.uploadReq == null) {
+          vm.visible = false;
+          return;
         }
+        //新建一个Form data 类型的文件
+        let fd = new FormData();
+        let fileName = this.fileName;
+        // if (this.multiple) {
+        //   this.fileList.forEach(f => {
+        //     fd.append('files', f);
+        //   });
+        // } else {
+        fd.append('file', file);
+        // }
+        this.isUploading = true;
+        this.uploadReq(fd).then((res) => {
+          vm.$emit('onUploaded', res);
+          vm.counter = vm.counter + 1;
+          // console.log('Counter ',vm.counter);
+          // console.log('FileList ', vm.fileLength);
+          if (vm.counter === vm.fileLength) {
+            vm.$message({
+              type: 'success',
+              message: vm.message
+            });
+            vm.counter = 0;
+            vm.visible = false;
+            vm.$emit('onSuccess');
+         }
+          vm.isUploading = false;
+        }).catch(error => {
+          vm.$emit('onFailed');
+          vm.isUploading = false;
+          vm.visible = false;
+        });
+      },
+    },
+    watch: {
+      toVisible: function (val) {
+        this.visible = val;
       }
     }
+  }
 </script>
 
 <style scoped>

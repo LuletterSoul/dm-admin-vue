@@ -112,9 +112,10 @@
                     </Col>
                     <Col span="12">
                       <Card style="min-height: 600pt">
-                        <em-placeholder :width="'400px'" :height="600" font-size="45px" :show="_res ===undefined">
-                          <Icon :type="_res !== undefined? 'happy-outline' : 'outlet'"></Icon>
-                          <p>未进行识别</p>
+                        <em-placeholder v-if="_res.proc.length === 0" :width="'400px'" :height="600" font-size="45px"
+                                        :show="_res.proc.length ===0">
+                          <Icon :type="'outlet'"></Icon>
+                          <p>仪表图像未识别</p>
                         </em-placeholder>
                         <vue-preview style="width: 100%;height: 300px" :slides="_res.proc" @close="handleClose">
                         </vue-preview>
@@ -157,22 +158,22 @@
                      :format="'image/jpg,image/jpg,image/jpeg'"
                      :message="'上传成功'"
                      :multiple="true"
-                     :upload-req="importFuc"
                      :text="'上传仪表的模板，作为读数的先验'"
-                     @onUploaded="handleImported"
+                     :upload-req="uploadTemplateReq"
+                     @onUploaded="onTemplateUploaded"
                      @onFailed="uploadTemplate=false"
                      @onClosed="uploadTemplate =false"
-                     @onChange="handleTemplateFileList"
                      :to-visible="uploadTemplate"
       ></upload-dialog>
       <upload-dialog :title="'加载仪表配置'"
-                     :format="'.png'"
+                     :format="'.json'"
                      :message="'上传成功'"
+                     :multiple="true"
+                     :upload-req="uploadConfigReq"
                      :text="'上传仪表规格和算法配置'"
-                     @onUploaded="onTemplateUploaded"
+                     @onUploaded="onConfigUploaded"
                      @onFailed="uploadConfig=false"
                      @onClosed="uploadConfig=false"
-                     @onChange="handleSrcImageList"
                      :to-visible="uploadConfig"
       ></upload-dialog>
 
@@ -180,8 +181,9 @@
                      :message="'上传成功'"
                      :format="'image/jpg,image/jpg,image/jpeg'"
                      :multiple="true"
+                     :upload-req="uploadSrcReq"
                      :text="'上传一张需要读数的图片'"
-                     @onUploaded="handleUpload"
+                     @onUploaded="onInsUpload"
                      @onChange="handleSrcImageList"
                      @onSubmit="handleSrcImageSubmit"
                      @onFailed="uploadSrcImg=false"
@@ -199,6 +201,7 @@
 <script>
   import Stat from '../insturment/stat';
   import EmPlaceholder from '../../components/placeholder';
+  import * as api from '../../api/index'
 
   export default {
     name: 'Instrument',
@@ -219,7 +222,9 @@
         selectedFilename: '1-1.jpg',
         srcIndex: 0,
         srcParentDir: 'images',
+        //local display
         srcImages: [],
+        srcResult: [],
         srcImagesFileList: [],
         templateFileList: [],
         statistics: [
@@ -318,100 +323,8 @@
           }
 
         ],
-        res: {
-          '1-1.jpg': {
-            realValue: 1.59,
-            readingValue: 1.49,
-            absoluteError: '1.1',
-            relativeError: '1.2',
-            timeConsumption: '1.23',
-            proc:
-              [
-                {
-                  src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-                  msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-                  // msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-                  alt: 'picture1',
-                  title: 'Image Caption 1',
-                  w: 1920,
-                  h: 1080
-                },
-                {
-                  src: 'https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_b.jpg',
-                  msrc: 'https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_m.jpg',
-                  alt: 'picture2',
-                  title: 'Image Caption 2',
-                  w: 1200,
-                  h: 900
-                },
-                {
-                  src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-                  msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-                  alt: 'picture1',
-                  title: 'Image Caption 1',
-                  w: 600,
-                  h: 400
-                },
-                {
-                  src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-                  msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-                  alt: 'picture1',
-                  title: 'Image Caption 1',
-                  w: 600,
-                  h: 400
-                }]
-          },
-          '2-1.jpg': {
-            realValue: 1.20,
-            readingValue: 1.24,
-            absoluteError: '1.1',
-            relativeError: '1.2',
-            timeConsumption: '1.43',
-            proc: [
-              {
-                url: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-                // msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-                alt: 'picture1',
-                title: 'Image Caption 1',
-                w: 1920,
-                h: 1080
-              },
-              {
-                url: 'https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_b.jpg',
-                msrc: 'https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_m.jpg',
-                alt: 'picture2',
-                title: 'Image Caption 2',
-                w: 1200,
-                h: 900
-              },
-              {
-                url: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-                msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-                alt: 'picture1',
-                title: 'Image Caption 1',
-                w: 600,
-                h: 400
-              },
-              {
-                src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-                msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-                alt: 'picture1',
-                title: 'Image Caption 1',
-                w: 600,
-                h: 400
-              },
-              {
-                src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-                msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-                alt: 'picture1',
-                title: 'Image Caption 1',
-                w: 600,
-                h: 400
-              }
-            ]
-          }
-        },
-
+        res: {},
+        hostImgMap: {},
         slide1: [
           {
             src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
@@ -500,6 +413,9 @@
       }
     },
     computed: {
+      _srcId() {
+        return this.hostImgMap[this.srcIndex];
+      },
       _meterList() {
         if (this.srcImages.length) {
           return this.srcImages.map(s => s.title);
@@ -513,8 +429,11 @@
         }
         return '';
       },
+      _currentImgName() {
+        return this._meterList[this.srcIndex - 1];
+      },
       _res() {
-        let res = this.res[this._meterList[this.srcIndex - 1]];
+        let res = this.res[this._currentImgName];
         if (res === undefined) {
           return {
             realValue: null,
@@ -536,13 +455,6 @@
       },
     },
     methods: {
-      handleEnterRealValue() {
-        this.realValue
-      },
-      handleFetchAlgImg() {
-        // console.log('Fetched');
-        this.isFetched = true
-      },
       onMenuItemSelect(name) {
         // console.log(name);
         this.activeRegName = name;
@@ -553,11 +465,8 @@
       handleImported(res) {
         this.uploadTemplate = false;
       },
-      importFuc(fd) {
-        //let vm = this;
-        return new Promise((resolve, reject) => {
+      onInsUpload() {
 
-        });
       },
       handleTemplateFileList(fileList) {
         // console.log(fileList);
@@ -573,6 +482,53 @@
         }
         // this.constructSlides(fileList, this.srcImages);
         // console.log(this.srcImages);
+      }, regReq(fd) {
+        let vm = this;
+        // let resultId = this.resultList[0].resultId;
+        return new Promise((resolve, reject) => {
+          api.ins_result.post(srcId).then(res => {
+            vm.uploadSrcImg = false;
+            //this.getFileNames();
+            resolve(res);
+          }).catch(error => {
+            reject(error);
+          });
+        });
+      },
+      uploadSrcReq(fd) {
+        let vm = this;
+        return new Promise((resolve, reject) => {
+          api.ins_src.post(fd).then(res => {
+            vm.uploadSrcImg = false;
+            vm.hostImgMap[vm.srcImages.length] = res.id;
+            // console.log(res);
+            resolve(res);
+          }).catch(error => {
+            reject(error);
+          });
+        });
+      },
+      uploadTemplateReq(fd) {
+        let vm = this;
+        return new Promise((resolve, reject) => {
+          api.ins_template.post(fd).then(res => {
+            vm.uploadTemplate = false;
+            resolve(res);
+          }).catch(error => {
+            reject(error);
+          });
+        });
+      },
+      uploadConfigReq(fd) {
+        let vm = this;
+        return new Promise((resolve, reject) => {
+          api.ins_config.post(fd).then(res => {
+            vm.uploadConfig = false;
+            resolve(res);
+          }).catch(error => {
+            reject(error);
+          });
+        });
       },
       constructSlides(fileList, slides) {
         fileList.forEach(fd => {
@@ -614,11 +570,44 @@
           that.meterShow = true;
         }, 500);
       },
+      onConfigUploaded(fd) {
+
+      },
       handleReading() {
-        let that = this;
-        that.isReading = true;
+        let vm = this;
+        vm.isReading = true;
+        api.ins_result.post(this._srcId).then(res => {
+          vm.res[vm._currentImgName] = res;
+          api.ins_proc.get({
+            resultId: res.id
+          }).then(proc => {
+            let procs = [];
+            proc.forEach(p => {
+              let reader = new FileReader();
+              let fdurl = process.env.BASE_API + '/' + p.proc;
+              console.log(fdurl);
+              // reader.readAsDataURL(fdurl);
+              // reader.onload = function (ev) {
+              //   // console.log(ev.target.result);
+              let image = new Image();
+              image.src = fdurl;
+              image.onload = function () {
+                procs.push({
+                  src: fdurl,
+                  msrc: fdurl,
+                  alt: vm._currentImgName.toLowerCase(),
+                  title: vm._currentImgName.toLowerCase(),
+                  w: this.width,
+                  h: this.height
+                })
+              }
+              // };
+            });
+            vm.res[vm._currentImgName].proc = procs;
+          });
+        });
         setTimeout(() => {
-          that.isReading = false;
+          vm.isReading = false;
         }, 2000)
       }
     }

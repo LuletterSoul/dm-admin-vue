@@ -2,12 +2,13 @@
 FROM node:6.14.3-slim as build-vue
 MAINTAINER XiangDe Liu <qq313700046@icloud.com>
 VOLUME /tmp
+RUN npm install cnpm -g
 WORKDIR /build/vue
 #将工程代码负责进容器中
 COPY . /build/vue
 #先安装依赖,再进行打包
-RUN  npm install \
-    && npm run build
+RUN  cnpm install \
+    && cnpm run build
 
 #建一个基于tomcat的界面服务器
 #只包括静态资源的镜像
