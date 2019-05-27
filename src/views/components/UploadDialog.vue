@@ -125,7 +125,7 @@
         this.isUploading = true;
         this.uploadReq(fd).then((res) => {
           vm.$emit('onUploaded', res);
-          vm.counter = vm.counter + 1;
+          vm.counter++;
           // console.log('Conuter', vm.counter);
           // console.log('Counter ',vm.counter);
           // console.log('FileList ', vm.fileLength);
@@ -137,9 +137,9 @@
             });
             vm.counter = 0;
             vm.visible = false;
+            vm.isUploading = false;
             vm.$emit('onSuccess');
          }
-          vm.isUploading = false;
         }).catch(error => {
           vm.$emit('onFailed');
           vm.isUploading = false;

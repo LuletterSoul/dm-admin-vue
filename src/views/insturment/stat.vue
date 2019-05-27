@@ -2,7 +2,8 @@
   <div>
     <Row type="flex" justify="center">
       <Col span="12">
-        <Page :total="_length" :current="page" :page-size="pageSize" @on-change="onPageChange" @on-page-size-change="onPageSizeChange" show-sizer
+        <Page :total="_length" :current="page" :page-size="pageSize" @on-change="onPageChange"
+              @on-page-size-change="onPageSizeChange" show-sizer
               show-elevator></Page>
       </Col>
       <Col span="4">
@@ -214,8 +215,14 @@
         let length = this._relativeError.length;
         if (length) {
           let total = 0;
-          this._relativeError.map(r => total += r);
-          let avg = total / length;
+          let cal = 0;
+          this._relativeError.map(r => {
+            if (r < 50) {
+              total += r;
+              cal++;
+            }
+          });
+          let avg = total / cal;
           avg = avg.toFixed(3);
           return this._relativeError.map(s => avg);
         }
@@ -286,8 +293,16 @@
       _avgAbsolute() {
         if (this._absoluteError.length) {
           let total = 0;
-          this._absoluteError.map(s => total += s.absoluteError);
-          let avg = total / this.stat.length;
+          let cal = 0;
+          this._absoluteError.map(s => {
+            if (s <= 50) {
+              total += s;
+              cal++;
+            }
+          });
+          console.log(this._statistics.length);
+          console.log('Total', total);
+          let avg = total / cal;
           avg = avg.toFixed(3);
           return this._absoluteError.map(s => avg);
         }
