@@ -220,7 +220,7 @@
         realValue: null,
         readingValue: null,
         selectedFilename: '1-1.jpg',
-        srcIndex: 0,
+        srcIndex: 1,
         srcParentDir: 'images',
         //local display
         srcImages: [],
@@ -577,15 +577,12 @@
         let vm = this;
         vm.isReading = true;
         api.ins_result.post(this._srcId).then(res => {
-          vm.res[vm._currentImgName] = res;
           api.ins_proc.get({
             resultId: res.id
           }).then(proc => {
             let procs = [];
             proc.forEach(p => {
-              let reader = new FileReader();
               let fdurl = process.env.BASE_API + '/' + p.proc;
-              console.log(fdurl);
               // reader.readAsDataURL(fdurl);
               // reader.onload = function (ev) {
               //   // console.log(ev.target.result);
@@ -603,7 +600,10 @@
               }
               // };
             });
-            vm.res[vm._currentImgName].proc = procs;
+            Object.assign(res, {
+              'proc': procs
+            });
+            vm.res[vm._currentImgName] = res;
           });
         });
         setTimeout(() => {
