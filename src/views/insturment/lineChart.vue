@@ -40,7 +40,7 @@
           return [];
         }
       },
-      title:{
+      title: {
         type: String,
         default: ''
       },
@@ -122,6 +122,11 @@
     created() {
       // this.chart.setOption(this.options);
     },
+    watch: {
+      series(value) {
+        this.chart.setOption(this._options);
+      }
+    },
     mounted() {
       this.initChart();
       // this.fetchStatistics();
@@ -181,11 +186,11 @@
     computed: {
       _options() {
         return {
-          title:{
+          title: {
             text: this.title
           },
           xAxis: {
-            axisLabel:{
+            axisLabel: {
               rotate: 45,
               interval: 0
             },

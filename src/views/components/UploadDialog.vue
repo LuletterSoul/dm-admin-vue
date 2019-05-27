@@ -103,7 +103,7 @@
       },
       handleChange(file, fileList) {
         this.$emit('onChange', fileList);
-        // this.fileList = fileList;
+        this.fileList = fileList;
       },
       // handleSuccess()
       handleBeforeUpload(file) {
@@ -126,9 +126,11 @@
         this.uploadReq(fd).then((res) => {
           vm.$emit('onUploaded', res);
           vm.counter = vm.counter + 1;
+          // console.log('Conuter', vm.counter);
           // console.log('Counter ',vm.counter);
           // console.log('FileList ', vm.fileLength);
           if (vm.counter === vm.fileLength) {
+            // debugger;
             vm.$message({
               type: 'success',
               message: vm.message

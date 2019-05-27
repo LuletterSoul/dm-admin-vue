@@ -40,6 +40,12 @@
                     <Button type="success" shape="circle" icon="folder" @click="uploadSrcImg=true"></Button>
                   </Tooltip>
                 </Col>
+                <Col span="1">
+                  <Tooltip content="批量识别" placement="top">
+                    <Button type="error" ghost shape="circle" icon="ios-speedometer-outline"
+                            @click="showBatchModel = true"></Button>
+                  </Tooltip>
+                </Col>
                 <!--                  <Tooltip content="显示识别过程" placement="top">-->
                 <!--                    <Button type="error" shape="circle" icon="folder" :disabled="!isUploadedSrc"-->
                 <!--                            @click="handleFetchAlgImg"></Button>-->
@@ -117,8 +123,10 @@
                           <Icon :type="'outlet'"></Icon>
                           <p>仪表图像未识别</p>
                         </em-placeholder>
-                        <vue-preview style="width: 100%;height: 300px" :slides="_res.proc" @close="handleClose">
-                        </vue-preview>
+                        <transition name="fade">
+                          <vue-preview style="width: 100%;height: 300px" :slides="_res.proc" @close="handleClose">
+                          </vue-preview>
+                        </transition>
                       </Card>
                     </Col>
                     <!--                  <Col offset="1" span="11">-->
@@ -145,7 +153,7 @@
               </transition>
               <transition name='fade'>
                 <Content v-if="activeRegName==='statistics'" :style="{padding: '20px'}">
-                  <stat :stat="statistics"></stat>
+                  <stat :stat="statistics" :all-stat="allStat"></stat>
                 </Content>
               </transition>
             </Layout>
@@ -153,7 +161,13 @@
 
         </div>
       </Row>
-
+      <Modal
+        v-model="showBatchModel"
+        title="批量识别"
+        :loading="batchReading"
+        @on-ok="handleBatchReg">
+        <p>批量识别所有样张需要等待较长时间。</p>
+      </Modal>
       <upload-dialog :title="'加载仪表模板'"
                      :format="'image/jpg,image/jpg,image/jpeg'"
                      :message="'上传成功'"
@@ -208,12 +222,16 @@
     components: {Stat, EmPlaceholder},
     data() {
       return {
+        batchReading: true,
+        showBatchModel: false,
         meterShow: false,
         value1: 0,
         uploadTemplate: false,
         uploadConfig: false,
         uploadSrcImg: false,
-        activeRegName: 'statistics',
+        uploadBatch: false,
+        // activeRegName: 'statistics',
+        activeRegName: 'reg',
         isFetched: false,
         isUploadedSrc: false,
         isReading: false,
@@ -221,196 +239,25 @@
         readingValue: null,
         selectedFilename: '1-1.jpg',
         srcIndex: 1,
+        srcIds: [],
+        batchRegResults: [],
         srcParentDir: 'images',
         //local display
         srcImages: [],
         srcResult: [],
         srcImagesFileList: [],
         templateFileList: [],
-        statistics: [
-          {
-            'type': '1-1_1',
-            'realValue': 0,
-            'readingValue': 6.878,
-            'absoluteError': 2.239,
-            'relativeError': -1,
-            'timeConsumption': 0.480
-          },
-          {
-            'type': '1-1_1',
-            'realValue': 0,
-            'readingValue': 6.878,
-            'absoluteError': 0.239,
-            'relativeError': 1.243,
-            'timeConsumption': 0.480
-          },
-          {
-            'type': '1-1_1',
-            'realValue': 0,
-            'readingValue': 6.878,
-            'absoluteError': 1.239,
-            'relativeError': 2.234,
-            'timeConsumption': 0.480
-          }, {
-            'type': '1-1_1',
-            'realValue': 0,
-            'readingValue': 6.878,
-            'absoluteError': 2.439,
-            'relativeError': 0.12,
-            'timeConsumption': 0.480
-          },
-          {
-            'type': '1-1_1',
-            'realValue': 0,
-            'readingValue': 6.878,
-            'absoluteError': 2.239,
-            'relativeError': -1,
-            'timeConsumption': 0.480
-          },
-          {
-            'type': '1-1_1',
-            'realValue': 0,
-            'readingValue': 6.878,
-            'absoluteError': 0.239,
-            'relativeError': 1.243,
-            'timeConsumption': 0.480
-          },
-          {
-            'type': '1-1_1',
-            'realValue': 0,
-            'readingValue': 6.878,
-            'absoluteError': 1.239,
-            'relativeError': 2.234,
-            'timeConsumption': 0.480
-          }, {
-            'type': '1-1_1',
-            'realValue': 0,
-            'readingValue': 6.878,
-            'absoluteError': 2.439,
-            'relativeError': 0.12,
-            'timeConsumption': 0.480
-          },
-          {
-            'type': '1-1_1',
-            'realValue': 0,
-            'readingValue': 6.878,
-            'absoluteError': 2.239,
-            'relativeError': -1,
-            'timeConsumption': 0.480
-          },
-          {
-            'type': '1-1_1',
-            'realValue': 0,
-            'readingValue': 6.878,
-            'absoluteError': 0.239,
-            'relativeError': 1.243,
-            'timeConsumption': 0.480
-          },
-          {
-            'type': '1-1_1',
-            'realValue': 0,
-            'readingValue': 6.878,
-            'absoluteError': 1.239,
-            'relativeError': 2.234,
-            'timeConsumption': 0.480
-          }, {
-            'type': '1-1_1',
-            'realValue': 0,
-            'readingValue': 6.878,
-            'absoluteError': 2.439,
-            'relativeError': 0.12,
-            'timeConsumption': 0.480
-          }
-
-        ],
+        statistics: [],
+        allStat: [],
         res: {},
         hostImgMap: {},
-        slide1: [
-          {
-            src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-            msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-            // msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-            alt: 'picture1',
-            title: 'Image Caption 1',
-            w: 1920,
-            h: 1080
-          },
-          {
-            src: 'https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_b.jpg',
-            msrc: 'https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_m.jpg',
-            alt: 'picture2',
-            title: 'Image Caption 2',
-            w: 1200,
-            h: 900
-          },
-          {
-            src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-            msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-            alt: 'picture1',
-            title: 'Image Caption 1',
-            w: 600,
-            h: 400
-          },
-          {
-            src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-            msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-            alt: 'picture1',
-            title: 'Image Caption 1',
-            w: 600,
-            h: 400
-          },
-          {
-            src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-            msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-            alt: 'picture1',
-            title: 'Image Caption 1',
-            w: 600,
-            h: 400
-          }
-        ],
-        slide2: [
-          {
-            url: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-            // msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-            alt: 'picture1',
-            title: 'Image Caption 1',
-            w: 1920,
-            h: 1080
-          },
-          {
-            url: 'https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_b.jpg',
-            msrc: 'https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_m.jpg',
-            alt: 'picture2',
-            title: 'Image Caption 2',
-            w: 1200,
-            h: 900
-          },
-          {
-            url: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-            msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-            alt: 'picture1',
-            title: 'Image Caption 1',
-            w: 600,
-            h: 400
-          },
-          {
-            src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-            msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-            alt: 'picture1',
-            title: 'Image Caption 1',
-            w: 600,
-            h: 400
-          },
-          {
-            src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-            msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-            alt: 'picture1',
-            title: 'Image Caption 1',
-            w: 600,
-            h: 400
-          }
-        ]
+
       }
+    },
+    mounted() {
+      api.ins_result.get().then(res => {
+        this.allStat = res;
+      });
     },
     computed: {
       _srcId() {
@@ -432,6 +279,7 @@
       _currentImgName() {
         return this._meterList[this.srcIndex - 1];
       },
+
       _res() {
         let res = this.res[this._currentImgName];
         if (res === undefined) {
@@ -444,6 +292,9 @@
             proc: []
           }
         }
+        res.proc.sort(function (a, b) {
+          return a.order - b.order;
+        });
         return res;
       },
       _readingText() {
@@ -455,6 +306,23 @@
       },
     },
     methods: {
+      loadImage: function (url, name) {
+        let res = [];
+        let absolute_url = process.env.BASE_API + '/' + url;
+        let image = new Image();
+        image.src = absolute_url;
+        image.onload = function () {
+          res.push({
+            src: absolute_url,
+            msrc: absolute_url,
+            alt: name,
+            title: name,
+            w: this.width,
+            h: this.height,
+          })
+        };
+        return res;
+      },
       onMenuItemSelect(name) {
         // console.log(name);
         this.activeRegName = name;
@@ -495,12 +363,31 @@
           });
         });
       },
+      handleBatchReg() {
+        if (this.activeRegName !== 'statistics') {
+          this.activeRegName = 'statistics';
+        }
+        if (!this.srcImages.length) {
+          this.$message({
+            type: 'error',
+            message: '未加载任何仪表图像'
+          });
+          this.showBatchModel = false;
+        } else {
+          let that = this;
+          api.ins_result.post(null, this.srcIds).then(results => {
+            that.statistics = results;
+            that.showBatchModel = false;
+          });
+        }
+      },
       uploadSrcReq(fd) {
         let vm = this;
         return new Promise((resolve, reject) => {
           api.ins_src.post(fd).then(res => {
             vm.uploadSrcImg = false;
             vm.hostImgMap[vm.srcImages.length] = res.id;
+            vm.srcIds.push(res.id);
             // console.log(res);
             resolve(res);
           }).catch(error => {
@@ -576,16 +463,13 @@
       handleReading() {
         let vm = this;
         vm.isReading = true;
-        api.ins_result.post(this._srcId).then(res => {
+        api.ins_result.post(this._srcId, null).then(res => {
           api.ins_proc.get({
             resultId: res.id
           }).then(proc => {
             let procs = [];
             proc.forEach(p => {
               let fdurl = process.env.BASE_API + '/' + p.proc;
-              // reader.readAsDataURL(fdurl);
-              // reader.onload = function (ev) {
-              //   // console.log(ev.target.result);
               let image = new Image();
               image.src = fdurl;
               image.onload = function () {
@@ -595,20 +479,18 @@
                   alt: vm._currentImgName.toLowerCase(),
                   title: vm._currentImgName.toLowerCase(),
                   w: this.width,
-                  h: this.height
+                  h: this.height,
+                  order: p.order
                 })
               }
-              // };
             });
             Object.assign(res, {
               'proc': procs
             });
-            vm.res[vm._currentImgName] = res;
+            vm.$set(vm.res, vm._currentImgName, res);
+            vm.isReading = false;
           });
         });
-        setTimeout(() => {
-          vm.isReading = false;
-        }, 2000)
       }
     }
   }

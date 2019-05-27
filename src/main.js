@@ -21,7 +21,8 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 
 import NProgress from 'nprogress'
-NProgress.configure({ showSpinner: false })// NProgress Configuration
+
+NProgress.configure({showSpinner: false})// NProgress Configuration
 import 'nprogress/nprogress.css'
 import 'normalize.css/normalize.css'
 import '@/assets/iconfont/iconfont'
@@ -68,7 +69,22 @@ Vue.use(VuePreview, {
 });
 Vue.use(Viewer);
 Viewer.setDefaults({
-  Options: { "inline": true, "button": true, "navbar": true, "title": true, "toolbar": true, "tooltip": true, "movable": true, "zoomable": true, "rotatable": true, "scalable": true, "transition": true, "fullscreen": true, "keyboard": true, "url": "data-source" }
+  Options: {
+    "inline": true,
+    "button": true,
+    "navbar": true,
+    "title": true,
+    "toolbar": true,
+    "tooltip": true,
+    "movable": true,
+    "zoomable": true,
+    "rotatable": true,
+    "scalable": true,
+    "transition": true,
+    "fullscreen": true,
+    "keyboard": true,
+    "url": "data-source"
+  }
 });
 // defalut install
 // Vue.use(VuePreview);
@@ -138,7 +154,7 @@ Vue.mixin({
     this.pageAnimated = true
   }
 });
-const whiteList = ['/login','/register'];
+const whiteList = ['/login', '/register'];
 router.beforeEach((to, from, next) => {
   NProgress.start();
   // removeCookiesToken();

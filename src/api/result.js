@@ -5,20 +5,21 @@ const RESULT = '/results/';
 function get() {
   return fetch({
     url: RESULT,
-    method:'get'
+    method: 'get'
   })
 }
 
-function post(srcId) {
+function post(srcId, srcIds) {
   return fetch({
-    url:RESULT,
-    method:'post',
-    data:{
-      srcId:srcId
+    url: RESULT,
+    method: 'post',
+    data: {
+      srcId: srcId,
+      srcIds: srcIds
     }
   })
 }
 
 export {
-  get,post
+  get, post
 }

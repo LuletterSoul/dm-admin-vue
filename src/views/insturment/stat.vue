@@ -1,19 +1,29 @@
 <template>
   <div>
-    <Row type="flex" justify="center" >
-      <Page :total="stat.length" :current="page" :page-size="pageSize" @on-change="onPageChange" show-sizer show-elevator></Page>
+    <Row type="flex" justify="center">
+      <Col span="12">
+        <Page :total="_length" :current="page" :page-size="pageSize" @on-change="onPageChange" @on-page-size-change="onPageSizeChange" show-sizer
+              show-elevator></Page>
+      </Col>
+      <Col span="4">
+        <Select v-model="display">
+          <Option v-for="item in displayOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
+      </Col>
     </Row>
     <Row type="flex" justify="center" class="row-top">
       <Col :span="18">
-        <Table :columns="statColumn" :data="_pageData" :loading="loading"></Table>
+        <Table :columns="statColumn" :data="_statistics" :loading="loading"></Table>
       </Col>
     </Row>
     <Row type="flex" justify="center" class="row-top">
       <Col :span="9">
-        <line-chart :height="'400px'" :title="'绝对误差分布图'" :series="_absoluteSeries" :x-axis-data="_absoluteAxisDate" :legend="legendAbsolute"></line-chart>
+        <line-chart :height="'400px'" :title="'绝对误差分布图'" :series="_absoluteSeries" :x-axis-data="_absoluteAxisDate"
+                    :legend="legendAbsolute"></line-chart>
       </Col>
       <Col :span="9">
-        <line-chart :height="'400px'" :title="'相对误差分布图'" :series="_relativeSeries" :x-axis-data="_relativeAxisDate" :legend="legendRelative"></line-chart>
+        <line-chart :height="'400px'" :title="'相对误差分布图'" :series="_relativeSeries" :x-axis-data="_relativeAxisDate"
+                    :legend="legendRelative"></line-chart>
       </Col>
     </Row>
   </div>
@@ -29,20 +39,36 @@
       stat: {
         required: Array,
         default: () => {
-          return [{
-            realValue: 1.59,
-            readingValue: 1.49,
-            absoluteError: '1.1',
-            relativeError: '1.2',
-            timeConsumption: '1.23',
-          }];
+          return []
+        }
+      },
+      allStat: {
+        required: Array,
+        default: () => {
+          return [];
+
         }
       }
     },
     data() {
+      let vm = this;
       return {
+        displayOptions: [{
+          value: 1,
+          label: '加载全部'
+        }, {
+          value: 2,
+          label: '加载当前结果'
+        }],
+        display: 1,
         loading: false,
         statColumn: [
+          {
+            type: 'index',
+            width: 60,
+            title: '序号',
+            align: 'center'
+          },
           {
             title: '类型',
             key: 'type',
@@ -57,18 +83,10 @@
               return h('div', [
                 h('VuePreview', {
                   props: {
-                    slides: [{
-                      src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-                      msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-                      // msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-                      alt: 'picture1',
-                      title: 'Image Caption 1',
-                      w: 1920,
-                      h: 1080
-                    }]
-                  },
+                    slides: params.row.template
+                  }
                 })
-              ])
+              ]);
             }
           },
           {
@@ -79,15 +97,7 @@
               return h('div', [
                 h('VuePreview', {
                   props: {
-                    slides: [{
-                      src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-                      msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-                      // msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-                      alt: 'picture1',
-                      title: 'Image Caption 1',
-                      w: 1920,
-                      h: 1080
-                    }]
+                    slides: params.row.src
                   },
                 })
               ])
@@ -128,23 +138,62 @@
       }
     },
     methods: {
+      // sleep(time) {
+      //   return new Promise(resolve => setTimeout(resolve, time));
+      //
+      // },
+      onPageSizeChange(val) {
+        this.pageSize = val;
+      },
+      loadImage: function (url, name) {
+        let res = [];
+        let absolute_url = process.env.BASE_API + '/' + url;
+        res.push({
+          src: absolute_url,
+          msrc: absolute_url,
+          alt: name,
+          title: name,
+          w: 1920,
+          h: 1080
+        });
+        return res;
+      },
       onPageChange(index) {
-        this.page= index;
+        this.page = index;
         let that = this;
         that.loading = true;
         setTimeout(() => {
           that.loading = false;
-        },500);
+        }, 500);
       }
     },
+    watch: {},
+    asyncComputed: {},
     computed: {
       _pageData() {
-        // console.log(this.stat.slice((this.page - 1) * this.pageSize, this.page * this.pageSize));
-        return this.stat.slice((this.page - 1) * this.pageSize, this.page * this.pageSize);
+        if (this.display === 1) {
+          return this.allStat.slice((this.page - 1) * this.pageSize, this.page * this.pageSize);
+        } else {
+          return this.stat.slice((this.page - 1) * this.pageSize, this.page * this.pageSize);
+        }
+      },
+      _length() {
+        if (this.display === 1) {
+          return this.allStat.length;
+        } else {
+          return this.stat.length;
+        }
+      },
+      _stat() {
+        if (this.display === 1) {
+          return this.allStat;
+        } else {
+          return this.stat;
+        }
       },
       _relativeAxisDate() {
         let filter = [];
-        this.stat.map(s => {
+        this._statistics.map(s => {
           if (s.relativeError !== -1) {
             filter.push(s.type);
             return s.type;
@@ -154,7 +203,7 @@
       },
       _relativeError() {
         let relative = [];
-        this.stat.map(s => {
+        this._statistics.map(s => {
           if (s.relativeError !== -1) {
             relative.push(s.relativeError);
           }
@@ -171,6 +220,29 @@
           return this._relativeError.map(s => avg);
         }
         return 0;
+      },
+      _statistics() {
+        if (!this._pageData.length) {
+          return [];
+        }
+        return this._pageData.map(res => {
+            let url = res.src;
+            let index = url.lastIndexOf("\/");
+            let type = url.substring(index + 1, url.length);
+            let src = this.loadImage(res.src, type);
+            let template = this.loadImage(res.template, type);
+            return {
+              'type': type,
+              'realValue': res.realValue,
+              'readingValue': res.value,
+              'absoluteError': res.absoluteError,
+              'relativeError': res.relativeError,
+              'timeConsumption': res.timeConsumption,
+              'template': template,
+              'src': src,
+            }
+          }
+        );
       },
       _relativeSeries() {
         return [{
@@ -200,23 +272,28 @@
           },
           smooth: false
         }]
-      },
+      }
+      ,
       _absoluteAxisDate() {
-        return this.stat.map(s => s.type);
-      },
+        return this._statistics.map(s => {
+          return s.type;
+        });
+      }
+      ,
       _absoluteError() {
-        return this.stat.map(s => s.absoluteError);
+        return this._statistics.map(s => s.absoluteError);
       },
       _avgAbsolute() {
-        if (this.stat.length) {
+        if (this._absoluteError.length) {
           let total = 0;
-          this.stat.map(s => total += s.absoluteError);
+          this._absoluteError.map(s => total += s.absoluteError);
           let avg = total / this.stat.length;
           avg = avg.toFixed(3);
-          return this.stat.map(s => avg);
+          return this._absoluteError.map(s => avg);
         }
         return 0;
-      },
+      }
+      ,
       _absoluteSeries() {
         return [{
           name: this.legendAbsolute[0],
@@ -246,7 +323,6 @@
           smooth: false
         }]
       },
-
     }
   }
 </script>
@@ -261,9 +337,10 @@
     margin-top: 20px;
   }
 
-  .row-bottom{
+  .row-bottom {
     margin-bottom: 20px;
   }
+
   .ivu-table td.orange {
     background-color: #ff6600;
     color: #fff;
