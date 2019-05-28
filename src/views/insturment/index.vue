@@ -232,10 +232,11 @@
   import Stat from '../insturment/stat';
   import EmPlaceholder from '../../components/placeholder';
   import * as api from '../../api/index'
+  import BackToTop from "../../components/BackToTop/index";
 
   export default {
     name: 'Instrument',
-    components: {Stat, EmPlaceholder},
+    components: {BackToTop, Stat, EmPlaceholder},
     data() {
       return {
         batchReading: true,

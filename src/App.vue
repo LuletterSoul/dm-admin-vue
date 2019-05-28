@@ -1,11 +1,15 @@
 <template>
   <div id="app" class="app-container">
-      <router-view></router-view>
+    <BackToTop></BackToTop>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
+  import BackToTop from "./components/BackToTop/index";
+
   export default {
+    components: {BackToTop},
     name: 'app'
   };
 </script>
