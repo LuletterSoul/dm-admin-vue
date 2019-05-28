@@ -51,6 +51,23 @@
                 <!--                            @click="handleFetchAlgImg"></Button>-->
                 <!--                  </Tooltip>-->
               </Row>
+              <Row type="flex" justify="center" style="margin-top: 20px">
+                <Col span="3">
+                  <Select v-model="pointerAlgType">
+                    <Option v-for="item in pointerAlgOptions" :value="item.value" :key="item.value">{{ item.label }}
+                    </Option>
+                  </Select>
+                </Col>
+                <Col offset="1" span="3">
+                  <el-switch
+                    :width="40"
+                    v-model="enableFitting"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    active-text="启用拟合"
+                    inactive-text="禁用拟合"></el-switch>
+                </Col>
+              </Row>
               <transition name="fade">
                 <Content v-if="activeRegName==='reg'" :style="{padding: '20px'}">
                   <Row style="margin-top: 20px" :gutter="12">
@@ -70,7 +87,7 @@
                               </Col>
                               <Col span="4">
                                 <FormItem label="识别值">
-                                  <Input v-model="_res.readingValue" readonly>
+                                  <Input v-model="_res.value" readonly>
                                   </Input>
                                 </FormItem>
                               </Col>
@@ -153,12 +170,11 @@
               </transition>
               <transition name='fade'>
                 <Content v-if="activeRegName==='statistics'" :style="{padding: '20px'}">
-                  <stat :stat="statistics" :all-stat="allStat"></stat>
+                  <stat :stat="statistics" :display="display" :all-stat="allStat"></stat>
                 </Content>
               </transition>
             </Layout>
           </Content>
-
         </div>
       </Row>
       <Modal
@@ -226,6 +242,7 @@
         showBatchModel: false,
         meterShow: false,
         value1: 0,
+        display: 1,
         uploadTemplate: false,
         uploadConfig: false,
         uploadSrcImg: false,
@@ -238,7 +255,7 @@
         realValue: null,
         readingValue: null,
         selectedFilename: '1-1.jpg',
-        srcIndex: 1,
+        srcIndex: 0,
         srcIds: [],
         batchRegResults: [],
         srcParentDir: 'images',
@@ -251,7 +268,16 @@
         allStat: [],
         res: {},
         hostImgMap: {},
-
+        pointerAlgOptions: [{
+          value: 0,
+          label: '径向直线积分'
+        },
+          {
+            value: 1,
+            label: '区域点搜索'
+          }],
+        pointerAlgType: 0,
+        enableFitting: false,
       }
     },
     mounted() {
@@ -339,7 +365,7 @@
       handleTemplateFileList(fileList) {
         // console.log(fileList);
         this.templateFileList = [];
-        this.constructSlides(fileList, this.templateFileList);
+        // this.constructSlides(fileList, this.templateFileList);
         // this.templateFileList = fileList;
       },
       handleSrcImageList(fileList) {
@@ -364,8 +390,9 @@
         });
       },
       handleBatchReg() {
+        this.activeRegName = 'statistics';
+        this.display = 2;
         if (this.activeRegName !== 'statistics') {
-          this.activeRegName = 'statistics';
         }
         if (!this.srcImages.length) {
           this.$message({
@@ -375,19 +402,21 @@
           this.showBatchModel = false;
         } else {
           let that = this;
-          api.ins_result.post(null, this.srcIds).then(results => {
+          api.ins_result.post(null, this.srcIds, this.pointerAlgType, this.enableFitting).then(results => {
             that.statistics = results;
             that.showBatchModel = false;
           });
         }
       },
-      uploadSrcReq(fd) {
+      uploadSrcReq(fd, file) {
         let vm = this;
         return new Promise((resolve, reject) => {
           api.ins_src.post(fd).then(res => {
             vm.uploadSrcImg = false;
-            vm.hostImgMap[vm.srcImages.length] = res.id;
             vm.srcIds.push(res.id);
+            // vm.hostImgMap[vm.srcIds.length] = res.id;
+            console.log(res);
+            vm.constructSlide(file, vm.srcImages, res.id);
             // console.log(res);
             resolve(res);
           }).catch(error => {
@@ -418,32 +447,40 @@
         });
       },
       constructSlides(fileList, slides) {
+        let that = this;
         fileList.forEach(fd => {
-          let reader = new FileReader();
-          reader.readAsDataURL(fd.raw);
-          reader.onload = function (ev) {
-            // console.log(ev.target.result);
-            let image = new Image();
-            image.src = ev.target.result;
-            image.onload = function () {
-              console.log(fd.name);
-              slides.push({
-                url: ev.target.result,
-                alt: fd.name.toLowerCase(),
-                title: fd.name.toLowerCase(),
-                w: this.width,
-                h: this.height
-              });
-            };
-          };
-        });
+          that.constructSlide(fd, slides);
+        })
         // console.log('Slides', slides);
+      },
+      constructSlide(fd, slides, srcId) {
+        let that = this;
+        let reader = new FileReader();
+        // console.log(fd.raw);
+        reader.readAsDataURL(fd);
+        reader.onload = function (ev) {
+          // console.log(ev.target.result);
+          let image = new Image();
+          image.src = ev.target.result;
+          console.log(fd);
+          image.onload = function () {
+            // console.log(fd.name);
+            slides.push({
+              url: ev.target.result,
+              alt: fd.name.toLowerCase(),
+              title: fd.name.toLowerCase(),
+              w: this.width,
+              h: this.height
+            });
+            that.hostImgMap[slides.length] = srcId;
+          };
+        };
       },
       handleSrcImageSubmit() {
         // trigger animation for first loading
         this.meterShow = true;
         this.uploadSrcImg = false;
-        this.constructSlides(this.srcImagesFileList, this.srcImages);
+        // this.constructSlides(this.srcImagesFileList, this.srcImages);
       },
       handleClose() {
         console.log('close event')
@@ -463,7 +500,7 @@
       handleReading() {
         let vm = this;
         vm.isReading = true;
-        api.ins_result.post(this._srcId, null).then(res => {
+        api.ins_result.post(this._srcId, null, this.pointerAlgType, this.enableFitting).then(res => {
           api.ins_proc.get({
             resultId: res.id
           }).then(proc => {

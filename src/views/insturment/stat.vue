@@ -7,7 +7,7 @@
               show-elevator></Page>
       </Col>
       <Col span="4">
-        <Select v-model="display">
+        <Select v-model="displayItem">
           <Option v-for="item in displayOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </Col>
@@ -37,6 +37,10 @@
     name: "Stat",
     components: {LineChart},
     props: {
+      display: {
+        required: Number,
+        default: 1,
+      },
       stat: {
         required: Array,
         default: () => {
@@ -61,7 +65,6 @@
           value: 2,
           label: '加载当前结果'
         }],
-        display: 1,
         loading: false,
         statColumn: [
           {
@@ -132,10 +135,12 @@
             align: 'center'
           }
         ],
+
         legendAbsolute: ['绝对误差', '平均绝对误差'],
         legendRelative: ['相对误差', '平均相对误差'],
         pageSize: 10,
-        page: 1
+        page: 1,
+        displayItem: 1,
       }
     },
     methods: {
@@ -168,25 +173,29 @@
         }, 500);
       }
     },
-    watch: {},
+    watch: {
+      display(val) {
+        this.displayItem = val;
+      }
+    },
     asyncComputed: {},
     computed: {
       _pageData() {
-        if (this.display === 1) {
+        if (this.displayItem === 1) {
           return this.allStat.slice((this.page - 1) * this.pageSize, this.page * this.pageSize);
         } else {
           return this.stat.slice((this.page - 1) * this.pageSize, this.page * this.pageSize);
         }
       },
       _length() {
-        if (this.display === 1) {
+        if (this.displayItem === 1) {
           return this.allStat.length;
         } else {
           return this.stat.length;
         }
       },
       _stat() {
-        if (this.display === 1) {
+        if (this.displayItem === 1) {
           return this.allStat;
         } else {
           return this.stat;
@@ -300,8 +309,8 @@
               cal++;
             }
           });
-          console.log(this._statistics.length);
-          console.log('Total', total);
+          // console.log(this._statistics.length);
+          // console.log('Total', total);
           let avg = total / cal;
           avg = avg.toFixed(3);
           return this._absoluteError.map(s => avg);

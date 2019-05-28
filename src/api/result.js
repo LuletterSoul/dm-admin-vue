@@ -9,11 +9,13 @@ function get() {
   })
 }
 
-function post(srcId, srcIds) {
+function post(srcId, srcIds, ptRegAlgType, enableFitting) {
   return fetch({
     url: RESULT,
     method: 'post',
     data: {
+      ptRegAlgType: ptRegAlgType,
+      enableFitting: enableFitting,
       srcId: srcId,
       srcIds: srcIds
     }

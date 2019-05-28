@@ -97,7 +97,7 @@
         return this.$confirm(`确定移除 ${file.name}？`);
       },
       submit() {
-        this.$emit('onSubmit');
+        this.$emit('onSubmit', this.fileList);
         this.fileLength = this.fileList.length;
         this.$refs.uploadDialog.submit();
       },
@@ -123,7 +123,7 @@
         fd.append('file', file);
         // }
         this.isUploading = true;
-        this.uploadReq(fd).then((res) => {
+        this.uploadReq(fd,file).then((res) => {
           vm.$emit('onUploaded', res);
           vm.counter++;
           // console.log('Conuter', vm.counter);
