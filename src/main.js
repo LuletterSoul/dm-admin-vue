@@ -4,7 +4,6 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-import ElementUI from 'element-ui'
 import '@/styles/index.scss'
 
 import iView from 'iview';
@@ -14,59 +13,19 @@ import zhLocale from './locale/zh-CN'
 import zhLocaleIView from 'iview/dist/locale/zh-CN'
 import enLocaleIView from 'iview/dist/locale/en-US'
 import VueLocalStorage from 'vue-ls'
-import EmHeader from './components/EmHeader'
-import EmSpot from './components/EmSpots'
-
-import 'element-ui/lib/theme-chalk/index.css'
 
 
 import NProgress from 'nprogress'
-
 NProgress.configure({showSpinner: false})// NProgress Configuration
 import 'nprogress/nprogress.css'
 import 'normalize.css/normalize.css'
 import '@/assets/iconfont/iconfont'
 import 'animate.css'
-import vueWaves from './directive/waves';// 水波纹指令
-import Velocity from 'velocity-animate/velocity'
-import VelocityUI from 'velocity-animate/velocity.ui'
-import IconSvg from '@/components/Icon-svg/index.vue'
-import Balloon from '@/components/balloon/index.vue';
-import AnimateTransition from '@/components/transition/AnimateTransition';
-import UploadDialog from '@/views/components/UploadDialog'
-import SingleTransition from '@/components/transition/SingleTransition';
-import EmPlaceholder from '@/components/placeholder'
-import VueFullPage from 'vue-fullpage.js'
-import {getToken} from '@/utils/auth'
 import 'iview/dist/styles/iview.css';    // 使用 CSS
-import {SweetModal, SweetModalTab} from 'sweet-modal-vue'
-import {getCookiesToken, setCookiesToken, removeCookiesToken} from '@/utils/auth';
-import VuePreview from 'vue-preview'
 import Viewer from 'v-viewer'
 import 'viewerjs/dist/viewer.css'
 
-Vue.use(VuePreview);
-// Vue.use(preview, {
-//   mainClass: 'pswp--minimal--dark',
-//   barsSize: {top: 0, bottom: 0},
-//   captionEl: false,
-//   fullscreenEl: false,
-//   shareEl: false,
-//   bgOpacity: 0.85,
-//   tapToClose: true,
-//   tapToToggleControls: false
-// });
 
-Vue.use(VuePreview, {
-  mainClass: 'pswp--minimal--dark',
-  barsSize: {top: 0, bottom: 0},
-  captionEl: false,
-  fullscreenEl: false,
-  shareEl: false,
-  bgOpacity: 0.85,
-  tapToClose: true,
-  tapToToggleControls: false
-});
 Vue.use(Viewer);
 Viewer.setDefaults({
   Options: {
@@ -86,27 +45,10 @@ Viewer.setDefaults({
     "url": "data-source"
   }
 });
-// defalut install
-// Vue.use(VuePreview);
-// with parameters install
-// Vue.use(preview, {
-//   mainClass: 'pswp--minimal--dark',
-//   barsSize: {top: 0, bottom: 0},
-//   captionEl: false,
-//   fullscreenEl: false,
-//   shareEl: false,
-//   bgOpacity: 0.85,
-//   tapToClose: true,
-//   tapToToggleControls: false
-// });
-
-window.Velocity = window.velocity = Velocity;
-
 
 Vue.config.productionTip = false;
 Vue.use(VueI18n);
 Vue.use(VueLocalStorage, {namespace: '_dm_platform'});
-Vue.use(ElementUI);
 
 const i18n = new VueI18n({
   locale: Vue.ls.get('locale') || 'zh-CN',
@@ -131,18 +73,6 @@ Vue.use(iView, {
   }
 });
 
-Vue.component('icon-svg', IconSvg);
-Vue.component('sweet-modal', SweetModal);
-Vue.component('sweet-modal-tab', SweetModalTab);
-Vue.component(EmHeader.name, EmHeader);
-Vue.component(EmSpot.name, EmSpot);
-Vue.component(Balloon.name, Balloon);
-Vue.component(AnimateTransition.name, AnimateTransition);
-Vue.component(SingleTransition.name, SingleTransition);
-Vue.component(EmPlaceholder.name, EmPlaceholder);
-Vue.component(UploadDialog.name, UploadDialog);
-Vue.use(vueWaves);
-Vue.use(VueFullPage);
 
 Vue.mixin({
   data() {
@@ -157,50 +87,7 @@ Vue.mixin({
 const whiteList = ['/login', '/register'];
 router.beforeEach((to, from, next) => {
   NProgress.start();
-  // removeCookiesToken();
   next();
-  // if (getCookiesToken()) {
-  //   if (to.path === '/login') {
-  //     next({path: '/'});
-  //     NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
-  //   } else {
-  //     if (store.getters.roles.length === 0) {
-  //       store.dispatch('GetInfo').then((res) => {
-  //         console.log(res.roles);
-  //         if (res.roles.indexOf('student') >= 0){
-  //           store.dispatch('GetStuInfo', res.userId).then(()=>{
-  //             store.dispatch('GenerateRoutes', {roles: res.roles}).then(() => {
-  //               router.addRoutes(store.getters.addRouters);
-  //               next({...to});
-  //             }).catch(err =>{
-  //               console.log(err);
-  //             })
-  //           })
-  //         }
-  //         else{
-  //           store.dispatch('GenerateRoutes', {roles: res.roles}).then(() => {
-  //             router.addRoutes(store.getters.addRouters);
-  //             next({...to});
-  //           }).catch(err =>{
-  //             console.log(err);
-  //           })
-  //         }
-  //       }).catch(err => {
-  //         console.log(err);
-  //       })
-  //     }
-  //     else {
-  //       next();
-  //     }
-  //   }
-  // } else {
-  //   if (whiteList.indexOf(to.path) !== -1) {
-  //     next()
-  //   } else {
-  //     next('/login');
-  //     NProgress.done();
-  //   }
-  // }
 });
 router.afterEach(() => {
   NProgress.done();
