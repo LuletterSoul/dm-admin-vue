@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Add refresh button">
+    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Clear check files when do classfication">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/dol/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dol/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/dev.env.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/dev.env.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/test.env.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/test.env.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -241,7 +242,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Node.js.test">
+  <component name="RunManager" selected="Node.js.dev">
     <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/dm-admin-vue/dist/index.html">
       <method v="2" />
     </configuration>
@@ -394,7 +395,7 @@
       <workItem from="1582611090480" duration="421000" />
       <workItem from="1582614835753" duration="2037000" />
       <workItem from="1583746991793" duration="1015000" />
-      <workItem from="1584975507188" duration="29733000" />
+      <workItem from="1584975507188" duration="30521000" />
     </task>
     <task id="LOCAL-00001" summary="dm platform based on vue cil.">
       <created>1503206739933</created>
@@ -585,7 +586,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585040526114</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Clear check files when do classfication">
+      <created>1585042350396</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1585042350396</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TodoView" selected-index="1">
@@ -649,7 +657,8 @@
     <MESSAGE value="Add dolphin detection UI viewer" />
     <MESSAGE value="Update prod ip" />
     <MESSAGE value="Add refresh button" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add refresh button" />
+    <MESSAGE value="Clear check files when do classfication" />
+    <option name="LAST_COMMIT_MESSAGE" value="Clear check files when do classfication" />
   </component>
   <component name="masterDetails">
     <states>
