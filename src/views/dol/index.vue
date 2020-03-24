@@ -24,8 +24,7 @@
           <Content :style="{padding: '24px 0', minHeight: '920pt'}">
 
             <Layout>
-              <Row type="flex" justify="center" style="margin-top: 20px">
-
+              <Row type="flex" justify="center" style="margin-top: 20px" v-if="activeRegName === 'reg'">
                 <Col span="1">
                   <Tooltip content="归为正样本" placement="top">
                     <Button type="primary" shape="circle" size="large" icon="plus" :disabled="check_files.length <=0"
@@ -76,7 +75,7 @@
                         </Row>
                         <Row style="margin-top: 20px">
                           <CheckboxGroup v-model="check_files">
-                            <Row v-for="(file,index) of _pageDate">
+                            <Row style="margin-top: 10px" v-for="(file,index) of _pageDate">
                               <Col span="12">
                                 <Checkbox size="large" :label="file.name"></Checkbox>
                               </Col>
@@ -257,6 +256,7 @@
             },
             onPageChange(index) {
                 this.page = index;
+                this.check_files = [];
                 let that = this;
                 that.file_tree_loading = true;
                 setTimeout(() => {
@@ -269,8 +269,15 @@
                 return new Promise((resolve, reject) => {
                     api.files.post(vm.selectFolder[0], vm.selectFolder[1], vm.selectFolder[2],
                         vm.check_files, type).then(res => {
-                        vm.classifying = false
+                        vm.classifying = false;
+                        vm.$Message.success('分类成功！');
+                        vm.showPlusConfirm = false;
+                        vm.showMiConfirm = false;
+                        vm.check_files = []
                     }).catch(error => {
+                        vm.showPlusConfirm = false;
+                        vm.showMiConfirm = false;
+                        vm.$Message.error('分类失败！');
                         reject(error);
                     });
                 });
