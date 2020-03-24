@@ -142,7 +142,7 @@
         components: {videoPlayer},
         data() {
             return {
-                video_url: 'http://221.226.81.54:1211/video/03240047/8/0324004726_0.mp4',
+                video_url: '',
                 file_tree: [],
                 check_files: [],
                 file_tree_loading: true,

@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Clear check files when do classfication">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/dev.env.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/dev.env.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/test.env.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/test.env.js" afterDir="false" />
+    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Update test profile">
+      <change beforePath="$PROJECT_DIR$/src/views/dol/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dol/index.vue" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -395,7 +393,7 @@
       <workItem from="1582611090480" duration="421000" />
       <workItem from="1582614835753" duration="2037000" />
       <workItem from="1583746991793" duration="1015000" />
-      <workItem from="1584975507188" duration="30521000" />
+      <workItem from="1584975507188" duration="30646000" />
     </task>
     <task id="LOCAL-00001" summary="dm platform based on vue cil.">
       <created>1503206739933</created>
@@ -593,7 +591,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585042350396</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Update test profile">
+      <created>1585043458233</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1585043458233</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TodoView" selected-index="1">
@@ -658,7 +663,8 @@
     <MESSAGE value="Update prod ip" />
     <MESSAGE value="Add refresh button" />
     <MESSAGE value="Clear check files when do classfication" />
-    <option name="LAST_COMMIT_MESSAGE" value="Clear check files when do classfication" />
+    <MESSAGE value="Update test profile" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update test profile" />
   </component>
   <component name="masterDetails">
     <states>
