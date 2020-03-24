@@ -56,9 +56,15 @@
                         </Spin>
 
                         <Row>
-                          <Col span="24">
+                          <Col span="20">
                             <Cascader :data="file_tree" v-model="selectFolder"
                                       @on-change="handleSelectFolders"></Cascader>
+                          </Col>
+                          <Col offset="2" span="1">
+                            <Tooltip content="刷新" placement="top">
+                              <Button type="primary" size="median" shape="circle" icon="refresh"
+                                      @click="handleRefresh"></Button>
+                            </Tooltip>
                           </Col>
                         </Row>
                         <Row style="margin-top: 20px">
@@ -270,8 +276,9 @@
                 });
             },
             handleSelectFolders: function (value) {
-                let vm = this
-                vm.filenames_loading = true
+                let vm = this;
+                vm.filenames_loading = true;
+                this.selectFolder = value;
                 return new Promise((resolve, reject) => {
                     api.files.filenames(value[0], value[1], value[2]).then(res => {
                         vm.files = res;
@@ -282,25 +289,21 @@
                     });
                 });
             },
+            handleRefresh: function () {
+                let vm = this;
+                vm.filenames_loading = true;
+                return new Promise((resolve, reject) => {
+                    api.files.filenames(this.selectFolder[0], this.selectFolder[1], this.selectFolder[2]).then(res => {
+                        vm.files = res;
+                        vm.filenames_loading = false;
+                        resolve(res);
+                    }).catch(error => {
+                        reject(error);
+                    });
+                });
+            },
             handleVideoView: function (url) {
                 this.video_url = url
-            },
-            loadImage: function (url, name) {
-                let res = [];
-                let absolute_url = process.env.BASE_API + '/' + url;
-                let image = new Image();
-                image.src = absolute_url;
-                image.onload = function () {
-                    res.push({
-                        src: absolute_url,
-                        msrc: absolute_url,
-                        alt: name,
-                        title: name,
-                        w: this.width,
-                        h: this.height,
-                    })
-                };
-                return res;
             },
             onMenuItemSelect(name) {
                 // console.log(name);

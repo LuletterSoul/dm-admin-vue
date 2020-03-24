@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Add dolphin detection UI viewer">
+    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Update prod ip">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/prod.env.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/prod.env.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/dol/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dol/index.vue" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -394,7 +394,7 @@
       <workItem from="1582611090480" duration="421000" />
       <workItem from="1582614835753" duration="2037000" />
       <workItem from="1583746991793" duration="1015000" />
-      <workItem from="1584975507188" duration="26720000" />
+      <workItem from="1584975507188" duration="28151000" />
     </task>
     <task id="LOCAL-00001" summary="dm platform based on vue cil.">
       <created>1503206739933</created>
@@ -571,7 +571,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585036102298</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Update prod ip">
+      <created>1585037410420</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1585037410420</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TodoView" selected-index="1">
@@ -633,7 +640,8 @@
     <MESSAGE value="tootip" />
     <MESSAGE value="instruemnt ui" />
     <MESSAGE value="Add dolphin detection UI viewer" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add dolphin detection UI viewer" />
+    <MESSAGE value="Update prod ip" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update prod ip" />
   </component>
   <component name="masterDetails">
     <states>
