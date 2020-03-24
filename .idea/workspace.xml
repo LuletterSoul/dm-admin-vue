@@ -1,95 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="instruemnt ui">
-      <change afterPath="$PROJECT_DIR$/src/api/videos.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/views/dol/index.vue" afterDir="false" />
+    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Add dolphin detection UI viewer">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/test.env.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/test.env.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/algorithms.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/article_table.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/auth.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/dashboard.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/datasets.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/excel_modules.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/grammars.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/groups.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/login.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/proc.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/result.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/files.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/results.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/src.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/stages.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/students.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/tasks.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/template.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/token.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/user.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/BackToTop/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Breadcrumb/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Charts/keyboard.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Charts/lineMarker.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Charts/mixChart.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Charts/scatter.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DndList/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Dropzone/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/EmAdd/EmAdd.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/EmHeader/index.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/EmHeader/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/EmSpots/index.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/EmSpots/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ErrorLog/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/GithubCorner/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Hamburger/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Icon-svg/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ImageCropper/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ImageCropper/lang.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ImageCropper/upload.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ImageCropper/utils.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/JsonEditor/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/LangSelect/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/MDinput/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/MarkdownEditor/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PanThumb/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Screenfull/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ScrollBar/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ScrollPane/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Share/dropdownMenu.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Sticky/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/SvgIcon/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TextHoverEffect/Mallki.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ThemePicker/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Tinymce/components/editorImage.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Tinymce/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Tinymce/plugins.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Tinymce/toolbar.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TodoList/Todo.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TodoList/index.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TodoList/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TreeTable/eval.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TreeTable/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TreeTable/readme.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Upload/singleImage.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Upload/singleImage2.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Upload/singleImage3.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/UploadExcel/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/animate_svg/DivideAnimation.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/animate_svg/Loading.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/balloon/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/button/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/placeholder/index.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/placeholder/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/transition/AnimateTransition.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/transition/FadeTransition.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/transition/SingleTransition.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/insturment/index.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/insturment/lineChart.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/insturment/stat.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/prod.env.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/prod.env.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -480,7 +394,7 @@
       <workItem from="1582611090480" duration="421000" />
       <workItem from="1582614835753" duration="2037000" />
       <workItem from="1583746991793" duration="1015000" />
-      <workItem from="1584975507188" duration="25992000" />
+      <workItem from="1584975507188" duration="26720000" />
     </task>
     <task id="LOCAL-00001" summary="dm platform based on vue cil.">
       <created>1503206739933</created>
@@ -650,7 +564,14 @@
       <option name="project" value="LOCAL" />
       <updated>1558978221334</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Add dolphin detection UI viewer">
+      <created>1585036102297</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1585036102298</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TodoView" selected-index="1">
@@ -711,7 +632,8 @@
     <MESSAGE value="fixed undefined" />
     <MESSAGE value="tootip" />
     <MESSAGE value="instruemnt ui" />
-    <option name="LAST_COMMIT_MESSAGE" value="instruemnt ui" />
+    <MESSAGE value="Add dolphin detection UI viewer" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add dolphin detection UI viewer" />
   </component>
   <component name="masterDetails">
     <states>
