@@ -290,6 +290,7 @@
                     api.files.filenames(value[0], value[1], value[2]).then(res => {
                         vm.files = res;
                         vm.filenames_loading = false;
+                        vm.page = 1;
                         resolve(res);
                     }).catch(error => {
                         reject(error);

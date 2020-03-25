@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Clear default video sources">
+    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Modify system name.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/dol/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/dol/index.vue" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -395,7 +395,9 @@
       <workItem from="1582614835753" duration="2037000" />
       <workItem from="1583746991793" duration="1015000" />
       <workItem from="1584975507188" duration="30878000" />
-      <workItem from="1585045831832" duration="40000" />
+      <workItem from="1585045831832" duration="475000" />
+      <workItem from="1585057865247" duration="1135000" />
+      <workItem from="1585124953877" duration="676000" />
     </task>
     <task id="LOCAL-00001" summary="dm platform based on vue cil.">
       <created>1503206739933</created>
@@ -607,7 +609,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585043618287</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Modify system name.">
+      <created>1585045919365</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1585045919366</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TodoView" selected-index="1">
@@ -674,7 +683,8 @@
     <MESSAGE value="Clear check files when do classfication" />
     <MESSAGE value="Update test profile" />
     <MESSAGE value="Clear default video sources" />
-    <option name="LAST_COMMIT_MESSAGE" value="Clear default video sources" />
+    <MESSAGE value="Modify system name." />
+    <option name="LAST_COMMIT_MESSAGE" value="Modify system name." />
   </component>
   <component name="masterDetails">
     <states>
