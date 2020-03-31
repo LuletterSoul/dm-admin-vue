@@ -41,7 +41,19 @@
               <transition name="fade">
                 <Content v-if="activeRegName==='reg'" :style="{padding: '20px'}">
                   <Row style="margin-top: 20px" :gutter="12">
-                    <Col span="12">
+                    <Col span="16">
+                      <Card>
+                        <Row>
+                          <Alert>{{this._navigate}}
+                          </Alert>
+                        </Row>
+                        <Row>
+                          <video-player :options="_playerOptions"></video-player>
+                        </Row>
+
+                      </Card>
+                    </Col>
+                    <Col span="8">
                       <Card>
                         <!--                        <em-placeholder :width="'400px'" :height="600" font-size="45px" :show="srcImages.length ===0">-->
                         <!--                          <Icon :type="srcImages.length ? 'happy-outline' : 'outlet'"></Icon>-->
@@ -61,7 +73,7 @@
                           </Col>
                           <Col offset="2" span="1">
                             <Tooltip content="刷新" placement="top">
-                              <Button type="primary" size="median" shape="circle" icon="refresh"
+                              <Button type="primary"  shape="circle" icon="refresh"
                                       @click="handleRefresh"></Button>
                             </Tooltip>
                           </Col>
@@ -80,17 +92,12 @@
                                 <Checkbox size="large" :label="file.name"></Checkbox>
                               </Col>
                               <Col offset="10" span="1">
-                                <Button type="primary" shape="circle" icon="ios-search"
-                                        @click="handleVideoView(file.url)"></Button>
+                                <Button type="primary" size='small' shape="circle" icon="ios-search"
+                                        @click="handleVideoView(file)"></Button>
                               </Col>
                             </Row>
                           </CheckboxGroup>
                         </Row>
-                      </Card>
-                    </Col>
-                    <Col span="12">
-                      <Card>
-                        <video-player :options="_playerOptions"></video-player>
                       </Card>
                     </Col>
                   </Row>
@@ -177,6 +184,7 @@
                     ]
                 }],
                 files: [],
+                selectFile: '',
                 classifying: true,
                 showPlusConfirm: false,
                 meterShow: false,
@@ -231,6 +239,8 @@
                         type: 'video/mp4',
                         src: this.video_url
                     }],
+                    notSupportedMessage: '此视频暂时无法播放，请稍后重试',
+                    loop: true,
                     autoplay: true,
                     controls: true,
                 }
@@ -247,7 +257,17 @@
 
             _pageDate() {
                 return this._files.slice((this.page - 1) * this.pageSize, this.page * this.pageSize);
+            },
+            _navigate() {
+                if (this.selectFolder.length) {
+
+                    return this.selectFolder[0] + ' / ' + this.selectFolder[1] + ' / ' + this.selectFolder[2] +
+                        ' / ' + this.selectFile;
+                } else {
+                    return ''
+                }
             }
+
 
         },
         methods: {
@@ -310,8 +330,9 @@
                     });
                 });
             },
-            handleVideoView: function (url) {
-                this.video_url = url
+            handleVideoView: function (file) {
+                this.video_url = file.url;
+                this.selectFile = file.name;
             },
             onMenuItemSelect(name) {
                 // console.log(name);
@@ -320,11 +341,14 @@
             requestFileTree() {
                 let vm = this;
                 // let resultId = this.resultList[0].resultId;
-                vm.file_tree_loading = true
+                vm.file_tree_loading = true;
                 return new Promise((resolve, reject) => {
                     api.files.get().then(res => {
                         vm.file_tree = res;
-                        vm.selectFolder = [res[0]['value'], res[0]['children'][0]['value']];
+                        let res_length = res.length;
+                        vm.selectFolder = [res[res_length - 1]['value'], res[res_length - 1]['children'][0]['value'],
+                            res[res_length - 1]['children'][0]['children'][1]['value']];
+                        vm.handleSelectFolders(vm.selectFolder);
                         vm.file_tree_loading = false;
                         resolve(res);
                     }).catch(error => {
