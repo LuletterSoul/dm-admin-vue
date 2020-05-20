@@ -1,8 +1,6 @@
-import * as video from './videos'
 import * as files from './files'
+import * as scores from './scores'
 
 export {
-  video,
-  files
-
+  scores, files
 }

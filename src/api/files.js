@@ -9,24 +9,25 @@ function get() {
   })
 }
 
-function filenames(date, channel, video_type) {
+function user_study() {
   return fetch({
-    url: `${FILES}/${date}/${channel}/${video_type}`,
+    url: `/user_study`,
     method: 'get'
   })
 }
 
-function post(date, channel, video_type, files, sample_type) {
+function photos(content, filename) {
   return fetch({
-    url: `${FILES}/${date}/${channel}/${video_type}`,
-    method: 'post',
-    data: {
-      sample_type: sample_type,
-      filenames: files
+    url: `/photos`,
+    method: 'get',
+    params: {
+      content: content,
+      filename: filename
     }
   })
 }
 
+
 export {
-  get, filenames, post
+  user_study, photos
 }
