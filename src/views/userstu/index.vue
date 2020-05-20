@@ -30,14 +30,14 @@
               <!--                <Col span="1">-->
               <!--                  <Tooltip content="归为负样本" placement="top">-->
               <!--                    <Button type="warning" size="large" shape="circle" icon="minus" :disabled="check_files.length <=0"-->
-              <!--                            @click="showMinusConfirm=true"></Button>-->
+              <!--                            @click="showResetConfirm=true"></Button>-->
               <!--                  </Tooltip>-->
               <!--                </Col>-->
               <!--              </Row>-->
               <transition name="fade">
                 <Content v-if="activeRegName==='reg'" :style="{padding: '20px'}">
                   <Row>
-                    <Col :span="22">
+                    <Col offset="1" :span="23">
                       <Progress :percent="_percent"></Progress>
                     </Col>
                   </Row>
@@ -92,7 +92,7 @@
                   </Row>
                   <Row style="margin-left: 400px;margin-top: 20px">
                     <Col span="16">
-                      <Button type="error" long @click="onReset">重置</Button>
+                      <Button type="error" long @click="showResetConfirm = true">重置</Button>
                     </Col>
                   </Row>
                 </Content>
@@ -125,12 +125,12 @@
       </Modal>
 
       <Modal
-        v-model="showMinusConfirm"
+        v-model="showResetConfirm"
         title="确认分类"
-        :loading="submitLoading"
-        @on-ok="submitRating('neg')">
-        <p>是否将 {{check_files.length}} 个视频分为江豚负样本？</p>
+        @on-ok="onReset()">
+        <p>重置会清空所有评分数据，是否确认重置？</p>
       </Modal>
+
     </Layout>
   </div>
 </template>
@@ -193,7 +193,7 @@
                 selectFolder: [],
                 display: 1,
                 uploadTemplate: false,
-                showMinusConfirm: false,
+                showResetConfirm: false,
                 uploadSrcImg: false,
                 uploadBatch: false,
                 // activeRegName: 'statistics',
@@ -240,10 +240,14 @@
         },
         computed: {
             _percent() {
-                return Math.floor(this.pos / (this.file_tree.length) * 100)
+                if (this.file_tree.length) {
+                    return Math.floor(this.pos / (this.file_tree.length) * 100)
+                } else {
+                    return 0
+                }
             },
             _submitable() {
-                return this.pos !== this.file_tree.length
+                return this.pos < this.file_tree.length || this.pos === 0
             },
             _playerOptions() {
                 return {
@@ -299,6 +303,12 @@
 
         },
         methods: {
+            handleSpinShow() {
+                this.$Spin.show();
+            },
+            handleSpinHide() {
+                this.$Spin.hide();
+            },
             onReset() {
                 this.shape_score = this.DEFAULT_SHAPE_SCORE;
                 this.visual_score = this.DEFAULT_VISUAL_SCORE;
@@ -306,31 +316,33 @@
                 this.pos = 0;
                 this.ex_button_status = ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'primary', 'ghost', 'ghost'];
                 this.visual_button_status = ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'success', 'ghost', 'ghost'];
+                this.showResetConfirm = false
+                this.$Message.success('重置成功！');
             },
             onClickPre() {
+                this.scores.pop();
                 if (this.pos >= 1) {
                     this.pos -= 1;
                 } else {
                     this.pos = 0
                 }
-                this.scores.pop();
                 this.shape_score = this.DEFAULT_SHAPE_SCORE;
                 this.visual_score = this.DEFAULT_VISUAL_SCORE;
                 this.ex_button_status = ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'primary', 'ghost', 'ghost'];
                 this.visual_button_status = ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'success', 'ghost', 'ghost'];
             },
             onClickNext() {
+                this.scores.push({
+                    'content': this._current_content,
+                    'shape_score': this.shape_score,
+                    'visual_score': this.visual_score
+                });
                 if (this.pos <= this.file_tree.length - 1) {
                     this.pos += 1;
 
                 } else {
                     this.pos = this.file_tree.length
                 }
-                this.scores.push({
-                    'content': this._current_content,
-                    'shape_score': this.shape_score,
-                    'visual_score': this.visual_score
-                });
                 this.shape_score = this.DEFAULT_SHAPE_SCORE;
                 this.visual_score = this.DEFAULT_VISUAL_SCORE;
                 this.ex_button_status = ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'primary', 'ghost', 'ghost'];
@@ -348,6 +360,7 @@
                     that.file_tree_loading = false;
                 }, 500);
             },
+
             submitRating: function (type) {
                 let vm = this;
                 vm.submitLoading = true;
@@ -433,13 +446,19 @@
                 let vm = this;
                 // let resultId = this.resultList[0].resultId;
                 vm.file_tree_loading = true;
+                this.handleSpinShow();
                 return new Promise((resolve, reject) => {
                     api.files.user_study().then(res => {
-                        vm.file_tree = res;
+                        if (res !== undefined) {
+                            vm.file_tree = res;
+                        } else {
+                            vm.$Message.error('图片加载失败，请刷新重试！');
+                        }
+                        vm.handleSpinHide();
                         vm.file_tree_loading = false;
-                        console.log(res);
                         resolve(res);
                     }).catch(error => {
+                        vm.handleSpinHide();
                         reject(error);
                     });
                 });
