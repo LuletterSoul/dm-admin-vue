@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Add user study ui.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Update test prod.">
       <change beforePath="$PROJECT_DIR$/build/test-server.js" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-server.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -399,7 +398,7 @@
       <workItem from="1585057865247" duration="1135000" />
       <workItem from="1585124953877" duration="3298000" />
       <workItem from="1585651106996" duration="1906000" />
-      <workItem from="1589960934746" duration="17184000" />
+      <workItem from="1589960934746" duration="17238000" />
     </task>
     <task id="LOCAL-00001" summary="dm platform based on vue cil.">
       <created>1503206739933</created>
@@ -639,7 +638,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589981851276</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="Update test prod.">
+      <created>1589982482460</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1589982482460</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TodoView" selected-index="1">
@@ -682,7 +688,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="学生端教师端整合" />
     <MESSAGE value="Merge branch 'dev'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
     <MESSAGE value="路由缓存" />
     <MESSAGE value="Loading时机" />
@@ -707,7 +712,8 @@
     <MESSAGE value="reset page when select file" />
     <MESSAGE value="Optimize UI layout and display video name when viewing" />
     <MESSAGE value="Add user study ui." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add user study ui." />
+    <MESSAGE value="Update test prod." />
+    <option name="LAST_COMMIT_MESSAGE" value="Update test prod." />
   </component>
   <component name="masterDetails">
     <states>
