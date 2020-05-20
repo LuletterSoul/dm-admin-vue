@@ -37,7 +37,7 @@ module.exports = {
   },
   test: {
     env: require('./test.env'),
-    port: 8082,
+    port: 9527,
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
