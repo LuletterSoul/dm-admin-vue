@@ -424,7 +424,9 @@
                     api.scores.post(this.user_id, this.scores).then(res => {
                         if (res === 'success') {
                             vm.$Message.success('提交成功，感谢参与，祝您生活愉快！');
-
+                            setInterval(function () {
+                                window.location.reload();
+                            }, 2000)
                         } else {
                             vm.$Message.error('提交失败，请再次提交！');
                         }
