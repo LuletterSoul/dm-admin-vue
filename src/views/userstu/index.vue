@@ -447,6 +447,7 @@
             submitRating: function () {
                 if (this.user.user_id === '' || !this.isValidUserName(this.user.user_id)) {
                     this.submitLoading = false;
+                    this.$Message.error('提交失败，用户名不合法！');
                     return
                 }
                 let vm = this;
