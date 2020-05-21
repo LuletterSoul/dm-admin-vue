@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Fixed final scores appending">
+    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Record history score while user click next or previous button">
+      <change afterPath="$PROJECT_DIR$/src/views/userstu/timer.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/test.env.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/test.env.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/scores.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/scores.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/userstu/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/userstu/index.vue" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -400,7 +401,8 @@
       <workItem from="1585057865247" duration="1135000" />
       <workItem from="1585124953877" duration="3298000" />
       <workItem from="1585651106996" duration="1906000" />
-      <workItem from="1589960934746" duration="29332000" />
+      <workItem from="1589960934746" duration="32850000" />
+      <workItem from="1590041987567" duration="10501000" />
     </task>
     <task id="LOCAL-00001" summary="dm platform based on vue cil.">
       <created>1503206739933</created>
@@ -675,7 +677,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590023277047</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="Record history score while user click next or previous button">
+      <created>1590033267486</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1590033267486</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TodoView" selected-index="1">
@@ -718,7 +727,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="路由缓存" />
     <MESSAGE value="Loading时机" />
     <MESSAGE value="新增数据导入页面" />
     <MESSAGE value="任务剩余时间显示修复" />
@@ -743,7 +751,8 @@
     <MESSAGE value="Add user study ui." />
     <MESSAGE value="Update test prod." />
     <MESSAGE value="Fixed final scores appending" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed final scores appending" />
+    <MESSAGE value="Record history score while user click next or previous button" />
+    <option name="LAST_COMMIT_MESSAGE" value="Record history score while user click next or previous button" />
   </component>
   <component name="masterDetails">
     <states>

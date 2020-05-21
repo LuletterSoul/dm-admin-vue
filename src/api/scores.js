@@ -2,9 +2,9 @@ import fetch from '@/utils/fetch';
 
 const SCORES = '/scores';
 
-function get() {
+function get_score_types() {
   return fetch({
-    url: SCORES,
+    url: '/score_types',
     method: 'get'
   })
 }
@@ -21,5 +21,5 @@ function post(user_id, scores) {
 }
 
 export {
-  post
+  post, get_score_types
 }

@@ -18,8 +18,7 @@
       <Row>
         <div class="layout">
           <Content :style="{padding: '24px 0', minHeight: '920pt'}">
-
-            <Layout>
+            <Layout style="margin-left: 80px">
               <!--              <Row type="flex" justify="center" style="margin-top: 20px" v-if="activeRegName === 'reg'">-->
               <!--                <Col span="1">-->
               <!--                  <Tooltip content="归为正样本" placement="top">-->
@@ -34,6 +33,7 @@
               <!--                  </Tooltip>-->
               <!--                </Col>-->
               <!--              </Row>-->
+
               <transition name="fade">
                 <Content v-if="activeRegName==='reg'" :style="{padding: '20px'}">
                   <Row>
@@ -41,11 +41,11 @@
                       <Progress :percent="_percent"></Progress>
                     </Col>
                   </Row>
-                  <Row v-show="this.pos < this.file_tree.length" style="margin-left: 50px;margin-top: 40px">
+                  <Row v-show="this.pos < this.file_tree.length" style="margin-left: 50px;margin-top: 20px">
                     <Col offset="10" span="1">
                       <Input v-model="this.pos+1" readonly></Input>
                     </Col>
-                    <Col style="margin-left: 20px" span="1">
+                    <Col style="margin-left: 10px" span="1">
                       <div style="font-size: 24px">
                         /
                       </div>
@@ -53,6 +53,13 @@
                     <Col style="margin-left: -50px" span="1">
                       <Input v-model="this.file_tree.length" readonly></Input>
                       <!--                      <InputNumber v-model="this.file_tree.length" readonly></InputNumber>-->
+                    </Col>
+                  </Row>
+                  <Row style="margin-left: -60px;margin-top: 30px;">
+                    <Col offset="11" span="4">
+                      <div style="font-size: 16px">
+                        <timer :auto-start="true" :stop="stopTimer"></timer>
+                      </div>
                     </Col>
                   </Row>
                   <Row style="margin-left: 200px;margin-top: 40px">
@@ -64,33 +71,35 @@
                       </Card>
                     </Col>
                   </Row>
-                  <Row style="margin-left: 280px;margin-top: 40px">
+                  <Row v-for="(score_type,index) of current_scores" style="margin-left: 280px;margin-top: 40px">
                     <Col span="4">
-                      <Tooltip content="指夸张的是否合理是否夸大了人物的主要特征">
-                        <Tag type="dot" color="blue" style="font-size: 24px">夸张质量</Tag>
+                      <Tooltip :content="score_type['des']">
+                        <Tag type="dot" :color="score_type['tag_color']" style="font-size: 24px">{{score_type['tag']}}
+                        </Tag>
                       </Tooltip>
                     </Col>
-                    <Col v-for="(score,index) of score_list" span="1" style="margin-left: 10px">
-                      <Button shape="circle" size="large" :type="ex_button_status[index]"
-                              @click="onClickShapeRating(index,score)">
-                        {{score}}
+                    <Col v-for="(button_type,s_idx) of score_view[index]['button_type']" span="1"
+                         style="margin-left: 10px">
+                      <Button shape="circle" size="large" :type="button_type"
+                              @click="onClickRatingButton(index,s_idx,score_view[index]['rank_list'][s_idx])">
+                        {{score_view[index]['rank_list'][s_idx]}}
                       </Button>
                     </Col>
                   </Row>
-                  <Row style="margin-left: 280px;margin-top: 40px">
-                    <Col span="4">
-                      <Tooltip content="指生成图的纹理风格是否接近真实漫画">
-                        <Tag type="dot" color="green" style="font-size: 24px">纹理质量</Tag>
-                      </Tooltip>
-                    </Col>
-                    <Col v-for="(score,index) of score_list" span="1" style="margin-left: 10px">
-                      <Button shape="circle" size="large" :type="visual_button_status[index]"
-                              @click="onClickVisualRating(index,score)">
-                        {{score}}
-                      </Button>
-                    </Col>
-                  </Row>
-                  <Row style="margin-left: 400px;margin-top: 40px">
+                  <!--                  <Row style="margin-left: 280px;margin-top: 40px">-->
+                  <!--                    <Col span="4">-->
+                  <!--                      <Tooltip content="指生成图的纹理风格是否接近真实漫画">-->
+                  <!--                        <Tag type="dot" color="green" style="font-size: 24px">纹理质量</Tag>-->
+                  <!--                      </Tooltip>-->
+                  <!--                    </Col>-->
+                  <!--                    <Col v-for="(score,index) of score_list" span="1" style="margin-left: 10px">-->
+                  <!--                      <Button shape="circle" size="large" :type="visual_button_status[index]"-->
+                  <!--                              @click="onClickVisualRating(index,score)">-->
+                  <!--                        {{score}}-->
+                  <!--                      </Button>-->
+                  <!--                    </Col>-->
+                  <!--                  </Row>-->
+                  <Row style="margin-left: 400px;margin-top: 30px">
                     <Col offset="6" span="2" size="large">
                       <Button type="primary" @click="onClickPre" :disabled="this.pos ===0">上一步</Button>
                     </Col>
@@ -154,22 +163,28 @@
     import 'video.js/dist/video-js.css'
 
     import {videoPlayer} from 'vue-video-player'
+    import Timer from './timer'
 
 
     export default {
         name: 'DolphinView',
-        components: {videoPlayer},
+        components: {videoPlayer, Timer},
         data() {
             return {
                 user_id: '',
                 video_url: '',
                 file_tree: [],
+                score_types: [],
+                current_scores: {},
                 check_files: [],
                 file_tree_loading: true,
                 filenames_loading: false,
                 pageSize: 10,
                 page: 1,
                 score_list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                score_view: [],
+                button_status: [],
+
                 ex_button_status: ['ghost', 'ghost', 'ghost', 'ghost', 'primary', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost'],
                 visual_button_status: ['ghost', 'ghost', 'ghost', 'ghost', 'success', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost'],
                 folders: [{
@@ -202,6 +217,7 @@
                 files: [],
                 selectFile: '',
                 submitLoading: true,
+                stopTimer: false,
                 showSubmitConfirm: false,
                 meterShow: false,
                 selectFolder: [],
@@ -233,6 +249,7 @@
                 hostImgMap: {},
                 DEFAULT_SHAPE_SCORE: 5,
                 DEFAULT_VISUAL_SCORE: 5,
+                DEFAULT_SCORE: 5,
                 shape_score: 5,
                 visual_score: 5,
                 pointerAlgOptions: [{
@@ -251,6 +268,7 @@
         },
         mounted() {
             this.requestFileTree();
+            this.requestScoreTypes();
         },
         computed: {
             _percent() {
@@ -260,8 +278,35 @@
                     return 0
                 }
             },
+            _default_scores() {
+                let default_scores = {};
+                for (let i = 0; i < this.current_scores.length; i++) {
+                    default_scores[this.current_scores[i]['score_type']] = this.current_scores[i]['default_value'];
+                }
+                return default_scores
+            },
+            _current_score() {
+                let score_res = {'content': this._current_content};
+                for (let i = 0; i < this.current_scores.length; i++) {
+                    score_res[this.current_scores[i]['score_type']] = this.current_scores[i]['value']
+                }
+                return score_res
+            },
+            _pos_score() {
+                if (this.pos <= this.scores.length - 1) {
+                    return this.scores[this.pos];
+                } else {
+                    return this._default_scores;
+                }
+            },
             _submitable() {
-                return this.pos < this.file_tree.length || this.pos === 0
+                if (this.pos < this.file_tree.length || this.pos === 0) {
+                    this.stopTimer = false;
+                    return true
+                } else {
+                    this.stopTimer = true;
+                    return false
+                }
             },
             _playerOptions() {
                 return {
@@ -327,19 +372,20 @@
                 this.$Spin.hide();
             },
             onReset() {
-                this.resetScore(this.DEFAULT_SHAPE_SCORE, this.DEFAULT_VISUAL_SCORE);
+                this.resetScore(this._default_scores);
                 this.scores = [];
                 this.pos = 0;
                 this.showResetConfirm = false;
                 this.$Message.success('重置成功！');
             },
-            resetScore: function (shape_score, visual_score) {
-                this.shape_score = shape_score;
-                this.visual_score = visual_score;
-                this.resetExRatingButton(this.shape_score - 1);
-                this.resetVisualRatingButton(this.visual_score - 1);
+            resetScore: function (scores) {
+                for (let i = 0; i < this.current_scores.length; i++) {
+                    let old_score = this.current_scores[i];
+                    old_score['value'] = scores[old_score['score_type']];
+                    this.$set(this.current_scores, i, old_score);
+                    this.resetRatingButton(i, old_score['value']);
+                }
             }, onClickPre() {
-                // this.scores.pop();
                 this.saveCurrentScore();
                 if (this.pos >= 1) {
                     this.pos -= 1;
@@ -347,59 +393,31 @@
                     this.pos = 0
                 }
                 if (this.scores.length) {
-                    this.resetScore(this.scores[this.pos]['shape_score'], this.scores[this.pos]['visual_score']);
+                    // this.resetScore(this.scores[this.pos]['shape_score'], this.scores[this.pos]['visual_score']);
+                    this.resetScore(this._pos_score);
+
                 } else {
-                    this.resetScore(this.DEFAULT_SHAPE_SCORE, this.DEFAULT_VISUAL_SCORE);
+                    this.resetScore(this._default_scores)
+                    // this.resetScore(this.DEFAULT_SHAPE_SCORE, this.DEFAULT_VISUAL_SCORE);
                 }
-                // this.ex_button_status = ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'primary', 'ghost', 'ghost'];
-                // this.visual_button_status = ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'success', 'ghost', 'ghost'];
             },
             saveCurrentScore: function () {
                 if (this.pos === this.scores.length) {
-                    this.scores.push({
-                        'content': this._current_content,
-                        'shape_score': this.shape_score,
-                        'visual_score': this.visual_score
-                    });
+                    this.scores.push(this._current_score);
                 } else {
-                    this.$set(this.scores, this.pos, {
-                        'content': this._current_content,
-                        'shape_score': this.shape_score,
-                        'visual_score': this.visual_score
-                    });
-                }
-            }, loadNextScore: function () {
-                if (this.pos <= this.scores.length - 1) {
-                    this.shape_score = this.scores[this.pos]['shape_score'];
-                    this.visual_score = this.scores[this.pos]['visual_score'];
-                } else {
-                    this.shape_score = this.DEFAULT_SHAPE_SCORE;
-                    this.visual_score = this.DEFAULT_VISUAL_SCORE;
+                    this.$set(this.scores, this.pos, this._current_score);
                 }
             }, onClickNext() {
                 this.saveCurrentScore();
                 if (this.pos <= this.file_tree.length - 1) {
                     this.pos += 1;
-
+                    this.resetScore(this._pos_score);
                 } else {
+                    this.resetScore(this._default_scores);
                     this.pos = this.file_tree.length
                 }
-                this.loadNextScore();
-                this.resetVisualRatingButton(this.visual_score - 1);
-                this.resetExRatingButton(this.shape_score - 1);
             },
-
-            onPageChange(index) {
-                this.page = index;
-                this.check_files = [];
-                let that = this;
-                that.file_tree_loading = true;
-                setTimeout(() => {
-                    that.file_tree_loading = false;
-                }, 500);
-            },
-
-            submitRating: function (type) {
+            submitRating: function () {
                 let vm = this;
                 vm.submitLoading = true;
                 return new Promise((resolve, reject) => {
@@ -437,31 +455,22 @@
                     });
                 });
             },
-            resetExRatingButton: function (index) {
-                for (let i = 0; i < this.ex_button_status.length; i++) {
-                    if (i !== index) {
-                        this.$set(this.ex_button_status, i, 'ghost');
+            resetRatingButton: function (score_type_idx, score_value) {
+                let button = this.score_view[score_type_idx]['button_type'];
+                for (let i = 0; i < button.length; i++) {
+                    if (i + 1 !== score_value) {
+                        this.$set(button, i, 'ghost');
                         // this.ex_button_status[i] = 'ghost'
                     } else {
-                        this.$set(this.ex_button_status, i, 'primary');
+                        this.$set(button, i, this.current_scores[score_type_idx]['bt_type']);
                     }
                 }
-            }, onClickShapeRating: function (index, score) {
-                this.resetExRatingButton(index);
-                this.shape_score = score
             },
-            resetVisualRatingButton: function (index) {
-                for (let i = 0; i < this.visual_button_status.length; i++) {
-                    if (i !== index) {
-                        this.$set(this.visual_button_status, i, 'ghost');
-                        // this.ex_button_status[i] = 'ghost'
-                    } else {
-                        this.$set(this.visual_button_status, i, 'success');
-                    }
-                }
-            }, onClickVisualRating: function (index, score) {
-                this.resetVisualRatingButton(index);
-                this.visual_score = score
+            onClickRatingButton: function (score_type_idx, b_idx, score_value) {
+                let score = this.current_scores[score_type_idx];
+                score['value'] = score_value;
+                this.resetRatingButton(score_type_idx, score_value);
+                this.$set(this.current_scores, score_type_idx, score);
             },
             handleRefresh: function () {
                 let vm = this;
@@ -501,6 +510,37 @@
                         resolve(res);
                     }).catch(error => {
                         vm.handleSpinHide();
+                        reject(error);
+                    });
+                });
+            },
+            requestScoreTypes() {
+                let vm = this;
+                return new Promise((resolve, reject) => {
+                    api.scores.get_score_types().then(res => {
+                        vm.current_scores = res;
+                        for (let i = 0; i < vm.current_scores.length; i++) {
+                            let cb = [];
+                            let score_rank = [];
+                            for (let j = 0; j < vm.current_scores[i]['rank']; j++) {
+                                if (j + 1 === vm.current_scores[i]['value']) {
+                                    cb.push(vm.current_scores[i]['bt_type']);
+                                } else {
+                                    cb.push('ghost')
+                                }
+                            }
+                            for (let k = 0; k < vm.current_scores[i]['rank']; k++) {
+                                score_rank.push(k + 1)
+                            }
+                            // vm.button_status.push(cb);
+                            // vm.score_list.push(score_rank)
+                            vm.score_view.push({
+                                'button_type': cb,
+                                'rank_list': score_rank
+                            })
+                        }
+                        resolve(res);
+                    }).catch(error => {
                         reject(error);
                     });
                 });
