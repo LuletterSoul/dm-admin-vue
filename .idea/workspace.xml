@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Add dynamic scores structure and timer">
+    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Reload window after user submits">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/userstu/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/userstu/index.vue" afterDir="false" />
     </list>
@@ -400,7 +400,7 @@
       <workItem from="1585124953877" duration="3298000" />
       <workItem from="1585651106996" duration="1906000" />
       <workItem from="1589960934746" duration="32850000" />
-      <workItem from="1590041987567" duration="11463000" />
+      <workItem from="1590041987567" duration="13399000" />
     </task>
     <task id="LOCAL-00001" summary="dm platform based on vue cil.">
       <created>1503206739933</created>
@@ -689,7 +689,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590055456669</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="Reload window after user submits">
+      <created>1590063442030</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1590063442031</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TodoView" selected-index="1">
@@ -732,7 +739,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="新增数据导入页面" />
     <MESSAGE value="任务剩余时间显示修复" />
     <MESSAGE value="修复部分字段显示问题" />
     <MESSAGE value="任务数据Loading" />
@@ -757,7 +763,8 @@
     <MESSAGE value="Fixed final scores appending" />
     <MESSAGE value="Record history score while user click next or previous button" />
     <MESSAGE value="Add dynamic scores structure and timer" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add dynamic scores structure and timer" />
+    <MESSAGE value="Reload window after user submits" />
+    <option name="LAST_COMMIT_MESSAGE" value="Reload window after user submits" />
   </component>
   <component name="masterDetails">
     <states>

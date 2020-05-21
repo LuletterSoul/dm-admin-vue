@@ -142,7 +142,11 @@
         @on-ok="submitRating('pos')">
         <Row>
           <Col span="24">
-            <Input v-model="user_id" placeholder="请输入用户ID"></Input>
+            <Form ref="user" :model='user' :rules="ruleValidate" :label-width="80">
+              <FormItem label="用户名" prop="user_id">
+                <Input v-model="user.user_id" placeholder="请输入用户名"></Input>
+              </FormItem>
+            </Form>
           </Col>
         </Row>
       </Modal>
@@ -170,8 +174,27 @@
         name: 'DolphinView',
         components: {videoPlayer, Timer},
         data() {
+            const validateUserId = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('用户名不能为空'));
+                } else if (!isValidUserName(value)) {
+                    callback(new Error('不合法的用户名！请重新输入'));
+                } else {
+                    callback();
+                }
+            };
+            const isValidUserName = (user_id) => {
+                return /^\w+$/.test(user_id);
+            };
             return {
-                user_id: '',
+                ruleValidate: {
+                    user_id: [
+                        {validator: validateUserId, required: true, trigger: 'blur'}
+                    ]
+                },
+                user: {
+                    user_id: '',
+                },
                 video_url: '',
                 file_tree: [],
                 score_types: [],
@@ -365,6 +388,9 @@
             onPageSizeChange() {
 
             },
+            isValidUserName(user_id) {
+                return /^\w+$/.test(user_id);
+            },
             handleSpinShow() {
                 this.$Spin.show();
             },
@@ -417,11 +443,16 @@
                     this.pos = this.file_tree.length
                 }
             },
+
             submitRating: function () {
+                if (this.user.user_id === '' || !this.isValidUserName(this.user.user_id)) {
+                    this.submitLoading = false;
+                    return
+                }
                 let vm = this;
                 vm.submitLoading = true;
                 return new Promise((resolve, reject) => {
-                    api.scores.post(this.user_id, this.scores).then(res => {
+                    api.scores.post(this.user.user_id, this.scores).then(res => {
                         if (res === 'success') {
                             vm.$Message.success('提交成功，感谢参与，祝您生活愉快！');
                             setInterval(function () {
