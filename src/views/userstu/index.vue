@@ -41,6 +41,20 @@
                       <Progress :percent="_percent"></Progress>
                     </Col>
                   </Row>
+                  <Row v-show="this.pos < this.file_tree.length" style="margin-left: 50px;margin-top: 40px">
+                    <Col offset="10" span="1">
+                      <Input v-model="this.pos+1" readonly></Input>
+                    </Col>
+                    <Col style="margin-left: 20px" span="1">
+                      <div style="font-size: 24px">
+                        /
+                      </div>
+                    </Col>
+                    <Col style="margin-left: -50px" span="1">
+                      <Input v-model="this.file_tree.length" readonly></Input>
+                      <!--                      <InputNumber v-model="this.file_tree.length" readonly></InputNumber>-->
+                    </Col>
+                  </Row>
                   <Row style="margin-left: 200px;margin-top: 40px">
                     <Col span="5" v-for="(url,index) of _src_photos_url">
                       <Card>
@@ -126,7 +140,7 @@
 
       <Modal
         v-model="showResetConfirm"
-        title="确认分类"
+        title="确认重置"
         @on-ok="onReset()">
         <p>重置会清空所有评分数据，是否确认重置？</p>
       </Modal>
@@ -156,8 +170,8 @@
                 pageSize: 10,
                 page: 1,
                 score_list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                ex_button_status: ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'primary', 'ghost', 'ghost'],
-                visual_button_status: ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'success', 'ghost', 'ghost'],
+                ex_button_status: ['ghost', 'ghost', 'ghost', 'ghost', 'primary', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost'],
+                visual_button_status: ['ghost', 'ghost', 'ghost', 'ghost', 'success', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost'],
                 folders: [{
                     value: '03201823',
                     label: '03201823',
@@ -217,10 +231,10 @@
                 allStat: [],
                 res: {},
                 hostImgMap: {},
-                DEFAULT_SHAPE_SCORE: 8,
-                DEFAULT_VISUAL_SCORE: 8,
-                shape_score: 8,
-                visual_score: 8,
+                DEFAULT_SHAPE_SCORE: 5,
+                DEFAULT_VISUAL_SCORE: 5,
+                shape_score: 5,
+                visual_score: 5,
                 pointerAlgOptions: [{
                     value: 0,
                     label: '径向直线积分'
@@ -236,7 +250,7 @@
             }
         },
         mounted() {
-            this.requestFileTree()
+            this.requestFileTree();
         },
         computed: {
             _percent() {
@@ -303,6 +317,9 @@
 
         },
         methods: {
+            onPageSizeChange() {
+
+            },
             handleSpinShow() {
                 this.$Spin.show();
             },
@@ -310,47 +327,68 @@
                 this.$Spin.hide();
             },
             onReset() {
-                this.shape_score = this.DEFAULT_SHAPE_SCORE;
-                this.visual_score = this.DEFAULT_VISUAL_SCORE;
+                this.resetScore(this.DEFAULT_SHAPE_SCORE, this.DEFAULT_VISUAL_SCORE);
                 this.scores = [];
                 this.pos = 0;
-                this.ex_button_status = ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'primary', 'ghost', 'ghost'];
-                this.visual_button_status = ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'success', 'ghost', 'ghost'];
-                this.showResetConfirm = false
+                this.showResetConfirm = false;
                 this.$Message.success('重置成功！');
             },
-            onClickPre() {
-                this.scores.pop();
+            resetScore: function (shape_score, visual_score) {
+                this.shape_score = shape_score;
+                this.visual_score = visual_score;
+                this.resetExRatingButton(this.shape_score - 1);
+                this.resetVisualRatingButton(this.visual_score - 1);
+            }, onClickPre() {
+                // this.scores.pop();
+                this.saveCurrentScore();
                 if (this.pos >= 1) {
                     this.pos -= 1;
                 } else {
                     this.pos = 0
                 }
-                this.shape_score = this.DEFAULT_SHAPE_SCORE;
-                this.visual_score = this.DEFAULT_VISUAL_SCORE;
-                this.ex_button_status = ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'primary', 'ghost', 'ghost'];
-                this.visual_button_status = ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'success', 'ghost', 'ghost'];
+                if (this.scores.length) {
+                    this.resetScore(this.scores[this.pos]['shape_score'], this.scores[this.pos]['visual_score']);
+                } else {
+                    this.resetScore(this.DEFAULT_SHAPE_SCORE, this.DEFAULT_VISUAL_SCORE);
+                }
+                // this.ex_button_status = ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'primary', 'ghost', 'ghost'];
+                // this.visual_button_status = ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'success', 'ghost', 'ghost'];
             },
-            onClickNext() {
-                this.scores.push({
-                    'content': this._current_content,
-                    'shape_score': this.shape_score,
-                    'visual_score': this.visual_score
-                });
+            saveCurrentScore: function () {
+                if (this.pos === this.scores.length) {
+                    this.scores.push({
+                        'content': this._current_content,
+                        'shape_score': this.shape_score,
+                        'visual_score': this.visual_score
+                    });
+                } else {
+                    this.$set(this.scores, this.pos, {
+                        'content': this._current_content,
+                        'shape_score': this.shape_score,
+                        'visual_score': this.visual_score
+                    });
+                }
+            }, loadNextScore: function () {
+                if (this.pos <= this.scores.length - 1) {
+                    this.shape_score = this.scores[this.pos]['shape_score'];
+                    this.visual_score = this.scores[this.pos]['visual_score'];
+                } else {
+                    this.shape_score = this.DEFAULT_SHAPE_SCORE;
+                    this.visual_score = this.DEFAULT_VISUAL_SCORE;
+                }
+            }, onClickNext() {
+                this.saveCurrentScore();
                 if (this.pos <= this.file_tree.length - 1) {
                     this.pos += 1;
 
                 } else {
                     this.pos = this.file_tree.length
                 }
-                this.shape_score = this.DEFAULT_SHAPE_SCORE;
-                this.visual_score = this.DEFAULT_VISUAL_SCORE;
-                this.ex_button_status = ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'primary', 'ghost', 'ghost'];
-                this.visual_button_status = ['ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost', 'success', 'ghost', 'ghost'];
+                this.loadNextScore();
+                this.resetVisualRatingButton(this.visual_score - 1);
+                this.resetExRatingButton(this.shape_score - 1);
             },
-            onPageSizeChange(val) {
-                this.pageSize = val;
-            },
+
             onPageChange(index) {
                 this.page = index;
                 this.check_files = [];
@@ -399,7 +437,7 @@
                     });
                 });
             },
-            onClickShapeRating: function (index, score) {
+            resetExRatingButton: function (index) {
                 for (let i = 0; i < this.ex_button_status.length; i++) {
                     if (i !== index) {
                         this.$set(this.ex_button_status, i, 'ghost');
@@ -408,9 +446,11 @@
                         this.$set(this.ex_button_status, i, 'primary');
                     }
                 }
+            }, onClickShapeRating: function (index, score) {
+                this.resetExRatingButton(index);
                 this.shape_score = score
             },
-            onClickVisualRating: function (index, score) {
+            resetVisualRatingButton: function (index) {
                 for (let i = 0; i < this.visual_button_status.length; i++) {
                     if (i !== index) {
                         this.$set(this.visual_button_status, i, 'ghost');
@@ -419,6 +459,8 @@
                         this.$set(this.visual_button_status, i, 'success');
                     }
                 }
+            }, onClickVisualRating: function (index, score) {
+                this.resetVisualRatingButton(index);
                 this.visual_score = score
             },
             handleRefresh: function () {

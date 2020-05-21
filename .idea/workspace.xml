@@ -4,6 +4,7 @@
     <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Fixed final scores appending">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/test.env.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/test.env.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/userstu/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/userstu/index.vue" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -399,7 +400,7 @@
       <workItem from="1585057865247" duration="1135000" />
       <workItem from="1585124953877" duration="3298000" />
       <workItem from="1585651106996" duration="1906000" />
-      <workItem from="1589960934746" duration="22026000" />
+      <workItem from="1589960934746" duration="29332000" />
     </task>
     <task id="LOCAL-00001" summary="dm platform based on vue cil.">
       <created>1503206739933</created>
@@ -667,7 +668,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589991198356</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Fixed final scores appending">
+      <created>1590023277047</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1590023277047</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TodoView" selected-index="1">
