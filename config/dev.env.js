@@ -5,5 +5,5 @@ module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
   BASE_API: '"http://221.226.81.54:1211"',
   API_VERSION: "/api/v1",
-  SERVER_API: '"http://localhost:8080"'
+  SERVER_API: '"http://localhost:5000/api"'
 });

@@ -8,7 +8,7 @@
             <div>
               <MenuItem name="reg">
                 <Icon type="ios-speedometer-outline"></Icon>
-                User Study
+                Style Transfer
               </MenuItem>
             </div>
           </Menu>
@@ -35,102 +35,101 @@
               <!--              </Row>-->
 
               <transition name="fade">
-                <Content v-if="activeRegName==='reg'" :style="{padding: '20px'}">
+                <Content>
                   <Row>
-                    <Col offset="1" :span="23">
-                      <Progress :percent="_percent"></Progress>
-                    </Col>
-                  </Row>
-                  <Row v-show="this.pos < this.file_tree.length" style="margin-left: 50px;margin-top: 20px">
-                    <Col offset="10" span="1">
-                      <Input v-model="this.pos+1" readonly></Input>
-                    </Col>
-                    <Col style="margin-left: 10px" span="1">
-                      <div style="font-size: 24px">
-                        /
-                      </div>
-                    </Col>
-                    <Col style="margin-left: -50px" span="1">
-                      <Input v-model="this.file_tree.length" readonly></Input>
-                      <!--                      <InputNumber v-model="this.file_tree.length" readonly></InputNumber>-->
-                    </Col>
-                  </Row>
-                  <Row style="margin-left: -60px;margin-top: 30px;">
-                    <Col offset="11" span="4">
-                      <div style="font-size: 16px">
-                        <timer :auto-start="true" :stop="stopTimer"></timer>
-                      </div>
-                    </Col>
-                  </Row>
-                  <Row style="margin-left: 200px;margin-top: 40px">
-                    <Col span="5" v-for="(url,index) of _src_photos_url">
-                      <Card>
-                        <div style="text-align:center">
-                          <img :src="url" width="256">
-                        </div>
-                      </Card>
-                    </Col>
-                  </Row>
-                  <Row v-for="(score_type,index) of current_scores" style="margin-left: 280px;margin-top: 40px">
                     <Col span="4">
-                      <Tooltip :content="score_type['des']">
-                        <Tag type="dot" :color="score_type['tag_color']" style="font-size: 24px">{{score_type['tag']}}
-                        </Tag>
-                      </Tooltip>
-                    </Col>
-                    <Col v-for="(button_type,s_idx) of score_view[index]['button_type']" span="1"
-                         style="margin-left: 10px">
-                      <Button shape="circle" size="large" :type="button_type"
-                              @click="onClickRatingButton(index,s_idx,score_view[index]['rank_list'][s_idx])">
-                        {{score_view[index]['rank_list'][s_idx]}}
-                      </Button>
-                    </Col>
-                  </Row>
-                  <!--                  <Row style="margin-left: 280px;margin-top: 40px">-->
-                  <!--                    <Col span="4">-->
-                  <!--                      <Tooltip content="指生成图的纹理风格是否接近真实漫画">-->
-                  <!--                        <Tag type="dot" color="green" style="font-size: 24px">纹理质量</Tag>-->
-                  <!--                      </Tooltip>-->
-                  <!--                    </Col>-->
-                  <!--                    <Col v-for="(score,index) of score_list" span="1" style="margin-left: 10px">-->
-                  <!--                      <Button shape="circle" size="large" :type="visual_button_status[index]"-->
-                  <!--                              @click="onClickVisualRating(index,score)">-->
-                  <!--                        {{score}}-->
-                  <!--                      </Button>-->
-                  <!--                    </Col>-->
-                  <!--                  </Row>-->
-                  <Row style="margin-left: 400px;margin-top: 30px">
-                    <Col offset="6" span="2" size="large">
-                      <Button type="primary" @click="onClickPre" :disabled="this.pos ===0">上一步</Button>
-                    </Col>
-                    <Col offset="1" span="2" size="large">
-                      <Button type="primary" @click="onClickNext" :disabled="this.pos === this.file_tree.length">下一步
-                      </Button>
-                    </Col>
-                  </Row>
-                  <Row style="margin-left: 400px;margin-top: 40px">
-                    <Col span="16">
-                      <Button type="success" long :disabled="_submitable" @click="showSubmitConfirm=true">提交</Button>
-                    </Col>
-                  </Row>
-                  <Row style="margin-left: 400px;margin-top: 20px">
-                    <Col span="16">
-                      <Button type="error" long @click="showResetConfirm = true">重置</Button>
-                    </Col>
-                  </Row>
-                </Content>
-              </transition>
-              <transition name='fade'>
-                <Content v-if="activeRegName==='statistics'" :style="{padding: '20px'}">
-                  <Row>
-                    <Col span="24">
                       <Card>
-                        <video-player :options="_playerOptions"></video-player>
+                        <img src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1027022371,2237485812&fm=26&gp=0.jpg" width="256">
                       </Card>
                     </Col>
                   </Row>
                 </Content>
+<!--                <Content v-if="activeRegName==='reg'" :style="{padding: '20px'}">-->
+<!--                  <Row>-->
+<!--                    <Col offset="1" :span="23">-->
+<!--                      <Progress :percent="_percent"></Progress>-->
+<!--                    </Col>-->
+<!--                  </Row>-->
+<!--                  <Row v-show="this.pos < this.file_tree.length" style="margin-left: 50px;margin-top: 20px">-->
+<!--                    <Col offset="10" span="1">-->
+<!--                      <Input v-model="this.pos+1" readonly></Input>-->
+<!--                    </Col>-->
+<!--                    <Col style="margin-left: 10px" span="1">-->
+<!--                      <div style="font-size: 24px">-->
+<!--                        /-->
+<!--                      </div>-->
+<!--                    </Col>-->
+<!--                    <Col style="margin-left: -50px" span="1">-->
+<!--                      <Input v-model="this.file_tree.length" readonly></Input>-->
+<!--                      &lt;!&ndash;                      <InputNumber v-model="this.file_tree.length" readonly></InputNumber>&ndash;&gt;-->
+<!--                    </Col>-->
+<!--                  </Row>-->
+<!--                  <Row style="margin-left: -60px;margin-top: 30px;">-->
+<!--                    <Col offset="11" span="4">-->
+<!--                      <div style="font-size: 16px">-->
+<!--                        <timer :auto-start="true" :stop="stopTimer"></timer>-->
+<!--                      </div>-->
+<!--                    </Col>-->
+<!--                  </Row>-->
+<!--                  <Row style="margin-left: 200px;margin-top: 40px">-->
+<!--                    <Col span="5" v-for="(url,index) of _src_photos_url">-->
+<!--                      <Card>-->
+<!--                        <div style="text-align:center">-->
+<!--                          <img :src="url" width="256">-->
+<!--                        </div>-->
+<!--                      </Card>-->
+<!--                    </Col>-->
+<!--                  </Row>-->
+<!--                  <Row v-for="(score_type,index) of current_scores" style="margin-left: 280px;margin-top: 40px">-->
+<!--                    <Col span="4">-->
+<!--                      <Tooltip :content="score_type['des']">-->
+<!--                        <Tag type="dot" :color="score_type['tag_color']" style="font-size: 24px">{{score_type['tag']}}-->
+<!--                        </Tag>-->
+<!--                      </Tooltip>-->
+<!--                    </Col>-->
+<!--                    <Col v-for="(button_type,s_idx) of score_view[index]['button_type']" span="1"-->
+<!--                         style="margin-left: 10px">-->
+<!--                      <Button shape="circle" size="large" :type="button_type"-->
+<!--                              @click="onClickRatingButton(index,s_idx,score_view[index]['rank_list'][s_idx])">-->
+<!--                        {{score_view[index]['rank_list'][s_idx]}}-->
+<!--                      </Button>-->
+<!--                    </Col>-->
+<!--                  </Row>-->
+<!--                  &lt;!&ndash;                  <Row style="margin-left: 280px;margin-top: 40px">&ndash;&gt;-->
+<!--                  &lt;!&ndash;                    <Col span="4">&ndash;&gt;-->
+<!--                  &lt;!&ndash;                      <Tooltip content="指生成图的纹理风格是否接近真实漫画">&ndash;&gt;-->
+<!--                  &lt;!&ndash;                        <Tag type="dot" color="green" style="font-size: 24px">纹理质量</Tag>&ndash;&gt;-->
+<!--                  &lt;!&ndash;                      </Tooltip>&ndash;&gt;-->
+<!--                  &lt;!&ndash;                    </Col>&ndash;&gt;-->
+<!--                  &lt;!&ndash;                    <Col v-for="(score,index) of score_list" span="1" style="margin-left: 10px">&ndash;&gt;-->
+<!--                  &lt;!&ndash;                      <Button shape="circle" size="large" :type="visual_button_status[index]"&ndash;&gt;-->
+<!--                  &lt;!&ndash;                              @click="onClickVisualRating(index,score)">&ndash;&gt;-->
+<!--                  &lt;!&ndash;                        {{score}}&ndash;&gt;-->
+<!--                  &lt;!&ndash;                      </Button>&ndash;&gt;-->
+<!--                  &lt;!&ndash;                    </Col>&ndash;&gt;-->
+<!--                  &lt;!&ndash;                  </Row>&ndash;&gt;-->
+<!--                  <Row style="margin-left: 400px;margin-top: 30px">-->
+<!--                    <Col offset="6" span="2" size="large">-->
+<!--                      <Button type="primary" @click="onClickPre" :disabled="this.pos ===0">上一步</Button>-->
+<!--                    </Col>-->
+<!--                    <Col offset="1" span="2" size="large">-->
+<!--                      <Button type="primary" @click="onClickNext" :disabled="this.pos === this.file_tree.length">下一步-->
+<!--                      </Button>-->
+<!--                    </Col>-->
+<!--                  </Row>-->
+<!--                  <Row style="margin-left: 400px;margin-top: 40px">-->
+<!--                    <Col span="16">-->
+<!--                      <Button type="success" long :disabled="_submitable" @click="showSubmitConfirm=true">提交</Button>-->
+<!--                    </Col>-->
+<!--                  </Row>-->
+<!--                  <Row style="margin-left: 400px;margin-top: 20px">-->
+<!--                    <Col span="16">-->
+<!--                      <Button type="error" long @click="showResetConfirm = true">重置</Button>-->
+<!--                    </Col>-->
+<!--                  </Row>-->
+<!--                </Content>-->
               </transition>
+
             </Layout>
           </Content>
         </div>

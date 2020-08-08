@@ -5,7 +5,7 @@ import Router from 'vue-router';
 // import NProgress from 'nprogress'
 
 const _import = require('./_import_' + process.env.NODE_ENV);
-import DolphinView from '../views/userstu/index'
+import DolphinView from '../views/sast/index'
 
 
 Vue.use(Router);
@@ -22,10 +22,10 @@ export const constantRouterMap = [
   // {path: '/register', component: _import('register/index'), hidden: true},
   {
     path: '/',
-    redirect: '/userstu'
+    redirect: '/sast'
   },
   {
-    path: '/userstu',
+    path: '/sast',
     component: DolphinView
   }
 
@@ -33,7 +33,7 @@ export const constantRouterMap = [
 
 export default new Router({
   // mode: 'history', //后端支持可开
-  base: '/userstu',
+  base: '/sast',
   scrollBehavior: () => ({y: 0}),
   routes: constantRouterMap
 });
