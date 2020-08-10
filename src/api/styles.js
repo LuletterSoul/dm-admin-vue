@@ -11,7 +11,7 @@ function get(style_id) {
 
 function gets(pages) {
   return fetch({
-    url: `${baseURL}`,
+    url: `${baseURL}/`,
     method: 'get',
     params: {
       ...pages

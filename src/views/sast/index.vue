@@ -46,33 +46,33 @@
                       <template v-if="_content_img.source== null">
                         <div style="width: 512px;height: 512px">
                           <div class="vertical-element">
-                            <Upload
-                              ref="upload"
-                              :show-upload-list="false"
-                              :default-file-list="defaultList"
-                              :on-success="handleSuccess"
-                              :on-progress="handleProgress"
-                              :format="['jpg','jpeg','png']"
-                              :max-size="2048"
-                              :on-format-error="handleFormatError"
-                              :on-exceeded-size="handleMaxSize"
-                              :before-upload="handleBeforeUpload"
-                              multiple
-                              type="drag"
-                              :action="_upload_action_content"
-                            >
-                              <div style="padding: 20px 0">
-                                <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                                <p>拖拽或点击上传内容图</p>
-                              </div>
-                            </Upload>
-                            <transition name="fade">
-                              <Progress v-if="show_progress" style="margin-top: 20px"
-                                        :percent="progress"></Progress>
-                            </transition>
-                            <Button style="width: 100%; margin-top: 20px" type="ghost" shape="circle" size="large"
-                                    @click="selectFromContentLib">从库内选择内容图
-                            </Button>
+                            <template>
+                              <Upload
+                                ref="content_upload"
+                                :show-upload-list="false"
+                                :on-success="handleSuccess"
+                                :on-progress="handleProgress"
+                                :format="['jpg','jpeg','png']"
+                                :on-format-error="handleFormatError"
+                                :on-exceeded-size="handleMaxSize"
+                                :before-upload="handleBeforeUpload"
+                                multiple
+                                type="drag"
+                                :action="_upload_action_content"
+                              >
+                                <div style="padding: 20px 0">
+                                  <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                                  <p>拖拽或点击上传内容图</p>
+                                </div>
+                              </Upload>
+                              <transition name="fade">
+                                <Progress v-if="show_progress" style="margin-top: 20px"
+                                          :percent="progress"></Progress>
+                              </transition>
+                              <Button style="width: 100%; margin-top: 20px" type="ghost" shape="circle" size="large"
+                                      @click="selectFromContentLib">从库内选择内容图
+                              </Button>
+                            </template>
                           </div>
                         </div>
                       </template>
@@ -83,9 +83,8 @@
                             :width="src_w" :height="src_h">
                           <div class="demo-upload-list-cover">
                             <div style="top: 50%">
-                              <Icon type="ios-upload-outline" @click.native="handleView(item.name)"></Icon>
-                              <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                              <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                              <Icon type="ios-eye-outline" @click.native="selectFromContentLib"></Icon>
+                              <Icon type="ios-trash-outline" @click.native="handleRemove"></Icon>
                             </div>
                           </div>
                         </div>
@@ -97,19 +96,52 @@
                         风格图
                         <template slot="desc">风格图提供图片合成所需的风格。</template>
                       </Alert>
-                      <div class="demo-upload-list">
-                        <img
-                          src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1027022371,2237485812&fm=26&gp=0.jpg"
-                          width="256">
-                        <div class="demo-upload-list-cover">
-                          <div style="top: 50%">
-                            <Icon type="ios-upload-outline" @click.native="handleView(item.name)"></Icon>
-                            <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                            <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                      <template v-if="_style_img.source== null">
+                        <div style="width: 512px;height: 512px">
+                          <div class="vertical-element">
+                            <template>
+                              <Upload
+                                ref="content_upload"
+                                :show-upload-list="false"
+                                :on-success="handleSuccess2"
+                                :on-progress="handleProgress2"
+                                :format="['jpg','jpeg','png']"
+                                :on-format-error="handleFormatError2"
+                                :on-exceeded-size="handleMaxSize2"
+                                :before-upload="handleBeforeUpload2"
+                                multiple
+                                type="drag"
+                                :action="_upload_action_style"
+                              >
+                                <div style="padding: 20px 0">
+                                  <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                                  <p>拖拽或点击上传风格图</p>
+                                </div>
+                              </Upload>
+                              <transition name="fade">
+                                <Progress v-if="show_progress" style="margin-top: 20px"
+                                          :percent="progress"></Progress>
+                              </transition>
+                              <Button style="width: 100%; margin-top: 20px" type="ghost" shape="circle" size="large"
+                                      @click="selectFromStyleLib">从库内选择风格图
+                              </Button>
+                            </template>
                           </div>
                         </div>
-                      </div>
-
+                      </template>
+                      <template v-else>
+                        <div class="demo-upload-list">
+                          <img
+                            :src="_style_img.source"
+                            :width="src_w" :height="src_h">
+                          <div class="demo-upload-list-cover">
+                            <div style="top: 50%">
+                              <Icon type="ios-eye-outline" @click.native="selectFromStyleLib"></Icon>
+                              <Icon type="ios-trash-outline" @click.native="handleRemove2"></Icon>
+                            </div>
+                          </div>
+                        </div>
+                      </template>
                     </Col>
                     <Col offset="1" span="7">
                       <Alert type="warning" show-icon>
@@ -133,12 +165,13 @@
                   </Row>
                   <Row style="margin-left: 400px;margin-top: 40px">
                     <Col span="16">
-                      <Button type="success" long :disabled="_submitable" @click="showSubmitConfirm=true">提交</Button>
+                      <Button type="success" long :disabled="_systhis_disable" @click="showSubmitConfirm=true">合成
+                      </Button>
                     </Col>
                   </Row>
                   <Row style="margin-left: 400px;margin-top: 20px">
                     <Col span="16">
-                      <Button type="error" long @click="showResetConfirm = true">重置</Button>
+                      <Button type="error" long :disabled="stop_disable" @click="showResetConfirm = true">中止</Button>
                     </Col>
                   </Row>
                 </Content>
@@ -149,16 +182,22 @@
         </div>
       </Row>
       <img-viewer ref="viewer" @onViewed="detail => {this.content_index = detail.index}"/>
+      <img-viewer ref="viewer2" @onViewed="detail => {this.style_index = detail.index}"/>
       <Modal
         v-model="showSubmitConfirm"
-        title="确认评分"
+        title="提交合成请求"
         :loading="submitLoading"
         @on-ok="submitRating('pos')">
         <Row>
           <Col span="24">
-            <Form ref="user" :model='user' :rules="ruleValidate" :label-width="80">
-              <FormItem label="用户名" prop="user_id">
-                <Input v-model="user.user_id" placeholder="请输入用户名"></Input>
+            <Form ref="config" :model='config' :rules="ruleValidate" :label-width="80">
+              <FormItem label="算法类型" prop="alg">
+                <!--                <Input v-model="config.user_id" placeholder="请输入用户名"></Input>-->
+                <label>
+                  <Select v-model="config.alg">
+                    <Option v-for="item in alg_options" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                  </Select>
+                </label>
               </FormItem>
             </Form>
           </Col>
@@ -225,6 +264,7 @@ export default {
       style_index: -1,
       style_id: -1,
       content_ids: [],
+      style_ids: [],
       style_imgs: [],
       content: {
         url: null,
@@ -243,14 +283,25 @@ export default {
         size: 10
       },
       progress: 0,
+      progress2: 0,
       show_progress: false,
+      show_progress2: false,
+      stop_disable: true,
       ruleValidate: {
         user_id: [
           {validator: validateUserId, required: true, trigger: 'blur'}
         ]
       },
-      user: {
+      alg_options: [{
+        value: 'MAST',
+        label: 'MAST'
+      }, {
+        value: 'CAST',
+        label: 'CAST'
+      }],
+      config: {
         user_id: '',
+        alg: 'MAST'
       },
       video_url: '',
       file_tree: [],
@@ -346,12 +397,15 @@ export default {
     }
   },
   mounted() {
-    this.requestFileTree();
-    this.requestScoreTypes();
+    // this.requestFileTree();
+    // this.requestScoreTypes();
   },
   computed: {
     _upload_action_content() {
       return `${process.env.SERVER_API}/contents/`
+    },
+    _upload_action_style() {
+      return `${process.env.SERVER_API}/styles/`
     },
     _content_imgs() {
       if (this.content_ids.length) {
@@ -442,14 +496,8 @@ export default {
         return this._default_scores;
       }
     },
-    _submitable() {
-      if (this.pos < this.file_tree.length || this.pos === 0) {
-        this.stopTimer = false;
-        return true
-      } else {
-        this.stopTimer = true;
-        return false
-      }
+    _systhis_disable() {
+      return this._content_img.source === null || this._style_img.source === null
     },
     _playerOptions() {
       return {
@@ -499,20 +547,22 @@ export default {
 
   },
   methods: {
-    handleImgViewed(img_detail) {
-      console.log(
-        img_detail
-      )
-    },
     selectFromContentLib() {
       let vm = this
       new Promise(((resolve, reject) => {
         let res = this.requestContentImages()
         resolve(res)
       })).then((res) => {
-        vm.$refs.viewer.show(
-          vm._content_imgs
-        );
+        if (vm.content_index !== -1) {
+          vm.$refs.viewer.show(
+            vm._content_imgs,
+            vm.content_index
+          );
+        } else {
+          vm.$refs.viewer.show(
+            vm._content_imgs
+          );
+        }
       }).catch(error => {
         console.log(error)
       })
@@ -520,11 +570,19 @@ export default {
     selectFromStyleLib() {
       let vm = this
       new Promise(((resolve, reject) => {
-        return this.requestStyleImages()
+        let res = this.requestStyleImages()
+        resolve(res)
       })).then((res) => {
-        vm.$refs.viewer.show(
-          vm._style_imgs
-        );
+        if (vm.style_index !== -1) {
+          vm.$refs.viewer2.show(
+            vm._style_imgs,
+            vm.style_index
+          );
+        } else {
+          vm.$refs.viewer2.show(
+            vm._style_imgs
+          );
+        }
       }).catch(error => {
         console.log(error)
       })
@@ -533,9 +591,9 @@ export default {
       this.imgName = name;
       this.visible = true;
     },
-    handleRemove(file) {
-      const fileList = this.$refs.upload.fileList;
-      this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+    handleRemove() {
+      this.content_index = -1
+      this.content_id = -1
     },
     handleSuccess(res, file) {
       // file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
@@ -561,7 +619,40 @@ export default {
       this.progress = progressEvent.loaded / progressEvent.total * 100 | 0
     },
     handleBeforeUpload(file) {
-      console.log(file)
+      return true;
+    },
+    handleView2(name) {
+      this.imgName = name;
+      this.visible = true;
+    },
+    handleRemove2() {
+      this.style_index = -1
+      this.style_id = -1
+    },
+    handleSuccess2(res, file) {
+      // file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
+      // file.name = '7eb99afb9d5f317c912f08b5212fd69a';
+      this.style_id = res
+      this.show_progress2 = false
+      this.style_index = -1
+    },
+    handleFormatError2(file) {
+      this.$Notice.warning({
+        title: '图片格式不正确',
+        desc: '《' + file.name + '》格式不正确, 请上传.jpg或.png格式的图片'
+      });
+    },
+    handleMaxSize2(file) {
+      this.$Notice.warning({
+        title: '超出文件大小限制',
+        desc: '图片' + file.name + '过大，不能超过2M.'
+      });
+    },
+    handleProgress2(progressEvent) {
+      this.show_progress2 = true
+      this.progress2 = progressEvent.loaded / progressEvent.total * 100 | 0
+    },
+    handleBeforeUpload2(file) {
       return true;
     },
     onPageSizeChange() {
@@ -624,7 +715,7 @@ export default {
     },
 
     submitRating: function () {
-      if (this.user.user_id === '' || !this.isValidUserName(this.user.user_id)) {
+      if (this.config.user_id === '' || !this.isValidUserName(this.config.user_id)) {
         this.submitLoading = false;
         this.$Message.error('提交失败，用户名不合法！');
         return
@@ -632,7 +723,7 @@ export default {
       let vm = this;
       vm.submitLoading = true;
       return new Promise((resolve, reject) => {
-        api.scores.post(this.user.user_id, this.scores).then(res => {
+        api.scores.post(this.config.user_id, this.scores).then(res => {
           if (res === 'success') {
             vm.$Message.success('提交成功，感谢参与，祝您生活愉快！');
             setInterval(function () {
@@ -737,16 +828,17 @@ export default {
       return new Promise((resolve, reject) => {
         api.styles.gets(this.pages).then(res => {
           if (res !== undefined) {
-            vm.style_ids = res;
+            vm.style_ids = res.style_ids;
+            vm.style_id = -1
           } else {
-            vm.$Message.error('图片加载失败，请刷新重试！');
+            vm.$Message.error('风格图加载失败，请刷新重试！');
           }
+          return resolve(res);
+        }).catch(error => {
+          return reject(error);
+        }).finally(() => {
           vm.handleSpinHide();
           vm.file_tree_loading = false;
-          resolve(res);
-        }).catch(error => {
-          vm.handleSpinHide();
-          reject(error);
         });
       });
     },

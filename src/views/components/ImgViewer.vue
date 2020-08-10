@@ -49,7 +49,6 @@ export default {
       this.$viewer.view(this.index);
     },
     show(images, index = 0) {
-      console.log(images)
       if (this.images === images) {
         this.view(index)
         return

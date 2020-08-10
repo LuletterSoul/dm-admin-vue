@@ -24,9 +24,9 @@
   </div>
 </template>
 <script>
-import UploadList from 'iview/src/components/upload/upload-list.vue';
-import {oneOf} from 'iview/src/utils/assist';
-import Emitter from 'iview/src/mixins/emitter';
+import UploadList from 'view-design/src/components/upload/upload-list.vue';
+import {oneOf} from 'view-design/src/utils/assist';
+import Emitter from 'view-design/src/mixins/emitter';
 import axios from 'axios';
 
 const prefixCls = 'ivu-upload';

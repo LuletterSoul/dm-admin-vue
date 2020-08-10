@@ -38,6 +38,7 @@
     "uuid": "3.2.1",
     "v-viewer": "^1.5.1",
     "videojs-flash": "^2.2.1",
+    "view-design": "^4.3.2",
     "vue": "2.5.2",
     "vue-count-to": "1.0.5",
     "vue-fullpage": "^2.0.5",

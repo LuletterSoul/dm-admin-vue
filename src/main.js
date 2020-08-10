@@ -6,12 +6,12 @@ import router from './router'
 import store from './store'
 import '@/styles/index.scss'
 
-import iView from 'iview';
+import ViewUI from 'view-design';
 import VueI18n from 'vue-i18n'
 import enLocale from './locale/en'
 import zhLocale from './locale/zh-CN'
-import zhLocaleIView from 'iview/dist/locale/zh-CN'
-import enLocaleIView from 'iview/dist/locale/en-US'
+import zhLocaleIView from 'view-design/dist/locale/zh-CN'
+import enLocaleIView from 'view-design/dist/locale/en-US'
 import VueLocalStorage from 'vue-ls'
 
 
@@ -65,7 +65,7 @@ const i18n = new VueI18n({
   }
 });
 
-Vue.use(iView, {
+Vue.use(ViewUI, {
   i18n: function (path, options) {
     let value = i18n.t(path, options);
     if (value !== null && value !== undefined) return value;
