@@ -150,18 +150,24 @@
                         合成图
                         <template slot="desc">合成图尽可能保持原图内容结构，并融合风格图的风格。</template>
                       </Alert>
-                      <div class="demo-upload-list">
-                        <img
-                          src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1027022371,2237485812&fm=26&gp=0.jpg"
-                          width="256">
-                        <div class="demo-upload-list-cover">
-                          <div style="top: 50%">
-                            <Icon type="ios-upload-outline" @click.native="handleView(item.name)"></Icon>
-                            <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                            <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                      <template v-if="_style_img.source== null">
+                        <div style="width: 512px;height: 512px">
+
+                        </div>
+                      </template>
+                      <template v-else>
+                        <div class="demo-upload-list">
+                          <img
+                            :src="_stylization_img.source"
+                            :width="src_w" :height="src_h">
+                          <div class="demo-upload-list-cover">
+                            <div style="top: 50%">
+                              <Icon type="ios-eye-outline" @click.native="selectFromStyleLib"></Icon>
+                              <Icon type="ios-trash-outline" @click.native="handleRemove2"></Icon>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      </template>
                     </Col>
                   </Row>
                   <Row style="margin-top: 20px">
@@ -292,6 +298,7 @@ export default {
         page: 0,
         size: 10
       },
+      stylization_id: -1,
       progress: 0,
       progress2: 0,
       show_progress: false,
@@ -480,13 +487,25 @@ export default {
         }
       }
     },
-    _style_img() {
+    _stylization_img() {
+      if (this.stylization_id !== -1) {
+        // from user upload
+        return {
+          thumbnail: `${process.env.SERVER_API}/stylizations/${this.stylization_id}?width=${this.thumbnail_width}&height=${this.thumbnail_height}`,
+          source: `${process.env.SERVER_API}/stylizations/${this.stylization_id}?width=${this.src_w}&height=${this.src_h}`,
+        }
+      } else {
+        return {
+          thumbnail: null,
+          source: null,
+        }
+      }
+    }, _style_img() {
       if (this.style_id !== -1) {
         // from user upload
         return {
           thumbnail: `${process.env.SERVER_API}/styles/${this.style_id}?width=${this.thumbnail_width}&height=${this.thumbnail_height}`,
           source: `${process.env.SERVER_API}/styles/${this.style_id}?width=${this.src_w}&height=${this.src_h}`,
-          id: this.style_id
         }
       } else if (this.style_index !== -1) {
         // from user select from library
@@ -495,7 +514,6 @@ export default {
         return {
           thumbnail: null,
           source: null,
-          id: null
         }
       }
     },
