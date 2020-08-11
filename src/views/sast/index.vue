@@ -43,7 +43,7 @@
                         <template slot="desc">内容图是用户输入的原图，用以获取风格图的风格。</template>
                       </Alert>
                       <template v-if="_content_img.source== null">
-                        <div style="width: 512px;height: 512px">
+                        <div class="photo-box">
                           <div class="vertical-element">
                             <template>
                               <Upload
@@ -97,7 +97,7 @@
                         <template slot="desc">风格图提供图片合成所需的风格。</template>
                       </Alert>
                       <template v-if="_style_img.source== null">
-                        <div style="width: 512px;height: 512px">
+                        <div class="photo-box">
                           <div class="vertical-element">
                             <template>
                               <Upload
@@ -150,23 +150,30 @@
                         合成图
                         <template slot="desc">合成图尽可能保持原图内容结构，并融合风格图的风格。</template>
                       </Alert>
-                      <template v-if="_style_img.source== null">
-                        <div style="width: 512px;height: 512px">
-
+                      <template v-if="_stylization_img.source== null">
+                        <div class="photo-box">
+                          <div class="vertical-element">
+                            <em-placeholder font-size="32px" :show="_stylization_img.source === null">
+                              <Icon :type="_stylization_img.source === null ? 'happy-outline' : 'outlet'"></Icon>
+                              <p>未合成</p>
+                            </em-placeholder>
+                          </div>
                         </div>
                       </template>
                       <template v-else>
-                        <div class="demo-upload-list">
+                        <transition name="fade">
                           <img
                             :src="_stylization_img.source"
                             :width="src_w" :height="src_h">
-                          <div class="demo-upload-list-cover">
-                            <div style="top: 50%">
-                              <Icon type="ios-eye-outline" @click.native="selectFromStyleLib"></Icon>
-                              <Icon type="ios-trash-outline" @click.native="handleRemove2"></Icon>
-                            </div>
-                          </div>
-                        </div>
+                        </transition>
+                        <!--                        <div class="demo-upload-list">-->
+                        <!--                          <div class="demo-upload-list-cover">-->
+                        <!--                            <div>-->
+                        <!--                              <Icon type="ios-eye-outline" @click.native="selectFromStyleLib"></Icon>-->
+                        <!--                              <Icon type="ios-trash-outline" @click.native="handleRemove2"></Icon>-->
+                        <!--                            </div>-->
+                        <!--                          </div>-->
+                        <!--                        </div>-->
                       </template>
                     </Col>
                   </Row>
@@ -234,6 +241,7 @@
 import * as api from '../../api/index'
 import VueVideoPlayer from 'vue-video-player'
 import 'video.js/dist/video-js.css'
+import EmPlaceholder from '../components/placeholder'
 
 import {videoPlayer} from 'vue-video-player'
 import Timer from './timer'
@@ -255,7 +263,7 @@ function genImages() {
 
 export default {
   name: 'StyleTransfer',
-  components: {videoPlayer, Timer, ImgViewer, AxiosUpload},
+  components: {videoPlayer, Timer, ImgViewer, AxiosUpload, EmPlaceholder},
   data() {
     const validateUserId = (rule, value, callback) => {
       if (value === '') {
@@ -431,6 +439,7 @@ export default {
       console.log(msg)
       this.$Message.success('合成成功!');
       this.synthesis_loading = false
+      this.stylization_id = msg.stylization_id
     },
     onSynthesising: function (msg) {
       this.synthesis_progress = msg.percent
@@ -663,6 +672,7 @@ export default {
     handleRemove() {
       this.content_index = -1
       this.content_id = -1
+      this.stylization_id = -1
     },
     handleSuccess(res, file) {
       // file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
@@ -697,6 +707,7 @@ export default {
     handleRemove2() {
       this.style_index = -1
       this.style_id = -1
+      this.stylization_id = -1
     },
     handleSuccess2(res, file) {
       // file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
@@ -867,6 +878,9 @@ export default {
       this.activeRegName = name;
     },
     requestContentImages() {
+      if (this._content_imgs.length > 0) {
+        return
+      }
       let vm = this;
       // let resultId = this.resultList[0].resultId;
       vm.file_tree_loading = true;
@@ -890,6 +904,9 @@ export default {
       });
     },
     requestStyleImages() {
+      if (this._style_imgs.length > 0) {
+        return
+      }
       let vm = this;
       // let resultId = this.resultList[0].resultId;
       vm.file_tree_loading = true;
@@ -992,8 +1009,7 @@ export default {
   overflow: hidden;
   background: #fff;
   position: relative;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
-  margin-right: 4px;
+  /*box-shadow: 0 1px 1px rgba(0, 0, 0, .2);*/
 }
 
 .img-block {
@@ -1005,7 +1021,7 @@ export default {
   overflow: hidden;
   background: #fff;
   position: relative;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+  /*box-shadow: 0 1px 1px rgba(0, 0, 0, .2);*/
   margin-right: 4px;
 }
 
@@ -1058,32 +1074,15 @@ export default {
   position: relative;
   top: 50%;
   transform: translateY(-50%);
+  margin: 20px;
 }
 
-.layout-logo {
-  width: 100px;
-  height: 30px;
-  background: #5b6270;
-  border-radius: 3px;
-  float: left;
-  position: relative;
-  top: 15px;
-  left: 20px;
-}
-
-.layout-nav {
-  width: 420px;
-  margin: 0 auto;
-}
-
-.layout-footer-center {
-  text-align: center;
-}
 
 .photo-box {
-  flex: 1;
-  display: flex;
-  justify-content: center;
+  width: 100%;
+  height: 512px;
+  border: 1px solid #515a6e;
+  border-radius: 20px;
 }
 
 center {
@@ -1094,4 +1093,6 @@ center {
   left: 0;
   right: 0;
 }
+
+
 </style>
