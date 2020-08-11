@@ -28,13 +28,11 @@ export const constantRouterMap = [
     path: '/sast',
     component: DolphinView
   }
-
 ];
 
 export default new Router({
-  // mode: 'history', //后端支持可开
-  base: '/sast',
-  scrollBehavior: () => ({y: 0}),
+  mode: 'history', //后端支持可开
+  // base: '/sast',
   routes: constantRouterMap
 });
 

@@ -5,26 +5,26 @@ import App from './App'
 import router from './router'
 import store from './store'
 import '@/styles/index.scss'
-
+// import VueSocketIO from "vue-socket.io";
 import ViewUI from 'view-design';
-import VueI18n from 'vue-i18n'
-import enLocale from './locale/en'
-import zhLocale from './locale/zh-CN'
-import zhLocaleIView from 'view-design/dist/locale/zh-CN'
-import enLocaleIView from 'view-design/dist/locale/en-US'
-import VueLocalStorage from 'vue-ls'
+import 'viewerjs/dist/viewer.css'
 
 
 import NProgress from 'nprogress'
+
 NProgress.configure({showSpinner: false})// NProgress Configuration
 import 'nprogress/nprogress.css'
 import 'normalize.css/normalize.css'
+import 'view-design/dist/styles/iview.css';
 import '@/assets/iconfont/iconfont'
-import 'animate.css'
-import 'iview/dist/styles/iview.css';    // 使用 CSS
 import Viewer from 'v-viewer'
-import 'viewerjs/dist/viewer.css'
 
+import VueSocketIOExt from 'vue-socket.io-extended';
+import io from 'socket.io-client';
+
+const socket = io(process.env.SOCKET_API);
+
+Vue.use(VueSocketIOExt, socket);
 
 Vue.use(Viewer);
 Viewer.setDefaults({
@@ -47,31 +47,41 @@ Viewer.setDefaults({
 });
 
 Vue.config.productionTip = false;
-Vue.use(VueI18n);
-Vue.use(VueLocalStorage, {namespace: '_dm_platform'});
+// Vue.use(VueI18n);
+// Vue.use(VueLocalStorage, {namespace: '_dm_platform'});
+//
+// const i18n = new VueI18n({
+//   locale: Vue.ls.get('locale') || 'zh-CN',
+//   fallbackLocale: 'zh-CN',
+//   messages: {
+//     'zh-CN': {
+//       ...zhLocaleIView,
+//       ...zhLocale
+//     },
+//     'en': {
+//       ...enLocaleIView,
+//       ...enLocale
+//     }
+//   }
+// });
 
-const i18n = new VueI18n({
-  locale: Vue.ls.get('locale') || 'zh-CN',
-  fallbackLocale: 'zh-CN',
-  messages: {
-    'zh-CN': {
-      ...zhLocaleIView,
-      ...zhLocale
-    },
-    'en': {
-      ...enLocaleIView,
-      ...enLocale
-    }
-  }
-});
+// Vue.use(ViewUI, {
+//   i18n: function (path, options) {
+//     let value = i18n.t(path, options);
+//     if (value !== null && value !== undefined) return value;
+//     return ''
+//   }
+// });
 
-Vue.use(ViewUI, {
-  i18n: function (path, options) {
-    let value = i18n.t(path, options);
-    if (value !== null && value !== undefined) return value;
-    return ''
-  }
-});
+// Vue.use(
+//   new VueSocketIO({
+//     debug: true,
+//     connection: process.env.SOCKET_API
+//   })
+// );
+
+
+Vue.use(ViewUI)
 
 
 Vue.mixin({
@@ -97,7 +107,7 @@ new Vue({
   el: '#app',
   router,
   store,
-  i18n,
+  // i18n,
   template: '<App/>',
   components: {App}
 });

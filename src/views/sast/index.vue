@@ -14,7 +14,6 @@
           </Menu>
         </Row>
       </Header>
-
       <Row>
         <div class="layout">
           <Content :style="{padding: '24px 0', minHeight: '920pt'}">
@@ -69,7 +68,8 @@
                                 <Progress v-if="show_progress" style="margin-top: 20px"
                                           :percent="progress"></Progress>
                               </transition>
-                              <Button style="width: 100%; margin-top: 20px" type="ghost" shape="circle" size="large"
+                              <Button style="width: 100%; margin-top: 20px" type="primary" ghost shape="circle"
+                                      size="large"
                                       @click="selectFromContentLib">从库内选择内容图
                               </Button>
                             </template>
@@ -119,10 +119,11 @@
                                 </div>
                               </Upload>
                               <transition name="fade">
-                                <Progress v-if="show_progress" style="margin-top: 20px"
-                                          :percent="progress"></Progress>
+                                <Progress v-if="show_progress2" style="margin-top: 20px"
+                                          :percent="progress2"></Progress>
                               </transition>
-                              <Button style="width: 100%; margin-top: 20px" type="ghost" shape="circle" size="large"
+                              <Button style="width: 100%; margin-top: 20px" type="primary" ghost shape="circle"
+                                      size="large"
                                       @click="selectFromStyleLib">从库内选择风格图
                               </Button>
                             </template>
@@ -163,20 +164,30 @@
                       </div>
                     </Col>
                   </Row>
+                  <Row style="margin-top: 20px">
+                    <transition name="fade">
+                      <template v-if="synthesis_loading">
+                        <Progress :percent="synthesis_progress" :stroke-width="20" status="active"/>
+                      </template>
+                    </transition>
+                  </Row>
                   <Row style="margin-left: 400px;margin-top: 40px">
                     <Col span="16">
-                      <Button type="success" long :disabled="_systhis_disable" @click="showSubmitConfirm=true">合成
+                      <Button type="success" long :loading="synthesis_loading" :disabled="_synthesis_disable"
+                              @click="showSubmitConfirm=true">
+                        <span v-if="synthesis_loading">正在合成</span>
+                        <span v-else>合成</span>
                       </Button>
                     </Col>
                   </Row>
                   <Row style="margin-left: 400px;margin-top: 20px">
                     <Col span="16">
-                      <Button type="error" long :disabled="stop_disable" @click="showResetConfirm = true">中止</Button>
+                      <Button type="error" long :disabled="!synthesis_loading" @click="showResetConfirm = true">中止
+                      </Button>
                     </Col>
                   </Row>
                 </Content>
               </transition>
-
             </Layout>
           </Content>
         </div>
@@ -186,8 +197,7 @@
       <Modal
         v-model="showSubmitConfirm"
         title="提交合成请求"
-        :loading="submitLoading"
-        @on-ok="submitRating('pos')">
+        @on-ok="requestStylizaitons">
         <Row>
           <Col span="24">
             <Form ref="config" :model='config' :rules="ruleValidate" :label-width="80">
@@ -206,9 +216,9 @@
 
       <Modal
         v-model="showResetConfirm"
-        title="确认重置"
+        title="确认中止"
         @on-ok="onReset()">
-        <p>重置会清空所有评分数据，是否确认重置？</p>
+        <p>中止会清空当前合成进度，是否确认中止？</p>
       </Modal>
 
     </Layout>
@@ -286,7 +296,9 @@ export default {
       progress2: 0,
       show_progress: false,
       show_progress2: false,
+      synthesis_progress: 0,
       stop_disable: true,
+      synthesis_loading: false,
       ruleValidate: {
         user_id: [
           {validator: validateUserId, required: true, trigger: 'blur'}
@@ -396,9 +408,29 @@ export default {
       scores: []
     }
   },
+  sockets: {
+    //这里是监听connect事件
+    connect: function () {
+      // this.id = this.$socket.id
+      console.log('建立连接')
+    },
+    disconnect: function () {
+      console.log('断开连接')
+    },
+    reconnect: function () {
+      console.log('重新连接')
+    },
+    onSynthesisCompleted: function (msg) {
+      console.log(msg)
+      this.$Message.success('合成成功!');
+      this.synthesis_loading = false
+    },
+    onSynthesising: function (msg) {
+      this.synthesis_progress = msg.percent
+    }
+  },
   mounted() {
-    // this.requestFileTree();
-    // this.requestScoreTypes();
+
   },
   computed: {
     _upload_action_content() {
@@ -454,6 +486,7 @@ export default {
         return {
           thumbnail: `${process.env.SERVER_API}/styles/${this.style_id}?width=${this.thumbnail_width}&height=${this.thumbnail_height}`,
           source: `${process.env.SERVER_API}/styles/${this.style_id}?width=${this.src_w}&height=${this.src_h}`,
+          id: this.style_id
         }
       } else if (this.style_index !== -1) {
         // from user select from library
@@ -462,11 +495,25 @@ export default {
         return {
           thumbnail: null,
           source: null,
+          id: null
         }
       }
     },
-    _stylization_img() {
-
+    _content_id() {
+      if (this.content_id !== -1) {
+        return this.content_id
+      } else if (this.content_index !== -1) {
+        return this.content_ids[this.content_index]
+      }
+    },
+    _style_id() {
+      if (this.style_id !== -1) {
+        return this.style_id
+      } else if (this.style_index !== -1) {
+        return this.style_ids[this.style_index]
+      } else {
+        return -1
+      }
     },
     _percent() {
       if (this.file_tree.length) {
@@ -496,7 +543,7 @@ export default {
         return this._default_scores;
       }
     },
-    _systhis_disable() {
+    _synthesis_disable() {
       return this._content_img.source === null || this._style_img.source === null
     },
     _playerOptions() {
@@ -547,6 +594,10 @@ export default {
 
   },
   methods: {
+    handleSocket() {
+      this.$socket.client.emit('synthesis');
+      console.log('点击触发')
+    },
     selectFromContentLib() {
       let vm = this
       new Promise(((resolve, reject) => {
@@ -672,7 +723,8 @@ export default {
       this.scores = [];
       this.pos = 0;
       this.showResetConfirm = false;
-      this.$Message.success('重置成功！');
+      this.$Message.success('中止成功！');
+      this.synthesis_loading = false
     },
     resetScore: function (scores) {
       for (let i = 0; i < this.current_scores.length; i++) {
@@ -713,7 +765,6 @@ export default {
         this.pos = this.file_tree.length
       }
     },
-
     submitRating: function () {
       if (this.config.user_id === '' || !this.isValidUserName(this.config.user_id)) {
         this.submitLoading = false;
@@ -833,6 +884,20 @@ export default {
           } else {
             vm.$Message.error('风格图加载失败，请刷新重试！');
           }
+          return resolve(res);
+        }).catch(error => {
+          return reject(error);
+        }).finally(() => {
+          vm.handleSpinHide();
+          vm.file_tree_loading = false;
+        });
+      });
+    },
+    requestStylizaitons() {
+      let vm = this;
+      this.synthesis_loading = true
+      return new Promise((resolve, reject) => {
+        api.stylizations.post(this._content_id, this._style_id, this.config.alg).then(res => {
           return resolve(res);
         }).catch(error => {
           return reject(error);
