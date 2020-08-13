@@ -5,6 +5,10 @@ import App from './App'
 import router from './router'
 import store from './store'
 import '@/styles/index.scss'
+import {VLazyImagePlugin} from "v-lazy-image";
+import VueToastr2 from "vue-toastr-2";
+import paper from "paper";
+import VTooltip from "v-tooltip";
 // import VueSocketIO from "vue-socket.io";
 import ViewUI from 'view-design';
 import 'viewerjs/dist/viewer.css'
@@ -13,18 +17,33 @@ import 'viewerjs/dist/viewer.css'
 import NProgress from 'nprogress'
 
 NProgress.configure({showSpinner: false})// NProgress Configuration
+import VueTouch from 'vue-touch'
+import Viewer from 'v-viewer'
+
+
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "vue-toastr-2/dist/vue-toastr-2.min.css";
+import "vue-loading-overlay/dist/vue-loading.css";
+
 import 'nprogress/nprogress.css'
 import 'normalize.css/normalize.css'
 import 'view-design/dist/styles/iview.css';
-import '@/assets/iconfont/iconfont'
-import Viewer from 'v-viewer'
+import 'font-awesome/css/font-awesome.min.css';
 
 import VueSocketIOExt from 'vue-socket.io-extended';
 import io from 'socket.io-client';
 
 const socket = io(process.env.SOCKET_API);
 
+paper.install(window);
+window.toastr = require("toastr");
+
+Vue.use(VueToastr2);
+Vue.use(VTooltip);
+Vue.use(VLazyImagePlugin);
 Vue.use(VueSocketIOExt, socket);
+Vue.use(VueTouch, {name: 'v-touch'});
 
 Vue.use(Viewer);
 Viewer.setDefaults({
@@ -84,16 +103,6 @@ Vue.config.productionTip = false;
 Vue.use(ViewUI)
 
 
-Vue.mixin({
-  data() {
-    return {
-      pageAnimated: false
-    }
-  },
-  mounted() {
-    this.pageAnimated = true
-  }
-});
 const whiteList = ['/login', '/register'];
 router.beforeEach((to, from, next) => {
   NProgress.start();
@@ -102,6 +111,10 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
   NProgress.done();
 });
+
+// router.beforeRouteUpdate((to, from, next) => {
+//   next() // DO IT!
+// })
 
 new Vue({
   el: '#app',

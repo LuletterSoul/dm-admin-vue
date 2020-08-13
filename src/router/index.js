@@ -5,7 +5,9 @@ import Router from 'vue-router';
 // import NProgress from 'nprogress'
 
 const _import = require('./_import_' + process.env.NODE_ENV);
-import DolphinView from '../views/sast/index'
+import StyleTransfer from '../views/sast/index'
+import Annotator from '../views/Annotator'
+import PageNotFound from "../views/PageNotFound";
 
 
 Vue.use(Router);
@@ -26,8 +28,16 @@ export const constantRouterMap = [
   },
   {
     path: '/sast',
-    component: DolphinView
-  }
+    component: StyleTransfer,
+    name: 'sast'
+  },
+  {
+    path: '/annotate/:identifier',
+    name: "annotate",
+    component: Annotator,
+    props: route => ({identifier: route.params.identifier, img_type: route.query.type})
+  },
+  {path: "*", component: PageNotFound}
 ];
 
 export default new Router({

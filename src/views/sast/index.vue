@@ -82,9 +82,10 @@
                             :src="_content_img.source"
                             :width="src_w" :height="src_h">
                           <div class="demo-upload-list-cover">
-                            <div style="top: 50%">
+                            <div>
                               <Icon type="ios-eye-outline" @click.native="selectFromContentLib"></Icon>
                               <Icon type="ios-trash-outline" @click.native="handleRemove"></Icon>
+                              <Icon type="ios-cog-outline" @click.native="handleContentEdit"></Icon>
                             </div>
                           </div>
                         </div>
@@ -139,6 +140,7 @@
                             <div style="top: 50%">
                               <Icon type="ios-eye-outline" @click.native="selectFromStyleLib"></Icon>
                               <Icon type="ios-trash-outline" @click.native="handleRemove2"></Icon>
+                              <Icon type="ios-cog-outline" @click.native="handleStyleEdit"></Icon>
                             </div>
                           </div>
                         </div>
@@ -330,6 +332,8 @@ export default {
         user_id: '',
         alg: 'MAST'
       },
+      content_mask_annotation: {},
+      style_mask_annotation: {},
       video_url: '',
       file_tree: [],
       score_types: [],
@@ -449,6 +453,28 @@ export default {
 
   },
   computed: {
+    _content_mask() {
+      let categories = this.content_mask_annotation.categories
+      if (categories === undefined) {
+        return []
+      } else {
+        let children = categories[0].annotations[0].compoundPath[1].children
+        return children.map(c => {
+          return c[1].segments
+        })
+      }
+    },
+    _style_mask() {
+      let categories = this.style_mask_annotation.categories
+      if (categories === undefined) {
+        return []
+      } else {
+        let children = categories[0].annotations[0].compoundPath[1].children
+        return children.map(c => {
+          return c[1].segments
+        })
+      }
+    },
     _upload_action_content() {
       return `${process.env.SERVER_API}/contents/`
     },
@@ -620,6 +646,31 @@ export default {
     }
 
   },
+  activated() {
+    let annotation = this.$route.params.annotation
+    let type = this.$route.params.type
+    console.log(annotation)
+    console.log(type)
+    if (annotation !== undefined) {
+      if (type === 'contents') {
+        console.log(type)
+        this.content_mask_annotation = annotation
+      } else if (type === 'styles') {
+        this.style_mask_annotation = annotation
+      }
+    }
+  },
+  // beforeRouteEnter(to, from, next) {
+  //   // 在渲染该组件的对应路由被 confirm 前调用
+  //   // 不！能！获取组件实例 `this`
+  //   // 因为当守卫执行前，组件实例还没被创建
+  //   console.log()
+  //   if (from.annotation === undefined) {
+  //     next(vm => {
+  //       vm.getQueryList()
+  //     })
+  //   }
+  // },
   methods: {
     handleSocket() {
       this.$socket.client.emit('synthesis');
@@ -673,6 +724,12 @@ export default {
       this.content_index = -1
       this.content_id = -1
       this.stylization_id = -1
+    },
+    handleContentEdit() {
+      this.$router.push({name: "annotate", params: {identifier: this._content_id}, query: {type: 'contents'}})
+    },
+    handleStyleEdit() {
+      this.$router.push({name: "annotate", params: {identifier: this._style_id}, query: {type: 'styles'}})
     },
     handleSuccess(res, file) {
       // file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
@@ -932,7 +989,7 @@ export default {
       let vm = this;
       this.synthesis_loading = true
       return new Promise((resolve, reject) => {
-        api.stylizations.post(this._content_id, this._style_id, this.config.alg).then(res => {
+        api.stylizations.post(this._content_id, this._style_id, this.config.alg, this._content_mask, this._style_mask).then(res => {
           return resolve(res);
         }).catch(error => {
           return reject(error);
