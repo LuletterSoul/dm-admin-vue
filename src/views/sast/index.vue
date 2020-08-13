@@ -989,7 +989,7 @@ export default {
       let vm = this;
       this.synthesis_loading = true
       return new Promise((resolve, reject) => {
-        api.stylizations.post(this._content_id, this._style_id, this.config.alg, this._content_mask, this._style_mask).then(res => {
+        api.stylizations.post(this._content_id, this._style_id, this.config.alg, this._content_mask, this._style_mask, this.src_w, this.src_h).then(res => {
           return resolve(res);
         }).catch(error => {
           return reject(error);

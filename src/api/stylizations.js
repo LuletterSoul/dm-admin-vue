@@ -10,7 +10,7 @@ function get(stylized_id) {
 }
 
 
-function post(content_id, style_id, alg, content_mask = null, style_mask = null) {
+function post(content_id, style_id, alg, content_mask = null, style_mask = null, width = 512, height = 512) {
   // let form = new FormData()
   // form.append('content_mask', content_mask)
   // form.append('style_mask', style_mask)
@@ -26,7 +26,9 @@ function post(content_id, style_id, alg, content_mask = null, style_mask = null)
       style_id: style_id,
       alg: alg,
       content_mask: content_mask,
-      style_mask: style_mask
+      style_mask: style_mask,
+      width: width,
+      height: height
     },
     method: 'post',
   })
