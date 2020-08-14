@@ -91,6 +91,31 @@
                         </div>
                       </template>
                     </Col>
+
+                    <Col offset="1" span="7">
+                      <Alert type="warning" show-icon>
+                        <Icon type="ios-eye-outline" slot="icon"></Icon>
+                        合成图
+                        <template slot="desc">合成图尽可能保持原图内容结构，并融合风格图的风格。</template>
+                      </Alert>
+                      <template v-if="_stylization_img.source== null">
+                        <div class="photo-box">
+                          <div class="vertical-element">
+                            <em-placeholder font-size="32px" :show="_stylization_img.source === null">
+                              <Icon :type="_stylization_img.source === null ? 'happy-outline' : 'outlet'"></Icon>
+                              <p>未合成</p>
+                            </em-placeholder>
+                          </div>
+                        </div>
+                      </template>
+                      <template v-else>
+                        <transition name="fade">
+                          <img
+                            :src="_stylization_img.source"
+                            :width="src_w" :height="src_h">
+                        </transition>
+                      </template>
+                    </Col>
                     <Col offset="1" span="7">
                       <Alert type="info" show-icon>
                         <Icon type="ios-eye-outline" slot="icon"></Icon>
@@ -146,38 +171,7 @@
                         </div>
                       </template>
                     </Col>
-                    <Col offset="1" span="7">
-                      <Alert type="warning" show-icon>
-                        <Icon type="ios-eye-outline" slot="icon"></Icon>
-                        合成图
-                        <template slot="desc">合成图尽可能保持原图内容结构，并融合风格图的风格。</template>
-                      </Alert>
-                      <template v-if="_stylization_img.source== null">
-                        <div class="photo-box">
-                          <div class="vertical-element">
-                            <em-placeholder font-size="32px" :show="_stylization_img.source === null">
-                              <Icon :type="_stylization_img.source === null ? 'happy-outline' : 'outlet'"></Icon>
-                              <p>未合成</p>
-                            </em-placeholder>
-                          </div>
-                        </div>
-                      </template>
-                      <template v-else>
-                        <transition name="fade">
-                          <img
-                            :src="_stylization_img.source"
-                            :width="src_w" :height="src_h">
-                        </transition>
-                        <!--                        <div class="demo-upload-list">-->
-                        <!--                          <div class="demo-upload-list-cover">-->
-                        <!--                            <div>-->
-                        <!--                              <Icon type="ios-eye-outline" @click.native="selectFromStyleLib"></Icon>-->
-                        <!--                              <Icon type="ios-trash-outline" @click.native="handleRemove2"></Icon>-->
-                        <!--                            </div>-->
-                        <!--                          </div>-->
-                        <!--                        </div>-->
-                      </template>
-                    </Col>
+
                   </Row>
                   <Row style="margin-top: 20px">
                     <transition name="fade">
@@ -446,6 +440,7 @@ export default {
       this.stylization_id = msg.stylization_id
     },
     onSynthesising: function (msg) {
+      console.log(msg)
       this.synthesis_progress = msg.percent
     }
   },
@@ -649,11 +644,8 @@ export default {
   activated() {
     let annotation = this.$route.params.annotation
     let type = this.$route.params.type
-    console.log(annotation)
-    console.log(type)
     if (annotation !== undefined) {
       if (type === 'contents') {
-        console.log(type)
         this.content_mask_annotation = annotation
       } else if (type === 'styles') {
         this.style_mask_annotation = annotation

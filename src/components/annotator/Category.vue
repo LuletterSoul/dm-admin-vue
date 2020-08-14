@@ -252,11 +252,8 @@ export default {
         category_id: this.category.id,
       }).then(response => {
         // this.$socket.emit("annotation", {
-        //   action: "create",
-        //   category_id: this.category.id,
         //   annotation: response
         // });
-        console.log(response)
         this.category.annotations.push(response);
         this.selectedAnnotation = annotationId;
         this.$nextTick(() => {
