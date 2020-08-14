@@ -34,7 +34,34 @@
               <!--              </Row>-->
 
               <transition name="fade">
+
                 <Content>
+                  <Row>
+                    <Col span="2">
+                      <Form ref="config" :model='config' :rules="ruleValidate" :label-width="80">
+                        <FormItem label="算法类型" prop="alg">
+                          <label>
+                            <Select v-model="config.alg">
+                              <Option v-for="item in alg_options" :value="item.value" :key="item.value">{{
+                                  item.label
+                                }}
+                              </Option>
+                            </Select>
+                          </label>
+                        </FormItem>
+                      </Form>
+                    </Col>
+                    <Col span=4>
+                      <Form ref="config" :model='config' :rules="ruleValidate" :label-width="80">
+                        <FormItem label="自动触发" prop="auto_trigger">
+                          <Switch v-model="config.auto_trigger" size="large">
+                            <span slot="open">开启</span>
+                            <span slot="close">关闭</span>
+                          </Switch>
+                        </FormItem>
+                      </Form>
+                    </Col>
+                  </Row>
                   <Row>
                     <Col span="7">
                       <Alert type="success" show-icon>
@@ -42,6 +69,9 @@
                         内容图
                         <template slot="desc">内容图是用户输入的原图，用以获取风格图的风格。</template>
                       </Alert>
+                      <Slider v-model="slide_content_index" :step="1" :max="_content_imgs.length"
+                              :disabled="this.synthesis_loading"
+                              @on-change="handleContentSlider"></Slider>
                       <template v-if="_content_img.source== null">
                         <div class="photo-box">
                           <div class="vertical-element">
@@ -98,6 +128,8 @@
                         合成图
                         <template slot="desc">合成图尽可能保持原图内容结构，并融合风格图的风格。</template>
                       </Alert>
+                      <Progress :percent="synthesis_progress" :stroke-width="20" status="active"
+                                style="margin-bottom: 5px"/>
                       <template v-if="_stylization_img.source== null">
                         <div class="photo-box">
                           <div class="vertical-element">
@@ -122,6 +154,8 @@
                         风格图
                         <template slot="desc">风格图提供图片合成所需的风格。</template>
                       </Alert>
+                      <Slider v-model="slide_style_index" :step="1" :max="_style_imgs.length"
+                              @on-change="handleStyleSlider" :disabled="synthesis_loading"></Slider>
                       <template v-if="_style_img.source== null">
                         <div class="photo-box">
                           <div class="vertical-element">
@@ -144,10 +178,7 @@
                                   <p>拖拽或点击上传风格图</p>
                                 </div>
                               </Upload>
-                              <transition name="fade">
-                                <Progress v-if="show_progress2" style="margin-top: 20px"
-                                          :percent="progress2"></Progress>
-                              </transition>
+
                               <Button style="width: 100%; margin-top: 20px" type="primary" ghost shape="circle"
                                       size="large"
                                       @click="selectFromStyleLib">从库内选择风格图
@@ -174,11 +205,10 @@
 
                   </Row>
                   <Row style="margin-top: 20px">
-                    <transition name="fade">
-                      <template v-if="synthesis_loading">
-                        <Progress :percent="synthesis_progress" :stroke-width="20" status="active"/>
-                      </template>
-                    </transition>
+                    <!--                    <transition name="fade">-->
+                    <!--                      <template v-if="synthesis_loading">-->
+                    <!--                      </template>-->
+                    <!--                    </transition>-->
                   </Row>
                   <Row style="margin-left: 400px;margin-top: 40px">
                     <Col span="16">
@@ -207,20 +237,7 @@
         v-model="showSubmitConfirm"
         title="提交合成请求"
         @on-ok="requestStylizaitons">
-        <Row>
-          <Col span="24">
-            <Form ref="config" :model='config' :rules="ruleValidate" :label-width="80">
-              <FormItem label="算法类型" prop="alg">
-                <!--                <Input v-model="config.user_id" placeholder="请输入用户名"></Input>-->
-                <label>
-                  <Select v-model="config.alg">
-                    <Option v-for="item in alg_options" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                  </Select>
-                </label>
-              </FormItem>
-            </Form>
-          </Col>
-        </Row>
+        用 {{ config.alg }} 算法生成风格图
       </Modal>
 
       <Modal
@@ -274,11 +291,14 @@ export default {
       return /^\w+$/.test(user_id);
     };
     return {
+      sid: '',
       thumbnail_width: 200,
       thumbnail_height: 300,
+      stylized_timestamp: 0,
       src_w: 512,
       src_h: 512,
-      allImages: [genImages(), genImages(), genImages()],
+      slide_content_index: 0,
+      slide_style_index: 0,
       content_index: -1,
       content_id: -1,
       style_index: -1,
@@ -324,7 +344,8 @@ export default {
       }],
       config: {
         user_id: '',
-        alg: 'MAST'
+        alg: 'MAST',
+        auto_trigger: true
       },
       content_mask_annotation: {},
       style_mask_annotation: {},
@@ -433,19 +454,40 @@ export default {
     reconnect: function () {
       console.log('重新连接')
     },
+    onConnected: function (msg) {
+      this.sid = msg.sid
+      console.log('Server sid', this.sid)
+    },
     onSynthesisCompleted: function (msg) {
-      console.log(msg)
+      if (msg.sid !== this.sid) {
+        return
+      }
       this.$Message.success('合成成功!');
       this.synthesis_loading = false
       this.stylization_id = msg.stylization_id
+      this.synthesis_progress = 0
+      this.stylized_timestamp = msg.timestamp
+    },
+    onSynthesisFailed: function (msg) {
+      if (msg.sid !== this.sid) {
+        return
+      }
+      console.log(msg)
+      this.$Message.error('合成失败!');
+      this.synthesis_loading = false
+      this.synthesis_progress = 0
     },
     onSynthesising: function (msg) {
+      if (msg.sid !== this.sid) {
+        return
+      }
       console.log(msg)
       this.synthesis_progress = msg.percent
     }
   },
   mounted() {
-
+    this.requestContentImages()
+    this.requestStyleImages()
   },
   computed: {
     _content_mask() {
@@ -521,8 +563,8 @@ export default {
       if (this.stylization_id !== -1) {
         // from user upload
         return {
-          thumbnail: `${process.env.SERVER_API}/stylizations/${this.stylization_id}?width=${this.thumbnail_width}&height=${this.thumbnail_height}`,
-          source: `${process.env.SERVER_API}/stylizations/${this.stylization_id}?width=${this.src_w}&height=${this.src_h}`,
+          thumbnail: `${process.env.SERVER_API}/stylizations/${this.stylization_id}?width=${this.thumbnail_width}&height=${this.thumbnail_height}&timestamp=${this.stylized_timestamp}`,
+          source: `${process.env.SERVER_API}/stylizations/${this.stylization_id}?width=${this.src_w}&height=${this.src_h}&timestamp=${this.stylized_timestamp}`,
         }
       } else {
         return {
@@ -553,6 +595,7 @@ export default {
       } else if (this.content_index !== -1) {
         return this.content_ids[this.content_index]
       }
+      this.content_mask_annotation = {}
     },
     _style_id() {
       if (this.style_id !== -1) {
@@ -562,6 +605,7 @@ export default {
       } else {
         return -1
       }
+      this.style_mask_annotation = {}
     },
     _percent() {
       if (this.file_tree.length) {
@@ -664,6 +708,22 @@ export default {
   //   }
   // },
   methods: {
+    handleContentSlider(value) {
+      if (value >= 0 && value <= this._content_imgs.length - 1) {
+        this.content_index = value
+        if (this.config.auto_trigger) {
+          this.requestStylizaitons()
+        }
+      }
+    },
+    handleStyleSlider(value) {
+      if (value >= 0 && value <= this._style_imgs.length - 1) {
+        this.style_index = value
+        if (this.config.auto_trigger) {
+          this.requestStylizaitons()
+        }
+      }
+    },
     handleSocket() {
       this.$socket.client.emit('synthesis');
       console.log('点击触发')
@@ -797,12 +857,10 @@ export default {
       this.$Spin.hide();
     },
     onReset() {
-      this.resetScore(this._default_scores);
-      this.scores = [];
-      this.pos = 0;
       this.showResetConfirm = false;
       this.$Message.success('中止成功！');
       this.synthesis_loading = false
+      this.synthesis_progress = 0
     },
     resetScore: function (scores) {
       for (let i = 0; i < this.current_scores.length; i++) {
@@ -938,7 +996,7 @@ export default {
         api.contents.gets(this.pages).then(res => {
           if (res !== undefined) {
             vm.content_ids = res.content_ids;
-            // vm.content_index = 0
+            vm.content_index = 0
             vm.content_id = -1
           } else {
             vm.$Message.error('内容图加载失败，请刷新重试！');
@@ -965,6 +1023,7 @@ export default {
           if (res !== undefined) {
             vm.style_ids = res.style_ids;
             vm.style_id = -1
+            vm.style_index = 0
           } else {
             vm.$Message.error('风格图加载失败，请刷新重试！');
           }
@@ -981,7 +1040,7 @@ export default {
       let vm = this;
       this.synthesis_loading = true
       return new Promise((resolve, reject) => {
-        api.stylizations.post(this._content_id, this._style_id, this.config.alg, this._content_mask, this._style_mask, this.src_w, this.src_h).then(res => {
+        api.stylizations.post(this._content_id, this._style_id, this.config.alg, this.sid, this._content_mask, this._style_mask, this.src_w, this.src_h).then(res => {
           return resolve(res);
         }).catch(error => {
           return reject(error);
