@@ -4,7 +4,8 @@ import * as contents from './contents'
 import * as styles from './styles'
 import * as stylizations from './stylizations'
 import * as annotations from './annotations'
+import * as category from './category'
 
 export {
-  scores, files, contents, styles, stylizations,annotations
+  scores, files, contents, styles, stylizations,annotations,category
 }

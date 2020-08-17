@@ -37,11 +37,25 @@
 
                 <Content>
                   <Row>
+                    <Col span=3>
+                      <Form ref="config" :model='config' :rules="ruleValidate" :label-width="80">
+                        <FormItem label="数据集" prop="category">
+                          <label>
+                            <Select v-model="config.category" @on-change="handleCategoryChange">
+                              <Option v-for="item in dataset_options" :value="item.value" :key="item.value">{{
+                                  item.label
+                                }}
+                              </Option>
+                            </Select>
+                          </label>
+                        </FormItem>
+                      </Form>
+                    </Col>
                     <Col span="2">
                       <Form ref="config" :model='config' :rules="ruleValidate" :label-width="80">
                         <FormItem label="算法类型" prop="alg">
                           <label>
-                            <Select v-model="config.alg">
+                            <Select v-model="config.alg" :disabled="alg_disabled">
                               <Option v-for="item in alg_options" :value="item.value" :key="item.value">{{
                                   item.label
                                 }}
@@ -51,7 +65,7 @@
                         </FormItem>
                       </Form>
                     </Col>
-                    <Col span=4>
+                    <Col span=2>
                       <Form ref="config" :model='config' :rules="ruleValidate" :label-width="80">
                         <FormItem label="自动触发" prop="auto_trigger">
                           <Switch v-model="config.auto_trigger" size="large">
@@ -61,6 +75,10 @@
                         </FormItem>
                       </Form>
                     </Col>
+
+                  </Row>
+                  <Row>
+
                   </Row>
                   <Row>
                     <Col span="7">
@@ -295,6 +313,7 @@ export default {
       thumbnail_width: 200,
       thumbnail_height: 300,
       stylized_timestamp: 0,
+      stylized_category: 'original',
       src_w: 512,
       src_h: 512,
       slide_content_index: 0,
@@ -331,9 +350,7 @@ export default {
       stop_disable: true,
       synthesis_loading: false,
       ruleValidate: {
-        user_id: [
-          {validator: validateUserId, required: true, trigger: 'blur'}
-        ]
+        user_id: []
       },
       alg_options: [{
         value: 'MAST',
@@ -342,11 +359,23 @@ export default {
         value: 'CAST',
         label: 'CAST'
       }],
+      dataset_options: [
+        {
+          value: 'WebCaricature',
+          label: 'WebCaricature'
+        },
+        {
+          value: 'COCO',
+          label: 'COCO'
+        },
+      ],
       config: {
         user_id: '',
         alg: 'MAST',
+        category: 'COCO',
         auto_trigger: true
       },
+      alg_disabled: false,
       content_mask_annotation: {},
       style_mask_annotation: {},
       video_url: '',
@@ -465,8 +494,9 @@ export default {
       this.$Message.success('合成成功!');
       this.synthesis_loading = false
       this.stylization_id = msg.stylization_id
-      this.synthesis_progress = 0
+      this.synthesis_progress = 100
       this.stylized_timestamp = msg.timestamp
+      this.stylized_category = 'original'
     },
     onSynthesisFailed: function (msg) {
       if (msg.sid !== this.sid) {
@@ -476,6 +506,7 @@ export default {
       this.$Message.error('合成失败!');
       this.synthesis_loading = false
       this.synthesis_progress = 0
+      this.stylized_category = 'original'
     },
     onSynthesising: function (msg) {
       if (msg.sid !== this.sid) {
@@ -483,11 +514,21 @@ export default {
       }
       console.log(msg)
       this.synthesis_progress = msg.percent
+    },
+    onSynthesisingFetch: function (msg) {
+      if (msg.sid !== this.sid) {
+        return
+      }
+      this.synthesis_progress = msg.percent
+      this.stylization_id = msg.stylization_id
+      this.stylized_timestamp = msg.timestamp
+      this.stylized_category = msg.category
     }
   },
   mounted() {
     this.requestContentImages()
     this.requestStyleImages()
+    this.requestDatasetCategory()
   },
   computed: {
     _content_mask() {
@@ -563,8 +604,8 @@ export default {
       if (this.stylization_id !== -1) {
         // from user upload
         return {
-          thumbnail: `${process.env.SERVER_API}/stylizations/${this.stylization_id}?width=${this.thumbnail_width}&height=${this.thumbnail_height}&timestamp=${this.stylized_timestamp}`,
-          source: `${process.env.SERVER_API}/stylizations/${this.stylization_id}?width=${this.src_w}&height=${this.src_h}&timestamp=${this.stylized_timestamp}`,
+          thumbnail: `${process.env.SERVER_API}/stylizations/${this.stylization_id}?width=${this.thumbnail_width}&height=${this.thumbnail_height}&timestamp=${this.stylized_timestamp}&category=${this.stylized_category}`,
+          source: `${process.env.SERVER_API}/stylizations/${this.stylization_id}?width=${this.src_w}&height=${this.src_h}&timestamp=${this.stylized_timestamp}&category=${this.stylized_category}`,
         }
       } else {
         return {
@@ -708,6 +749,18 @@ export default {
   //   }
   // },
   methods: {
+    handleCategoryChange(value) {
+      if (value === 'WebCaricature') {
+        this.config.alg = 'CAST'
+        this.alg_disabled = true
+      } else {
+        this.alg_disabled = false
+      }
+      this.content_ids = []
+      this.style_ids = []
+      this.requestStyleImages()
+      this.requestContentImages()
+    },
     handleContentSlider(value) {
       if (value >= 0 && value <= this._content_imgs.length - 1) {
         this.content_index = value
@@ -993,7 +1046,7 @@ export default {
       vm.file_tree_loading = true;
       this.handleSpinShow();
       return new Promise((resolve, reject) => {
-        api.contents.gets(this.pages).then(res => {
+        api.contents.gets(this.pages, this.config.category).then(res => {
           if (res !== undefined) {
             vm.content_ids = res.content_ids;
             vm.content_index = 0
@@ -1010,6 +1063,13 @@ export default {
         });
       });
     },
+    requestDatasetCategory() {
+      return new Promise((resolve, reject) => {
+        api.category.gets().then(res => {
+          this.dataset_options = res
+        })
+      })
+    },
     requestStyleImages() {
       if (this._style_imgs.length > 0) {
         return
@@ -1019,7 +1079,7 @@ export default {
       vm.file_tree_loading = true;
       this.handleSpinShow();
       return new Promise((resolve, reject) => {
-        api.styles.gets(this.pages).then(res => {
+        api.styles.gets(this.pages, this.config.category).then(res => {
           if (res !== undefined) {
             vm.style_ids = res.style_ids;
             vm.style_id = -1

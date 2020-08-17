@@ -9,12 +9,13 @@ function get(style_id) {
   })
 }
 
-function gets(pages) {
+function gets(pages, category) {
   return fetch({
     url: `${baseURL}/`,
     method: 'get',
     params: {
-      ...pages
+      ...pages,
+      category: category
     }
   })
 }
