@@ -563,8 +563,8 @@ export default {
       if (this.content_ids.length) {
         return this.content_ids.map(c => {
           return {
-            thumbnail: `${process.env.SERVER_API}/contents/${c}?width=${this.thumbnail_width}&height=${this.thumbnail_height}`,
-            source: `${process.env.SERVER_API}/contents/${c}?width=${this.src_w}&height=${this.src_h}`,
+            thumbnail: `${process.env.SERVER_API}/contents/${c}?width=${this.thumbnail_width}&height=${this.thumbnail_height}&category=${this.config.category}`,
+            source: `${process.env.SERVER_API}/contents/${c}?width=${this.src_w}&height=${this.src_h}&category=${this.config.category}`,
           }
         })
       } else {
@@ -575,8 +575,8 @@ export default {
       if (this.style_ids.length) {
         return this.style_ids.map(s => {
           return {
-            thumbnail: `${process.env.SERVER_API}/styles/${s}?width=${this.thumbnail_width}&height=${this.thumbnail_height}`,
-            source: `${process.env.SERVER_API}/styles/${s}?width=${this.src_w}&height=${this.src_h}`,
+            thumbnail: `${process.env.SERVER_API}/styles/${s}?width=${this.thumbnail_width}&height=${this.thumbnail_height}&category=${this.config.category}`,
+            source: `${process.env.SERVER_API}/styles/${s}?width=${this.src_w}&height=${this.src_h}&category=${this.config.category}`,
           }
         })
       } else {
@@ -587,8 +587,8 @@ export default {
       if (this.content_id !== -1) {
         // from user upload
         return {
-          thumbnail: `${process.env.SERVER_API}/contents/${this.content_id}?width=${this.thumbnail_width}&height=${this.thumbnail_height}`,
-          source: `${process.env.SERVER_API}/contents/${this.content_id}?width=${this.src_w}&height=${this.src_h}`,
+          thumbnail: `${process.env.SERVER_API}/contents/${this.content_id}?width=${this.thumbnail_width}&height=${this.thumbnail_height}&category=${this.config.category}`,
+          source: `${process.env.SERVER_API}/contents/${this.content_id}?width=${this.src_w}&height=${this.src_h}&category=${this.config.category}`,
         }
       } else if (this.content_index !== -1) {
         // from user select from library
@@ -617,8 +617,8 @@ export default {
       if (this.style_id !== -1) {
         // from user upload
         return {
-          thumbnail: `${process.env.SERVER_API}/styles/${this.style_id}?width=${this.thumbnail_width}&height=${this.thumbnail_height}`,
-          source: `${process.env.SERVER_API}/styles/${this.style_id}?width=${this.src_w}&height=${this.src_h}`,
+          thumbnail: `${process.env.SERVER_API}/styles/${this.style_id}?width=${this.thumbnail_width}&height=${this.thumbnail_height}&category=${this.config.category}`,
+          source: `${process.env.SERVER_API}/styles/${this.style_id}?width=${this.src_w}&height=${this.src_h}&category=${this.config.category}`,
         }
       } else if (this.style_index !== -1) {
         // from user select from library
@@ -1119,7 +1119,7 @@ export default {
       let vm = this;
       this.synthesis_loading = true
       return new Promise((resolve, reject) => {
-        api.stylizations.post(this._content_id, this._style_id, this.config.alg, this.sid, this._content_mask, this._style_mask, this.src_w, this.src_h).then(res => {
+        api.stylizations.post(this._content_id, this._style_id, this.config.alg, this.sid, this.config.category, this._content_mask, this._style_mask, this.src_w, this.src_h).then(res => {
           return resolve(res);
         }).catch(error => {
           return reject(error);
