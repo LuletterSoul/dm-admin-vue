@@ -41,7 +41,8 @@
                       <Form ref="config" :model='config' :rules="ruleValidate" :label-width="80">
                         <FormItem label="数据集" prop="category">
                           <label>
-                            <Select v-model="config.category" @on-change="handleCategoryChange">
+                            <Select v-model="config.category" @on-change="handleCategoryChange"
+                                    :disabled="category_disabled">
                               <Option v-for="item in dataset_options" :value="item.value" :key="item.value">{{
                                   item.label
                                 }}
@@ -55,7 +56,7 @@
                       <Form ref="config" :model='config' :rules="ruleValidate" :label-width="80">
                         <FormItem label="算法类型" prop="alg">
                           <label>
-                            <Select v-model="config.alg" :disabled="alg_disabled">
+                            <Select v-model="config.alg" :disabled="alg_disabled" @on-change="handleAlgChange">
                               <Option v-for="item in alg_options" :value="item.value" :key="item.value">{{
                                   item.label
                                 }}
@@ -376,6 +377,7 @@ export default {
         auto_trigger: true
       },
       alg_disabled: false,
+      category_disabled: false,
       content_mask_annotation: {},
       style_mask_annotation: {},
       video_url: '',
@@ -502,7 +504,6 @@ export default {
       if (msg.sid !== this.sid) {
         return
       }
-      console.log(msg)
       this.$Message.error('合成失败!');
       this.synthesis_loading = false
       this.synthesis_progress = 0
@@ -512,7 +513,6 @@ export default {
       if (msg.sid !== this.sid) {
         return
       }
-      console.log(msg)
       this.synthesis_progress = msg.percent
     },
     onSynthesisingFetch: function (msg) {
@@ -749,18 +749,37 @@ export default {
   //   }
   // },
   methods: {
-    handleCategoryChange(value) {
-      if (value === 'WebCaricature') {
-        this.config.alg = 'CAST'
-        this.alg_disabled = true
-      } else {
-        this.alg_disabled = false
-      }
+    resetData() {
       this.content_ids = []
       this.style_ids = []
       this.requestStyleImages()
       this.requestContentImages()
+      this.stylization_id = -1
+      this.slide_content_index = 0
+      this.slide_style_index = 0
+      this.progress = 0
+      this.progress2 = 0
+      this.synthesis_progress = 0
     },
+    handleAlgChange(value) {
+      if (value === 'CAST') {
+        this.config.category = 'WebCaricature'
+        this.category_disabled = true
+      } else {
+        this.category_disabled = false
+      }
+      this.resetData()
+    },
+    handleCategoryChange(value) {
+      if (value === 'COCO') {
+        this.config.alg = 'MAST'
+        this.alg_disabled = true
+      } else {
+        this.alg_disabled = false
+      }
+      this.resetData()
+    },
+
     handleContentSlider(value) {
       if (value >= 0 && value <= this._content_imgs.length - 1) {
         this.content_index = value
