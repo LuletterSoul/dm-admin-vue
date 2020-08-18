@@ -35,7 +35,7 @@ export const constantRouterMap = [
     path: '/annotate/:identifier',
     name: "annotate",
     component: Annotator,
-    props: route => ({identifier: route.params.identifier, img_type: route.query.type})
+    props: route => ({identifier: route.params.identifier, img_type: route.query.type, category: route.query.category})
   },
   {path: "*", component: PageNotFound}
 ];

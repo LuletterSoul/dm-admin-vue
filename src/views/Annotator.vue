@@ -310,6 +310,10 @@ export default {
     img_type: {
       type: [String],
       required: true
+    },
+    category: {
+      type: [String],
+      required: true
     }
   },
   data() {
@@ -1128,7 +1132,7 @@ export default {
   created() {
     this.paper = new paper.PaperScope();
     this.image.id = this.identifier;
-    this.image.url = `${process.env.SERVER_API}/${this.img_type}/${this.identifier}`
+    this.image.url = `${process.env.SERVER_API}/${this.img_type}/${this.identifier}?category=${this.category}`
     this.current_img_type = this.img_type
   }
 };

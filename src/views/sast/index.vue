@@ -7,8 +7,8 @@
             <!--          <div class="layout-logo"></div>-->
             <div>
               <MenuItem name="reg">
-                <Icon type="ios-speedometer-outline"></Icon>
-                Style Transfer
+                <Icon type="ios-brush-outline"/>
+                Aristagram
               </MenuItem>
             </div>
           </Menu>
@@ -850,10 +850,18 @@ export default {
       this.stylization_id = -1
     },
     handleContentEdit() {
-      this.$router.push({name: "annotate", params: {identifier: this._content_id}, query: {type: 'contents'}})
+      this.$router.push({
+        name: "annotate",
+        params: {identifier: this._content_id},
+        query: {type: 'contents', category: this.config.category}
+      })
     },
     handleStyleEdit() {
-      this.$router.push({name: "annotate", params: {identifier: this._style_id}, query: {type: 'styles'}})
+      this.$router.push({
+        name: "annotate",
+        params: {identifier: this._style_id},
+        query: {type: 'styles', category: this.config.category}
+      })
     },
     handleSuccess(res, file) {
       // file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';

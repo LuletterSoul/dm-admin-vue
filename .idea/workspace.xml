@@ -75,8 +75,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="add image query support based category.">
+    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="fixed alg select disable">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Annotator.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Annotator.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/sast/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/sast/index.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -486,21 +489,7 @@
       <workItem from="1596787883572" duration="53594000" />
       <workItem from="1597151212892" duration="46195000" />
       <workItem from="1597375871959" duration="12719000" />
-      <workItem from="1597561804813" duration="9606000" />
-    </task>
-    <task id="LOCAL-00005" summary="API修改">
-      <created>1533370161922</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1533370161923</updated>
-    </task>
-    <task id="LOCAL-00006" summary="注册页面修改">
-      <created>1533373450380</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1533373450380</updated>
+      <workItem from="1597561804813" duration="14964000" />
     </task>
     <task id="LOCAL-00007" summary="学生端教师端整合">
       <created>1533914668881</created>
@@ -831,7 +820,21 @@
       <option name="project" value="LOCAL" />
       <updated>1597648018077</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="fixed alg select disable">
+      <created>1597655494329</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1597655494330</updated>
+    </task>
+    <task id="LOCAL-00055" summary="add dynamic category selection.">
+      <created>1597674444321</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1597674444324</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TodoView" selected-index="1">
@@ -873,8 +876,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add dolphin detection UI viewer" />
-    <MESSAGE value="Update prod ip" />
     <MESSAGE value="Add refresh button" />
     <MESSAGE value="Clear check files when do classfication" />
     <MESSAGE value="Update test profile" />
@@ -898,7 +899,9 @@
     <MESSAGE value="switch stylization window position with style window." />
     <MESSAGE value="fixed socket client multicasting problem." />
     <MESSAGE value="add image query support based category." />
-    <option name="LAST_COMMIT_MESSAGE" value="add image query support based category." />
+    <MESSAGE value="fixed alg select disable" />
+    <MESSAGE value="add dynamic category selection." />
+    <option name="LAST_COMMIT_MESSAGE" value="add dynamic category selection." />
   </component>
   <component name="WindowStateProjectService">
     <state x="574" y="178" key="#Deployment" timestamp="1597328588485">
@@ -913,11 +916,11 @@
       <screen x="0" y="23" width="1920" height="1006" />
     </state>
     <state x="851" y="356" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1596804064428" />
-    <state x="504" y="23" width="854" height="1006" key="CommitChangelistDialog2" timestamp="1597648017495">
+    <state x="504" y="23" width="854" height="1006" key="CommitChangelistDialog2" timestamp="1597674443882">
       <screen x="0" y="23" width="1920" height="1006" />
     </state>
     <state x="504" y="0" key="CommitChangelistDialog2/-1920.0.1920.1080/0.0.1920.1080@0.0.1920.1080" timestamp="1597036789827" />
-    <state x="504" y="23" width="854" height="1006" key="CommitChangelistDialog2/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1597648017495" />
+    <state x="504" y="23" width="854" height="1006" key="CommitChangelistDialog2/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1597674443882" />
     <state x="504" y="23" key="CommitChangelistDialog2/-1920.23.1920.1057/0.23.1920.1057@0.23.1920.1057" timestamp="1597399512416" />
     <state x="100" y="100" width="1720" height="880" key="DiffContextDialog" timestamp="1597032547641">
       <screen x="0" y="0" width="1920" height="1080" />
@@ -1031,27 +1034,27 @@
       <screen x="0" y="23" width="1920" height="1006" />
     </state>
     <state x="475" y="152" key="SettingsEditor/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1597328742089" />
-    <state x="719" y="273" width="564" height="540" key="StructurePopup" timestamp="1597650635816">
+    <state x="719" y="273" width="564" height="540" key="StructurePopup" timestamp="1597719050663">
       <screen x="0" y="23" width="1920" height="1006" />
     </state>
     <state x="719" y="268" width="564" height="580" key="StructurePopup/-1920.0.1920.1080/0.0.1920.1080@0.0.1920.1080" timestamp="1597115150689" />
-    <state x="719" y="273" width="564" height="540" key="StructurePopup/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1597650635816" />
+    <state x="719" y="273" width="564" height="540" key="StructurePopup/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1597719050663" />
     <state x="719" y="286" width="564" height="568" key="StructurePopup/-1920.23.1920.1057/0.23.1920.1057@0.23.1920.1057" timestamp="1597398808688" />
-    <state width="500" height="468" key="SwitcherDM" timestamp="1597398784013">
-      <screen x="0" y="23" width="1920" height="1057" />
-    </state>
-    <state width="500" height="445" key="SwitcherDM/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1597384950476" />
-    <state width="500" height="468" key="SwitcherDM/-1920.23.1920.1057/0.23.1920.1057@0.23.1920.1057" timestamp="1597398784013" />
-    <state x="531" y="274" key="Vcs.Push.Dialog.v2" timestamp="1597648342502">
+    <state width="500" height="445" key="SwitcherDM" timestamp="1597719029459">
       <screen x="0" y="23" width="1920" height="1006" />
     </state>
-    <state x="531" y="274" key="Vcs.Push.Dialog.v2/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1597648342502" />
+    <state width="500" height="445" key="SwitcherDM/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1597719029459" />
+    <state width="500" height="468" key="SwitcherDM/-1920.23.1920.1057/0.23.1920.1057@0.23.1920.1057" timestamp="1597398784013" />
+    <state x="531" y="274" key="Vcs.Push.Dialog.v2" timestamp="1597674447118">
+      <screen x="0" y="23" width="1920" height="1006" />
+    </state>
+    <state x="531" y="274" key="Vcs.Push.Dialog.v2/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1597674447118" />
     <state x="531" y="287" key="Vcs.Push.Dialog.v2/-1920.23.1920.1057/0.23.1920.1057@0.23.1920.1057" timestamp="1597399554837" />
-    <state x="842" y="278" width="596" height="549" key="find.popup" timestamp="1597398702340">
-      <screen x="0" y="23" width="1920" height="1057" />
+    <state x="842" y="266" width="596" height="522" key="find.popup" timestamp="1597715860650">
+      <screen x="0" y="23" width="1920" height="1006" />
     </state>
     <state x="842" y="261" width="596" height="561" key="find.popup/-1920.0.1920.1080/0.0.1920.1080@0.0.1920.1080" timestamp="1597057395193" />
-    <state x="842" y="266" width="596" height="522" key="find.popup/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1597374119246" />
+    <state x="842" y="266" width="596" height="522" key="find.popup/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1597715860650" />
     <state x="842" y="278" width="596" height="549" key="find.popup/-1920.23.1920.1057/0.23.1920.1057@0.23.1920.1057" timestamp="1597398702340" />
     <state x="824" y="237" width="318" height="685" key="ftp.server.browser" timestamp="1597328733791">
       <screen x="0" y="23" width="1920" height="1006" />
