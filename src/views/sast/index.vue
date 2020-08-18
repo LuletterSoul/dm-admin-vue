@@ -43,7 +43,8 @@
                           <label>
                             <Select v-model="config.category" @on-change="handleCategoryChange"
                                     :disabled="category_disabled">
-                              <Option v-for="item in dataset_options" :value="item.value" :key="item.value">{{
+                              <Option v-for="item in dataset_options" :value="item.value" :key="item.value"
+                                      :disabled="item.disable">{{
                                   item.label
                                 }}
                               </Option>
@@ -57,7 +58,8 @@
                         <FormItem label="算法类型" prop="alg">
                           <label>
                             <Select v-model="config.alg" :disabled="alg_disabled" @on-change="handleAlgChange">
-                              <Option v-for="item in alg_options" :value="item.value" :key="item.value">{{
+                              <Option v-for="item in alg_options" :value="item.value" :key="item.value"
+                                      :disabled="item.disable">{{
                                   item.label
                                 }}
                               </Option>
@@ -355,10 +357,12 @@ export default {
       },
       alg_options: [{
         value: 'MAST',
-        label: 'MAST'
+        label: 'MAST',
+        disable: false
       }, {
         value: 'CAST',
-        label: 'CAST'
+        label: 'CAST',
+        disable: false
       }],
       dataset_options: [
         {
@@ -370,6 +374,8 @@ export default {
           label: 'COCO'
         },
       ],
+      alg_compatible_map: {},
+      dataset_compatible_map: {},
       config: {
         user_id: '',
         alg: 'MAST',
@@ -762,21 +768,38 @@ export default {
       this.synthesis_progress = 0
     },
     handleAlgChange(value) {
-      if (value === 'CAST') {
-        this.config.category = 'WebCaricature'
-        this.category_disabled = true
-      } else {
-        this.category_disabled = false
+      // if (value === 'CAST') {
+      this.dataset_options = this.alg_compatible_map[value]
+      this.alg_options = this.dataset_compatible_map[this.config.category]
+      // this.category_disabled = true
+      // } else {
+      //   this.category_disabled = false
+      // }}
+      for (let i = 0; i < this.dataset_options.length; i++) {
+        if (this.dataset_options[i].disable === false) {
+          this.config.category = this.dataset_options[i].value
+          break
+        }
       }
+      // this.config.category = this.dataset_options[0].value
       this.resetData()
     },
     handleCategoryChange(value) {
-      if (value === 'COCO') {
-        this.config.alg = 'MAST'
-        this.alg_disabled = true
-      } else {
-        this.alg_disabled = false
+      // if (value === 'COCO') {
+      //   this.config.alg = 'MAST'
+      //   this.alg_disabled = true
+      // } else {
+      //   this.alg_disabled = false
+      // }
+      this.dataset_options = this.alg_compatible_map[this.config.alg]
+      this.alg_options = this.dataset_compatible_map[value]
+      for (let i = 0; i < this.alg_options.length; i++) {
+        if (this.alg_options[i].disable === false) {
+          this.config.alg = this.alg_options[i].value
+          break
+        }
       }
+      // this.config.alg = this.alg_options[0].value
       this.resetData()
     },
 
@@ -1093,7 +1116,12 @@ export default {
     requestDatasetCategory() {
       return new Promise((resolve, reject) => {
         api.category.gets().then(res => {
-          this.dataset_options = res
+          this.config.alg = res.alg_default
+          this.config.category = res.category_default
+          this.alg_options = res.alg_options
+          this.dataset_options = res.category_options
+          this.alg_compatible_map = res.alg_compatible_map
+          this.dataset_compatible_map = res.dataset_compatible_map
         })
       })
     },
