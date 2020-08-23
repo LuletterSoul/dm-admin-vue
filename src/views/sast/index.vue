@@ -102,7 +102,7 @@
                                 :show-upload-list="false"
                                 :on-success="handleSuccess"
                                 :on-progress="handleProgress"
-                                :format="['jpg','jpeg','png']"
+                                :format="['jpg','jpeg','png','bmp']"
                                 :on-format-error="handleFormatError"
                                 :on-exceeded-size="handleMaxSize"
                                 :before-upload="handleBeforeUpload"
@@ -186,7 +186,7 @@
                                 :show-upload-list="false"
                                 :on-success="handleSuccess2"
                                 :on-progress="handleProgress2"
-                                :format="['jpg','jpeg','png']"
+                                :format="['jpg','jpeg','png','bmp']"
                                 :on-format-error="handleFormatError2"
                                 :on-exceeded-size="handleMaxSize2"
                                 :before-upload="handleBeforeUpload2"
@@ -519,7 +519,12 @@ export default {
       if (msg.sid !== this.sid) {
         return
       }
-      this.synthesis_progress = msg.percent
+      if (msg.percent <= 1) {
+        this.synthesis_progress = msg.percent
+      } else {
+
+        this.synthesis_progress = 1
+      }
     },
     onSynthesisingFetch: function (msg) {
       if (msg.sid !== this.sid) {
@@ -770,16 +775,23 @@ export default {
     handleAlgChange(value) {
       // if (value === 'CAST') {
       this.dataset_options = this.alg_compatible_map[value]
-      this.alg_options = this.dataset_compatible_map[this.config.category]
+      // this.alg_options = this.dataset_compatible_map[this.config.category]
       // this.category_disabled = true
       // } else {
       //   this.category_disabled = false
       // }}
+      let tmp = ''
+      let exist_compatible = false
       for (let i = 0; i < this.dataset_options.length; i++) {
         if (this.dataset_options[i].disable === false) {
-          this.config.category = this.dataset_options[i].value
-          break
+          tmp = this.dataset_options[i].value
         }
+        if (this.dataset_options[i].value === this.config.category) {
+          exist_compatible = true
+        }
+      }
+      if (!exist_compatible) {
+        this.config.category = tmp
       }
       // this.config.category = this.dataset_options[0].value
       this.resetData()
@@ -791,13 +803,22 @@ export default {
       // } else {
       //   this.alg_disabled = false
       // }
-      this.dataset_options = this.alg_compatible_map[this.config.alg]
+      // this.dataset_options = this.alg_compatible_map[this.config.alg]
+      let tmp = ''
+      let exist_compatible = false
       this.alg_options = this.dataset_compatible_map[value]
       for (let i = 0; i < this.alg_options.length; i++) {
+        // search the first compatible option item
         if (this.alg_options[i].disable === false) {
           this.config.alg = this.alg_options[i].value
-          break
         }
+        if (this.alg_options[i].value === this.config.alg) {
+          exist_compatible = true
+        }
+      }
+      // if current selected option don't exist in compatible option items,set as the first one.
+      if (!exist_compatible) {
+        this.config.alg = tmp
       }
       // this.config.alg = this.alg_options[0].value
       this.resetData()
