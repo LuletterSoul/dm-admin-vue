@@ -74,7 +74,7 @@
                   <Row v-for="(score_type,index) of current_scores" style="margin-left: 280px;margin-top: 40px">
                     <Col span="4">
                       <Tooltip :content="score_type['des']">
-                        <Tag type="dot" :color="score_type['tag_color']" style="font-size: 24px">{{score_type['tag']}}
+                        <Tag type="dot" :color="score_type['tag_color']" style="font-size: 24px">{{ score_type['tag'] }}
                         </Tag>
                       </Tooltip>
                     </Col>
@@ -82,7 +82,7 @@
                          style="margin-left: 10px">
                       <Button shape="circle" size="large" :type="button_type"
                               @click="onClickRatingButton(index,s_idx,score_view[index]['rank_list'][s_idx])">
-                        {{score_view[index]['rank_list'][s_idx]}}
+                        {{ score_view[index]['rank_list'][s_idx] }}
                       </Button>
                     </Col>
                   </Row>
@@ -162,479 +162,494 @@
   </div>
 </template>
 <script>
-    import * as api from '../../api/index'
-    import VueVideoPlayer from 'vue-video-player'
-    import 'video.js/dist/video-js.css'
+import * as api from '../../api/index'
+import VueVideoPlayer from 'vue-video-player'
+import 'video.js/dist/video-js.css'
 
-    import {videoPlayer} from 'vue-video-player'
-    import Timer from './timer'
+import {videoPlayer} from 'vue-video-player'
+import Timer from './timer'
 
 
-    export default {
-        name: 'DolphinView',
-        components: {videoPlayer, Timer},
-        data() {
-            const validateUserId = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('用户名不能为空'));
-                } else if (!isValidUserName(value)) {
-                    callback(new Error('不合法的用户名！请重新输入'));
-                } else {
-                    callback();
-                }
-            };
-            const isValidUserName = (user_id) => {
-                return /^\w+$/.test(user_id);
-            };
-            return {
-                ruleValidate: {
-                    user_id: [
-                        {validator: validateUserId, required: true, trigger: 'blur'}
-                    ]
-                },
-                user: {
-                    user_id: '',
-                },
-                video_url: '',
-                file_tree: [],
-                score_types: [],
-                current_scores: {},
-                check_files: [],
-                file_tree_loading: true,
-                filenames_loading: false,
-                pageSize: 10,
-                page: 1,
-                score_list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                score_view: [],
-                button_status: [],
+export default {
+  name: 'DolphinView',
+  components: {videoPlayer, Timer},
+  data() {
+    const validateUserId = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('用户名不能为空'));
+      } else if (!isValidUserName(value)) {
+        callback(new Error('不合法的用户名！请重新输入'));
+      } else {
+        callback();
+      }
+    };
+    const isValidUserName = (user_id) => {
+      return /^\w+$/.test(user_id);
+    };
+    return {
+      ruleValidate: {
+        user_id: [
+          {validator: validateUserId, required: true, trigger: 'blur'}
+        ]
+      },
+      user: {
+        user_id: '',
+      },
+      video_url: '',
+      // file_tree: [],
+      file_trees: {},
+      file_index: 0,
+      score_types: [],
+      current_scores: {},
+      check_files: [],
+      file_tree_loading: true,
+      filenames_loading: false,
+      pageSize: 10,
+      page: 1,
+      score_list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      score_view: [],
+      button_status: [],
 
-                ex_button_status: ['ghost', 'ghost', 'ghost', 'ghost', 'primary', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost'],
-                visual_button_status: ['ghost', 'ghost', 'ghost', 'ghost', 'success', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost'],
-                folders: [{
-                    value: '03201823',
-                    label: '03201823',
-                    children: [
-                        {
-                            value: 'original',
-                            label: '原始视频'
-                        },
-                        {
-                            value: 'render',
-                            label: '渲染视频'
-                        }
-                    ]
-                }, {
-                    value: '03201824',
-                    label: '03201824',
-                    children: [
-                        {
-                            value: 'original',
-                            label: '原始视频'
-                        },
-                        {
-                            value: 'render',
-                            label: '渲染视频'
-                        }
-                    ]
-                }],
-                files: [],
-                selectFile: '',
-                submitLoading: true,
-                stopTimer: false,
-                showSubmitConfirm: false,
-                meterShow: false,
-                selectFolder: [],
-                display: 1,
-                uploadTemplate: false,
-                showResetConfirm: false,
-                uploadSrcImg: false,
-                uploadBatch: false,
-                // activeRegName: 'statistics',
-                activeRegName: 'reg',
-                isFetched: false,
-                isUploadedSrc: false,
-                isReading: false,
-                realValue: null,
-                readingValue: null,
-                selectedFilename: '1-1.jpg',
-                srcIndex: 0,
-                srcIds: [],
-                batchRegResults: [],
-                srcParentDir: 'images',
-                //local display
-                srcImages: [],
-                srcResult: [],
-                srcImagesFileList: [],
-                templateFileList: [],
-                statistics: [],
-                allStat: [],
-                res: {},
-                hostImgMap: {},
-                DEFAULT_SHAPE_SCORE: 5,
-                DEFAULT_VISUAL_SCORE: 5,
-                DEFAULT_SCORE: 5,
-                shape_score: 5,
-                visual_score: 5,
-                pointerAlgOptions: [{
-                    value: 0,
-                    label: '径向直线积分'
-                },
-                    {
-                        value: 1,
-                        label: '区域点搜索'
-                    }],
-                pointerAlgType: 0,
-                enableFitting: false,
-                pos: 0,
-                scores: []
-            }
-        },
-        mounted() {
-            this.requestFileTree();
-            this.requestScoreTypes();
-        },
-        computed: {
-            _percent() {
-                if (this.file_tree.length) {
-                    return Math.floor(this.pos / (this.file_tree.length) * 100)
-                } else {
-                    return 0
-                }
-            },
-            _default_scores() {
-                let default_scores = {};
-                for (let i = 0; i < this.current_scores.length; i++) {
-                    default_scores[this.current_scores[i]['score_type']] = this.current_scores[i]['default_value'];
-                }
-                return default_scores
-            },
-            _current_score() {
-                let score_res = {'content': this._current_content};
-                for (let i = 0; i < this.current_scores.length; i++) {
-                    score_res[this.current_scores[i]['score_type']] = this.current_scores[i]['value']
-                }
-                return score_res
-            },
-            _pos_score() {
-                if (this.pos <= this.scores.length - 1) {
-                    return this.scores[this.pos];
-                } else {
-                    return this._default_scores;
-                }
-            },
-            _submitable() {
-                if (this.pos < this.file_tree.length || this.pos === 0) {
-                    this.stopTimer = false;
-                    return true
-                } else {
-                    this.stopTimer = true;
-                    return false
-                }
-            },
-            _playerOptions() {
-                return {
-                    fluid: true,
-                    preload: 'auto',
-                    sources: [{
-                        type: 'video/mp4',
-                        src: this.video_url
-                    }],
-                    notSupportedMessage: '此视频暂时无法播放，请稍后重试',
-                    loop: true,
-                    autoplay: true,
-                    controls: true,
-                }
-            },
-
-            _files() {
-                return this.files.map(f => {
-                    return {
-                        name: f,
-                        url: `${process.env.SERVER_API}/video/${this.selectFolder[0]}/${this.selectFolder[1]}/${this.selectFolder[2]}/${f}`
-                    }
-                })
-            },
-
-            _pageDate() {
-                return this._files.slice((this.page - 1) * this.pageSize, this.page * this.pageSize);
-            },
-            _navigate() {
-                if (this.selectFolder.length) {
-
-                    return this.selectFolder[0] + ' / ' + this.selectFolder[1] + ' / ' + this.selectFolder[2] +
-                        ' / ' + this.selectFile;
-                } else {
-                    return ''
-                }
-            },
-            _current_content() {
-                if (this.file_tree.length && this.pos <= this.file_tree.length - 1) {
-                    return this.file_tree[this.pos]['content']
-                } else {
-                    return this.file_tree[this.file_tree.length - 1]['content']
-                }
-            },
-            _src_photos_url() {
-                if (this.file_tree.length && this.pos <= this.file_tree.length - 1) {
-                    return this.file_tree[this.pos]['filenames'].map(f =>
-                        `${process.env.SERVER_API}/photos/${this.file_tree[this.pos]['content']}/${f}`);
-                } else {
-                    return []
-                }
-            }
-
-        },
-        methods: {
-            onPageSizeChange() {
-
-            },
-            isValidUserName(user_id) {
-                return /^\w+$/.test(user_id);
-            },
-            handleSpinShow() {
-                this.$Spin.show();
-            },
-            handleSpinHide() {
-                this.$Spin.hide();
-            },
-            onReset() {
-                this.resetScore(this._default_scores);
-                this.scores = [];
-                this.pos = 0;
-                this.showResetConfirm = false;
-                this.$Message.success('重置成功！');
-            },
-            resetScore: function (scores) {
-                for (let i = 0; i < this.current_scores.length; i++) {
-                    let old_score = this.current_scores[i];
-                    old_score['value'] = scores[old_score['score_type']];
-                    this.$set(this.current_scores, i, old_score);
-                    this.resetRatingButton(i, old_score['value']);
-                }
-            }, onClickPre() {
-                this.saveCurrentScore();
-                if (this.pos >= 1) {
-                    this.pos -= 1;
-                } else {
-                    this.pos = 0
-                }
-                if (this.scores.length) {
-                    // this.resetScore(this.scores[this.pos]['shape_score'], this.scores[this.pos]['visual_score']);
-                    this.resetScore(this._pos_score);
-
-                } else {
-                    this.resetScore(this._default_scores)
-                    // this.resetScore(this.DEFAULT_SHAPE_SCORE, this.DEFAULT_VISUAL_SCORE);
-                }
-            },
-            saveCurrentScore: function () {
-                if (this.pos === this.scores.length) {
-                    this.scores.push(this._current_score);
-                } else {
-                    this.$set(this.scores, this.pos, this._current_score);
-                }
-            }, onClickNext() {
-                this.saveCurrentScore();
-                if (this.pos <= this.file_tree.length - 1) {
-                    this.pos += 1;
-                    this.resetScore(this._pos_score);
-                } else {
-                    this.resetScore(this._default_scores);
-                    this.pos = this.file_tree.length
-                }
-            },
-
-            submitRating: function () {
-                if (this.user.user_id === '' || !this.isValidUserName(this.user.user_id)) {
-                    this.submitLoading = false;
-                    this.$Message.error('提交失败，用户名不合法！');
-                    return
-                }
-                let vm = this;
-                vm.submitLoading = true;
-                return new Promise((resolve, reject) => {
-                    api.scores.post(this.user.user_id, this.scores).then(res => {
-                        if (res === 'success') {
-                            vm.$Message.success('提交成功，感谢参与，祝您生活愉快！');
-                            setInterval(function () {
-                                window.location.reload();
-                            }, 2000)
-                        } else {
-                            vm.$Message.error('提交失败，请再次提交！');
-                        }
-                        vm.submitLoading = false;
-                        vm.showSubmitConfirm = false;
-                        vm.showMiConfirm = false;
-                        vm.check_files = []
-                    }).catch(error => {
-                        vm.showSubmitConfirm = false;
-                        vm.showMiConfirm = false;
-                        vm.$Message.error('提交失败！');
-                        reject(error);
-                    });
-                });
-            },
-            handleSelectFolders: function (value) {
-                let vm = this;
-                vm.filenames_loading = true;
-                this.selectFolder = value;
-                return new Promise((resolve, reject) => {
-                    api.files.filenames(value[0], value[1], value[2]).then(res => {
-                        vm.files = res;
-                        vm.filenames_loading = false;
-                        vm.page = 1;
-                        resolve(res);
-                    }).catch(error => {
-                        reject(error);
-                    });
-                });
-            },
-            resetRatingButton: function (score_type_idx, score_value) {
-                let button = this.score_view[score_type_idx]['button_type'];
-                for (let i = 0; i < button.length; i++) {
-                    if (i + 1 !== score_value) {
-                        this.$set(button, i, 'ghost');
-                        // this.ex_button_status[i] = 'ghost'
-                    } else {
-                        this.$set(button, i, this.current_scores[score_type_idx]['bt_type']);
-                    }
-                }
-            },
-            onClickRatingButton: function (score_type_idx, b_idx, score_value) {
-                let score = this.current_scores[score_type_idx];
-                score['value'] = score_value;
-                this.resetRatingButton(score_type_idx, score_value);
-                this.$set(this.current_scores, score_type_idx, score);
-            },
-            handleRefresh: function () {
-                let vm = this;
-                vm.filenames_loading = true;
-                return new Promise((resolve, reject) => {
-                    api.files.filenames(this.selectFolder[0], this.selectFolder[1], this.selectFolder[2]).then(res => {
-                        vm.files = res;
-                        vm.filenames_loading = false;
-                        resolve(res);
-                    }).catch(error => {
-                        reject(error);
-                    });
-                });
-            },
-            handleVideoView: function (file) {
-                this.video_url = file.url;
-                this.selectFile = file.name;
-            },
-            onMenuItemSelect(name) {
-                // console.log(name);
-                this.activeRegName = name;
-            },
-            requestFileTree() {
-                let vm = this;
-                // let resultId = this.resultList[0].resultId;
-                vm.file_tree_loading = true;
-                this.handleSpinShow();
-                return new Promise((resolve, reject) => {
-                    api.files.user_study().then(res => {
-                        if (res !== undefined) {
-                            vm.file_tree = res;
-                        } else {
-                            vm.$Message.error('图片加载失败，请刷新重试！');
-                        }
-                        vm.handleSpinHide();
-                        vm.file_tree_loading = false;
-                        resolve(res);
-                    }).catch(error => {
-                        vm.handleSpinHide();
-                        reject(error);
-                    });
-                });
-            },
-            requestScoreTypes() {
-                let vm = this;
-                return new Promise((resolve, reject) => {
-                    api.scores.get_score_types().then(res => {
-                        vm.current_scores = res;
-                        for (let i = 0; i < vm.current_scores.length; i++) {
-                            let cb = [];
-                            let score_rank = [];
-                            for (let j = 0; j < vm.current_scores[i]['rank']; j++) {
-                                if (j + 1 === vm.current_scores[i]['value']) {
-                                    cb.push(vm.current_scores[i]['bt_type']);
-                                } else {
-                                    cb.push('ghost')
-                                }
-                            }
-                            for (let k = 0; k < vm.current_scores[i]['rank']; k++) {
-                                score_rank.push(k + 1)
-                            }
-                            // vm.button_status.push(cb);
-                            // vm.score_list.push(score_rank)
-                            vm.score_view.push({
-                                'button_type': cb,
-                                'rank_list': score_rank
-                            })
-                        }
-                        resolve(res);
-                    }).catch(error => {
-                        reject(error);
-                    });
-                });
-            }
-        }
+      ex_button_status: ['ghost', 'ghost', 'ghost', 'ghost', 'primary', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost'],
+      visual_button_status: ['ghost', 'ghost', 'ghost', 'ghost', 'success', 'ghost', 'ghost', 'ghost', 'ghost', 'ghost'],
+      folders: [{
+        value: '03201823',
+        label: '03201823',
+        children: [
+          {
+            value: 'original',
+            label: '原始视频'
+          },
+          {
+            value: 'render',
+            label: '渲染视频'
+          }
+        ]
+      }, {
+        value: '03201824',
+        label: '03201824',
+        children: [
+          {
+            value: 'original',
+            label: '原始视频'
+          },
+          {
+            value: 'render',
+            label: '渲染视频'
+          }
+        ]
+      }],
+      files: [],
+      selectFile: '',
+      submitLoading: true,
+      stopTimer: false,
+      showSubmitConfirm: false,
+      meterShow: false,
+      selectFolder: [],
+      display: 1,
+      uploadTemplate: false,
+      showResetConfirm: false,
+      uploadSrcImg: false,
+      uploadBatch: false,
+      // activeRegName: 'statistics',
+      activeRegName: 'reg',
+      isFetched: false,
+      isUploadedSrc: false,
+      isReading: false,
+      realValue: null,
+      readingValue: null,
+      selectedFilename: '1-1.jpg',
+      srcIndex: 0,
+      srcIds: [],
+      batchRegResults: [],
+      srcParentDir: 'images',
+      //local display
+      srcImages: [],
+      srcResult: [],
+      srcImagesFileList: [],
+      templateFileList: [],
+      statistics: [],
+      allStat: [],
+      res: {},
+      hostImgMap: {},
+      DEFAULT_SHAPE_SCORE: 5,
+      DEFAULT_VISUAL_SCORE: 5,
+      DEFAULT_SCORE: 5,
+      shape_score: 5,
+      visual_score: 5,
+      pointerAlgOptions: [{
+        value: 0,
+        label: '径向直线积分'
+      },
+        {
+          value: 1,
+          label: '区域点搜索'
+        }],
+      pointerAlgType: 0,
+      enableFitting: false,
+      pos: 0,
+      scores: []
     }
+  },
+  mounted() {
+    this.requestFileTree();
+    this.requestScoreTypes();
+  },
+  computed: {
+    _data_keys() {
+      return Object.keys(this.file_trees)
+    },
+    _data_key() {
+      return this._data_keys[this.file_index]
+    },
+    file_tree() {
+      if (JSON.stringify(this.file_trees) !== '{}') {
+        return this.file_trees[this._data_key]
+      } else {
+        return []
+      }
+    },
+    _percent() {
+      if (this.file_tree.length) {
+        return Math.floor(this.pos / (this.file_tree.length) * 100)
+      } else {
+        return 0
+      }
+    },
+    _default_scores() {
+      let default_scores = {};
+      for (let i = 0; i < this.current_scores.length; i++) {
+        default_scores[this.current_scores[i]['score_type']] = this.current_scores[i]['default_value'];
+      }
+      return default_scores
+    },
+    _current_score() {
+      let score_res = {'content': this._current_content};
+      for (let i = 0; i < this.current_scores.length; i++) {
+        score_res[this.current_scores[i]['score_type']] = this.current_scores[i]['value']
+      }
+      return score_res
+    },
+    _pos_score() {
+      if (this.pos <= this.scores.length - 1) {
+        return this.scores[this.pos];
+      } else {
+        return this._default_scores;
+      }
+    },
+    _submitable() {
+      if (this.pos < this.file_tree.length || this.pos === 0) {
+        this.stopTimer = false;
+        return true
+      } else {
+        this.stopTimer = true;
+        return false
+      }
+    },
+    _playerOptions() {
+      return {
+        fluid: true,
+        preload: 'auto',
+        sources: [{
+          type: 'video/mp4',
+          src: this.video_url
+        }],
+        notSupportedMessage: '此视频暂时无法播放，请稍后重试',
+        loop: true,
+        autoplay: true,
+        controls: true,
+      }
+    },
+
+    _files() {
+      return this.files.map(f => {
+        return {
+          name: f,
+          url: `${process.env.SERVER_API}/video/${this.selectFolder[0]}/${this.selectFolder[1]}/${this.selectFolder[2]}/${f}`
+        }
+      })
+    },
+
+    _pageDate() {
+      return this._files.slice((this.page - 1) * this.pageSize, this.page * this.pageSize);
+    },
+    _navigate() {
+      if (this.selectFolder.length) {
+
+        return this.selectFolder[0] + ' / ' + this.selectFolder[1] + ' / ' + this.selectFolder[2] +
+          ' / ' + this.selectFile;
+      } else {
+        return ''
+      }
+    },
+    _current_content() {
+      if (this.file_tree.length && this.pos <= this.file_tree.length - 1) {
+        return this.file_tree[this.pos]['content']
+      } else {
+        return this.file_tree[this.file_tree.length - 1]['content']
+      }
+    },
+    _src_photos_url() {
+      if (this.file_tree.length && this.pos <= this.file_tree.length - 1) {
+        return this.file_tree[this.pos]['filenames'].map(f =>
+          `${process.env.SERVER_API}/photos/${this._data_key}/${this.file_tree[this.pos]['content']}/${f}`);
+      } else {
+        return []
+      }
+    }
+
+  },
+  methods: {
+    onPageSizeChange() {
+
+    },
+    isValidUserName(user_id) {
+      return /^\w+$/.test(user_id);
+    },
+    handleSpinShow() {
+      this.$Spin.show();
+    },
+    handleSpinHide() {
+      this.$Spin.hide();
+    },
+    onReset() {
+      this.resetScore(this._default_scores);
+      this.scores = [];
+      this.pos = 0;
+      this.showResetConfirm = false;
+      this.$Message.success('重置成功！');
+    },
+    resetScore: function (scores) {
+      for (let i = 0; i < this.current_scores.length; i++) {
+        let old_score = this.current_scores[i];
+        old_score['value'] = scores[old_score['score_type']];
+        this.$set(this.current_scores, i, old_score);
+        this.resetRatingButton(i, old_score['value']);
+      }
+    }, onClickPre() {
+      this.saveCurrentScore();
+      if (this.pos >= 1) {
+        this.pos -= 1;
+      } else {
+        this.pos = 0
+      }
+      if (this.scores.length) {
+        // this.resetScore(this.scores[this.pos]['shape_score'], this.scores[this.pos]['visual_score']);
+        this.resetScore(this._pos_score);
+
+      } else {
+        this.resetScore(this._default_scores)
+        // this.resetScore(this.DEFAULT_SHAPE_SCORE, this.DEFAULT_VISUAL_SCORE);
+      }
+    },
+    saveCurrentScore: function () {
+      if (this.pos === this.scores.length) {
+        this.scores.push(this._current_score);
+      } else {
+        this.$set(this.scores, this.pos, this._current_score);
+      }
+    }, onClickNext() {
+      this.saveCurrentScore();
+      if (this.pos <= this.file_tree.length - 1) {
+        this.pos += 1;
+        this.resetScore(this._pos_score);
+      } else {
+        this.resetScore(this._default_scores);
+        this.pos = this.file_tree.length
+      }
+    },
+
+    submitRating: function () {
+      if (this.user.user_id === '' || !this.isValidUserName(this.user.user_id)) {
+        this.submitLoading = false;
+        this.$Message.error('提交失败，用户名不合法！');
+        return
+      }
+      let vm = this;
+      vm.submitLoading = true;
+      return new Promise((resolve, reject) => {
+        api.scores.post(this.user.user_id, this.scores, this._data_key).then(res => {
+          if (res === 'success') {
+            vm.$Message.success('提交成功，感谢参与，祝您生活愉快！');
+            setInterval(function () {
+              // window.location.reload();
+            }, 2000)
+          } else {
+            vm.$Message.error('提交失败，请再次提交！');
+          }
+          vm.submitLoading = false;
+          vm.showSubmitConfirm = false;
+          vm.showMiConfirm = false;
+          vm.check_files = []
+        }).catch(error => {
+          vm.showSubmitConfirm = false;
+          vm.showMiConfirm = false;
+          vm.$Message.error('提交失败！');
+          reject(error);
+        });
+      });
+    },
+    handleSelectFolders: function (value) {
+      let vm = this;
+      vm.filenames_loading = true;
+      this.selectFolder = value;
+      return new Promise((resolve, reject) => {
+        api.files.filenames(value[0], value[1], value[2]).then(res => {
+          vm.files = res;
+          vm.filenames_loading = false;
+          vm.page = 1;
+          resolve(res);
+        }).catch(error => {
+          reject(error);
+        });
+      });
+    },
+    resetRatingButton: function (score_type_idx, score_value) {
+      let button = this.score_view[score_type_idx]['button_type'];
+      for (let i = 0; i < button.length; i++) {
+        if (i + 1 !== score_value) {
+          this.$set(button, i, 'ghost');
+          // this.ex_button_status[i] = 'ghost'
+        } else {
+          this.$set(button, i, this.current_scores[score_type_idx]['bt_type']);
+        }
+      }
+    },
+    onClickRatingButton: function (score_type_idx, b_idx, score_value) {
+      let score = this.current_scores[score_type_idx];
+      score['value'] = score_value;
+      this.resetRatingButton(score_type_idx, score_value);
+      this.$set(this.current_scores, score_type_idx, score);
+    },
+    handleRefresh: function () {
+      let vm = this;
+      vm.filenames_loading = true;
+      return new Promise((resolve, reject) => {
+        api.files.filenames(this.selectFolder[0], this.selectFolder[1], this.selectFolder[2]).then(res => {
+          vm.files = res;
+          vm.filenames_loading = false;
+          resolve(res);
+        }).catch(error => {
+          reject(error);
+        });
+      });
+    },
+    handleVideoView: function (file) {
+      this.video_url = file.url;
+      this.selectFile = file.name;
+    },
+    onMenuItemSelect(name) {
+      // console.log(name);
+      this.activeRegName = name;
+    },
+    requestFileTree() {
+      let vm = this;
+      // let resultId = this.resultList[0].resultId;
+      vm.file_tree_loading = true;
+      this.handleSpinShow();
+      return new Promise((resolve, reject) => {
+        api.files.user_study().then(res => {
+          if (res !== undefined) {
+            vm.file_trees = res;
+          } else {
+            vm.$Message.error('图片加载失败，请刷新重试！');
+          }
+          vm.handleSpinHide();
+          vm.file_tree_loading = false;
+          resolve(res);
+        }).catch(error => {
+          vm.handleSpinHide();
+          reject(error);
+        });
+      });
+    },
+    requestScoreTypes() {
+      let vm = this;
+      return new Promise((resolve, reject) => {
+        api.scores.get_score_types().then(res => {
+          vm.current_scores = res;
+          for (let i = 0; i < vm.current_scores.length; i++) {
+            let cb = [];
+            let score_rank = [];
+            for (let j = 0; j < vm.current_scores[i]['rank']; j++) {
+              if (j + 1 === vm.current_scores[i]['value']) {
+                cb.push(vm.current_scores[i]['bt_type']);
+              } else {
+                cb.push('ghost')
+              }
+            }
+            for (let k = 0; k < vm.current_scores[i]['rank']; k++) {
+              score_rank.push(k + 1)
+            }
+            // vm.button_status.push(cb);
+            // vm.score_list.push(score_rank)
+            vm.score_view.push({
+              'button_type': cb,
+              'rank_list': score_rank
+            })
+          }
+          resolve(res);
+        }).catch(error => {
+          reject(error);
+        });
+      });
+    }
+  }
+}
 </script>
 
 <style>
-  .layout {
-    border: 1px solid #d7dde4;
-    position: relative;
-    border-radius: 4px;
-    overflow: hidden;
-    background: url("../../assets/5.jpg");
-  }
+.layout {
+  border: 1px solid #d7dde4;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  background: url("../../assets/5.jpg");
+}
 
-  .my-gallery figure {
-    margin: 5px;
-    display: inline-block;
-    /*box-shadow: 0 0 10px #CCCCCC;*/
-  }
+.my-gallery figure {
+  margin: 5px;
+  display: inline-block;
+  /*box-shadow: 0 0 10px #CCCCCC;*/
+}
 
-  .my-gallery figure img {
-    width: 210px;
-    vertical-align: middle;
-  }
+.my-gallery figure img {
+  width: 210px;
+  vertical-align: middle;
+}
 
-  .layout-logo {
-    width: 100px;
-    height: 30px;
-    background: #5b6270;
-    border-radius: 3px;
-    float: left;
-    position: relative;
-    top: 15px;
-    left: 20px;
-  }
+.layout-logo {
+  width: 100px;
+  height: 30px;
+  background: #5b6270;
+  border-radius: 3px;
+  float: left;
+  position: relative;
+  top: 15px;
+  left: 20px;
+}
 
-  .layout-nav {
-    width: 420px;
-    margin: 0 auto;
-  }
+.layout-nav {
+  width: 420px;
+  margin: 0 auto;
+}
 
-  .layout-footer-center {
-    text-align: center;
-  }
+.layout-footer-center {
+  text-align: center;
+}
 
-  .photo-box {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-  }
+.photo-box {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
 
-  center {
-    position: absolute;
-    margin: auto;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
+center {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
 </style>
