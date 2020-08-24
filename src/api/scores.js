@@ -9,13 +9,14 @@ function get_score_types() {
   })
 }
 
-function post(user_id, scores) {
+function post(user_id, scores, key) {
   return fetch({
     url: `${SCORES}`,
     method: 'post',
     data: {
       user_id: user_id,
-      scores: scores
+      scores: scores,
+      order: key
     }
   })
 }

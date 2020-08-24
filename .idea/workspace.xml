@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="Add user id check form">
+    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="multi-datasets.&#10;multi-datasets.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/scores.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/scores.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/userstu/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/userstu/index.vue" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FavoritesManager">
-    <favorites_list name="dm-admin-vue" />
   </component>
   <component name="FileColors">
     <fileColor scope="Non-Project Files (Material Default)" color="2E3C43" />
@@ -49,7 +50,7 @@
     </favorite-branches>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="dol/v1.0.0" />
+        <entry key="$PROJECT_DIR$" value="sast" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -225,18 +226,6 @@
           <option name="textToSend" value="" />
           <option name="filesToSend" value="" />
         </RestClientRequest>
-      </list>
-    </option>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
       </list>
     </option>
   </component>
@@ -702,7 +691,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590065551766</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="multi-datasets.&#10;multi-datasets.">
+      <created>1598279776133</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1598279776133</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TodoView" selected-index="1">
@@ -722,9 +718,7 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
@@ -743,9 +737,9 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="修复部分字段显示问题" />
     <MESSAGE value="任务数据Loading" />
     <MESSAGE value="学生端显示已上传文件名" />
     <MESSAGE value="修复数据集信息的显示错误" />
@@ -770,7 +764,43 @@
     <MESSAGE value="Add dynamic scores structure and timer" />
     <MESSAGE value="Reload window after user submits" />
     <MESSAGE value="Add user id check form" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add user id check form" />
+    <MESSAGE value="multi-datasets.&#10;multi-datasets." />
+    <option name="LAST_COMMIT_MESSAGE" value="multi-datasets.&#10;multi-datasets." />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="638" y="123" key="#Deployment" timestamp="1598166914043">
+      <screen x="0" y="23" width="1920" height="1006" />
+    </state>
+    <state x="638" y="123" key="#Deployment/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1598166914043" />
+    <state x="622" y="110" key="#SSH_Configurations" timestamp="1598166866447">
+      <screen x="0" y="23" width="1920" height="1006" />
+    </state>
+    <state x="622" y="110" key="#SSH_Configurations/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1598166866447" />
+    <state x="599" y="37" key="CommitChangelistDialog2" timestamp="1598279919858">
+      <screen x="0" y="23" width="1920" height="1057" />
+    </state>
+    <state x="599" y="37" key="CommitChangelistDialog2/-1920.23.1920.1010/0.23.1920.1057@0.23.1920.1057" timestamp="1598279919858" />
+    <state x="539" y="96" key="SettingsEditor" timestamp="1598166948297">
+      <screen x="0" y="23" width="1920" height="1006" />
+    </state>
+    <state x="539" y="96" key="SettingsEditor/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1598166948297" />
+    <state x="685" y="277" width="540" height="540" key="StructurePopup" timestamp="1598278316171">
+      <screen x="0" y="23" width="1920" height="1057" />
+    </state>
+    <state x="685" y="277" width="540" height="540" key="StructurePopup/-1920.23.1920.1010/0.23.1920.1057@0.23.1920.1057" timestamp="1598278316171" />
+    <state x="623" y="283" key="Vcs.Push.Dialog.v2" timestamp="1598279923405">
+      <screen x="0" y="23" width="1920" height="1057" />
+    </state>
+    <state x="623" y="283" key="Vcs.Push.Dialog.v2/-1920.23.1920.1010/0.23.1920.1057@0.23.1920.1057" timestamp="1598279923405" />
+    <state x="943" y="115" width="404" height="685" key="ftp.server.browser" timestamp="1598166908074">
+      <screen x="0" y="23" width="1920" height="1006" />
+    </state>
+    <state x="943" y="115" width="404" height="685" key="ftp.server.browser/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1598166908074" />
+    <state x="703" y="221" width="670" height="711" key="search.everywhere.popup" timestamp="1598277207342">
+      <screen x="0" y="23" width="1920" height="1057" />
+    </state>
+    <state x="703" y="221" width="670" height="711" key="search.everywhere.popup/-1920.23.1920.1010/0.23.1920.1057@0.23.1920.1057" timestamp="1598277207342" />
+    <state x="703" y="211" width="670" height="676" key="search.everywhere.popup/-1920.23.1920.1057/0.23.1920.1006@0.23.1920.1006" timestamp="1598166956115" />
   </component>
   <component name="masterDetails">
     <states>
