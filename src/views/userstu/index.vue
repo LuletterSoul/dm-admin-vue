@@ -108,6 +108,7 @@
                       </Button>
                     </Col>
                   </Row>
+
                   <Row style="margin-left: 400px;margin-top: 40px">
                     <Col span="16">
                       <Button type="success" long :disabled="_submitable" @click="showSubmitConfirm=true">提交</Button>
@@ -116,6 +117,12 @@
                   <Row style="margin-left: 400px;margin-top: 20px">
                     <Col span="16">
                       <Button type="error" long @click="showResetConfirm = true">重置</Button>
+                    </Col>
+                  </Row>
+                  <Row style="margin-left: 400px;margin-top: 20px"
+                       v-if="this.file_index+1 < this._data_keys.length && this.pos === this.file_tree.length">
+                    <Col span="16">
+                      <Button type="success" long @click="showNextTaskConfirm=true">下个任务</Button>
                     </Col>
                   </Row>
                 </Content>
@@ -156,6 +163,13 @@
         title="确认重置"
         @on-ok="onReset()">
         <p>重置会清空所有评分数据，是否确认重置？</p>
+      </Modal>
+
+      <Modal
+        v-model="showNextTaskConfirm"
+        title="下一个任务"
+        @on-ok="submitNextTask">
+        <p>进入下一个任务？</p>
       </Modal>
 
     </Layout>
@@ -244,6 +258,7 @@ export default {
       submitLoading: true,
       stopTimer: false,
       showSubmitConfirm: false,
+      showNextTaskConfirm: false,
       meterShow: false,
       selectFolder: [],
       display: 1,
@@ -288,7 +303,8 @@ export default {
       pointerAlgType: 0,
       enableFitting: false,
       pos: 0,
-      scores: []
+      scores: [],
+      score_res: {}
     }
   },
   mounted() {
@@ -302,6 +318,17 @@ export default {
     _data_key() {
       return this._data_keys[this.file_index]
     },
+    _next_data_key() {
+      if (this._data_keys.length) {
+        if (this.file_index + 1 < this._data_keys.length) {
+          return this._data_keys[this.file_index + 1]
+        } else {
+          return this._data_keys[this.file_index]
+        }
+      } else {
+        return ''
+      }
+    },
     file_tree() {
       if (JSON.stringify(this.file_trees) !== '{}') {
         return this.file_trees[this._data_key]
@@ -311,7 +338,7 @@ export default {
     },
     _percent() {
       if (this.file_tree.length) {
-        return Math.floor(this.pos / (this.file_tree.length) * 100)
+        return Math.floor((this.pos) / (this.file_tree.length) * 100)
       } else {
         return 0
       }
@@ -338,7 +365,7 @@ export default {
       }
     },
     _submitable() {
-      if (this.pos < this.file_tree.length || this.pos === 0) {
+      if (this.pos < this.file_tree.length || this.pos === 0 || this.file_index + 1 < this._data_keys.length) {
         this.stopTimer = false;
         return true
       } else {
@@ -443,16 +470,22 @@ export default {
       }
     },
     saveCurrentScore: function () {
-      if (this.pos === this.scores.length) {
-        this.scores.push(this._current_score);
-      } else {
+      if (this.pos < this.file_tree.length) {
         this.$set(this.scores, this.pos, this._current_score);
+        // this.scores.push(this._current_score);
       }
     }, onClickNext() {
       this.saveCurrentScore();
       if (this.pos <= this.file_tree.length - 1) {
         this.pos += 1;
         this.resetScore(this._pos_score);
+        if (this.pos === this.file_tree.length && this.file_index + 1 < this._data_keys.length) {
+          this.showNextTaskConfirm = true
+        } else if (this.pos === this.file_tree.length && this.file_index + 1 === this._data_keys.length) {
+          this.$Message.success('谢谢您，已完成所有任务评分！');
+          // this.file_index = this.file_index + 1
+          this.showSubmitConfirm = true
+        }
       } else {
         this.resetScore(this._default_scores);
         this.pos = this.file_tree.length
@@ -467,8 +500,9 @@ export default {
       }
       let vm = this;
       vm.submitLoading = true;
+      vm.score_res[this._next_data_key] = this.scores
       return new Promise((resolve, reject) => {
-        api.scores.post(this.user.user_id, this.scores,this._data_key).then(res => {
+        api.scores.post(this.user.user_id, this.score_res).then(res => {
           if (res === 'success') {
             vm.$Message.success('提交成功，感谢参与，祝您生活愉快！');
             setInterval(function () {
@@ -488,6 +522,13 @@ export default {
           reject(error);
         });
       });
+    },
+    submitNextTask() {
+      this.score_res[this._data_key] = this.scores
+      this.file_index = this.file_index + 1
+      this.resetScore(this._default_scores)
+      this.pos = 0
+      this.scores = [];
     },
     handleSelectFolders: function (value) {
       let vm = this;
