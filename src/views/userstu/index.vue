@@ -472,7 +472,6 @@ export default {
     saveCurrentScore: function () {
       if (this.pos < this.file_tree.length) {
         this.$set(this.scores, this.pos, this._current_score);
-        // this.scores.push(this._current_score);
       }
     }, onClickNext() {
       this.saveCurrentScore();
