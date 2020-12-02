@@ -786,7 +786,7 @@ export default {
         if (this.dataset_options[i].disable === false) {
           tmp = this.dataset_options[i].value
         }
-        if (this.dataset_options[i].value === this.config.category) {
+        if (this.dataset_options.disable === false && this.dataset_options[i].value === this.config.category) {
           exist_compatible = true
         }
       }
@@ -812,7 +812,7 @@ export default {
         if (this.alg_options[i].disable === false) {
           this.config.alg = this.alg_options[i].value
         }
-        if (this.alg_options[i].value === this.config.alg) {
+        if (this.alg_options[i].disable=== false && this.alg_options[i].value === this.config.alg) {
           exist_compatible = true
         }
       }
