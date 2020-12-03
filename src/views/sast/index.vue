@@ -1178,6 +1178,7 @@ export default {
       this.synthesis_progress = 0;
     },
     handleAlgChange(value) {
+      this.view_content = true;
       // if (value === 'CAST') {
       this.dataset_options = this.alg_compatible_map[value];
       // this.alg_options = this.dataset_compatible_map[this.config.category]
