@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="app-container">
+  <div id="app">
     <transition>
       <keep-alive :include="cachedViews">
         <router-view></router-view>
@@ -13,12 +13,15 @@ export default {
   name: 'app',
   data() {
     return {
-      cachedViews: ['StyleTransfer']
+      cachedViews: ['Main']
     }
   }
 };
 </script>
 <style>
-@import "./assets/tagsStyle.css";
-@import "./assets/tooltip.css";
+body {
+  font-size: 16px;
+  background-color: #f8f8f8;
+  -webkit-font-smoothing: antialiased;
+}
 </style>
