@@ -52,7 +52,7 @@
     "vant": "^2.11.1",
     "videojs-flash": "^2.2.1",
     "view-design": "^4.3.2",
-    "vue": "2.5.2",
+    "vue": "^2.6.12",
     "vue-count-to": "1.0.5",
     "vue-fullpage": "^2.0.5",
     "vue-fullpage.js": "^0.0.5",
