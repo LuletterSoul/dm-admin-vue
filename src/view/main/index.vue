@@ -1,10 +1,10 @@
 <template>
   <div>
-    <van-tabbar v-model="active" active-color="#ee0a24" inactive-color="#000">
+    <!-- <van-tabbar v-model="active" active-color="#ee0a24" inactive-color="#000">
       <van-tabbar-item icon="home-o">首页</van-tabbar-item>
-      <van-tabbar-item icon="photo-o">图片艺术</van-tabbar-item>
+      <van-tabbar-item icon="photo-o" to="/photo">图片艺术</van-tabbar-item>
       <van-tabbar-item icon="video-o">视频艺术</van-tabbar-item>
-    </van-tabbar>
+    </van-tabbar> -->
   </div>
 </template>
 
@@ -18,21 +18,24 @@ export default {
   //   [SubmitBar.name]: SubmitBar,
   //   [CheckboxGroup.name]: CheckboxGroup,
   // },
-  name: "main",
+  name: "Home",
   data() {
     return {
       tab_options: [
         {
           label: "首页",
           icon: "home-0",
+          path: "/main",
         },
         {
           label: "图像艺术",
           icon: "photo-o",
+          path: "/photo",
         },
         {
           label: "视频艺术",
           icon: "video-o",
+          path: "/video",
         },
       ],
       active: 0,

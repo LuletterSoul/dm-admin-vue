@@ -6,13 +6,27 @@ Vue.use(Router);
 const routes = [
   {
     path: "*",
-    redirect: "/main",
+    redirect: "/home",
   },
   {
-    name: "main",
+    name: "home",
     component: () => import("./view/main"),
     meta: {
       title: "Aristagram",
+    },
+  },
+  {
+    name: "photo",
+    component: () => import("./view/photo"),
+    meta: {
+      title: "图片艺术创作",
+    },
+  },
+  {
+    name: "video",
+    component: () => import("./view/video"),
+    meta: {
+      title: "视频艺术创作",
     },
   },
 ];
