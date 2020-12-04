@@ -6,24 +6,86 @@
       left-arrow
       @click-left="onClickLeft"
     />
+    <div class="content_container" ref="__container_id">
+      <div class="select_button">
+        <van-row>
+          <van-col span="24">
+            <van-button
+              size="small"
+              round
+              type="info"
+              block
+              plain
+              @click="onClickUpload"
+              >从相册上传</van-button
+            >
+          </van-col>
+          <van-uploader
+            v-show="false"
+            ref="img_uploader"
+            v-model="fileList"
+            multiple
+            :max-count="2"
+            :show-upload="true"
+          >
+          </van-uploader>
+        </van-row>
+      </div>
+      <Content :content_imgs="content_imgs" :width="'100%'" :height="'100%'">
+      </Content>
+    </div>
   </div>
 </template>
 
 <script>
-// import { Checkbox, CheckboxGroup, Card, SubmitBar, Toast } from "vant";
 import { mapState } from "vuex";
+import Content from "./content.vue";
 
 export default {
-  // components: {
-  //   [Card.name]: Card,
-  //   [Checkbox.name]: Checkbox,
-  //   [SubmitBar.name]: SubmitBar,
-  //   [CheckboxGroup.name]: CheckboxGroup,
-  // },
-
   name: "Photo",
+  components: { Content },
   data() {
-    return {};
+    return {
+      fileList: [],
+      content_imgs: [
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/apple-1.jpg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/apple-1.jpg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/apple-1.jpg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/apple-1.jpg" },
+        { thumbnail: "https://img.yzcdn.cn/vant/apple-1.jpg" },
+      ],
+    };
   },
 
   computed: {
@@ -34,8 +96,19 @@ export default {
     onClickLeft() {
       this.$router.back();
     },
+    onClickUpload() {
+      this.$refs.img_uploader.$refs.input.click();
+    },
   },
 };
 </script>
 
-<style lang="less"></style>
+<style lang="less">
+.content_container {
+  margin: 5px;
+}
+
+.select_button {
+  margin: 15px;
+}
+</style>

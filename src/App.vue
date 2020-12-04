@@ -3,13 +3,13 @@
     <router-view />
     <div>
       <van-tabbar v-model="active" active-color="#ee0a24" inactive-color="#000">
-        <van-tabbar-item icon="home-o">{{
+        <van-tabbar-item icon="home-o" to="/home">{{
           tab_options[0].label
         }}</van-tabbar-item>
         <van-tabbar-item icon="photo-o" to="/photo">{{
           tab_options[1].label
         }}</van-tabbar-item>
-        <van-tabbar-item icon="video-o">{{
+        <van-tabbar-item icon="video-o" to="/video">{{
           tab_options[2].label
         }}</van-tabbar-item>
       </van-tabbar>
