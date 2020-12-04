@@ -7,32 +7,35 @@
       @click-left="onClickLeft"
     />
     <div class="content_container" ref="__container_id">
-      <div class="select_button">
-        <van-row>
-          <van-col span="24">
-            <van-button
-              size="small"
-              round
-              type="info"
-              block
-              plain
-              @click="onClickUpload"
-              >从相册上传</van-button
+      <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+        <div class="select_button">
+          <van-row>
+            <van-col span="24">
+              <van-button
+                size="small"
+                round
+                type="info"
+                block
+                plain
+                @click="onClickUpload"
+                >从相册上传</van-button
+              >
+            </van-col>
+            <van-uploader
+              v-show="false"
+              ref="img_uploader"
+              v-model="fileList"
+              multiple
+              :max-count="2"
+              :show-upload="true"
             >
-          </van-col>
-          <van-uploader
-            v-show="false"
-            ref="img_uploader"
-            v-model="fileList"
-            multiple
-            :max-count="2"
-            :show-upload="true"
-          >
-          </van-uploader>
-        </van-row>
-      </div>
-      <Content :content_imgs="content_imgs" :width="'100%'" :height="'100%'">
-      </Content>
+            </van-uploader>
+          </van-row>
+        </div>
+
+        <Content :content_imgs="content_imgs" :width="'100%'" :height="'100%'">
+        </Content>
+      </van-pull-refresh>
     </div>
   </div>
 </template>
@@ -47,6 +50,7 @@ export default {
   data() {
     return {
       fileList: [],
+      isLoading: false,
       content_imgs: [
         { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
         { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
@@ -93,6 +97,13 @@ export default {
   },
 
   methods: {
+    onRefresh() {
+      setTimeout(() => {
+        this.$toast("刷新成功");
+        this.isLoading = false;
+        this.count++;
+      }, 1000);
+    },
     onClickLeft() {
       this.$router.back();
     },
