@@ -7,6 +7,15 @@
       @click-left="onClickLeft"
     />
     <div class="content_container" ref="__container_id">
+      <div class='func'>
+      <func-card :icon="'user-o'" :func="'漫画生成'"> </func-card>
+      </div>
+      <div class='func'>
+      <func-card :icon="'flower-o'" :func="'场景转换'"> </func-card>
+      </div>
+      <div class='func'>
+      <func-card :icon="'fire-o'" :func="'纹理迁移'"> </func-card>
+      </div>
       <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
         <div class="select_button">
           <van-row>
@@ -32,7 +41,6 @@
             </van-uploader>
           </van-row>
         </div>
-
         <Content :content_imgs="content_imgs" :width="'100%'" :height="'100%'">
         </Content>
       </van-pull-refresh>
@@ -43,10 +51,11 @@
 <script>
 import { mapState } from "vuex";
 import Content from "./content.vue";
+import FuncCard from "./func_card.vue";
 
 export default {
   name: "Photo",
-  components: { Content },
+  components: { Content, FuncCard },
   data() {
     return {
       fileList: [],
@@ -116,10 +125,14 @@ export default {
 
 <style lang="less">
 .content_container {
-  margin: 5px;
+  margin: 20px;
 }
 
-.select_button {
-  margin: 15px;
+.func{
+  margin-top: 20px;
 }
+// .select_button {
+
+//   margin: 15px;
+// }
 </style>

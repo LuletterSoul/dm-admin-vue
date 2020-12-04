@@ -1,5 +1,5 @@
 <template>
-  <div class="content_container" ref="__container_id">
+  <div ref="__container_id">
     <van-row
       type="flex"
       class="content_row"
@@ -100,7 +100,7 @@ export default {
 
 <style lang="less">
 .content_row {
-  margin: 10px;
+  margin-top: 10px;
 }
 
 .img_container {

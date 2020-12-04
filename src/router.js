@@ -10,6 +10,7 @@ const routes = [
   },
   {
     name: "home",
+    path: "/home",
     component: () => import("./view/main"),
     meta: {
       title: "Aristagram",
@@ -17,6 +18,7 @@ const routes = [
   },
   {
     name: "photo",
+    path: "/photo",
     component: () => import("./view/photo"),
     meta: {
       title: "图片艺术创作",
@@ -24,6 +26,7 @@ const routes = [
   },
   {
     name: "video",
+    path: "/video",
     component: () => import("./view/video"),
     meta: {
       title: "视频艺术创作",
