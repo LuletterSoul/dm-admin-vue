@@ -39,30 +39,9 @@ export default {
     };
   },
 
-  computed: {
-    submitBarText() {
-      const count = this.checkedGoods.length;
-      return "结算" + (count ? `(${count})` : "");
-    },
+  computed: {},
 
-    totalPrice() {
-      return this.goods.reduce(
-        (total, item) =>
-          total + (this.checkedGoods.indexOf(item.id) !== -1 ? item.price : 0),
-        0
-      );
-    },
-  },
-
-  methods: {
-    formatPrice(price) {
-      return (price / 100).toFixed(2);
-    },
-
-    onSubmit() {
-      // Toast("点击结算");
-    },
-  },
+  methods: {},
 };
 </script>
 
