@@ -78,7 +78,7 @@ export default {
       },
       pages: {
         page: 0,
-        size: 18,
+        size: 15,
       },
       content_imgs: [],
     };

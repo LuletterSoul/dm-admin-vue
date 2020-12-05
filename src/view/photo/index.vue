@@ -10,7 +10,6 @@
       <single-transition>
         <router-view></router-view>
       </single-transition>
-      <AnnimateTransition> </AnnimateTransition>
     </div>
   </div>
 </template>
@@ -18,7 +17,6 @@
 <script>
 import { mapState } from "vuex";
 import SingleTransition from "@/components/SingleTransition.vue";
-import AnnimateTransition from "@/components/AnimateTransition.vue";
 export default {
   name: "PhotoStylizationHome",
   data() {
@@ -38,7 +36,7 @@ export default {
   computed: {
     ...mapState("photo", ["titleName"]),
   },
-  components: { SingleTransition, AnnimateTransition },
+  components: { SingleTransition },
   methods: {
     onClickLeft() {
       this.$router.back();

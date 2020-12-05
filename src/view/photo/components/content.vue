@@ -10,13 +10,12 @@
     >
       <van-col :span="_span" v-for="(img, col_index) in row" :key="col_index">
         <div
-          class="img_container"
+          class="auto_img"
           :ref="'__col_id_' + (col * row_index + col_index)"
         >
           <van-image
             fit="cover"
             :width="width"
-            :height="_height"
             :src="img.thumbnail"
             @click="onClick(img)"
           />
@@ -56,13 +55,10 @@ export default {
   },
 
   mounted() {
-    this.$nextTick(this.getContainerWidth);
+    this.$nextTick(this.getContainerWidth());
   },
 
   computed: {
-    _height() {
-      return Math.floor(this.containerWidth * 0.28) + "px";
-    },
     _span() {
       return Math.floor(24 / this.col);
     },
@@ -91,13 +87,6 @@ export default {
     onClick(img) {
       console.log(img.thumbnail);
     },
-    getContainerWidth() {
-      if (this.$refs.__container_id.clientWidth) {
-        this.containerWidth = this.$refs.__container_id.clientWidth;
-      } else {
-        this.containerWidth = 350;
-      }
-    },
   },
 };
 </script>
@@ -109,5 +98,19 @@ export default {
 
 .img_container {
   margin: 1px;
+}
+
+.autoimg {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+  overflow: hidden;
+}
+.autoimg img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
 }
 </style>
