@@ -17,6 +17,7 @@
 
 <script type="text/javascript">
 import Velocity from "velocity-animate";
+import "velocity-animate/velocity.ui";
 export default {
   name: "AnimateTransition",
   props: {
@@ -72,11 +73,11 @@ export default {
         done
       );
     },
-    afterEnter: function(el) {
+    afterEnter: function() {
       this.$emit("InEnd");
     },
-    beforeLeave: function(el) {
-      let vm = this;
+    beforeLeave: function() {
+      // let vm = this;
     },
     leave: function(el, done) {
       let vm = this;
@@ -98,7 +99,7 @@ export default {
         done
       );
     },
-    afterLeave: function(el) {
+    afterLeave: function() {
       //        this.$emit('slideOutEnd');
     },
     beforeAppear: function(el) {

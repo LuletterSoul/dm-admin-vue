@@ -92,7 +92,11 @@ export default {
       console.log(img.thumbnail);
     },
     getContainerWidth() {
-      this.containerWidth = this.$refs.__container_id.clientWidth;
+      if (this.$refs.__container_id.clientWidth) {
+        this.containerWidth = this.$refs.__container_id.clientWidth;
+      } else {
+        this.containerWidth = 350;
+      }
     },
   },
 };

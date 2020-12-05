@@ -1,8 +1,11 @@
 <template>
   <div id="app">
-    <transition :name="transitionName">
-      <router-view />
-    </transition>
+    <single-transition
+      :in-style="'transition.fadeIn'"
+      :out-style="'transition.fadeOut'"
+    >
+      <router-view></router-view>
+    </single-transition>
     <div>
       <van-tabbar v-model="active" active-color="#ee0a24" inactive-color="#000">
         <van-tabbar-item icon="home-o" to="/home">{{
@@ -23,14 +26,12 @@
 // import { Checkbox, CheckboxGroup, Card, SubmitBar, Toast } from "vant";
 
 import { Toast } from "vant";
+import SingleTransition from "@/components/SingleTransition.vue";
 
 export default {
-  // components: {
-  //   [Card.name]: Card,
-  //   [Checkbox.name]: Checkbox,
-  //   [SubmitBar.name]: SubmitBar,
-  //   [CheckboxGroup.name]: CheckboxGroup,
-  // },
+  components: {
+    SingleTransition,
+  },
 
   name: "Home",
   data() {
@@ -81,7 +82,7 @@ export default {
 <style lang="less">
 body {
   font-size: 24px;
-  background-color: #f8f8f8;
+  background-color: #fff;
   -webkit-font-smoothing: antialiased;
 }
 </style>

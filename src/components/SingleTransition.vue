@@ -1,8 +1,6 @@
 <template>
   <div id="singleTransition">
     <transition
-      name="fade"
-      mode="out-in"
       :css="false"
       @before-enter="beforeEnter"
       @enter="enter"
@@ -20,16 +18,18 @@
 
 <script type="text/javascript">
 import Velocity from "velocity-animate";
+import "velocity-animate/velocity.ui";
+
 export default {
   name: "SingleTransition",
   props: {
     duration: {
       type: Number,
-      default: 1000,
+      default: 300,
     },
     delay: {
       type: Number,
-      default: 500,
+      default: 300,
     },
     inStyle: {
       type: String,
@@ -66,12 +66,10 @@ export default {
         done
       );
     },
-    afterEnter: function(el) {
+    afterEnter: function() {
       this.$emit("InEnd");
     },
-    beforeLeave: function(el) {
-      let vm = this;
-    },
+    beforeLeave: function() {},
     leave: function(el, done) {
       let vm = this;
       Velocity(
@@ -87,7 +85,7 @@ export default {
         done
       );
     },
-    afterLeave: function(el) {
+    afterLeave: function() {
       //        this.$emit('slideOutEnd');
     },
     beforeAppear: function(el) {

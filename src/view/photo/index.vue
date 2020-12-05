@@ -7,15 +7,18 @@
         left-arrow
         @click-left="onClickLeft"
       />
-      <transition :name="transitionName">
+      <single-transition>
         <router-view></router-view>
-      </transition>
+      </single-transition>
+      <AnnimateTransition> </AnnimateTransition>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import SingleTransition from "@/components/SingleTransition.vue";
+import AnnimateTransition from "@/components/AnimateTransition.vue";
 export default {
   name: "PhotoStylizationHome",
   data() {
@@ -29,13 +32,13 @@ export default {
       const toDepth = to.path.split("/").length;
       const fromDepth = from.path.split("/").length;
       this.transitionName = toDepth <= fromDepth ? "slide-right" : "slide-left";
-      console.log("222222");
     },
   },
 
   computed: {
     ...mapState("photo", ["titleName"]),
   },
+  components: { SingleTransition, AnnimateTransition },
   methods: {
     onClickLeft() {
       this.$router.back();

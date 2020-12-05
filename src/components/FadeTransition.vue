@@ -19,6 +19,7 @@
 </template>
 <script type="text/javascript">
 import Velocity from "velocity-animate";
+import "velocity-animate/velocity.ui";
 export default {
   name: "fadeTransition",
   props: {
