@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
       <div class="select_button">
         <van-row>
           <van-col span="24">
@@ -25,17 +25,31 @@
           </van-uploader>
         </van-row>
       </div>
-      <Content :content_imgs="_content_imgs" :width="'100%'" :height="'100%'">
-      </Content>
+      <!-- <van-list
+        v-model="file_tree_loading"
+        :finished="finished"
+        finished-text="没有更多内容了"
+        @load="onLoad"
+      >
+      </van-list> -->
+      <load-more
+        @onLoad="onLoad"
+        :data-loading="file_tree_loading"
+        :finished="finished"
+      >
+        <Content :content_imgs="_content_imgs" :width="'100%'" :height="'100%'">
+        </Content>
+      </load-more>
     </van-pull-refresh>
   </div>
 </template>
 
 <script>
 import Content from "./components/content.vue";
+import LoadMore from "@/components/LoadMore";
 export default {
   name: "PhotoLib",
-  components: { Content },
+  components: { Content, LoadMore },
   props: {
     algName: {
       type: String,
@@ -45,7 +59,8 @@ export default {
   data() {
     return {
       fileList: [],
-      isLoading: false,
+      refreshing: false,
+      finished: false,
       src_w: 512,
       src_h: 512,
       thumbnail_width: 512,
@@ -63,46 +78,9 @@ export default {
       },
       pages: {
         page: 0,
-        size: 10,
+        size: 18,
       },
-      content_imgs: [
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/apple-1.jpg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/apple-1.jpg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/apple-1.jpg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/apple-1.jpg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/apple-1.jpg" },
-      ],
+      content_imgs: [],
     };
   },
   mounted() {
@@ -124,23 +102,40 @@ export default {
     },
   },
   methods: {
-    requestContentImages() {
-      if (this._content_imgs.length > 0) {
-        return;
-      }
+    onLoad() {
+      this.pages.page = this.pages.page + 1;
+      this.file_tree_loading = true;
+      this.requestContentImages(true);
+    },
+    requestContentImages(loadNextPage = false) {
+      // // // if (this._content_imgs.length > 0) {
+      // //   return;
+      // }
       let vm = this;
       // let resultId = this.resultList[0].resultId;
-      vm.file_tree_loading = true;
-      this.$toast({
-        message: "加载中...",
-        forbidClick: true,
-      });
+      // this.$toast({
+      //   message: "加载中...",
+      //   forbidClick: true,
+      // });
       return new Promise((resolve, reject) => {
         this.api.contents
           .gets(this.pages, this.config.category)
           .then((res) => {
             if (res !== undefined) {
-              vm.content_ids = res.content_ids;
+              if (loadNextPage) {
+                for (let i = 0; i < res.content_ids.length; i++) {
+                  vm.content_ids.push(res.content_ids[i]);
+                }
+              } else {
+                vm.content_ids = res.content_ids;
+              }
+              // this.$toast.success({
+              //   message: "加载成功",
+              //   forbidClick: true,
+              // });
+              if (this.content_ids.length === res.total) {
+                vm.finished = true;
+              }
               vm.content_index = 0;
               vm.content_id = -1;
             } else {
@@ -152,20 +147,27 @@ export default {
             return resolve(res);
           })
           .catch((error) => {
+            this.$toast.fail({
+              message: "内容图加载失败，请刷新重试！",
+              forbidClick: true,
+            });
             return reject(error);
           })
           .finally(() => {
-            // vm.handleSpinHide();
+            vm.refreshing = false;
             vm.file_tree_loading = false;
           });
       });
     },
     onRefresh() {
-      setTimeout(() => {
-        this.$toast("刷新成功");
-        this.isLoading = false;
-        this.count++;
-      }, 1000);
+      for (let i = 0; i < this.content_ids.length; i++) {
+        this.$set(this.content_ids, i, this.content_ids[i]);
+      }
+      this.refreshing = false;
+      this.$toast.success({
+        message: "刷新成功",
+        forbidClick: true,
+      });
     },
     onClickUpload() {
       this.$refs.img_uploader.$refs.input.click();
