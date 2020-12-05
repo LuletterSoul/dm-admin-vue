@@ -1,15 +1,17 @@
 <template>
   <div id="app">
-    <router-view />
+    <transition :name="transitionName">
+      <router-view />
+    </transition>
     <div>
       <van-tabbar v-model="active" active-color="#ee0a24" inactive-color="#000">
         <van-tabbar-item icon="home-o" to="/home">{{
           tab_options[0].label
         }}</van-tabbar-item>
-        <van-tabbar-item icon="photo-o" to="/photo">{{
+        <van-tabbar-item icon="photo-o" to="/pr">{{
           tab_options[1].label
         }}</van-tabbar-item>
-        <van-tabbar-item icon="video-o" to="/video">{{
+        <van-tabbar-item icon="video-o" to="/vr">{{
           tab_options[2].label
         }}</van-tabbar-item>
       </van-tabbar>
@@ -51,7 +53,17 @@ export default {
         },
       ],
       active: 0,
+      transitionName: "slide-right",
     };
+  },
+
+  watch: {
+    $route(to, from) {
+      const toDepth = to.path.split("/").length;
+      const fromDepth = from.path.split("/").length;
+      this.transitionName = toDepth <= fromDepth ? "slide-right" : "slide-left";
+      console.log("111111");
+    },
   },
 
   methods: {
@@ -66,9 +78,9 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
 body {
-  font-size: 16px;
+  font-size: 24px;
   background-color: #f8f8f8;
   -webkit-font-smoothing: antialiased;
 }

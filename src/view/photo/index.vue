@@ -1,123 +1,44 @@
 <template>
   <div>
-    <van-nav-bar
-      :title="this.titleName"
-      left-text=""
-      left-arrow
-      @click-left="onClickLeft"
-    />
     <div class="content_container" ref="__container_id">
-      <div class='func'>
-      <func-card :icon="'user-o'" :func="'漫画生成'"> </func-card>
-      </div>
-      <div class='func'>
-      <func-card :icon="'flower-o'" :func="'场景转换'"> </func-card>
-      </div>
-      <div class='func'>
-      <func-card :icon="'fire-o'" :func="'纹理迁移'"> </func-card>
-      </div>
-      <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-        <div class="select_button">
-          <van-row>
-            <van-col span="24">
-              <van-button
-                size="small"
-                round
-                type="info"
-                block
-                plain
-                @click="onClickUpload"
-                >从相册上传</van-button
-              >
-            </van-col>
-            <van-uploader
-              v-show="false"
-              ref="img_uploader"
-              v-model="fileList"
-              multiple
-              :max-count="2"
-              :show-upload="true"
-            >
-            </van-uploader>
-          </van-row>
-        </div>
-        <Content :content_imgs="content_imgs" :width="'100%'" :height="'100%'">
-        </Content>
-      </van-pull-refresh>
+      <van-nav-bar
+        :title="this.titleName"
+        left-text=""
+        left-arrow
+        @click-left="onClickLeft"
+      />
+      <transition :name="transitionName">
+        <router-view></router-view>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import Content from "./content.vue";
-import FuncCard from "./func_card.vue";
-
 export default {
-  name: "Photo",
-  components: { Content, FuncCard },
+  name: "PhotoStylizationHome",
   data() {
     return {
-      fileList: [],
-      isLoading: false,
-      content_imgs: [
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/cat.jpeg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/apple-1.jpg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/apple-1.jpg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/apple-1.jpg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/apple-1.jpg" },
-        { thumbnail: "https://img.yzcdn.cn/vant/apple-1.jpg" },
-      ],
+      transitionName: "slide-right",
     };
+  },
+
+  watch: {
+    $route(to, from) {
+      const toDepth = to.path.split("/").length;
+      const fromDepth = from.path.split("/").length;
+      this.transitionName = toDepth <= fromDepth ? "slide-right" : "slide-left";
+      console.log("222222");
+    },
   },
 
   computed: {
     ...mapState("photo", ["titleName"]),
   },
-
   methods: {
-    onRefresh() {
-      setTimeout(() => {
-        this.$toast("刷新成功");
-        this.isLoading = false;
-        this.count++;
-      }, 1000);
-    },
     onClickLeft() {
       this.$router.back();
-    },
-    onClickUpload() {
-      this.$refs.img_uploader.$refs.input.click();
     },
   },
 };
@@ -128,11 +49,16 @@ export default {
   margin: 20px;
 }
 
-.func{
-  margin-top: 20px;
+.slide-left-enter,
+.slide-right-leave-active {
+  opacity: 0;
+  -webkit-transform: translate(30px, 0);
+  transform: translate(30px, 0);
 }
-// .select_button {
-
-//   margin: 15px;
-// }
+.slide-left-leave-active,
+.slide-right-enter {
+  opacity: 0;
+  -webkit-transform: translate(-30px, 0);
+  transform: translate(-30px, 0);
+}
 </style>
