@@ -1,23 +1,19 @@
-import fetch from '@/utils/fetch';
+import { axios_server } from "./base";
 
-const baseURL = '/category';
+const baseURL = "/category";
 
 function get(content_id) {
-  return fetch({
+  return axios_server({
     url: `${baseURL}/${content_id}`,
-    method: 'get'
-  })
+    method: "get",
+  });
 }
-
 
 function gets() {
-  return fetch({
+  return axios_server({
     url: `${baseURL}/`,
-    method: 'get',
-  })
+    method: "get",
+  });
 }
 
-
-export {
-  get, gets
-}
+export { get, gets };

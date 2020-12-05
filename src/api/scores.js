@@ -1,25 +1,22 @@
-import fetch from '@/utils/fetch';
-
-const SCORES = '/scores';
+import { axios_server } from "./base";
+const SCORES = "/scores";
 
 function get_score_types() {
-  return fetch({
-    url: '/score_types',
-    method: 'get'
-  })
+  return axios_server({
+    url: "/score_types",
+    method: "get",
+  });
 }
 
 function post(user_id, scores) {
-  return fetch({
+  return axios_server({
     url: `${SCORES}`,
-    method: 'post',
+    method: "post",
     data: {
       user_id: user_id,
-      scores: scores
-    }
-  })
+      scores: scores,
+    },
+  });
 }
 
-export {
-  post, get_score_types
-}
+export { post, get_score_types };

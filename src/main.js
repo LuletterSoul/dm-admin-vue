@@ -6,6 +6,10 @@ import store from "./store";
 import Vant from "vant";
 import "vant/lib/index.css";
 
+import * as api from "./api";
+
+Vue.prototype.api = api;
+
 Vue.use(Vant);
 
 new Vue({

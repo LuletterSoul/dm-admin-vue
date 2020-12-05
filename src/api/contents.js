@@ -1,39 +1,36 @@
-import fetch from '@/utils/fetch';
+import { axios_server } from "./base";
 
-const baseURL = '/contents';
+const baseURL = "/contents";
 
-function get(content_id) {
-  return fetch({
+export const get = (content_id) => {
+  return axios_server({
     url: `${baseURL}/${content_id}`,
-    method: 'get'
-  })
-}
+    method: "get",
+  });
+};
 
-
-function gets(pages, category) {
-  return fetch({
+export const gets = (pages, category) => {
+  return axios_server({
     url: `${baseURL}/`,
-    method: 'get',
+    method: "get",
     params: {
       ...pages,
-      category
-    }
-  })
-}
+      category,
+    },
+  });
+};
 
-function post(content_img, progress) {
-  let form = new FormData()
-  form.append('content_img', content_img)
-  return fetch({
+export const post = (content_img, progress) => {
+  let form = new FormData();
+  form.append("content_img", content_img);
+  return axios_server({
     url: `${baseURL}`,
     headers: {
-      "Content-Type": "multipart/form-data"
+      "Content-Type": "multipart/form-data",
     },
-    method: 'post',
-    onUploadProgress: progress
-  })
-}
+    method: "post",
+    onUploadProgress: progress,
+  });
+};
 
-export {
-  get, gets, post
-}
+// export { get, gets, post };

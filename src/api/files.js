@@ -1,33 +1,29 @@
-import fetch from '@/utils/fetch';
+import { axios_server } from "./base";
+const FILES = "/files";
 
-const FILES = '/files';
-
-function get() {
-  return fetch({
+export const get = function get() {
+  return axios_server({
     url: FILES,
-    method: 'get'
-  })
-}
+    method: "get",
+  });
+};
 
-function user_study() {
-  return fetch({
+export const user_study = function user_study() {
+  return axios_server({
     url: `/user_study`,
-    method: 'get'
-  })
-}
+    method: "get",
+  });
+};
 
-function photos(content, filename) {
-  return fetch({
+export const photos = function photos(content, filename) {
+  return axios_server({
     url: `/photos`,
-    method: 'get',
+    method: "get",
     params: {
       content: content,
-      filename: filename
-    }
-  })
-}
+      filename: filename,
+    },
+  });
+};
 
-
-export {
-  user_study, photos
-}
+// export { get, user_study, photos };

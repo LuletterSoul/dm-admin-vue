@@ -1,35 +1,31 @@
-import fetch from '@/utils/fetch';
-
-const baseURL = '/annotations';
+import { axios_server } from "./base";
+const baseURL = "/annotations";
 
 function get(content_id) {
-  return fetch({
+  return axios_server({
     url: `${baseURL}/${content_id}`,
-    method: 'get'
-  })
+    method: "get",
+  });
 }
 
-
 function gets(pages) {
-  return fetch({
+  return axios_server({
     url: `${baseURL}/`,
-    method: 'get',
+    method: "get",
     params: {
-      ...pages
-    }
-  })
+      ...pages,
+    },
+  });
 }
 
 function post(annotation) {
-  return fetch({
+  return axios_server({
     url: `${baseURL}/`,
-    method: 'post',
+    method: "post",
     data: {
-      ...annotation
-    }
-  })
+      ...annotation,
+    },
+  });
 }
 
-export {
-  get, gets, post
-}
+export { get, gets, post };

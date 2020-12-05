@@ -1,37 +1,34 @@
-import fetch from '@/utils/fetch';
-
-const baseURL = '/styles';
+import { axios_server } from "./base";
+const baseURL = "/styles";
 
 function get(style_id) {
-  return fetch({
+  return axios_server({
     url: `${baseURL}/${style_id}`,
-    method: 'get'
-  })
+    method: "get",
+  });
 }
 
 function gets(pages, category) {
-  return fetch({
+  return axios_server({
     url: `${baseURL}/`,
-    method: 'get',
+    method: "get",
     params: {
       ...pages,
-      category: category
-    }
-  })
+      category: category,
+    },
+  });
 }
 
 function post(style_img) {
-  let form = new FormData()
-  form.append('style_img', style_img)
-  return fetch({
+  let form = new FormData();
+  form.append("style_img", style_img);
+  return axios_server({
     url: `${baseURL}`,
     headers: {
-      "Content-Type": "multipart/form-data"
+      "Content-Type": "multipart/form-data",
     },
-    method: 'post',
-  })
+    method: "post",
+  });
 }
 
-export {
-  get, gets, post
-}
+export { get, gets, post };
