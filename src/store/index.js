@@ -2,12 +2,14 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 import photo from "./photo";
+import video from "./video";
 
 Vue.use(Vuex);
 
 let store = new Vuex.Store({
   modules: {
     photo,
+    video,
   },
   state: {
     process: [],

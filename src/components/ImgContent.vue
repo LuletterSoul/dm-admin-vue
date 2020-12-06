@@ -9,27 +9,41 @@
       :key="'__row_index_' + row_index"
     >
       <van-col :span="_span" v-for="(img, col_index) in row" :key="col_index">
-        <div
-          class="auto_img"
-          :ref="'__col_id_' + (col * row_index + col_index)"
+        <single-transition
+          :in-style="'transition.fadeIn'"
+          :out-style="'transition.fadeOut'"
         >
-          <van-image
-            fit="cover"
-            :width="width"
-            :src="img.thumbnail"
-            @click="onClick(img)"
-          />
-        </div>
+          <div
+            class="auto_img"
+            :ref="'__col_id_' + (col * row_index + col_index)"
+          >
+            <van-image
+              fit="cover"
+              :width="width"
+              :src="img"
+              @click="onClick(col * row_index + col_index)"
+            >
+              <template v-slot:loading>
+                <van-loading type="spinner" size="20" />
+              </template>
+            </van-image>
+          </div>
+        </single-transition>
       </van-col>
     </van-row>
   </div>
 </template>
 
 <script>
+// import AnimateTransition from "@/components/AnimateTransition";
+import SingleTransition from "@/components/SingleTransition";
 export default {
-  name: "Content",
+  name: "ImgContent",
+  components: {
+    SingleTransition,
+  },
   props: {
-    content_imgs: {
+    imgs: {
       type: Array,
       default: () => {
         return [];
@@ -54,28 +68,26 @@ export default {
     };
   },
 
-  mounted() {
-    this.$nextTick(this.getContainerWidth());
-  },
+  mounted() {},
 
   computed: {
     _span() {
       return Math.floor(24 / this.col);
     },
     _img_matrix() {
-      let len = this.content_imgs.length;
+      let len = this.imgs.length;
       let matrix = [];
       if (len) {
         let row = Math.floor(len / this.col);
         for (let i = 0; i < row; i++) {
           let row = [];
           for (let j = 0; j < this.col; j++) {
-            row.push(this.content_imgs[i * this.col + j]);
+            row.push(this.imgs[i * this.col + j]);
           }
           matrix.push(row);
         }
         if (row * this.col < len) {
-          matrix.push(this.content_imgs.slice(this.col * row));
+          matrix.push(this.imgs.slice(this.col * row));
         }
         return matrix;
       }
@@ -84,8 +96,8 @@ export default {
   },
 
   methods: {
-    onClick(img) {
-      console.log(img.thumbnail);
+    onClick(index) {
+      console.log(index);
     },
   },
 };

@@ -37,19 +37,23 @@
         :data-loading="file_tree_loading"
         :finished="finished"
       >
-        <Content :content_imgs="_content_imgs" :width="'100%'" :height="'100%'">
-        </Content>
+        <img-content
+          :imgs="_content_srcs"
+          :width="'100%'"
+          :height="'100%'"
+        >
+        </img-content>
       </load-more>
     </van-pull-refresh>
   </div>
 </template>
 
 <script>
-import Content from "./components/content.vue";
+import ImgContent from "@/components/ImgContent.vue";
 import LoadMore from "@/components/LoadMore";
 export default {
   name: "PhotoLib",
-  components: { Content, LoadMore },
+  components: { ImgContent, LoadMore },
   props: {
     algName: {
       type: String,
@@ -99,6 +103,11 @@ export default {
       } else {
         return [];
       }
+    },
+    _content_srcs() {
+      return this._content_imgs.map((c) => {
+        return c.source;
+      });
     },
   },
   methods: {

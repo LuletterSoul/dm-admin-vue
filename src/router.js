@@ -39,7 +39,7 @@ const routes = [
         meta: {
           title: "图像库",
         },
-        component: () => import("./view/photo/plib.vue"),
+        component: () => import("./view/photo/lib.vue"),
         props: (route) => {
           return {
             query: { algName: route.query.algName },
@@ -50,12 +50,36 @@ const routes = [
   },
 
   {
-    name: "photo_stylization",
+    name: "video_stylization",
     path: "/vr",
     component: () => import("./view/video"),
+    redirect: "/vr/lib",
     meta: {
       title: "视频艺术创作",
     },
+    children: [
+      // {
+      //   name: "vr_func",
+      //   path: "func",
+      //   meta: {
+      //     title: "视频迁移功能",
+      //   },
+      //   component: () => import("./view/video/func.vue"),
+      // },
+      {
+        name: "vr_lib",
+        path: "lib",
+        meta: {
+          title: "视频库",
+        },
+        component: () => import("./view/video/lib.vue"),
+        props: (route) => {
+          return {
+            query: { algName: route.query.algName },
+          };
+        },
+      },
+    ],
   },
 ];
 
