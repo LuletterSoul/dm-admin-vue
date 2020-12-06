@@ -9,7 +9,7 @@
       </single-transition>
     </div>
     <transition name="fade">
-      <div class="nav" v-show="show">
+      <div class="nav" v-show="show" v-if="showNav">
         <van-tabbar
           v-model="active"
           active-color="#ee0a24"
@@ -35,6 +35,7 @@
 
 import { Toast } from "vant";
 import SingleTransition from "@/components/SingleTransition.vue";
+import { mapState } from "vuex";
 
 export default {
   components: {
@@ -110,7 +111,9 @@ export default {
       Toast("按钮");
     },
   },
-  computed: {},
+  computed: {
+    ...mapState(["showNav"]),
+  },
 };
 </script>
 

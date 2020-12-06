@@ -6,7 +6,7 @@ Vue.use(Router);
 const routes = [
   {
     path: "*",
-    redirect: "/home",
+    redirect: "/style",
   },
   {
     name: "home",
@@ -47,17 +47,16 @@ const routes = [
           };
         },
       },
-      {
-        name: "style",
-        path: "/style",
-        component: () => import("./view/style"),
-        meta: {
-          title: "风格化",
-        },
-      },
     ],
   },
-
+  {
+    name: "style",
+    path: "/style",
+    component: () => import("./view/style"),
+    meta: {
+      title: "风格化",
+    },
+  },
   {
     name: "video_stylization",
     path: "/vr",

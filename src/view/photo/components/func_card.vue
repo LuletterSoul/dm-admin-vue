@@ -75,23 +75,18 @@ export default {
 
   methods: {
     onTo() {
-      this.$router.push({ name: this.to, query: { algName: this.algName, category: this.category } });
+      this.$router.push({
+        name: this.to,
+        query: { algName: this.algName, category: this.category },
+      });
     },
   },
 };
 </script>
 
 <style lang="less">
-.my-card {
-  background: #7fffd4;
-  color: rgba(175, 36, 82, 0.267);
-  width: 100%;
-  height: 100pt;
-  border-radius: 20pt;
-}
-
 .btn .van-button--large {
-  height: 150px;
+  height: 100px;
 }
 
 .btn .van-button--round {
@@ -99,7 +94,7 @@ export default {
 }
 
 .btn .van-button {
-  font-size: 36px;
+  font-size: 16px;
 }
 
 .btn .van-button--primary {
