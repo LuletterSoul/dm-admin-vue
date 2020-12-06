@@ -47,6 +47,14 @@ const routes = [
           };
         },
       },
+      {
+        name: "style",
+        path: "/style",
+        component: () => import("./view/style"),
+        meta: {
+          title: "风格化",
+        },
+      },
     ],
   },
 
