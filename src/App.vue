@@ -81,7 +81,6 @@ export default {
 
 <style lang="less">
 body {
-  font-size: 24px;
   background-color: #fff;
   -webkit-font-smoothing: antialiased;
 }

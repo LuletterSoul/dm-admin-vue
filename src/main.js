@@ -12,6 +12,14 @@ Vue.prototype.api = api;
 
 Vue.use(Vant);
 
+import VideoPlayer from 'vue-video-player'
+import 'video.js/dist/video-js.css'
+Vue.use(VideoPlayer)
+
+import vueMiniPlayer from 'vue-mini-player'
+import 'vue-mini-player/lib/vue-mini-player.css'
+Vue.use(vueMiniPlayer)
+
 new Vue({
   router,
   store,
