@@ -47,6 +47,10 @@ export default {
       type: String,
       default: "DIST",
     },
+    category: {
+      type: String,
+      default: "Video",
+    },
   },
   data() {
     return {

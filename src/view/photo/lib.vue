@@ -37,11 +37,7 @@
         :data-loading="file_tree_loading"
         :finished="finished"
       >
-        <img-content
-          :imgs="_content_srcs"
-          :width="'100%'"
-          :height="'100%'"
-        >
+        <img-content :imgs="_content_srcs" :width="'100%'" :height="'100%'">
         </img-content>
       </load-more>
     </van-pull-refresh>
@@ -58,6 +54,10 @@ export default {
     algName: {
       type: String,
       default: "MAST",
+    },
+    category: {
+      type: String,
+      default: "COCO",
     },
   },
   data() {
@@ -76,7 +76,7 @@ export default {
       config: {
         user_id: "",
         alg: this.algName,
-        category: "COCO",
+        category: this.category,
         auto_trigger: true,
         videoType: "video",
       },

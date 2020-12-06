@@ -42,7 +42,8 @@ const routes = [
         component: () => import("./view/photo/lib.vue"),
         props: (route) => {
           return {
-            query: { algName: route.query.algName },
+            algName: route.query.algName,
+            category: route.query.category,
           };
         },
       },
@@ -75,7 +76,8 @@ const routes = [
         component: () => import("./view/video/lib.vue"),
         props: (route) => {
           return {
-            query: { algName: route.query.algName },
+            algName: route.query.algName,
+            category: route.query.category,
           };
         },
       },
