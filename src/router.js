@@ -73,6 +73,39 @@ const routes = [
         ],
     },
 
+  {
+    name: "video_stylization",
+    path: "/vr",
+    component: () => import("./view/video"),
+    redirect: "/vr/lib",
+    meta: {
+      title: "视频艺术创作",
+    },
+    children: [
+      // {
+      //   name: "vr_func",
+      //   path: "func",
+      //   meta: {
+      //     title: "视频迁移功能",
+      //   },
+      //   component: () => import("./view/video/func.vue"),
+      // },
+      {
+        name: "vr_lib",
+        path: "lib",
+        meta: {
+          title: "视频库",
+        },
+        component: () => import("./view/video/lib.vue"),
+        props: (route) => {
+          return {
+            algName: route.query.algName,
+            category: route.query.category,
+          };
+        },
+      },
+    ],
+  },
     {
         name: "photo_stylization",
         path: "/vr",

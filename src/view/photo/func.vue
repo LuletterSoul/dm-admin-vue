@@ -7,6 +7,7 @@
         :spanStyle="func_option.spanStyle"
         :to="func_option.to"
         :algName="func_option.algName"
+        :category="func_option.category"
       >
       </func-card>
     </div>
@@ -32,6 +33,7 @@ export default {
           },
           to: "pr_lib",
           algName: "CAST",
+          category: "WebCaricature",
         },
         {
           icon: "fire-o",
@@ -42,6 +44,7 @@ export default {
           },
           to: "pr_lib",
           algName: "MAST",
+          category: "COCO",
         },
         {
           icon: "flower-o",
@@ -52,6 +55,7 @@ export default {
           },
           to: "pr_lib",
           algName: "MAST",
+          category: "COCO",
         },
       ],
     };

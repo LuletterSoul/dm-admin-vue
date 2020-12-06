@@ -28,6 +28,10 @@ export default {
       type: String,
       default: "",
     },
+    category: {
+      type: String,
+      default: "",
+    },
     background: {
       type: Object,
       default: () => {
@@ -71,7 +75,7 @@ export default {
 
   methods: {
     onTo() {
-      this.$router.push({ name: this.to, query: { algName: this.algName } });
+      this.$router.push({ name: this.to, query: { algName: this.algName, category: this.category } });
     },
   },
 };

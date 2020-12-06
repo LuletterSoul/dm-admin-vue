@@ -10,7 +10,6 @@
       <single-transition>
         <router-view></router-view>
       </single-transition>
-      <AnnimateTransition> </AnnimateTransition>
     </div>
   </div>
 </template>
@@ -18,7 +17,6 @@
 <script>
 import { mapState } from "vuex";
 import SingleTransition from "@/components/SingleTransition.vue";
-import AnnimateTransition from "@/components/AnimateTransition.vue";
 export default {
   name: "PhotoStylizationHome",
   data() {
@@ -27,18 +25,18 @@ export default {
     };
   },
 
-  watch: {
-    $route(to, from) {
-      const toDepth = to.path.split("/").length;
-      const fromDepth = from.path.split("/").length;
-      this.transitionName = toDepth <= fromDepth ? "slide-right" : "slide-left";
-    },
-  },
+  // watch: {
+  //   $route(to, from) {
+  //     const toDepth = to.path.split("/").length;
+  //     const fromDepth = from.path.split("/").length;
+  //     this.transitionName = toDepth <= fromDepth ? "slide-right" : "slide-left";
+  //   },
+  // },
 
   computed: {
     ...mapState("photo", ["titleName"]),
   },
-  components: { SingleTransition, AnnimateTransition },
+  components: { SingleTransition },
   methods: {
     onClickLeft() {
       this.$router.back();
