@@ -75,11 +75,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="add backup to .gitignore">
-      <change afterPath="$PROJECT_DIR$/src/view/image-show/index.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/view/image-show/utils.js" afterDir="false" />
+    <list default="true" id="91b45ab3-6b45-444d-87ec-a049dd3e1884" name="Default" comment="split the props">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,7 +178,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/dist/static/js/app.17a98b6a65b6cfd117f7.js&#10;F:/GitHup/dm-admin-vue/node_modules/china-area-data/data.js&#10;F:/GitHup/dm-admin-vue/node_modules/vue/dist/vue.runtime.js&#10;F:/GitHup/dm-admin-vue/dist/static/loading/loading.css&#10;F:/GitHup/vueAdmin-template/node_modules/_velocity-animate@1.5.0@velocity-animate/velocity.ui.js&#10;F:/GitHup/dm-admin-vue/dist/static/css/app.29113b27013dc968455ad7792358cc84.css&#10;F:/GitHup/vueAdmin-template/node_modules/_velocity-animate@1.5.0@velocity-animate/velocity.js" />
     <property name="editor.config.ad.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/view" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/backup" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.prettier" value="true" />
@@ -197,16 +195,16 @@
     <property name="nodejs_interpreter_path" value="node" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="web.server" />
+    <property name="settings.editor.selected.configurable" value="editing.templates" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Projects\front\dm-admin-vue\backup" />
       <recent name="D:\Projects\front\dm-admin-vue\src\view" />
       <recent name="$PROJECT_DIR$/src/api" />
       <recent name="$PROJECT_DIR$/src/views" />
       <recent name="$PROJECT_DIR$/src/assets" />
-      <recent name="$PROJECT_DIR$/src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/views" />
@@ -486,62 +484,6 @@
       <workItem from="1597151212892" duration="46195000" />
       <workItem from="1597375871959" duration="12719000" />
       <workItem from="1597561804813" duration="14964000" />
-    </task>
-    <task id="LOCAL-00008" summary="学生端教师端整合">
-      <created>1533916224355</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1533916224355</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Merge branch 'dev'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml">
-      <created>1534327800962</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1534327800962</updated>
-    </task>
-    <task id="LOCAL-00010" summary="路由缓存">
-      <created>1534343949911</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1534343949911</updated>
-    </task>
-    <task id="LOCAL-00011" summary="路由缓存">
-      <created>1534343967990</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1534343967990</updated>
-    </task>
-    <task id="LOCAL-00012" summary="Loading时机">
-      <created>1534343993718</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1534343993718</updated>
-    </task>
-    <task id="LOCAL-00013" summary="新增数据导入页面">
-      <created>1534344008001</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1534344008001</updated>
-    </task>
-    <task id="LOCAL-00014" summary="任务剩余时间显示修复">
-      <created>1534344451495</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1534344451495</updated>
-    </task>
-    <task id="LOCAL-00015" summary="修复部分字段显示问题">
-      <created>1534346845228</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1534346845228</updated>
     </task>
     <task id="LOCAL-00016" summary="任务数据Loading">
       <created>1534346879611</created>
@@ -830,7 +772,63 @@
       <option name="project" value="LOCAL" />
       <updated>1607172101715</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="add image-show">
+      <created>1607173119885</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1607173119885</updated>
+    </task>
+    <task id="LOCAL-00058" summary="add style">
+      <created>1607265208044</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1607265208045</updated>
+    </task>
+    <task id="LOCAL-00059" summary="add coClickImg event">
+      <created>1607308285445</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1607308285445</updated>
+    </task>
+    <task id="LOCAL-00060" summary="split the props">
+      <created>1607308335992</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1607308335992</updated>
+    </task>
+    <task id="LOCAL-00061" summary="split the props">
+      <created>1607308397701</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1607308397701</updated>
+    </task>
+    <task id="LOCAL-00062" summary="add style.vue">
+      <created>1607308435861</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1607308435862</updated>
+    </task>
+    <task id="LOCAL-00063" summary="add function onClickImg to jump to style">
+      <created>1607308498993</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1607308498993</updated>
+    </task>
+    <task id="LOCAL-00064" summary="add function onClickImg to jump to style">
+      <created>1607308541228</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1607308541229</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TodoView" selected-index="1">
@@ -872,12 +870,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Clear check files when do classfication" />
-    <MESSAGE value="Update test profile" />
-    <MESSAGE value="Clear default video sources" />
-    <MESSAGE value="Modify system name." />
-    <MESSAGE value="reset page when select file" />
-    <MESSAGE value="Optimize UI layout and display video name when viewing" />
     <MESSAGE value="Add user study ui." />
     <MESSAGE value="Update test prod." />
     <MESSAGE value="Fixed final scores appending" />
@@ -897,7 +889,13 @@
     <MESSAGE value="fixed alg select disable" />
     <MESSAGE value="add dynamic category selection." />
     <MESSAGE value="add backup to .gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="add backup to .gitignore" />
+    <MESSAGE value="add image-show" />
+    <MESSAGE value="add style" />
+    <MESSAGE value="add coClickImg event" />
+    <MESSAGE value="split the props" />
+    <MESSAGE value="add style.vue" />
+    <MESSAGE value="add function onClickImg to jump to style" />
+    <option name="LAST_COMMIT_MESSAGE" value="add function onClickImg to jump to style" />
   </component>
   <component name="masterDetails">
     <states>
