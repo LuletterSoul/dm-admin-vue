@@ -37,7 +37,7 @@
         :data-loading="file_tree_loading"
         :finished="finished"
       >
-        <img-content :imgs="_content_srcs" :width="'100%'" :height="'100%'">
+        <img-content @onClickImg="onClickImg" :imgs="_content_srcs" :width="'100%'" :height="'100%'">
         </img-content>
       </load-more>
     </van-pull-refresh>
@@ -111,6 +111,26 @@ export default {
     },
   },
   methods: {
+    onClickImg(index) {
+        console.log(index)
+        let current_content_img = this._content_imgs[index];
+        let completed = false;
+        let showType = 'photo';
+        this.$router.push({
+            name: 'style',
+            params: {
+                showType: showType,
+                completed: completed,
+                oriInfo: current_content_img,
+                stylizedInfo: {
+                    video: '',
+                    thumbnail: '',
+                    source: ''
+                }
+
+            }
+        })
+    },
     onLoad() {
       this.pages.page = this.pages.page + 1;
       this.file_tree_loading = true;

@@ -17,6 +17,9 @@ Vue.prototype.api = api;
 Vue.use(Vant);
 
 Vue.use(VueSocketIOExt, socket);
+import VideoPlayer from "vue-video-player";
+import "video.js/dist/video-js.css";
+Vue.use(VideoPlayer);
 
 new Vue({
   router,

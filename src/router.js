@@ -4,6 +4,83 @@ import Router from "vue-router";
 Vue.use(Router);
 
 const routes = [
+    {
+        path: "*",
+        redirect: "/home",
+    },
+    {
+        name: "image-show",
+        path: "/image-show",
+        component: () => import("./view/image-show"),
+        meta: {
+            title: "Aristagram",
+        },
+    },
+    {
+        name: "video-show",
+        path: "/video-show",
+        component: () => import("./view/video-show"),
+        meta: {
+            title: "Aristagram",
+        },
+    },
+    {
+        name: "style",
+        path: "/style",
+        component: () => import("./view/style/style"),
+        meta: {
+            title: "Aristagram",
+        },
+        props: (route)=>{
+            return{
+                showType: route.params.showType,
+                completed: route.params.completed,
+                oriInfo: route.params.oriInfo,
+                stylizedInfo: route.params.stylizedInfo
+            }
+        }
+    },
+    {
+        name: "home",
+        path: "/home",
+        component: () => import("./view/main"),
+        meta: {
+            title: "Aristagram",
+        },
+    },
+    {
+        name: "photo_stylization",
+        path: "/pr",
+        component: () => import("./view/photo"),
+        meta: {
+            title: "图片艺术创作",
+        },
+        redirect: "/pr/func",
+        children: [
+            {
+                name: "pr_func",
+                path: "func",
+                meta: {
+                    title: "风格迁移功能",
+                },
+                component: () => import("./view/photo/func.vue"),
+            },
+            {
+                name: "pr_lib",
+                path: "lib",
+                meta: {
+                    title: "图像库",
+                },
+                component: () => import("./view/photo/lib.vue"),
+                props: (route) => {
+                    return {
+                        query: {algName: route.query.algName},
+                    };
+                },
+            },
+        ],
+    },
+
   {
     path: "*",
     redirect: "/style",
@@ -94,20 +171,20 @@ const routes = [
 
 // add route path
 routes.forEach((route) => {
-  route.path = route.path || "/" + (route.name || "");
+    route.path = route.path || "/" + (route.name || "");
 });
 
 const router = new Router({
-  mode: "history",
-  routes: routes,
+    mode: "history",
+    routes: routes,
 });
 
 router.beforeEach((to, from, next) => {
-  const title = to.meta && to.meta.title;
-  if (title) {
-    document.title = title;
-  }
-  next();
+    const title = to.meta && to.meta.title;
+    if (title) {
+        document.title = title;
+    }
+    next();
 });
 
-export { router };
+export {router};
