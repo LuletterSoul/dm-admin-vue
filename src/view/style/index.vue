@@ -9,6 +9,14 @@
     <!-- <div class="tab_box"> -->
     <!-- <div class="box"> -->
     <!-- <div class="tab_box"> -->
+    <van-overlay
+      :show="showStylizationProcessing"
+      @click="showStylizationProcessing = false"
+    >
+      <div class="loading_wrapper">
+        <van-loading size="24px" vertical>加载中...</van-loading>
+      </div>
+    </van-overlay>
     <div class="box">
       <van-tabs
         @click="onClick"
@@ -24,22 +32,24 @@
         >
           <div class="lateral-sliding">
             <div
-              class="lateral-sliding-item c-preview"
+              class="lateral-sliding-item"
               v-for="(item, index) in _style_imgs"
               :key="index"
             >
-              <van-image
-                :src="item.source"
-                fit="cover"
-                :width="128"
-                :height="128"
-                :radius="10"
-                @click="onStyleClick(index)"
-              >
-                <template v-slot:loading>
-                  <van-loading type="spinner" size="20" />
-                </template>
-              </van-image>
+              <div class="image_hover">
+                <van-image
+                  :src="item.source"
+                  fit="cover"
+                  :width="128"
+                  :height="128"
+                  :radius="10"
+                  @click="onStyleClick(index)"
+                >
+                  <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                  </template>
+                </van-image>
+              </div>
             </div>
           </div>
         </van-tab>
@@ -64,6 +74,7 @@ export default {
   },
   data() {
     return {
+      showStylizationProcessing: false,
       config: {
         user_id: "",
         alg: this.algName,
@@ -86,6 +97,64 @@ export default {
       thumbnail_height: 512,
       dataset: {},
     };
+  },
+
+  sockets: {
+    //这里是监听connect事件
+    connect: function() {
+      // this.id = this.$socket.id
+      console.log("建立连接");
+    },
+    disconnect: function() {
+      console.log("断开连接");
+    },
+    reconnect: function() {
+      console.log("重新连接");
+    },
+    onConnected: function(msg) {
+      this.sid = msg.sid;
+      console.log("Server sid", this.sid);
+    },
+    onSynthesisCompleted: function(msg) {
+      if (msg.sid !== this.sid) {
+        return;
+      }
+      this.view_content = false;
+      this.$Message.success("合成成功!");
+      this.synthesis_loading = false;
+      this.stylization_id = msg.stylization_id;
+      this.synthesis_progress = 100;
+      this.stylized_timestamp = msg.timestamp;
+      this.stylized_category = "original";
+    },
+    onSynthesisFailed: function(msg) {
+      if (msg.sid !== this.sid) {
+        return;
+      }
+      this.$Message.error("合成失败!");
+      this.synthesis_loading = false;
+      this.synthesis_progress = 0;
+      this.stylized_category = "original";
+    },
+    onSynthesising: function(msg) {
+      if (msg.sid !== this.sid) {
+        return;
+      }
+      if (msg.percent <= 1) {
+        this.synthesis_progress = msg.percent;
+      } else {
+        this.synthesis_progress = 1;
+      }
+    },
+    onSynthesisingFetch: function(msg) {
+      if (msg.sid !== this.sid) {
+        return;
+      }
+      this.synthesis_progress = msg.percent;
+      this.stylization_id = msg.stylization_id;
+      this.stylized_timestamp = msg.timestamp;
+      this.stylized_category = msg.category;
+    },
   },
 
   mounted() {
@@ -130,6 +199,7 @@ export default {
     },
     onStyleClick(index) {
       console.log(this._style_imgs[index]);
+      this.showStylizationProcessing = true;
     },
     requestDatasetCategory() {
       return new Promise(() => {
@@ -160,6 +230,7 @@ export default {
       // this.$toast({
       //   message: "加载中...",
       //   forbidClick: true,
+
       // });
       return new Promise((resolve, reject) => {
         this.api.styles
@@ -224,8 +295,17 @@ export default {
 .lateral-sliding-item {
   display: flex;
   margin: 5px;
+  z-index: 1;
   /* background-color: red; */
 }
+
+.loading_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
 .each-img {
   width: 150px;
   height: 88px;
@@ -275,24 +355,24 @@ export default {
   justify-content: center;
   align-items: center;
   color: #fff;
-  position: relative;
   cursor: pointer;
   transition: 0.5s all;
+  z-index: 2;
 
-  &__img {
-    position: absolute;
-    left: 0;
-    top: 0;
-    background: #000
-      url(https://images.unsplash.com/photo-1466657718950-8f9346c04f8f?dpr=1&auto=format&fit=crop&w=800&h=800&q=80&cs=tinysrgb)
-      no-repeat center center;
-    background-size: cover;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    opacity: 0.5;
-    mix-blend-mode: screen;
-  }
+  // &__img {
+  //   position: absolute;
+  //   left: 0;
+  //   top: 0;
+  //   background: #000
+  //     url(https://images.unsplash.com/photo-1466657718950-8f9346c04f8f?dpr=1&auto=format&fit=crop&w=800&h=800&q=80&cs=tinysrgb)
+  //     no-repeat center center;
+  //   background-size: cover;
+  //   width: 100%;
+  //   height: 100%;
+  //   z-index: 1;
+  //   opacity: 0.5;
+  //   mix-blend-mode: screen;
+  // }
 
   &__title {
     position: relative;
@@ -308,5 +388,27 @@ export default {
       text-shadow: 0 0 20px rgba(0, 0, 0, 1);
     }
   }
+}
+
+.image_hover img {
+  filter: blur(0px);
+  -webkit-filter: blur(0px);
+  // filter: grayscale(0%);
+  // -webkit-filter: grayscale(0%);
+  -webkit-transition: all 0.5s ease;
+}
+
+.image_hover img:hover {
+  filter: blur(3px);
+  -webkit-filter: blur(3px);
+  // filter: grayscale(100%);
+  // -webkit-filter: grayscale(100%);
+  // filter: blur(5px);
+  // -webkit-filter: blur(5px);
+  // filter: gray;
+  // -webkit-filter: drop-shadow(20px 20px 20px #000);
+  // filter: drop-shadow(20px 20px 20px #000);
+  // -webkit-filter: grayscale(100%);
+  transition: 0.5s ease;
 }
 </style>
