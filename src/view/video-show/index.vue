@@ -103,43 +103,53 @@
 </style>
 
 <script>
+    import axios from "axios";
+    import {saveAs} from 'file-saver'
+
     export default {
         name: 'VideoPreviewer',
         props: {
-            video_info: {
+            completed: {
+                type: Boolean,
+                default: false
+            },
+            viewRes: {
+                type: Boolean,
+                default: false
+            },
+            oriInfo: {
                 type: Object,
                 default: () => {
-                    return {
-                        completed: false,
-                        viewRes: false,
-                        oriInfo: {
-                            video: 'https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4',
-                            thumbnail: 'https://i.loli.net/2019/06/06/5cf8c5d9c57b510947.png',
-                            source: ''
-                        },
-                        stylizedInfo: {
-                            video: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-                            thumbnail: 'https://i.loli.net/2019/06/06/5cf8c5d9c57b510947.png',
-                            source: ''
-                        }
+                    return{
+                        video: 'https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4',
+                        thumbnail: 'https://i.loli.net/2019/06/06/5cf8c5d9c57b510947.png',
+                        source: ''
                     }
                 }
-            }
+            },
+            stylizedInfo: {
+                type: Object,
+                default: () => {
+                    return{
+                        video: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                        thumbnail: 'https://i.loli.net/2019/06/06/5cf8c5d9c57b510947.png',
+                        source: ''
+                    }
+                }
+            },
         },
         data() {
-            return {
-
-            };
+            return {};
         },
         computed: {
             _showVideoUrl() {
-                return (this.video_info.completed && this.video_info.viewRes) ? this.video_info.stylizedInfo.video : this.video_info.oriInfo.video;
+                return (this.completed && this.viewRes) ? this.stylizedInfo.video : this.oriInfo.video;
             },
             _showPoster() {
-                return (this.video_info.completed && this.video_info.viewRes) ? this.video_info.stylizedInfo.thumbnail : this.video_info.oriInfo.thumbnail
+                return (this.completed && this.viewRes) ? this.stylizedInfo.thumbnail : this.oriInfo.thumbnail
             },
-            _eyeOpened(){
-                return this.video_info.completed && this.video_info.viewRes
+            _eyeOpened() {
+                return this.completed && this.viewRes
             },
             _playerOptions() {
                 return {
@@ -169,21 +179,43 @@
         },
         methods: {
             onChangeEye() {
-                if (this.video_info.completed) {
+                if (this.completed) {
                     this.$emit('onChangeView')
                 } else {
                     this.$toast.fail('视频尚未渲染完成!')
                 }
             },
             onClose() {
-                alert('关闭')
+                this.$router.back()
             },
             handleFullscreen() {
 
             },
             onDownload() {
-                this.$toast.fail('视频暂不支持下载!')
-            },
+                axios({
+                    method: "get",
+                    url: this._showVideoUrl,
+                    responseType: 'blob'
+                }).then(res => {
+                    var timestamp = Date.parse(new Date())
+                    var filename = timestamp + '.mp4'
+                    saveAs(res.data, filename)
+                }).catch((error)=>{
+                    console.log(error)
+                    this.$toast.fail({
+                        message: '下载失败!',
+                        forbidClick: true
+                    })
+                }).finally(()=>{
+                    this.$toast.success({
+                        message: '下载成功!',
+                        forbidClick: true
+                    })
+                })
+            }
+            // onDownload() {
+            //     this.$toast.fail('视频暂不支持下载!')
+            // },
         },
     };
 </script>
