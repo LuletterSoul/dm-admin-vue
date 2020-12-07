@@ -123,10 +123,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    viewRes: {
-      type: Boolean,
-      default: false,
-    },
     oriInfo: {
       type: Object,
       default: () => {
@@ -146,17 +142,12 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      viewRes: false,
+    };
   },
 
   computed: {
-    _viewRes() {
-      if (this.stylizedInfo.source !== undefined) {
-        return true;
-      } else {
-        return false;
-      }
-    },
     _showImageUrl() {
       return this.completed && this.viewRes
         ? this.stylizedInfo.source
@@ -174,7 +165,8 @@ export default {
   methods: {
     onChangeEye() {
       if (this.completed) {
-        this.$emit("onChangeView");
+        // this.$emit("onChangeView");
+        this.viewRes = !this.viewRes;
       } else {
         this.$toast.fail("图片尚未渲染完成!");
       }

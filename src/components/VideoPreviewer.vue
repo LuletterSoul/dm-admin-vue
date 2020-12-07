@@ -137,10 +137,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    viewRes: {
-      type: Boolean,
-      default: false,
-    },
+
     oriInfo: {
       type: Object,
       default: () => {
@@ -165,7 +162,14 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      viewRes: false,
+    };
+  },
+  watch: {
+    stylizedInfo() {
+      this.viewRes = true;
+    },
   },
   computed: {
     _showVideoUrl() {
@@ -212,7 +216,8 @@ export default {
   methods: {
     onChangeEye() {
       if (this.completed) {
-        this.$emit("onChangeView");
+        // this.$emit("onChangeView");
+        this.viewRes = !this.viewRes;
       } else {
         this.$toast.fail("视频尚未渲染完成!");
       }

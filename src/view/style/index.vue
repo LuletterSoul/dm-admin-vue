@@ -13,16 +13,12 @@
         v-bind:oriInfo="_oriInfo"
         v-bind:stylizedInfo="_stylizedInfo"
         v-bind:completed="_completed"
-        v-bind:viewRes="viewRes"
-        @onChangeView="onChangeView"
       ></image-previewer>
       <video-previewer
         v-if="_showType === 'video'"
         v-bind:oriInfo="_oriInfo"
         v-bind:stylizedInfo="_stylizedInfo"
         v-bind:completed="_completed"
-        v-bind:viewRes="viewRes"
-        @onChangeView="onChangeView"
       ></video-previewer>
     </div>
     <div class="box">
@@ -140,7 +136,6 @@ export default {
       thumbnail_width: 512,
       thumbnail_height: 512,
       dataset: {},
-      viewRes: false,
       // stylization_id: -1,
       synthesis_progress: 100,
       stylized_timestamp: 0,
