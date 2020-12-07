@@ -6,7 +6,7 @@ Vue.use(Router);
 const routes = [
     {
         path: "*",
-        redirect: "/style",
+        redirect: "/home",
     },
     {
         name: "image-show",
@@ -31,6 +31,14 @@ const routes = [
         meta: {
             title: "Aristagram",
         },
+        props: (route)=>{
+            return{
+                showType: route.params.showType,
+                completed: route.params.completed,
+                oriInfo: route.params.oriInfo,
+                stylizedInfo: route.params.stylizedInfo
+            }
+        }
     },
     {
         name: "home",
@@ -63,7 +71,7 @@ const routes = [
                 meta: {
                     title: "图像库",
                 },
-                component: () => import("./view/photo/plib.vue"),
+                component: () => import("./view/photo/lib.vue"),
                 props: (route) => {
                     return {
                         query: {algName: route.query.algName},
