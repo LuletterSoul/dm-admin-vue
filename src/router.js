@@ -82,6 +82,59 @@ const routes = [
     },
 
   {
+    path: "*",
+    redirect: "/style",
+  },
+  {
+    name: "home",
+    path: "/home",
+    component: () => import("./view/main"),
+    meta: {
+      title: "Aristagram",
+    },
+  },
+  {
+    name: "photo_stylization",
+    path: "/pr",
+    component: () => import("./view/photo"),
+    meta: {
+      title: "图片艺术创作",
+    },
+    redirect: "/pr/func",
+    children: [
+      {
+        name: "pr_func",
+        path: "func",
+        meta: {
+          title: "风格迁移功能",
+        },
+        component: () => import("./view/photo/func.vue"),
+      },
+      {
+        name: "pr_lib",
+        path: "lib",
+        meta: {
+          title: "图像库",
+        },
+        component: () => import("./view/photo/lib.vue"),
+        props: (route) => {
+          return {
+            algName: route.query.algName,
+            category: route.query.category,
+          };
+        },
+      },
+    ],
+  },
+  {
+    name: "style",
+    path: "/style",
+    component: () => import("./view/style"),
+    meta: {
+      title: "风格化",
+    },
+  },
+  {
     name: "video_stylization",
     path: "/vr",
     component: () => import("./view/video"),
@@ -114,14 +167,6 @@ const routes = [
       },
     ],
   },
-    {
-        name: "photo_stylization",
-        path: "/vr",
-        component: () => import("./view/video"),
-        meta: {
-            title: "视频艺术创作",
-        },
-    },
 ];
 
 // add route path

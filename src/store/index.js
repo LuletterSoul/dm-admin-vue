@@ -12,11 +12,16 @@ let store = new Vuex.Store({
     video,
   },
   state: {
+    showNav: true,
     process: [],
     undo: [],
     dataset: "",
   },
-  mutations: {},
+  mutations: {
+    changeNavStatus(state, status) {
+      state.showNav = status;
+    },
+  },
   actions: {},
 });
 
