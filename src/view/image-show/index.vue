@@ -10,7 +10,7 @@
             <!--    结果展示div-->
             <div class="image-div">
                 <div class="image">
-                    <van-image v-bind:src="_showImageUrl" style="width: 100%; height: 100%;">
+                    <van-image v-bind:src="_showImageUrl" fit="contain" width="100%" height="100%">
                     </van-image>
                 </div>
             </div>
@@ -77,75 +77,86 @@
 </style>
 
 <script>
+    import axios from 'axios'
+    import { saveAs } from 'file-saver'
+
     export default {
         name: 'ImagePreviewer',
         props: {
-            image_info: {
+            completed: {
+                type: Boolean,
+                default: false
+            },
+            viewRes: {
+                type: Boolean,
+                default: false
+            },
+            oriInfo: {
                 type: Object,
                 default: () => {
                     return {
-                        completed: false,
-                        viewRes: true,
-                        oriInfo: {
-                            video: '',
-                            thumbnail: '',
-                            source: 'https://s3.ax1x.com/2020/12/04/DH4AFU.jpg'
-                        },
-                        stylizedInfo: {
-                            video: '',
-                            thumbnail: '',
-                            source: 'https://s3.ax1x.com/2020/12/04/DbJAsI.png'
-                        }
+                        video: 'https://api.dogecloud.com/player/get.mp4?vcode=5ac682e6f8231991&userId=17&ext=.mp4',
+                        thumbnail: 'https://i.loli.net/2019/06/06/5cf8c5d9c57b510947.png',
+                        source: 'https://s3.ax1x.com/2020/12/04/DH4AFU.jpg'
                     }
                 }
-            }
+            },
+            stylizedInfo: {
+                type: Object,
+                default: () => {
+                    return {
+                        video: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                        thumbnail: 'https://i.loli.net/2019/06/06/5cf8c5d9c57b510947.png',
+                        source: 'https://s3.ax1x.com/2020/12/04/DbJAsI.png'
+                    }
+                }
+            },
         },
         data() {
-            return {
-
-            }
+            return {}
         },
         computed: {
-            _showImageUrl(){
-                return (this.image_info.completed && this.image_info.viewRes) ? this.image_info.stylizedInfo.source : this.image_info.oriInfo.source
+            _showImageUrl() {
+                return (this.completed && this.viewRes) ? this.stylizedInfo.source : this.oriInfo.source
             },
-            _eyeOpened(){
-                return this.image_info.completed && this.image_info.viewRes
+            _eyeOpened() {
+                return this.completed && this.viewRes
             }
 
         },
         methods: {
             onChangeEye() {
-                if (this.image_info.completed) {
+                if (this.completed) {
                     this.$emit('onChangeView')
                 } else {
                     this.$toast.fail('图片尚未渲染完成!')
                 }
             },
             onClose() {
-                alert('关闭页面')
+                this.$router.back()
             },
             onDownload() {
-                this.$axios({
+                axios({
                     method: "get",
                     url: this._showImageUrl,
-                    responseType: 'arraybuffer',
-                    params: {
-                        asAttachment: false,
-                        width: 512,
-                        height: 512,
-                        category: 'COCO',
-                    }
+                    responseType: 'blob'
                 }).then(res => {
-                    var src = 'data:image/jpg;base64,' + btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), ''));
-                    var link = document.createElement('a');
-                    link.href = src;
                     var timestamp = Date.parse(new Date())
-                    link.download = timestamp + '.jpg';
-                    link.click();
-                    this.$toast.success('已保存')
+                    var filename = timestamp + '.jpg'
+                    saveAs(res.data, filename)
+                }).catch((error)=>{
+                    console.log(error)
+                    this.$toast.fail({
+                        message: '下载失败!',
+                        forbidClick: true
+                    })
+                }).finally(()=>{
+                    this.$toast.success({
+                        message: '下载成功!',
+                        forbidClick: true
+                    })
                 })
-            },
+            }
         },
     };
 </script>
