@@ -1,14 +1,5 @@
 <template>
   <div>
-    <!-- <div style="height: 470px;"></div> -->
-    <!-- <van-row type="flex" justify="space-between">
-      <van-col span="24">
-
-      </van-col>
-    </van-row> -->
-    <!-- <div class="tab_box"> -->
-    <!-- <div class="box"> -->
-    <!-- <div class="tab_box"> -->
     <van-overlay
       :show="showStylizationProcessing"
       @click="showStylizationProcessing = false"
@@ -17,6 +8,24 @@
         <van-loading size="24px" vertical>加载中...</van-loading>
       </div>
     </van-overlay>
+    <div class="previewer">
+      <image-previewer
+        v-if="_showType === 'photo'"
+        v-bind:oriInfo="_oriInfo"
+        v-bind:stylizedInfo="_stylizedInfo"
+        v-bind:completed="_completed"
+        v-bind:viewRes="viewRes"
+        @onChangeView="onChangeView"
+      ></image-previewer>
+      <video-previewer
+        v-if="_showType === 'video'"
+        v-bind:oriInfo="_oriInfo"
+        v-bind:stylizedInfo="_stylizedInfo"
+        v-bind:completed="_completed"
+        v-bind:viewRes="viewRes"
+        @onChangeView="onChangeView"
+      ></video-previewer>
+    </div>
     <div class="box">
       <van-tabs
         @click="onClick"
@@ -64,14 +73,50 @@
 
 <script>
 import { mapMutations } from "vuex";
+
+import ImagePreviewer from "@/components/ImagePreviewer";
+import VideoPreviewer from "@/components/VideoPreviewer";
+
 export default {
   name: "Style",
-  prop: {
+  props: {
     alg: {
       type: String,
       default: "MAST",
     },
+    showType: {
+      type: String,
+      default: "photo",
+    },
+    completed: {
+      type: Boolean,
+      default: false,
+    },
+    oriInfo: {
+      type: Object,
+      default: () => {
+        return {
+          video:
+            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          thumbnail: "https://i.loli.net/2019/06/06/5cf8c5d9c57b510947.png",
+          source: "https://s3.ax1x.com/2020/12/04/DH4AFU.jpg",
+        };
+      },
+    },
+    stylizedInfo: {
+      type: Object,
+      default: () => {
+        return {
+          video:
+            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          thumbnail: "https://i.loli.net/2019/06/06/5cf8c5d9c57b510947.png",
+          source: "https://s3.ax1x.com/2020/12/04/DbJAsI.png",
+        };
+      },
+    },
   },
+
+  components: { ImagePreviewer, VideoPreviewer },
   data() {
     return {
       showStylizationProcessing: false,
@@ -96,6 +141,7 @@ export default {
       thumbnail_width: 512,
       thumbnail_height: 512,
       dataset: {},
+      viewRes: false,
     };
   },
 
@@ -157,12 +203,37 @@ export default {
     },
   },
 
+  // beforeRouteEnter(to, from, next) {
+  // this.changeNavStatus(false);
+  // next();
+  // },
+
+  beforeRouteLeave(to, from, next) {
+    this.changeNavStatus(true);
+    next();
+  },
   mounted() {
-    this.changeNavStatus(false);
     this.requestDatasetCategory();
+    this.changeNavStatus(false);
   },
 
   computed: {
+    _showType() {
+      return this.showType;
+      // return this.$route.query.showType
+    },
+    _completed() {
+      return this.completed;
+      // return this.$route.query.completed==='true'
+    },
+    _oriInfo() {
+      return this.oriInfo;
+      // return this.$route.query.oriInfo
+    },
+    _stylizedInfo() {
+      return this.stylizedInfo;
+      // return this.$route.query.stylizedInfo
+    },
     _category() {
       return this.config.category;
     },
@@ -281,11 +352,21 @@ export default {
           });
       });
     },
+    onChangeView() {
+      this.viewRes = !this.viewRes;
+    },
   },
 };
 </script>
 
 <style lang="less">
+.previewer {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  position: absolute;
+}
+
 .lateral-sliding {
   display: flex;
   overflow-y: hidden;
@@ -319,77 +400,6 @@ export default {
   width: 100%;
 }
 
-.c-preview {
-  background: #000;
-  background: -moz-linear-gradient(
-    -45deg,
-    #000000 0%,
-    #000000 25%,
-    #1e539e 50%,
-    #ff3083 75%,
-    #7800a8 100%
-  ); /* FF3.6-15 */
-  background: -webkit-linear-gradient(
-    -45deg,
-    #000000 0%,
-    #000000 25%,
-    #1e539e 50%,
-    #ff3083 75%,
-    #7800a8 100%
-  ); /* Chrome10-25,Safari5.1-6 */
-  background: linear-gradient(
-    135deg,
-    #000000 0%,
-    #000000 25%,
-    #1e539e 50%,
-    #ff3083 75%,
-    #7800a8 100%
-  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  background-size: 400% 400%;
-  background-repeat: no-repeat;
-  display: flex;
-  // width: 500px;
-  // height: 500px;
-  max-width: 100vw;
-  max-height: 100vh;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-  cursor: pointer;
-  transition: 0.5s all;
-  z-index: 2;
-
-  // &__img {
-  //   position: absolute;
-  //   left: 0;
-  //   top: 0;
-  //   background: #000
-  //     url(https://images.unsplash.com/photo-1466657718950-8f9346c04f8f?dpr=1&auto=format&fit=crop&w=800&h=800&q=80&cs=tinysrgb)
-  //     no-repeat center center;
-  //   background-size: cover;
-  //   width: 100%;
-  //   height: 100%;
-  //   z-index: 1;
-  //   opacity: 0.5;
-  //   mix-blend-mode: screen;
-  // }
-
-  &__title {
-    position: relative;
-    z-index: 10;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  &:hover {
-    background-position: 100% 100%;
-
-    &__title {
-      text-shadow: 0 0 20px rgba(0, 0, 0, 1);
-    }
-  }
-}
-
 .image_hover img {
   filter: blur(0px);
   -webkit-filter: blur(0px);
@@ -401,14 +411,6 @@ export default {
 .image_hover img:hover {
   filter: blur(3px);
   -webkit-filter: blur(3px);
-  // filter: grayscale(100%);
-  // -webkit-filter: grayscale(100%);
-  // filter: blur(5px);
-  // -webkit-filter: blur(5px);
-  // filter: gray;
-  // -webkit-filter: drop-shadow(20px 20px 20px #000);
-  // filter: drop-shadow(20px 20px 20px #000);
-  // -webkit-filter: grayscale(100%);
   transition: 0.5s ease;
 }
 </style>
