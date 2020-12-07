@@ -10,7 +10,12 @@
     <!-- <div class="box"> -->
     <!-- <div class="tab_box"> -->
     <div class="box">
-      <van-tabs @click="onClick" v-model="config.category" animated>
+      <van-tabs
+        @click="onClick"
+        v-model="config.category"
+        animated
+        :border="true"
+      >
         <van-tab
           v-for="(option, index) in dataset_options"
           :key="index"
@@ -19,7 +24,7 @@
         >
           <div class="lateral-sliding">
             <div
-              class="lateral-sliding-item3"
+              class="lateral-sliding-item c-preview"
               v-for="(item, index) in _style_imgs"
               :key="index"
             >
@@ -28,6 +33,7 @@
                 fit="cover"
                 :width="128"
                 :height="128"
+                :radius="10"
                 @click="onStyleClick(index)"
               >
                 <template v-slot:loading>
@@ -214,19 +220,10 @@ export default {
   overflow-y: hidden;
   overflow-x: scroll;
 }
-.lateral-sliding-item1 {
+
+.lateral-sliding-item {
   display: flex;
-  margin-right: 8px;
-  /* background-color: yellow; */
-}
-.lateral-sliding-item2 {
-  display: flex;
-  margin-right: 8px;
-  /* background-color: blue; */
-}
-.lateral-sliding-item3 {
-  display: flex;
-  margin-right: 8px;
+  margin: 5px;
   /* background-color: red; */
 }
 .each-img {
@@ -234,37 +231,82 @@ export default {
   height: 88px;
 }
 
-.tab_box {
-  // 新添加的outer外层盒子
-  width: 100%;
-  position: fixed;
-  z-index: 100;
-}
-
 .box {
   position: fixed;
   bottom: 0;
+  margin-left: 10px;
+  margin-right: 10px;
   width: 100%;
 }
 
-//绝对定位
-.tab-position-fixed {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 50px;
-  z-index: 999;
+.c-preview {
+  background: #000;
+  background: -moz-linear-gradient(
+    -45deg,
+    #000000 0%,
+    #000000 25%,
+    #1e539e 50%,
+    #ff3083 75%,
+    #7800a8 100%
+  ); /* FF3.6-15 */
+  background: -webkit-linear-gradient(
+    -45deg,
+    #000000 0%,
+    #000000 25%,
+    #1e539e 50%,
+    #ff3083 75%,
+    #7800a8 100%
+  ); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(
+    135deg,
+    #000000 0%,
+    #000000 25%,
+    #1e539e 50%,
+    #ff3083 75%,
+    #7800a8 100%
+  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  background-size: 400% 400%;
+  background-repeat: no-repeat;
   display: flex;
+  // width: 500px;
+  // height: 500px;
+  max-width: 100vw;
+  max-height: 100vh;
+  justify-content: center;
   align-items: center;
-  justify-content: space-around;
-}
+  color: #fff;
+  position: relative;
+  cursor: pointer;
+  transition: 0.5s all;
 
-// .box .roll {
-//   flex: 1;
-//   width: 100%;
-//   overflow-y: scroll;
-//   -webkit-overflow-scrolling: touch;
-//   height: auto;
-// }
+  &__img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #000
+      url(https://images.unsplash.com/photo-1466657718950-8f9346c04f8f?dpr=1&auto=format&fit=crop&w=800&h=800&q=80&cs=tinysrgb)
+      no-repeat center center;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.5;
+    mix-blend-mode: screen;
+  }
+
+  &__title {
+    position: relative;
+    z-index: 10;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &:hover {
+    background-position: 100% 100%;
+
+    &__title {
+      text-shadow: 0 0 20px rgba(0, 0, 0, 1);
+    }
+  }
+}
 </style>
