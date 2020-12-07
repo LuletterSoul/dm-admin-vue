@@ -1,8 +1,6 @@
 import axios from "axios";
 // 创建axios实例
 
-console.log(process.env.VUE_APP_API_URL);
-
 const axios_server = axios.create({
   baseURL: process.env.VUE_APP_API_URL, // api的base_url
   // timeout: 20000                  // 请求超时时间

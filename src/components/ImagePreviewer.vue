@@ -141,19 +141,22 @@ export default {
     stylizedInfo: {
       type: Object,
       default: () => {
-        return {
-          video:
-            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          thumbnail: "https://i.loli.net/2019/06/06/5cf8c5d9c57b510947.png",
-          source: "https://s3.ax1x.com/2020/12/04/DbJAsI.png",
-        };
+        return {};
       },
     },
   },
   data() {
     return {};
   },
+
   computed: {
+    _viewRes() {
+      if (this.stylizedInfo.source !== undefined) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     _showImageUrl() {
       return this.completed && this.viewRes
         ? this.stylizedInfo.source
@@ -161,6 +164,11 @@ export default {
     },
     _eyeOpened() {
       return this.completed && this.viewRes;
+    },
+  },
+  watch: {
+    stylizedInfo() {
+      this.viewRes = true;
     },
   },
   methods: {

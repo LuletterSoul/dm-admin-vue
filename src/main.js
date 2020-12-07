@@ -1,7 +1,8 @@
 import Vue from "vue";
 import App from "./App";
-import VueSocketIOExt from "vue-socket.io-extended";
-import io from "socket.io-client";
+
+import VueSocketIO from "vue-socket.io";
+import SocketIO from "socket.io-client";
 import { router } from "./router";
 import store from "./store";
 
@@ -10,16 +11,28 @@ import "vant/lib/index.css";
 
 import * as api from "./api";
 
-const socket = io(process.env.VUE_APP_SOCKET_URL);
+import VideoPlayer from "vue-video-player";
+import "video.js/dist/video-js.css";
+
+Vue.use(VideoPlayer);
 
 Vue.prototype.api = api;
 
 Vue.use(Vant);
 
-Vue.use(VueSocketIOExt, socket);
-import VideoPlayer from "vue-video-player";
-import "video.js/dist/video-js.css";
-Vue.use(VideoPlayer);
+// const socket = io(process.env.VUE_APP_SOCKET_URL);
+
+Vue.use(
+  new VueSocketIO({
+    debug: true,
+    connection: SocketIO(process.env.VUE_APP_SOCKET_URL), //options object is Optional
+    vuex: {
+      store,
+      actionPrefix: "SOCKET_",
+      mutationPrefix: "SOCKET_",
+    },
+  })
+);
 
 new Vue({
   router,

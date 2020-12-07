@@ -1,11 +1,10 @@
 <template>
   <div>
-    <van-overlay
-      :show="showStylizationProcessing"
-      @click="showStylizationProcessing = false"
-    >
+    <van-overlay :show="_synthesis_loading">
       <div class="loading_wrapper">
-        <van-loading size="24px" vertical>加载中...</van-loading>
+        <van-loading size="24px" vertical
+          >合成中 {{ this._synthesis_progress }}%...</van-loading
+        >
       </div>
     </van-overlay>
     <div class="previewer">
@@ -73,6 +72,7 @@
 
 <script>
 import { mapMutations } from "vuex";
+import { mapState } from "vuex";
 
 import ImagePreviewer from "@/components/ImagePreviewer";
 import VideoPreviewer from "@/components/VideoPreviewer";
@@ -106,13 +106,12 @@ export default {
     stylizedInfo: {
       type: Object,
       default: () => {
-        return {
-          video:
-            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          thumbnail: "https://i.loli.net/2019/06/06/5cf8c5d9c57b510947.png",
-          source: "https://s3.ax1x.com/2020/12/04/DbJAsI.png",
-        };
+        return {};
       },
+    },
+    contentId: {
+      type: String,
+      default: "",
     },
   },
 
@@ -122,7 +121,7 @@ export default {
       showStylizationProcessing: false,
       config: {
         user_id: "",
-        alg: this.algName,
+        alg: this.alg,
         category: "WebCaricature",
         auto_trigger: true,
         videoType: "video",
@@ -142,66 +141,72 @@ export default {
       thumbnail_height: 512,
       dataset: {},
       viewRes: false,
+      // stylization_id: -1,
+      synthesis_progress: 100,
+      stylized_timestamp: 0,
+      stylized_category: "original",
+      content_mask: [],
+      style_mask: [],
     };
   },
 
-  sockets: {
-    //这里是监听connect事件
-    connect: function() {
-      // this.id = this.$socket.id
-      console.log("建立连接");
-    },
-    disconnect: function() {
-      console.log("断开连接");
-    },
-    reconnect: function() {
-      console.log("重新连接");
-    },
-    onConnected: function(msg) {
-      this.sid = msg.sid;
-      console.log("Server sid", this.sid);
-    },
-    onSynthesisCompleted: function(msg) {
-      if (msg.sid !== this.sid) {
-        return;
-      }
-      this.view_content = false;
-      this.$Message.success("合成成功!");
-      this.synthesis_loading = false;
-      this.stylization_id = msg.stylization_id;
-      this.synthesis_progress = 100;
-      this.stylized_timestamp = msg.timestamp;
-      this.stylized_category = "original";
-    },
-    onSynthesisFailed: function(msg) {
-      if (msg.sid !== this.sid) {
-        return;
-      }
-      this.$Message.error("合成失败!");
-      this.synthesis_loading = false;
-      this.synthesis_progress = 0;
-      this.stylized_category = "original";
-    },
-    onSynthesising: function(msg) {
-      if (msg.sid !== this.sid) {
-        return;
-      }
-      if (msg.percent <= 1) {
-        this.synthesis_progress = msg.percent;
-      } else {
-        this.synthesis_progress = 1;
-      }
-    },
-    onSynthesisingFetch: function(msg) {
-      if (msg.sid !== this.sid) {
-        return;
-      }
-      this.synthesis_progress = msg.percent;
-      this.stylization_id = msg.stylization_id;
-      this.stylized_timestamp = msg.timestamp;
-      this.stylized_category = msg.category;
-    },
-  },
+  // sockets: {
+  //   //这里是监听connect事件
+  //   connect: function() {
+  //     console.log("建立连接");
+  //   },
+  //   disconnect: function() {
+  //     console.log("断开连接");
+  //   },
+  //   reconnect: function() {
+  //     console.log("重新连接");
+  //   },
+  //   onConnected: function(msg) {
+  //     this.sid = msg.sid;
+  //     console.log("Server sid", this.sid);
+  //   },
+  //   onSynthesisCompleted: function(msg) {
+  //     if (msg.sid !== this.sid) {
+  //       return;
+  //     }
+  //     this.view_content = false;
+  //     this.$toast.success({ message: "合成成功" });
+  //     this.synthesis_loading = false;
+  //     this.stylization_id = msg.stylization_id;
+  //     this.synthesis_progress = 100;
+  //     this.stylized_timestamp = msg.timestamp;
+  //     this.stylized_category = "original";
+  //   },
+  //   onSynthesisFailed: function(msg) {
+  //     if (msg.sid !== this.sid) {
+  //       return;
+  //     }
+  //     this.$toast.success({ message: "合成失败" });
+  //     this.synthesis_loading = false;
+  //     this.synthesis_progress = 0;
+  //     this.stylized_category = "original";
+  //   },
+  //   onSynthesising: function(msg) {
+  //     if (msg.sid !== this.sid) {
+  //       return;
+  //     }
+  //     console.log(msg);
+  //     if (msg.percent <= 1) {
+  //       this.synthesis_progress = msg.percent;
+  //     } else {
+  //       this.synthesis_progress = 1;
+  //     }
+  //   },
+  //   onSynthesisingFetch: function(msg) {
+  //     if (msg.sid !== this.sid) {
+  //       return;
+  //     }
+  //     this.synthesis_progress = msg.percent;
+  //     this.stylization_id = msg.stylization_id;
+  //     this.stylized_timestamp = msg.timestamp;
+  //     this.stylized_category = msg.category;
+  //   },
+  // },
 
   // beforeRouteEnter(to, from, next) {
   // this.changeNavStatus(false);
@@ -218,12 +223,34 @@ export default {
   },
 
   computed: {
+    ...mapState(["stylization", "sid"]),
+
+    _stylization_id() {
+      return this.stylization.stylization_id;
+    },
+
+    _stylized_category() {
+      return this.stylization.stylized_category;
+    },
+
+    _stylized_timestamp() {
+      return this.stylization.stylized_timestamp;
+    },
+
+    _synthesis_loading() {
+      return this.stylization.synthesis_loading;
+    },
+
+    _synthesis_progress() {
+      return this.stylization.synthesis_progress;
+    },
+
     _showType() {
       return this.showType;
       // return this.$route.query.showType
     },
     _completed() {
-      return this.completed;
+      return this._stylization_id !== -1;
       // return this.$route.query.completed==='true'
     },
     _oriInfo() {
@@ -231,7 +258,18 @@ export default {
       // return this.$route.query.oriInfo
     },
     _stylizedInfo() {
-      return this.stylizedInfo;
+      if (this._stylization_id !== -1) {
+        // from user upload
+        return {
+          thumbnail: `${process.env.VUE_APP_API_URL}/stylizations/${this._stylization_id}?width=${this.thumbnail_width}&height=${this.thumbnail_height}&timestamp=${this._stylized_timestamp}&category=${this._stylized_category}`,
+          source: `${process.env.VUE_APP_API_URL}/stylizations/${this._stylization_id}?width=${this.src_w}&height=${this.src_h}&timestamp=${this.stylized_timestamp}&category=${this._stylized_category}`,
+        };
+      } else {
+        return {
+          thumbnail: null,
+          source: null,
+        };
+      }
       // return this.$route.query.stylizedInfo
     },
     _category() {
@@ -264,13 +302,14 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["changeNavStatus"]),
+    ...mapMutations(["changeNavStatus", "setSynthesisLoading"]),
     onClick() {
       this.requestStyleImages(this._category);
     },
     onStyleClick(index) {
-      console.log(this._style_imgs[index]);
+      // console.log(this._style_imgs[index]);
       this.showStylizationProcessing = true;
+      this.requestStylizaitons(this._style_ids[index]);
     },
     requestDatasetCategory() {
       return new Promise(() => {
@@ -354,6 +393,35 @@ export default {
     },
     onChangeView() {
       this.viewRes = !this.viewRes;
+    },
+
+    requestStylizaitons(style_id) {
+      let vm = this;
+      this.setSynthesisLoading(true);
+      return new Promise((resolve, reject) => {
+        this.api.stylizations
+          .post(
+            this.contentId,
+            style_id,
+            this.config.alg,
+            this.sid,
+            this.config.category,
+            this.content_mask,
+            this.style_mask,
+            this.src_w,
+            this.src_h
+          )
+          .then((res) => {
+            return resolve(res);
+          })
+          .catch((error) => {
+            return reject(error);
+          })
+          .finally(() => {
+            // vm.handleSpinHide();
+            vm.file_tree_loading = false;
+          });
+      });
     },
   },
 };

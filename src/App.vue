@@ -67,6 +67,64 @@ export default {
       transitionName: "slide-right",
     };
   },
+
+  // sockets: {
+  //   //这里是监听connect事件
+  //   connect: function() {
+  //     console.log("建立连接");
+  //   },
+  //   disconnect: function() {
+  //     console.log("断开连接");
+  //   },
+  //   reconnect: function() {
+  //     console.log("重新连接");
+  //   },
+  //   onConnected: function(msg) {
+  //     this.sid = msg.sid;
+  //     console.log("Server sid", this.sid);
+  //   },
+  //   onSynthesisCompleted: function(msg) {
+  //     if (msg.sid !== this.sid) {
+  //       return;
+  //     }
+  //     this.view_content = false;
+  //     this.$toast.success({ message: "合成成功" });
+  //     this.synthesis_loading = false;
+  //     this.stylization_id = msg.stylization_id;
+  //     this.synthesis_progress = 100;
+  //     this.stylized_timestamp = msg.timestamp;
+  //     this.stylized_category = "original";
+  //   },
+  //   onSynthesisFailed: function(msg) {
+  //     if (msg.sid !== this.sid) {
+  //       return;
+  //     }
+  //     this.$toast.success({ message: "合成失败" });
+  //     this.synthesis_loading = false;
+  //     this.synthesis_progress = 0;
+  //     this.stylized_category = "original";
+  //   },
+  //   onSynthesising: function(msg) {
+  //     if (msg.sid !== this.sid) {
+  //       return;
+  //     }
+  //     console.log(msg);
+  //     if (msg.percent <= 1) {
+  //       this.synthesis_progress = msg.percent;
+  //     } else {
+  //       this.synthesis_progress = 1;
+  //     }
+  //   },
+  //   onSynthesisingFetch: function(msg) {
+  //     if (msg.sid !== this.sid) {
+  //       return;
+  //     }
+  //     this.synthesis_progress = msg.percent;
+  //     this.stylization_id = msg.stylization_id;
+  //     this.stylized_timestamp = msg.timestamp;
+  //     this.stylized_category = msg.category;
+  //   },
+  // },
   mounted() {
     //核心开始------------------------------------
     let oldTop = 0; //旧数据，初始为0
@@ -94,14 +152,14 @@ export default {
     //;
   },
 
-  watch: {
-    $route(to, from) {
-      const toDepth = to.path.split("/").length;
-      const fromDepth = from.path.split("/").length;
-      this.transitionName = toDepth <= fromDepth ? "slide-right" : "slide-left";
-      console.log("111111");
-    },
-  },
+  // watch: {
+  //   $route(to, from) {
+  //     const toDepth = to.path.split("/").length;
+  //     const fromDepth = from.path.split("/").length;
+  //     this.transitionName = toDepth <= fromDepth ? "slide-right" : "slide-left";
+  //     console.log("111111");
+  //   },
+  // },
 
   methods: {
     onClickLeft() {
