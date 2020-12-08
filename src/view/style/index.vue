@@ -37,6 +37,9 @@
           :name="option.label"
         >
           <div class="lateral-sliding">
+            <div class="lateral-sliding-item">
+              <van-uploader v-model="fileList" multiple />
+            </div>
             <div
               class="lateral-sliding-item"
               v-for="(item, index) in _style_imgs"
@@ -491,5 +494,11 @@ export default {
   filter: blur(3px);
   -webkit-filter: blur(3px);
   transition: 0.5s ease;
+}
+.lateral-sliding .van-uploader__upload {
+  margin: 0;
+  border-radius: 10px;
+  width: 128px;
+  height: 128px;
 }
 </style>

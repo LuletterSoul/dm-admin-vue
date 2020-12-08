@@ -1,7 +1,7 @@
 <template>
   <div>
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-      <div class="select_button">
+      <!-- <div class="select_button">
         <van-row>
           <van-col span="24">
             <van-button
@@ -25,7 +25,7 @@
           </van-uploader>
         </van-row>
       </div>
-
+ -->
       <load-more
         @onLoad="onLoad"
         :data-loading="file_tree_loading"
