@@ -45,13 +45,23 @@
       <!--    结果展示div-->
       <div class="image-div">
         <div class="image">
-          <van-image
-            v-bind:src="_showImageUrl"
-            fit="contain"
-            width="100%"
-            height="100%"
+          <single-transition
+            :in-style="'transition.fadeIn'"
+            :out-style="'transition.fadeOut'"
           >
-          </van-image>
+            <van-image
+              v-bind:src="_showImageUrl"
+              fit="contain"
+              width="100%"
+              height="100%"
+              @load="onImgLoadDone"
+              @error="onImgLoadError"
+            >
+              <template v-slot:loading>
+                <van-loading type="spinner" size="20" />
+              </template>
+            </van-image>
+          </single-transition>
         </div>
       </div>
     </div>
@@ -115,8 +125,10 @@
 <script>
 import axios from "axios";
 import { saveAs } from "file-saver";
+import SingleTransition from "./SingleTransition.vue";
 
 export default {
+  components: { SingleTransition },
   name: "ImagePreviewer",
   props: {
     completed: {
@@ -144,14 +156,20 @@ export default {
   data() {
     return {
       viewRes: false,
+      loadDone: false,
     };
   },
 
   computed: {
     _showImageUrl() {
-      return this.completed && this.viewRes
-        ? this.stylizedInfo.source
-        : this.oriInfo.source;
+      if (this.completed && this.viewRes) {
+        return this.stylizedInfo.source;
+      } else {
+        return this.oriInfo.source;
+      }
+      // return this.completed && this.viewRes && this.loadDone
+      // ? this.stylizedInfo.source
+      // : this.oriInfo.source;
     },
     _eyeOpened() {
       return this.completed && this.viewRes;
@@ -163,6 +181,15 @@ export default {
     },
   },
   methods: {
+    onImgLoadError() {
+      this.$toast.error({ message: "图片加载失败！" });
+    },
+
+    onImgLoadDone() {
+      console.log("Image load done");
+      this.loadDone = true;
+    },
+
     onChangeEye() {
       if (this.completed) {
         // this.$emit("onChangeView");

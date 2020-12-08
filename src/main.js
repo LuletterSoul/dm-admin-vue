@@ -7,6 +7,7 @@ import { router } from "./router";
 import store from "./store";
 
 import Vant from "vant";
+import { Lazyload } from "vant";
 import "vant/lib/index.css";
 
 import * as api from "./api";
@@ -19,6 +20,17 @@ Vue.use(VideoPlayer);
 Vue.prototype.api = api;
 
 Vue.use(Vant);
+Vue.use(Lazyload, {
+  lazyComponent: true,
+  listenEvents: [
+    "scroll",
+    "wheel",
+    "mousewheel",
+    "resize",
+    "animationend",
+    "transitionend",
+  ],
+});
 
 // const socket = io(process.env.VUE_APP_SOCKET_URL);
 

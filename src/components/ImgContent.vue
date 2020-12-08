@@ -96,6 +96,9 @@ export default {
   },
 
   methods: {
+    onLoad(index) {
+      console.log(index);
+    },
     onClick(index) {
       this.$emit("onClickImg", index);
     },

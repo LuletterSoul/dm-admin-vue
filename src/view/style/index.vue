@@ -70,6 +70,7 @@
 import { mapMutations } from "vuex";
 import { mapState } from "vuex";
 
+// import AnimateTransition from "@/components/AnimateTransition";
 import ImagePreviewer from "@/components/ImagePreviewer";
 import VideoPreviewer from "@/components/VideoPreviewer";
 
@@ -115,7 +116,10 @@ export default {
     },
   },
 
-  components: { ImagePreviewer, VideoPreviewer },
+  components: {
+    ImagePreviewer,
+    VideoPreviewer,
+  },
   data() {
     return {
       showStylizationProcessing: false,
@@ -332,9 +336,9 @@ export default {
       });
     },
     requestStyleImages(category, loadNextPage = false) {
-      // // // if (this._style_imgs.length > 0) {
-      // //   return;
-      // }
+      if (this.dataset[category] > 0) {
+        return;
+      }
       let vm = this;
       // let resultId = this.resultList[0].resultId;
       // this.$toast({
@@ -347,7 +351,7 @@ export default {
           .gets(this.pages, category)
           .then((res) => {
             if (res !== undefined) {
-              if (!this.dataset[vm.config.category]) {
+              if (!this.dataset[category]) {
                 vm.dataset = Object.assign({}, vm.dataset, {
                   [category]: [],
                 });
