@@ -1,34 +1,43 @@
 //upLoaderImg.js
-import axios from 'axios'		//引入axios
-import { Toast } from 'vant'	//引入Toast
+import axios from "axios"; //引入axios
+import { Toast } from "vant"; //引入Toast
 
-function upLoaderImg (file, category, type) {	//file为 你读取成功的回调文件信息
-    //new 一个FormData格式的参数
-    let params = new FormData()
-    params.append('file', file)
-    params.append('category', category)
-    let config = {
-        headers: { //添加请求头
-            'Content-Type': 'multipart/form-data'
+function upLoaderImg(file, category, type) {
+  //file为 你读取成功的回调文件信息
+  //new 一个FormData格式的参数
+  let params = new FormData();
+  params.append("file", file);
+  let config = {
+    headers: {
+      //添加请求头
+      "Content-Type": "multipart/form-data",
+    },
+  };
+  return new Promise((resolve, reject) => {
+    //把 uploadUrl 换成自己的 上传路径
+    axios
+      .post(
+        `http://221.226.81.54:1212/api/${type}?category=${category}`,
+        params,
+        config
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          //如果为真 resolve出去
+          Toast.success("上传成功");
+          resolve(res.data);
+        } else {
+          //否则 Toast 提示
+          // Toast.fail(res.data && (res.data.msg))
+          Toast.fail("上传失败");
+          reject(res.data);
         }
-    }
-    return new Promise((resolve, reject) => {
-        //把 uploadUrl 换成自己的 上传路径
-        axios.post('http://221.226.81.54:1212/api/'+type+'/', params, config).then(res => {
-            if (res.status === 200) {				//如果为真 resolve出去
-                Toast.success('上传成功')
-                resolve(res.data)
-            } else {
-                //否则 Toast 提示
-                // Toast.fail(res.data && (res.data.msg))
-                Toast.fail('上传失败')
-                reject(res.data)
-            }
-        }).catch(err => {
-            Toast.fail('系统异常')
-            reject(err)
-        });
-    })
+      })
+      .catch((err) => {
+        Toast.fail("系统异常");
+        reject(err);
+      });
+  });
 }
 
-export default upLoaderImg
+export default upLoaderImg;
