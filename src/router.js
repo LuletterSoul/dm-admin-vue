@@ -95,9 +95,11 @@ const routes = [
       return {
         showType: route.params.showType,
         completed: route.params.completed,
+        alg: route.params.alg,
         oriInfo: route.params.oriInfo,
         stylizedInfo: route.params.stylizedInfo,
         contentId: route.params.contentId,
+        contentCategory: route.params.contentCategory,
       };
     },
   },

@@ -124,11 +124,14 @@ export default {
           showType: showType,
           completed: completed,
           oriInfo: video,
+          alg: this.algName,
           stylizedInfo: {
             video: "",
             thumbnail: "",
             source: "",
           },
+          contentId: this.content_ids[index],
+          contentCategory: this.config.category,
         },
       });
     },

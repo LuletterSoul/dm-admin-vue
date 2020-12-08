@@ -109,6 +109,10 @@ export default {
       type: String,
       default: "",
     },
+    contentCategory: {
+      type: String,
+      default: "",
+    },
   },
 
   components: { ImagePreviewer, VideoPreviewer },
@@ -258,6 +262,7 @@ export default {
         return {
           thumbnail: `${process.env.VUE_APP_API_URL}/stylizations/${this._stylization_id}?width=${this.thumbnail_width}&height=${this.thumbnail_height}&timestamp=${this._stylized_timestamp}&category=${this._stylized_category}`,
           source: `${process.env.VUE_APP_API_URL}/stylizations/${this._stylization_id}?width=${this.src_w}&height=${this.src_h}&timestamp=${this.stylized_timestamp}&category=${this._stylized_category}`,
+          video: `${process.env.VUE_APP_API_URL}/stylizations/${this._stylization_id}?width=${this.src_w}&height=${this.src_h}&timestamp=${this.stylized_timestamp}&category=${this._stylized_category}`,
         };
       } else {
         return {
@@ -400,6 +405,7 @@ export default {
             style_id,
             this.config.alg,
             this.sid,
+            this.contentCategory,
             this.config.category,
             this.content_mask,
             this.style_mask,

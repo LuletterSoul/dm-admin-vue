@@ -125,6 +125,7 @@ export default {
         params: {
           showType: showType,
           completed: completed,
+          alg: this.algName,
           oriInfo: current_content_img,
           stylizedInfo: {
             video: "",
@@ -132,6 +133,7 @@ export default {
             source: "",
           },
           contentId: this.content_ids[index],
+          contentCategory: this.config.category,
         },
       });
     },
