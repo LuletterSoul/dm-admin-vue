@@ -38,7 +38,14 @@
         >
           <div class="lateral-sliding">
             <div class="lateral-sliding-item">
-              <van-uploader v-model="fileList" multiple />
+              <van-uploader
+                v-model="fileList"
+                :preview-image="false"
+                :max-count="2"
+                :show-upload="true"
+                :afterRead="afterRead"
+                :beforeRead="beforeRead"
+                multiple />
             </div>
             <div
               class="lateral-sliding-item"
@@ -78,6 +85,7 @@ import { mapState } from "vuex";
 // import AnimateTransition from "@/components/AnimateTransition";
 import ImagePreviewer from "@/components/ImagePreviewer";
 import VideoPreviewer from "@/components/VideoPreviewer";
+import upLoaderImg from "@/view/photo/util";
 
 export default {
   name: "Style",
@@ -127,6 +135,7 @@ export default {
   },
   data() {
     return {
+      fileList: [],
       showStylizationProcessing: false,
       config: {
         user_id: "",
@@ -438,6 +447,19 @@ export default {
           });
       });
     },
+      beforeRead (file) {	//上传之前校验
+        if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+          this.$toast.fail('只允许上传jpg/png格式的图片！')
+          return false
+        }
+        return true
+      },
+      async afterRead (file) {	//文件读取完成后的回调函数
+        let uploadImg = await upLoaderImg(file.file, this.category, 'styles')//使用上传的方法。file.file
+        this.dataset[this._category].splice(0, 0, uploadImg)
+        // this.content_ids.push(uploadImg)
+        console.log(uploadImg)
+      }
   },
 };
 </script>

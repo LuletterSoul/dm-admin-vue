@@ -2,7 +2,7 @@
 import axios from 'axios'		//引入axios
 import { Toast } from 'vant'	//引入Toast
 
-function upLoaderImg (file, category) {	//file为 你读取成功的回调文件信息
+function upLoaderImg (file, category, type) {	//file为 你读取成功的回调文件信息
     //new 一个FormData格式的参数
     let params = new FormData()
     params.append('file', file)
@@ -14,7 +14,7 @@ function upLoaderImg (file, category) {	//file为 你读取成功的回调文件
     }
     return new Promise((resolve, reject) => {
         //把 uploadUrl 换成自己的 上传路径
-        axios.post('http://221.226.81.54:1212/api/contents/', params, config).then(res => {
+        axios.post('http://221.226.81.54:1212/api/'+type+'/', params, config).then(res => {
             if (res.status === 200) {				//如果为真 resolve出去
                 Toast.success('上传成功')
                 resolve(res.data)
