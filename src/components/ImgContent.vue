@@ -21,6 +21,8 @@
               fit="cover"
               :width="width"
               :src="img"
+              lazy-load
+              :radius="10"
               @click="onClick(col * row_index + col_index)"
             >
               <template v-slot:loading>

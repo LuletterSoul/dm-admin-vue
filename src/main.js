@@ -36,7 +36,7 @@ Vue.use(Lazyload, {
 
 Vue.use(
   new VueSocketIO({
-    debug: true,
+    debug: false,
     connection: SocketIO(process.env.VUE_APP_SOCKET_URL), //options object is Optional
     vuex: {
       store,

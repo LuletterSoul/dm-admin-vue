@@ -412,6 +412,7 @@ export default {
       let vm = this;
       this.setSynthesisLoading(true);
       return new Promise((resolve, reject) => {
+        console.log(this.config.category);
         this.api.stylizations
           .post(
             this.contentId,

@@ -68,7 +68,7 @@ let store = new Vuex.Store({
       if (msg.sid !== state.sid) {
         return;
       }
-      console.log(msg.percent);
+      // console.log(msg.percent);
       if (msg.percent <= 100) {
         state.stylization.synthesis_progress = msg.percent;
       } else {
