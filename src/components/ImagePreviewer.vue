@@ -54,6 +54,7 @@
               fit="contain"
               width="100%"
               height="100%"
+              lazy-load
               @load="onImgLoadDone"
               @error="onImgLoadError"
             >
@@ -106,6 +107,10 @@
   /* box-shadow: 10px 5px 5px black; */
   border-radius: 5px;
 }
+
+/* .image .van-image {
+  background-color: rgba(0, 0, 0, 0.85);
+} */
 
 .bottom-bar {
   width: 100vw;

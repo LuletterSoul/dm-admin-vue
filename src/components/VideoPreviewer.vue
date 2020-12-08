@@ -44,12 +44,14 @@
       <!--    结果展示div-->
       <div class="video-div">
         <div class="video">
-          <video-player
-            class="video-player vjs-custom-skin"
-            ref="videoPlayer"
-            :playsinline="true"
-            :options="_playerOptions"
-          ></video-player>
+          <lazy-component>
+            <video-player
+              class="video-player vjs-custom-skin"
+              ref="videoPlayer"
+              :playsinline="true"
+              :options="_playerOptions"
+            ></video-player>
+          </lazy-component>
         </div>
       </div>
       <!--      bottom bar-->
