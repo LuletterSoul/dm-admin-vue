@@ -7,8 +7,8 @@
           name="close"
           class="icon-background"
           color="white"
-          size="50px"
-          style="margin-left: 30px"
+          size="30px"
+          style="margin-left: 10px"
           @click="onClose"
         />
         <van-icon
@@ -16,7 +16,7 @@
           name="eye-o"
           class="icon-background"
           color="white"
-          size="50px"
+          size="30px"
           @click="onChangeEye"
         />
         <van-icon
@@ -24,7 +24,7 @@
           name="closed-eye"
           class="icon-background"
           color="white"
-          size="50px"
+          size="30px"
           @click="onChangeEye"
         />
 
@@ -32,8 +32,8 @@
           name="passed"
           class="icon-background"
           color="white"
-          size="50px"
-          style="margin-right: 30px"
+          size="30px"
+          style="margin-right: 10px"
           @click="onDownload"
         />
       </div>
