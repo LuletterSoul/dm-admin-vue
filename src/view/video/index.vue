@@ -1,22 +1,16 @@
 <template>
   <div>
-    <div class="content_container" ref="__container_id">
-      <van-nav-bar
-        :title="this.titleName"
-        left-text=""
-        left-arrow
-        @click-left="onClickLeft"
-      />
-      <single-transition>
+    <div class="vr_container">
+      <transition name="van-fade">
         <router-view></router-view>
-      </single-transition>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import SingleTransition from "@/components/SingleTransition.vue";
+// import SingleTransition from "@/components/SingleTransition.vue";
 export default {
   name: "VideoStylizationHome",
   data() {
@@ -25,17 +19,14 @@ export default {
   computed: {
     ...mapState("video", ["titleName"]),
   },
-  components: { SingleTransition },
-  methods: {
-    onClickLeft() {
-      this.$router.back();
-    },
-  },
+  // components: { SingleTransition },
+  components: {},
+  methods: {},
 };
 </script>
 
 <style lang="less">
-.content_container {
+.vr_container {
   margin: 20px;
 }
 

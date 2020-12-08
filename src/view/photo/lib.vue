@@ -213,6 +213,7 @@ export default {
 
 <style lang="less">
 .select_button {
-  margin-top: 20px;
+  margin-top: 0px;
+  margin-bottom: 10px;
 }
 </style>

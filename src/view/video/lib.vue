@@ -1,28 +1,30 @@
 <template>
   <div>
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-      <van-row>
-        <van-col span="24">
-          <van-button
-            size="small"
-            round
-            type="info"
-            block
-            plain
-            @click="onClickUpload"
-            >从相册上传
-          </van-button>
-        </van-col>
-        <van-uploader
-          v-show="false"
-          ref="img_uploader"
-          v-model="fileList"
-          multiple
-          :max-count="2"
-          :show-upload="true"
-        >
-        </van-uploader>
-      </van-row>
+      <div class="select_button">
+        <van-row>
+          <van-col span="24">
+            <van-button
+              size="small"
+              round
+              type="info"
+              block
+              plain
+              @click="onClickUpload"
+              >从相册上传
+            </van-button>
+          </van-col>
+          <van-uploader
+            v-show="false"
+            ref="img_uploader"
+            v-model="fileList"
+            multiple
+            :max-count="2"
+            :show-upload="true"
+          >
+          </van-uploader>
+        </van-row>
+      </div>
 
       <load-more
         @onLoad="onLoad"
@@ -211,6 +213,6 @@ export default {
 
 <style lang="less">
 .select_button {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 </style>

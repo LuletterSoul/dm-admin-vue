@@ -1,55 +1,40 @@
 <template>
   <div>
-    <div class="content_container" ref="__container_id">
-      <van-nav-bar
-        :title="this.titleName"
-        left-text=""
-        left-arrow
-        @click-left="onClickLeft"
-      />
-      <single-transition>
+    <div class="pr_container">
+      <!-- <single-transition
+        :in-style="'transition.fadeIn'"
+        :out-style="'transition.fadeOut'"
+      >
         <router-view></router-view>
-      </single-transition>
+      </single-transition> -->
+      <transition name="van-fade">
+        <router-view></router-view>
+      </transition>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import SingleTransition from "@/components/SingleTransition.vue";
+// import SingleTransition from "@/components/SingleTransition.vue";
 export default {
   name: "PhotoStylizationHome",
   data() {
-    return {
-      transitionName: "slide-right",
-    };
+    return {};
   },
-
-  // watch: {
-  //   $route(to, from) {
-  //     const toDepth = to.path.split("/").length;
-  //     const fromDepth = from.path.split("/").length;
-  //     this.transitionName = toDepth <= fromDepth ? "slide-right" : "slide-left";
-  //   },
-  // },
 
   computed: {
     ...mapState("photo", ["titleName"]),
   },
-  components: { SingleTransition },
-  methods: {
-    onClickLeft() {
-      this.$router.back();
-    },
-  },
+  components: {},
+  methods: {},
 };
 </script>
 
 <style lang="less">
-.content_container {
+.pr_container {
   margin: 20px;
 }
-
 .slide-left-enter,
 .slide-right-leave-active {
   opacity: 0;

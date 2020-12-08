@@ -1,30 +1,40 @@
 <template>
-  <div id="app">
-    <div>
-      <single-transition
-        :in-style="'transition.fadeIn'"
-        :out-style="'transition.fadeOut'"
-      >
-        <router-view></router-view>
-      </single-transition>
-    </div>
-    <transition name="fade">
-      <div class="nav" v-show="show" v-if="showNav">
-        <van-tabbar
-          v-model="active"
-          active-color="#ee0a24"
-          inactive-color="#000"
+  <div>
+    <van-nav-bar
+      :title="this.titleName"
+      left-text=""
+      left-arrow
+      @click-left="onClickLeft"
+      v-if="showNav"
+    />
+    <div id="app" class="app_container">
+      <div>
+        <single-transition
+          :in-style="'transition.fadeIn'"
+          :out-style="'transition.fadeOut'"
         >
-          <van-tabbar-item
-            v-for="(tab_option, index) in tab_options"
-            :icon="tab_option.icon"
-            :to="tab_option.path"
-            :name="tab_option.path"
-            :key="index"
-            >{{ tab_option.label }}</van-tabbar-item
+          <router-view></router-view>
+        </single-transition>
+      </div>
+    </div>
+    <div>
+      <transition name="fade">
+        <div class="nav" v-show="show" v-if="showNav">
+          <van-tabbar
+            v-model="active"
+            active-color="#ee0a24"
+            inactive-color="#000"
           >
+            <van-tabbar-item
+              v-for="(tab_option, index) in tab_options"
+              :icon="tab_option.icon"
+              :to="tab_option.path"
+              :name="tab_option.path"
+              :key="index"
+              >{{ tab_option.label }}</van-tabbar-item
+            >
 
-          <!-- <van-tabbar-item icon="home-o" to="/home">{{
+            <!-- <van-tabbar-item icon="home-o" to="/home">{{
             tab_options[0].label
           }}</van-tabbar-item>
           <van-tabbar-item icon="photo-o" :to="tab_options[]">{{
@@ -33,16 +43,16 @@
           <van-tabbar-item icon="video-o" to="/vr">{{
             tab_options[2].label
           }}</van-tabbar-item> -->
-        </van-tabbar>
-      </div>
-    </transition>
+          </van-tabbar>
+        </div>
+      </transition>
+    </div>
   </div>
 </template>
 
 <script>
 // import { Checkbox, CheckboxGroup, Card, SubmitBar, Toast } from "vant";
 
-import { Toast } from "vant";
 import SingleTransition from "@/components/SingleTransition.vue";
 import { mapState } from "vuex";
 
@@ -105,10 +115,7 @@ export default {
 
   methods: {
     onClickLeft() {
-      Toast("返回");
-    },
-    onClickRight() {
-      Toast("按钮");
+      this.$router.back();
     },
   },
   computed: {
@@ -156,6 +163,11 @@ a {
     border-radius: 100%;
   }
 }
+
+.app_container {
+  // margin: 20px;
+}
+
 .status {
   position: fixed;
   left: 100px;

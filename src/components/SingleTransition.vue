@@ -29,7 +29,7 @@ export default {
     },
     delay: {
       type: Number,
-      default: 300,
+      default: 0,
     },
     inStyle: {
       type: String,
