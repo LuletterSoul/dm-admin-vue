@@ -9,6 +9,7 @@
       @after-leave="afterLeave"
       @before-appear="beforeAppear"
       @appear="appear"
+      mode="out-in"
     >
       <slot class="flip-list-move"> </slot>
     </transition-group>

@@ -10,6 +10,7 @@
       @after-leave="afterLeave"
       @before-appear="beforeAppear"
       @appear="appear"
+      mode="out-in"
     >
       <slot> </slot>
     </transition>
