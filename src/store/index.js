@@ -31,6 +31,9 @@ let store = new Vuex.Store({
     changeNavStatus(state, status) {
       state.showNav = status;
     },
+    clearStyle(state, val) {
+      state.stylization.stylization_id = val;
+    },
     setSynthesisLoading(state, status) {
       state.stylization.synthesis_loading = status;
     },

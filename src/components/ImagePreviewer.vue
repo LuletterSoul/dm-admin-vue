@@ -199,7 +199,8 @@ export default {
       }
     },
     onClose() {
-      this.$router.back();
+      // this.$router.back();
+      this.$emit('onCloseStyle')
     },
     onDownload() {
       axios({

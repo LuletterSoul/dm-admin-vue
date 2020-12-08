@@ -84,6 +84,7 @@ export default {
       active: 0,
       show: true,
       transitionName: "slide-right",
+      titleName: "",
     };
   },
 
@@ -108,6 +109,7 @@ export default {
 
   watch: {
     $route(to) {
+      this.titleName = to.meta.title;
       let toDepth = to.path.split("/");
       this.active = `/${toDepth[1]}`;
     },
@@ -131,18 +133,10 @@ body {
 }
 
 .tab_nav {
-  margin-top: 20px;
+  position: absolute;
+  margin-top: 10px;
 }
 
-.nav {
-  // width: 100%;
-  // height: 50px;
-  // line-height: 50px;
-  // background: rgba(0, 0, 0, 0.8);
-  // text-align: center;
-  // font-size: 14px;
-  // position: fixed;
-}
 a {
   color: #fff;
   text-decoration: none;
@@ -165,6 +159,7 @@ a {
 }
 
 .app_container {
+  // position: absolute;
   // margin: 20px;
 }
 

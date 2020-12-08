@@ -24,7 +24,7 @@ export default {
   },
 
   computed: {
-    ...mapState("photo", ["titleName"]),
+    ...mapState(),
   },
   components: {},
   methods: {},

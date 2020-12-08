@@ -14,7 +14,7 @@ const routes = [
     path: "/home",
     component: () => import("./view/main"),
     meta: {
-      title: "Aristagram",
+      title: "Aristagram - AI艺幻创客",
     },
   },
   {
@@ -30,7 +30,7 @@ const routes = [
         name: "pr_func",
         path: "func",
         meta: {
-          title: "风格迁移功能",
+          title: "艺术图像创作",
         },
         component: () => import("./view/photo/func.vue"),
       },
@@ -38,7 +38,7 @@ const routes = [
         name: "pr_lib",
         path: "lib",
         meta: {
-          title: "图像库",
+          title: "图像素材库",
         },
         component: () => import("./view/photo/lib.vue"),
         props: (route) => {
@@ -72,7 +72,7 @@ const routes = [
         name: "vr_lib",
         path: "lib",
         meta: {
-          title: "视频库",
+          title: "视频素材库",
         },
         component: () => import("./view/video/lib.vue"),
         props: (route) => {
@@ -89,7 +89,7 @@ const routes = [
     path: "/style",
     component: () => import("./view/style"),
     meta: {
-      title: "风格化",
+      title: "AI艺术化",
     },
     props: (route) => {
       return {

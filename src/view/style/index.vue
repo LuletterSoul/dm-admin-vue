@@ -9,12 +9,14 @@
     </van-overlay>
     <div class="previewer">
       <image-previewer
+        @onCloseStyle="onCloseStyle"
         v-if="_showType === 'photo'"
         v-bind:oriInfo="_oriInfo"
         v-bind:stylizedInfo="_stylizedInfo"
         v-bind:completed="_completed"
       ></image-previewer>
       <video-previewer
+        @onCloseStyle="onCloseStyle"
         v-if="_showType === 'video'"
         v-bind:oriInfo="_oriInfo"
         v-bind:stylizedInfo="_stylizedInfo"
@@ -306,7 +308,11 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["changeNavStatus", "setSynthesisLoading"]),
+    ...mapMutations(["changeNavStatus", "setSynthesisLoading", "clearStyle"]),
+    onCloseStyle() {
+      this.$router.back();
+      this.clearStyle(-1);
+    },
     onClick() {
       this.requestStyleImages(this._category);
     },
