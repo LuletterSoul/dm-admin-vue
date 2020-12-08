@@ -219,7 +219,8 @@ export default {
     },
     async afterRead (file) {	//文件读取完成后的回调函数
       let uploadImg = await upLoaderImg(file.file, this.category)//使用上传的方法。file.file
-      this.content_ids.push(uploadImg)
+      this.content_ids.splice(0, 0, uploadImg)
+      // this.content_ids.push(uploadImg)
       console.log(uploadImg)
     }
   },
