@@ -9,12 +9,16 @@
     />
     <div id="app" class="app_container">
       <div>
-        <single-transition
+        <!-- <single-transition
           :in-style="'transition.fadeIn'"
           :out-style="'transition.fadeOut'"
+          mode="out-in"
         >
           <router-view></router-view>
-        </single-transition>
+        </single-transition> -->
+        <transition name="fade" mode="out-in" :duration="200">
+          <router-view></router-view>
+        </transition>
       </div>
     </div>
     <div>
@@ -53,12 +57,12 @@
 <script>
 // import { Checkbox, CheckboxGroup, Card, SubmitBar, Toast } from "vant";
 
-import SingleTransition from "@/components/SingleTransition.vue";
+// import SingleTransition from "@/components/SingleTransition.vue";
 import { mapState } from "vuex";
 
 export default {
   components: {
-    SingleTransition,
+    // SingleTransition,
   },
 
   name: "Home",
