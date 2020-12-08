@@ -86,7 +86,7 @@ export default {
 
 <style lang="less">
 .btn .van-button--large {
-  height: 100px;
+  height: 150px;
 }
 
 .btn .van-button--round {
@@ -94,7 +94,7 @@ export default {
 }
 
 .btn .van-button {
-  font-size: 16px;
+  font-size: 24px;
 }
 
 .btn .van-button--primary {

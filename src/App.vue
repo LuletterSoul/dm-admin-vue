@@ -15,15 +15,24 @@
           active-color="#ee0a24"
           inactive-color="#000"
         >
-          <van-tabbar-item icon="home-o" to="/home">{{
+          <van-tabbar-item
+            v-for="(tab_option, index) in tab_options"
+            :icon="tab_option.icon"
+            :to="tab_option.path"
+            :name="tab_option.path"
+            :key="index"
+            >{{ tab_option.label }}</van-tabbar-item
+          >
+
+          <!-- <van-tabbar-item icon="home-o" to="/home">{{
             tab_options[0].label
           }}</van-tabbar-item>
-          <van-tabbar-item icon="photo-o" to="/pr">{{
+          <van-tabbar-item icon="photo-o" :to="tab_options[]">{{
             tab_options[1].label
           }}</van-tabbar-item>
           <van-tabbar-item icon="video-o" to="/vr">{{
             tab_options[2].label
-          }}</van-tabbar-item>
+          }}</van-tabbar-item> -->
         </van-tabbar>
       </div>
     </transition>
@@ -48,18 +57,18 @@ export default {
       tab_options: [
         {
           label: "首页",
-          icon: "home-0",
-          path: "/main",
+          icon: "home-o",
+          path: "/home",
         },
         {
           label: "图像艺术",
           icon: "photo-o",
-          path: "/photo",
+          path: "/pr",
         },
         {
           label: "视频艺术",
           icon: "video-o",
-          path: "/video",
+          path: "/vr",
         },
       ],
       active: 0,
@@ -68,63 +77,6 @@ export default {
     };
   },
 
-  // sockets: {
-  //   //这里是监听connect事件
-  //   connect: function() {
-  //     console.log("建立连接");
-  //   },
-  //   disconnect: function() {
-  //     console.log("断开连接");
-  //   },
-  //   reconnect: function() {
-  //     console.log("重新连接");
-  //   },
-  //   onConnected: function(msg) {
-  //     this.sid = msg.sid;
-  //     console.log("Server sid", this.sid);
-  //   },
-  //   onSynthesisCompleted: function(msg) {
-  //     if (msg.sid !== this.sid) {
-  //       return;
-  //     }
-  //     this.view_content = false;
-  //     this.$toast.success({ message: "合成成功" });
-  //     this.synthesis_loading = false;
-  //     this.stylization_id = msg.stylization_id;
-  //     this.synthesis_progress = 100;
-  //     this.stylized_timestamp = msg.timestamp;
-  //     this.stylized_category = "original";
-  //   },
-  //   onSynthesisFailed: function(msg) {
-  //     if (msg.sid !== this.sid) {
-  //       return;
-  //     }
-  //     this.$toast.success({ message: "合成失败" });
-  //     this.synthesis_loading = false;
-  //     this.synthesis_progress = 0;
-  //     this.stylized_category = "original";
-  //   },
-  //   onSynthesising: function(msg) {
-  //     if (msg.sid !== this.sid) {
-  //       return;
-  //     }
-  //     console.log(msg);
-  //     if (msg.percent <= 1) {
-  //       this.synthesis_progress = msg.percent;
-  //     } else {
-  //       this.synthesis_progress = 1;
-  //     }
-  //   },
-  //   onSynthesisingFetch: function(msg) {
-  //     if (msg.sid !== this.sid) {
-  //       return;
-  //     }
-  //     this.synthesis_progress = msg.percent;
-  //     this.stylization_id = msg.stylization_id;
-  //     this.stylized_timestamp = msg.timestamp;
-  //     this.stylized_category = msg.category;
-  //   },
-  // },
   mounted() {
     //核心开始------------------------------------
     let oldTop = 0; //旧数据，初始为0
@@ -142,24 +94,14 @@ export default {
       }
       oldTop = top; //更新旧的位置
     };
-    //核心结束------------------------------------
-    //
-    //当前位置60
-    //
-    //旧>新=↑
-    //
-    //旧的位置90
-    //;
   },
 
-  // watch: {
-  //   $route(to, from) {
-  //     const toDepth = to.path.split("/").length;
-  //     const fromDepth = from.path.split("/").length;
-  //     this.transitionName = toDepth <= fromDepth ? "slide-right" : "slide-left";
-  //     console.log("111111");
-  //   },
-  // },
+  watch: {
+    $route(to) {
+      let toDepth = to.path.split("/");
+      this.active = `/${toDepth[1]}`;
+    },
+  },
 
   methods: {
     onClickLeft() {
