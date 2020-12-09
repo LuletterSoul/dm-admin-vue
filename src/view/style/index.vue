@@ -325,7 +325,6 @@ export default {
       return this.checked_mark[this._category];
     },
     _checked_style() {
-      console.log(1111);
       return this._checked_mark.map((i) => {
         return i ? "checked" : null;
       });

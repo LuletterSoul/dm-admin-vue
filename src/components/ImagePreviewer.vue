@@ -51,19 +51,21 @@
             :out-style="'transition.fadeOut'"
             class="transition-div"
           >
-            <van-image
-              v-bind:src="_showImageUrl"
-              fit="contain"
-              width="100%"
-              height="100%"
-              lazy-load
-              @load="onImgLoadDone"
-              @error="onImgLoadError"
-            >
-              <template v-slot:loading>
-                <van-loading type="spinner" size="20" />
-              </template>
-            </van-image>
+            <div v-show="loadDone">
+              <van-image
+                v-bind:src="_showImageUrl"
+                fit="contain"
+                width="100%"
+                height="100%"
+                @load="onImgLoadDone"
+                @error="onImgLoadError"
+                :show-loading="false"
+              >
+                <!-- <template v-slot:loading>
+                  <van-loading type="spinner" size="20" />
+                </template> -->
+              </van-image>
+            </div>
           </single-transition>
         </div>
       </div>
@@ -112,14 +114,14 @@
   justify-content: center;
 }
 
-.transition-div{
-    width: 100%;
-    display: flex;
-    justify-content: center;
+.transition-div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
-.van-image{
-    width: 100%;
+.van-image {
+  width: 100%;
 }
 
 /* .image .van-image {
@@ -197,6 +199,8 @@ export default {
   watch: {
     stylizedInfo() {
       this.viewRes = true;
+      this.loadDone = false;
+      // this.loadDone = false;
     },
   },
   methods: {
@@ -206,6 +210,7 @@ export default {
 
     onImgLoadDone() {
       this.loadDone = true;
+      console.log("Image Load done.");
     },
 
     onChangeEye() {

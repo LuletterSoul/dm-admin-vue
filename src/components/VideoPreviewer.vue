@@ -44,14 +44,14 @@
       <!--    结果展示div-->
       <div class="video-div">
         <div class="video">
-          <lazy-component>
+          <transition name="van-fade" mode="out-in">
             <video-player
               class="video-player vjs-custom-skin"
               ref="videoPlayer"
               :playsinline="true"
               :options="_playerOptions"
             ></video-player>
-          </lazy-component>
+          </transition>
         </div>
       </div>
       <!--      bottom bar-->

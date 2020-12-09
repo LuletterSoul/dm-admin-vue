@@ -9,15 +9,11 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 // import SingleTransition from "@/components/SingleTransition.vue";
 export default {
   name: "VideoStylizationHome",
   data() {
     return {};
-  },
-  computed: {
-    ...mapState("video", ["titleName"]),
   },
   // components: { SingleTransition },
   components: {},
