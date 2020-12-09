@@ -191,7 +191,6 @@ export default {
     },
 
     onImgLoadDone() {
-      console.log("Image load done");
       this.loadDone = true;
     },
 

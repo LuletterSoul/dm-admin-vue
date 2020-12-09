@@ -55,6 +55,7 @@
             >
               <div class="image_hover">
                 <van-image
+                  :class="_checked_style[index]"
                   :src="item.source"
                   fit="cover"
                   :width="128"
@@ -159,6 +160,7 @@ export default {
       thumbnail_width: 512,
       thumbnail_height: 512,
       dataset: {},
+      checked_mark: {},
       // stylization_id: -1,
       synthesis_progress: 100,
       stylized_timestamp: 0,
@@ -295,7 +297,7 @@ export default {
       return this.config.category;
     },
     _style_ids() {
-      if (this.dataset[`${this._category}`]) {
+      if (this.dataset[this._category]) {
         return this.dataset[this._category];
       } else {
         return [];
@@ -319,6 +321,15 @@ export default {
         return c.source;
       });
     },
+    _checked_mark() {
+      return this.checked_mark[this._category];
+    },
+    _checked_style() {
+      console.log(1111);
+      return this._checked_mark.map((i) => {
+        return i ? "checked" : null;
+      });
+    },
   },
   methods: {
     ...mapMutations(["changeNavStatus", "setSynthesisLoading", "clearStyle"]),
@@ -333,6 +344,19 @@ export default {
       // console.log(this._style_imgs[index]);
       this.showStylizationProcessing = true;
       this.requestStylizaitons(this._style_ids[index]);
+      this.setCheckedMark(index);
+    },
+    setCheckedMark(index) {
+      let cm = this.checked_mark[this._category];
+      this.$set(cm, index, true);
+      for (let i = 0; i < cm.length; i++) {
+        if (i !== index) {
+          this.$set(cm, i, false);
+        }
+      }
+      this.checked_mark = Object.assign({}, this.checked_mark, {
+        [this._category]: cm,
+      });
     },
     requestDatasetCategory() {
       return new Promise(() => {
@@ -354,45 +378,76 @@ export default {
         });
       });
     },
+
+    appendNewStyleDataset(
+      category,
+      incoming_style_ids,
+      res,
+      loadNextPage = false
+    ) {
+      if (!this.dataset[category]) {
+        this.dataset = Object.assign({}, this.dataset, {
+          [category]: [],
+        });
+      }
+      if (loadNextPage) {
+        for (let i = 0; i < res.style_ids.length; i++) {
+          this.dataset[category].push(res.style_ids[i]);
+        }
+      } else {
+        this.dataset = Object.assign({}, this.dataset, {
+          [category]: res.style_ids,
+        });
+      }
+      if (this.style_ids.length === res.total) {
+        this.finished = true;
+      }
+      this.style_index = 0;
+      this.style_id = -1;
+      this.buildCheckingMark(category, this.dataset[category]);
+    },
+
+    buildCheckingMark(category, style_ids) {
+      this.checked_mark = Object.assign({}, this.checked_mark, {
+        [category]: style_ids.map(() => false),
+      });
+    },
+
     requestStyleImages(category, loadNextPage = false) {
       if (this.dataset[category] > 0) {
         return;
       }
       let vm = this;
-      // let resultId = this.resultList[0].resultId;
-      // this.$toast({
-      //   message: "加载中...",
-      //   forbidClick: true,
-
-      // });
       return new Promise((resolve, reject) => {
         this.api.styles
           .gets(this.pages, category)
           .then((res) => {
             if (res !== undefined) {
-              if (!this.dataset[category]) {
-                vm.dataset = Object.assign({}, vm.dataset, {
-                  [category]: [],
-                });
-              }
-              if (loadNextPage) {
-                for (let i = 0; i < res.style_ids.length; i++) {
-                  vm.dataset[category].push(res.style_ids[i]);
-                }
-              } else {
-                vm.dataset = Object.assign({}, vm.dataset, {
-                  [category]: res.style_ids,
-                });
-              }
-              // this.$toast.success({
-              //   message: "加载成功",
-              //   forbidClick: true,
-              // });
-              if (this.style_ids.length === res.total) {
-                vm.finished = true;
-              }
-              vm.style_index = 0;
-              vm.style_id = -1;
+              // if (!this.dataset[category]) {
+              //   vm.dataset = Object.assign({}, vm.dataset, {
+              //     [category]: [],
+              //   });
+              // }
+              // if (loadNextPage) {
+              //   for (let i = 0; i < res.style_ids.length; i++) {
+              //     vm.dataset[category].push(res.style_ids[i]);
+              //   }
+              // } else {
+              //   vm.dataset = Object.assign({}, vm.dataset, {
+              //     [category]: res.style_ids,
+              //   });
+              // }
+              // if (this.style_ids.length === res.total) {
+              //   vm.finished = true;
+              // }
+              // vm.style_index = 0;
+              // vm.style_id = -1;
+              this.appendNewStyleDataset(
+                category,
+                res.style_ids,
+                res,
+                loadNextPage
+              );
             } else {
               this.$toast.fail({
                 message: "内容图加载失败，请刷新重试！",
@@ -422,7 +477,6 @@ export default {
       let vm = this;
       this.setSynthesisLoading(true);
       return new Promise((resolve, reject) => {
-        console.log(this.config.category);
         this.api.stylizations
           .post(
             this.contentId,
@@ -461,7 +515,6 @@ export default {
       let uploadImg = await upLoaderImg(file.file, this._category, "styles"); //使用上传的方法。file.file
       this.dataset[this._category].splice(0, 0, uploadImg);
       // this.content_ids.push(uploadImg)
-      console.log(uploadImg);
     },
   },
 };
@@ -508,19 +561,34 @@ export default {
   width: 100%;
 }
 
-.image_hover img {
-  filter: blur(0px);
-  -webkit-filter: blur(0px);
-  // filter: grayscale(0%);
-  // -webkit-filter: grayscale(0%);
-  -webkit-transition: all 0.5s ease;
+.checked {
+  animation: pulse 3s infinite;
+}
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 2px 2px #000;
+  }
+  50% {
+    box-shadow: 0 0 3px 3px #2c79ec;
+  }
+  100% {
+    box-shadow: 0 0 1px 2px #000;
+  }
 }
 
-.image_hover img:hover {
-  filter: blur(3px);
-  -webkit-filter: blur(3px);
-  transition: 0.5s ease;
-}
+// .image_hover img {
+//   filter: blur(0px);
+//   -webkit-filter: blur(0px);
+//   // filter: grayscale(0%);
+//   // -webkit-filter: grayscale(0%);
+//   -webkit-transition: all 0.5s ease;
+// }
+
+// .image_hover img:hover {
+//   filter: blur(3px);
+//   -webkit-filter: blur(3px);
+//   transition: 0.5s ease;
+// }
 .lateral-sliding .van-uploader__upload {
   margin: 0;
   border-radius: 10px;
