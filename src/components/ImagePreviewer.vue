@@ -1,3 +1,4 @@
+<script src="../router.js"></script>
 <template>
   <div>
     <div class="bar-image">
@@ -48,6 +49,7 @@
           <single-transition
             :in-style="'transition.fadeIn'"
             :out-style="'transition.fadeOut'"
+            class="transition-div"
           >
             <van-image
               v-bind:src="_showImageUrl"
@@ -94,8 +96,8 @@
 }
 
 .image-div {
-  /* width: 100vw; */
-  height: 80%;
+  width: 100vw;
+  height: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -106,6 +108,18 @@
   height: 95%;
   /* box-shadow: 10px 5px 5px black; */
   border-radius: 5px;
+  display: flex;
+  justify-content: center;
+}
+
+.transition-div{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.van-image{
+    width: 100%;
 }
 
 /* .image .van-image {
