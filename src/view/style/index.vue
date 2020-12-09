@@ -34,7 +34,7 @@
           v-for="(option, index) in dataset_options"
           :key="index"
           :title="option.label"
-          :name="option.label"
+          :name="option.value"
         >
           <div class="lateral-sliding">
             <div class="lateral-sliding-item">
@@ -364,13 +364,13 @@ export default {
           // this.config.category = res.category_default;
           // this.alg_options = res.alg_options;
           this.dataset_options = res.category_options;
-          this.config.category = this.dataset_options[0].label;
+          this.config.category = this.dataset_options[0].value;
           this.config = Object.assign({}, this.config);
           for (let i = 0; i < this.dataset_options.length; i++) {
             // this.dataset = Object.assign(this.dataset, {
             //   [this.dataset_options[i].label]: [],
             // });
-            this.requestStyleImages(this.dataset_options[i].label);
+            this.requestStyleImages(this.dataset_options[i].value);
           }
           // this.alg_compatible_map = res.alg_compatible_map;
           // this.dataset_compatible_map = res.dataset_compatible_map;
