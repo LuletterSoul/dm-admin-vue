@@ -41,7 +41,7 @@
               <van-uploader
                 v-model="fileList"
                 :preview-image="false"
-                :max-count="2"
+                :max-count="10"
                 :show-upload="true"
                 :afterRead="afterRead"
                 :beforeRead="beforeRead"
