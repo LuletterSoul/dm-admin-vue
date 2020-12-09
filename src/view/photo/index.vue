@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 // import SingleTransition from "@/components/SingleTransition.vue";
 export default {
   name: "PhotoStylizationHome",
@@ -23,9 +22,7 @@ export default {
     return {};
   },
 
-  computed: {
-    ...mapState(),
-  },
+  computed: {},
   components: {},
   methods: {},
 };

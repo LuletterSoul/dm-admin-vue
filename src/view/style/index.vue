@@ -39,6 +39,7 @@
           <div class="lateral-sliding">
             <div class="lateral-sliding-item">
               <van-uploader
+                v-if="option.upload"
                 v-model="fileList"
                 :preview-image="false"
                 :max-count="10"
@@ -167,6 +168,7 @@ export default {
       stylized_category: "original",
       content_mask: [],
       style_mask: [],
+      stylization_meta: [],
     };
   },
 
@@ -363,7 +365,10 @@ export default {
           // this.config.alg = res.alg_default;
           // this.config.category = res.category_default;
           // this.alg_options = res.alg_options;
-          this.dataset_options = res.category_options;
+          this.stylization_meta = res;
+          this.dataset_options = res.alg_compatible_map[this.config.alg].filter(
+            (c) => !c.disable
+          );
           this.config.category = this.dataset_options[0].value;
           this.config = Object.assign({}, this.config);
           for (let i = 0; i < this.dataset_options.length; i++) {
