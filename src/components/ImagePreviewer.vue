@@ -210,7 +210,6 @@ export default {
 
     onImgLoadDone() {
       this.loadDone = true;
-      console.log("Image Load done.");
     },
 
     onChangeEye() {
