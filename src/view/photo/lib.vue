@@ -210,19 +210,26 @@ export default {
     onClickUpload() {
       this.$refs.img_uploader.$refs.input.click();
     },
-    beforeRead (file) {	//上传之前校验
-        if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
-            this.$toast.fail('只允许上传jpg/png格式的图片！')
-            return false
-        }
-        return true
+    beforeRead(file) {
+      //上传之前校验
+      if (
+        file.type !== "image/jpeg" &&
+        file.type !== "image/png" &&
+        file.type !== "image/jpg" &&
+        file.type !== "image/bmp"
+      ) {
+        this.$toast.fail("只允许上传jpg/png格式的图片！");
+        return false;
+      }
+      return true;
     },
-    async afterRead (file) {	//文件读取完成后的回调函数
-      let uploadImg = await upLoaderImg(file.file, this.category, 'contents')//使用上传的方法。file.file
-      this.content_ids.splice(0, 0, uploadImg)
+    async afterRead(file) {
+      //文件读取完成后的回调函数
+      let uploadImg = await upLoaderImg(file.file, this.category, "contents"); //使用上传的方法。file.file
+      this.content_ids.splice(0, 0, uploadImg);
       // this.content_ids.push(uploadImg)
-      console.log(uploadImg)
-    }
+      console.log(uploadImg);
+    },
   },
 };
 </script>
