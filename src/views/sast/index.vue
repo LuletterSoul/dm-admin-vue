@@ -336,6 +336,17 @@
                             >将一段视频渲染出想要的艺术风格。</template
                           >
                         </Alert>
+
+                        <Row>
+                          <Col>
+                            <Progress
+                              :percent="synthesis_progress"
+                              :stroke-width="20"
+                              status="active"
+                              style="margin-bottom: 5px"
+                            />
+                          </Col>
+                        </Row>
                         <!-- <Slider
                           v-model="slide_content_index"
                           :step="1"
@@ -686,7 +697,7 @@ export default {
       },
       pages: {
         page: 0,
-        size: 10,
+        size: 50,
       },
       stylization_id: -1,
       progress: 0,
@@ -895,10 +906,10 @@ export default {
       if (msg.sid !== this.sid) {
         return;
       }
-      if (msg.percent <= 1) {
+      if (msg.percent <= 100) {
         this.synthesis_progress = msg.percent;
       } else {
-        this.synthesis_progress = 1;
+        this.synthesis_progress = 100;
       }
     },
     onSynthesisingFetch: function (msg) {
@@ -1614,6 +1625,7 @@ export default {
             this._style_id,
             this.config.alg,
             this.sid,
+            this.config.category,
             this.config.category,
             this._content_mask,
             this._style_mask,

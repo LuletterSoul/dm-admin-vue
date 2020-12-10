@@ -1,16 +1,26 @@
-import fetch from '@/utils/fetch';
+import fetch from "@/utils/fetch";
 
-const baseURL = '/stylizations';
+const baseURL = "/stylizations";
 
 function get(stylized_id) {
   return fetch({
     url: `${baseURL}/${stylized_id}`,
-    method: 'get'
-  })
+    method: "get",
+  });
 }
 
-
-function post(content_id, style_id, alg, sid, category, content_mask = null, style_mask = null, width = 512, height = 512) {
+function post(
+  content_id,
+  style_id,
+  alg,
+  sid,
+  content_category,
+  style_category,
+  content_mask = null,
+  style_mask = null,
+  width = 512,
+  height = 512
+) {
   // let form = new FormData()
   // form.append('content_mask', content_mask)
   // form.append('style_mask', style_mask)
@@ -30,12 +40,11 @@ function post(content_id, style_id, alg, sid, category, content_mask = null, sty
       width: width,
       height: height,
       sid: sid,
-      category: category
+      style_category: style_category,
+      content_category: content_category,
     },
-    method: 'post',
-  })
+    method: "post",
+  });
 }
 
-export {
-  get, post
-}
+export { get, post };
