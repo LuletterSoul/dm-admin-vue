@@ -149,7 +149,7 @@ export default {
       },
       pages: {
         page: 0,
-        size: 15,
+        size: 50,
       },
       style_ids: [],
       style_index: 0,
