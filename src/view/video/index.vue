@@ -2,8 +2,8 @@
   <div>
     <div class="vr_container">
       <transition name="van-fade" mode="out-in">
-        <!-- <router-view></router-view> -->
-        <van-empty description="访问人数过多！系统受限，请稍后重试。" />
+        <router-view></router-view>
+        <!-- <van-empty description="访问人数过多！系统受限，请稍后重试。" /> -->
       </transition>
     </div>
   </div>
