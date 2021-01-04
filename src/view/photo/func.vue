@@ -25,17 +25,6 @@ export default {
     return {
       func_options: [
         {
-          icon: "user-o",
-          func_des: "漫画生成",
-          spanStyle: {
-            backgroundColor: "rgb(228,246,249)",
-            fontColor: "#000",
-          },
-          to: "pr_lib",
-          algName: "CAST",
-          category: "WebCaricature",
-        },
-        {
           icon: "fire-o",
           func_des: "场景转换",
           spanStyle: {
@@ -56,6 +45,17 @@ export default {
           to: "pr_lib",
           algName: "MAST",
           category: "COCO",
+        },
+        {
+          icon: "user-o",
+          func_des: "漫画生成",
+          spanStyle: {
+            backgroundColor: "rgb(228,246,249)",
+            fontColor: "#000",
+          },
+          to: "pr_lib",
+          algName: "CAST",
+          category: "WebCaricature",
         },
       ],
     };

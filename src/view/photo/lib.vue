@@ -5,6 +5,7 @@
         <van-row>
           <van-col span="24">
             <van-button
+              v-if="algName !== 'CAST'"
               size="small"
               round
               type="info"
