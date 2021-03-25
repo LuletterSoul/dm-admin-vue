@@ -63,31 +63,41 @@
                     </Col>
                   </Row>
                   <Row style="margin-left: 20px;margin-top: 40px">
-                    <Col span="4" v-for="(url,index) of _src_photos_url">
-                      <Card>
+                    <div class="card-window">
+                         <Col span="3" v-for="(url,index) of _src_photos_url" :key="index">
+                      <!-- <Card v-for="(url,index) of _src_photos_url" :key="index" style="position: absolute; width: 100px"> -->
+                      <Card >
                         <div style="text-align:center">
-                          <img :src="url" width="200">
+                          <img :src="url" width="100%" height="100%">
                         </div>
                       </Card>
                       <template v-if="index===0">
                         <div
                           style="font-size:24px;margin-top: 20px;position: absolute; left: 50%; transform: translateX(-50%);">
                           <!--<Button shape="circle"  :type="button_type" >{{index}}</Button>-->
-                          原图
+                          内容图
+                        </div>
+                      </template>
+                      <template v-else-if="index===1">
+                        <div
+                          style="font-size:24px;margin-top: 20px;position: absolute; left: 50%; transform: translateX(-50%);">
+                          <!--<Button shape="circle"  :type="button_type" >{{index}}</Button>-->
+                          风格图
                         </div>
                       </template>
                       <template v-else>
                         <div
                           style="font-size:24px;margin-top: 20px;position: absolute; left: 50%; transform: translateX(-50%);">
                           <!--<Button shape="circle"  :type="button_type" >{{index}}</Button>-->
-                          {{index}}
+                          {{index - 1}}
                         </div>
-
                       </template>
                     </Col>
+                    </div>
+                 
                   </Row>
                   <div style="margin-top: 80px;"></div>
-                  <Row v-for="(score_type,index) of current_scores" style="margin-left: 200px;margin-top: 40px">
+                  <Row v-for="(score_type,index) of current_scores" style="margin-left: 200px;margin-top: 40px" :key="index">
                     <Col span="5">
                       <Tooltip :content="score_type['des']">
                         <Tag type="dot" :color="score_type['tag_color']" style="font-size: 24px">{{ score_type['tag'] }}
@@ -95,7 +105,7 @@
                       </Tooltip>
                     </Col>
                     <Col v-for="(button_type,s_idx) of score_view[index]['button_type']" span="1"
-                         style="margin-left: 60px">
+                         style="margin-left: 60px" :key="s_idx">
                       <Button shape="circle" size="large" :type="button_type"
                               @click="onClickRatingButton(index,s_idx,score_view[index]['rank_list'][s_idx])"
                               :disabled="button_states[index][s_idx]">
@@ -162,14 +172,14 @@
       </Row>
       <Modal
         v-model="showSubmitConfirm"
-        title="确认评分"
+        title="确认评分 (提交时点确定，不要回车！)"
         :loading="submitLoading"
         @on-ok="submitRating('pos')">
         <Row>
           <Col span="24">
             <Form ref="user" :model='user' :rules="ruleValidate" :label-width="80">
               <FormItem label="用户名" prop="user_id">
-                <Input v-model="user.user_id" placeholder="请输入用户名"></Input>
+                <Input v-model="user.user_id" placeholder="请输入用户名" @on-enter="console.log('Enter')"></Input>
               </FormItem>
             </Form>
           </Col>
@@ -568,7 +578,7 @@
           for (let j = 0; j < this.current_scores.length; j++) {
             console.log()
             // console.log(this.scores[i][this.current_scores[j]]);
-            temfinish[this.current_scores[j]['score_type']] = this.file_tree[i]['filenames'][this.scores[i][this.current_scores[j]['score_type']]];
+            temfinish[this.current_scores[j]['score_type']] = this.file_tree[i]['filenames'][this.scores[i][this.current_scores[j]['score_type']] + 1];
           }
           vm.final.push(temfinish);
         }
@@ -578,9 +588,6 @@
           api.scores.post(this.user.user_id, this.score_res).then(res => {
             if (res === 'success') {
               vm.$Message.success('提交成功，感谢参与，祝您生活愉快！');
-              setInterval(function () {
-                // window.location.reload();
-              }, 2000)
             } else {
               vm.$Message.error('提交失败，请再次提交！');
             }
@@ -637,20 +644,20 @@
         // console.log(score_type_idx);
         // alert(b_idx);
 
-        if (score_type_idx === 0 || score_type_idx === 2) {
-          let i = score_type_idx + 1
-          for (let j = 0; j < this.button_states[i].length; j++) {
-            this.button_states[i][j] = false;
-          }
-          this.button_states[i][b_idx] = true;
-        }
-        if (score_type_idx === 1 || score_type_idx === 3) {
-          let i = score_type_idx - 1
-          for (let j = 0; j < this.button_states[i].length; j++) {
-            this.button_states[i][j] = false;
-          }
-          this.button_states[i][b_idx] = true;
-        }
+        // if (score_type_idx === 0 || score_type_idx === 2) {
+        //   let i = score_type_idx + 1
+        //   for (let j = 0; j < this.button_states[i].length; j++) {
+        //     this.button_states[i][j] = false;
+        //   }
+        //   this.button_states[i][b_idx] = true;
+        // }
+        // if (score_type_idx === 1 || score_type_idx === 3) {
+        //   let i = score_type_idx - 1
+        //   for (let j = 0; j < this.button_states[i].length; j++) {
+        //     this.button_states[i][j] = false;
+        //   }
+        //   this.button_states[i][b_idx] = true;
+        // }
       },
       handleRefresh: function () {
         let vm = this;
@@ -780,6 +787,10 @@
     flex: 1;
     display: flex;
     justify-content: center;
+  }
+
+  .card-window .ivu-col-span-3{
+        width: 10.5%;
   }
 
   center {
